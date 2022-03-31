@@ -1,19 +1,22 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
+describe("Bridge", function () {
+  it("Should change required approvals", async function () {
+    const [owner] = await ethers.getSigners();
+    const ownerAddress = owner.address;
+    const validators = [ownerAddress];
 
-    expect(await greeter.greet()).to.equal("Hello, world!");
+    const initialRequiredApprovals = 1;
+    const newRequiredApprovals = 2;
 
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
+    const Bridge = await ethers.getContractFactory("Bridge");
+    const bridge = await Bridge.deploy();
+    await bridge.deployed();
+    await (await bridge.initialize(ownerAddress, validators, initialRequiredApprovals)).wait();
+    expect(await bridge.requiredApprovals()).to.equal(initialRequiredApprovals);
 
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
-
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+    await (await bridge.setRequiredApprovals(newRequiredApprovals)).wait();
+    expect(await bridge.requiredApprovals()).to.equal(newRequiredApprovals);
   });
 });
