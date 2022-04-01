@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
 contract Bridge is Initializable {
     address public owner;
@@ -14,6 +15,8 @@ contract Bridge is Initializable {
 
     event Approved(bytes32 id, address validator);
     event Executed(bytes32 id, bytes data, address validator);
+    event Deposit(address token, uint256 chainId, uint256 amount);
+    event Transferred(address token, address receiver, uint256 amount, address validator);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "only owner");
@@ -74,5 +77,32 @@ contract Bridge is Initializable {
         bytes32 id = keccak256(_data);
         executed[id] = true;
         emit Executed(id, _data, msg.sender);
+    }
+
+    function deposit (address _token, uint256 _chainId, uint256 _amount) external payable {
+        require(IERC20Upgradeable(_token).transferFrom(msg.sender, address(this), _amount), "failed to execute deposit");
+        emit Deposit (_token, _chainId, _amount);
+    }
+
+    function approveTransfer(bytes calldata _txHash, address _token, address _receiver, uint256 _amount) external onlyValidator {
+        bytes32 id = keccak256(abi.encodePacked(_txHash, _token, _receiver, _amount));
+        
+        if (!approvals[id][msg.sender]) {
+            approvals[id][msg.sender] = true;
+            approvalsCount[id]++;
+            emit Approved(id, msg.sender);
+        }
+
+        if (executed[id]) {
+            return;
+        }
+
+        if (approvalsCount[id] >= requiredApprovals) {
+            require(IERC20Upgradeable(_token).transfer(_receiver, _amount), "failed transfer");
+            emit Transferred(_token, _receiver, _amount, msg.sender);
+            executed[id] = true;
+           
+        }
+
     }
 }
