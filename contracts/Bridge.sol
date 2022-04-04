@@ -12,6 +12,7 @@ contract Bridge is Initializable {
     mapping(bytes32 => uint256) public approvalsCount;
     mapping(bytes32 => bool) public executed;
     uint256 public requiredApprovals;
+    IERC20Upgradeable public token;
 
     event Approved(bytes32 id, address validator);
     event Executed(bytes32 id, bytes data, address validator);
@@ -56,31 +57,9 @@ contract Bridge is Initializable {
         requiredApprovals = _requiredApprovals;
     }
 
-    function approve(bytes calldata _data) external onlyValidator {
-        bytes32 id = keccak256(_data);
-        if (!approvals[id][msg.sender]) {
-            approvals[id][msg.sender] = true;
-            approvalsCount[id]++;
-            emit Approved(id, msg.sender);
-        }
-
-        if (executed[id]) {
-            return;
-        }
-
-        if (approvalsCount[id] >= requiredApprovals) {
-            _execute(_data);
-        }
-    }
-
-    function _execute(bytes calldata _data) private {
-        bytes32 id = keccak256(_data);
-        executed[id] = true;
-        emit Executed(id, _data, msg.sender);
-    }
-
-    function deposit (address _token, uint256 _chainId, uint256 _amount) external payable {
-        require(IERC20Upgradeable(_token).transferFrom(msg.sender, address(this), _amount), "failed to execute deposit");
+    function deposit (address _token, uint256 _chainId, uint256 _amount) external {
+        require(_amount != 0, "Amount cannot be equal to 0.");
+        require(IERC20Upgradeable(_token).transferFrom(msg.sender, address(this), _amount), "Transfer failed.");
         emit Deposit (_token, _chainId, _amount);
     }
 
@@ -98,11 +77,9 @@ contract Bridge is Initializable {
         }
 
         if (approvalsCount[id] >= requiredApprovals) {
-            require(IERC20Upgradeable(_token).transfer(_receiver, _amount), "failed transfer");
-            emit Transferred(_token, _receiver, _amount, msg.sender);
             executed[id] = true;
-           
+            require(IERC20Upgradeable(_token).transfer(_receiver, _amount), "Failed transfer");
+            emit Transferred(_token, _receiver, _amount, msg.sender);
         }
-
     }
 }
