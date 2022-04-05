@@ -1,0 +1,32 @@
+image: node:16
+
+stages:
+  - test
+
+test:lint:
+  stage: test
+  script:
+    - npm install
+    - npx hardhat check
+
+test:build:
+  stage: test
+  script:
+    - npm install
+    - npx hardhat compile
+    - npx hardhat typechain
+
+test:deploy:
+  stage: test
+  services:
+    - name: trufflesuite/ganache-cli:latest
+      alias: ganache
+  script:
+    - npm install
+    - npx hardhat --network ganache run scripts/deploy.ts
+
+test:unit:
+  stage: test
+  script:
+    - npm install
+    - npx hardhat test
