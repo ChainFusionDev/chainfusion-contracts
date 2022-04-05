@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { assert } from "console";
 import { ethers } from "hardhat";
+import { utils } from "ethers";
 
 describe("Bridge", function () {
   it("Should change required approvals", async function () {
@@ -45,8 +46,7 @@ describe("Bridge", function () {
     const mintAmount = "100000000000000000000";
     const depositAmount = "10000000000000000000";
     
-    const txHash1 = "0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f";
-    const txHash2 = "0x54c96e7f79d5fd653951c49343fc2fa7299f14c01a5a3a03f8bfb55eecb2711f";
+    const txHash = "0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f";
 
     const Bridge = await ethers.getContractFactory("Bridge");
     const bridge = await Bridge.deploy();
@@ -62,19 +62,24 @@ describe("Bridge", function () {
     expect(await mockToken.balanceOf(bridge.address)).to.equal(depositAmount);
 
     const bridge1 = await ethers.getContractAt("Bridge", bridge.address, v1);
-    await bridge1.approveTransfer(txHash1, mockToken.address, receiver.address, depositAmount);
+    const id = utils.solidityKeccak256(["bytes","address", "address", "uint256"], [txHash, mockToken.address, receiver.address, depositAmount]);
+    await expect(bridge1.approveTransfer(txHash, mockToken.address, receiver.address, depositAmount)).to
+      .emit(bridge1, 'Approved')
+      .withArgs(id, v1.address);
 
     const bridge2 = await ethers.getContractAt("Bridge", bridge.address, v2);
-    await bridge2.approveTransfer(txHash1, mockToken.address, receiver.address, depositAmount);
-
+    await expect(bridge2.approveTransfer(txHash, mockToken.address, receiver.address, depositAmount)).to
+      .emit(bridge2, 'Approved')
+      .withArgs(id, v2.address)
+      .emit(bridge2, 'Transferred')
+      .withArgs(mockToken.address, receiver.address, depositAmount, v2.address);
+    
     const bridge3 = await ethers.getContractAt("Bridge", bridge.address, v3);    
-    await bridge3.approveTransfer(txHash2, mockToken.address, receiver.address, depositAmount);
+    await bridge3.approveTransfer(txHash, mockToken.address, receiver.address, depositAmount);
 
-    try {
-      const bridgeOther = await ethers.getContractAt("Bridge", bridge.address, owner);
-      await bridgeOther.approveTransfer(txHash2, mockToken.address, receiver.address, depositAmount);
-    } catch (ex) {
-      console.log("Only Validator");
-    }   
+    await expect(bridge.approveTransfer(txHash, mockToken.address, receiver.address, depositAmount)).to.be
+      .revertedWith('only validator');
+
+    expect(await bridge.executed(id)).to.equal(true);
   });
 });

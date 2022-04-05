@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Bridge is Initializable {
     address public owner;
@@ -12,10 +12,9 @@ contract Bridge is Initializable {
     mapping(bytes32 => uint256) public approvalsCount;
     mapping(bytes32 => bool) public executed;
     uint256 public requiredApprovals;
-    IERC20Upgradeable public token;
+    IERC20 public token;
 
     event Approved(bytes32 id, address validator);
-    event Executed(bytes32 id, bytes data, address validator);
     event Deposit(address token, uint256 chainId, uint256 amount);
     event Transferred(address token, address receiver, uint256 amount, address validator);
 
@@ -59,7 +58,7 @@ contract Bridge is Initializable {
 
     function deposit (address _token, uint256 _chainId, uint256 _amount) external {
         require(_amount != 0, "Amount cannot be equal to 0.");
-        require(IERC20Upgradeable(_token).transferFrom(msg.sender, address(this), _amount), "Transfer failed.");
+        require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "Transfer failed.");
         emit Deposit (_token, _chainId, _amount);
     }
 
@@ -78,7 +77,7 @@ contract Bridge is Initializable {
 
         if (approvalsCount[id] >= requiredApprovals) {
             executed[id] = true;
-            require(IERC20Upgradeable(_token).transfer(_receiver, _amount), "Failed transfer");
+            require(IERC20(_token).transfer(_receiver, _amount), "Failed transfer");
             emit Transferred(_token, _receiver, _amount, msg.sender);
         }
     }
