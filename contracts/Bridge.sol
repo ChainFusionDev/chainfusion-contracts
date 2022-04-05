@@ -3,9 +3,9 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Bridge is Initializable {
-    address public owner;
+contract Bridge is Initializable, Ownable {
     address[] public validators;
     mapping(address => bool) public isValidator;
     mapping(bytes32 => mapping(address => bool)) public approvals;
@@ -18,27 +18,18 @@ contract Bridge is Initializable {
     event Deposited(address token, uint256 chainId, uint256 amount);
     event Transferred(address token, address receiver, uint256 amount, address validator);
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "only owner");
-        _;
-    }
-
     modifier onlyValidator() {
         require(isValidator[msg.sender], "only validator");
         _;
     }
 
     function initialize(address _owner, address[] calldata _validators, uint256 _requiredApprovals) external initializer {
-        owner = _owner;
+        _transferOwnership(_owner);
         validators = _validators;
         for (uint256 i = 0; i < _validators.length; i++) {
             isValidator[_validators[i]] = true;
         }
         requiredApprovals = _requiredApprovals;
-    }
-
-    function setOwner(address _owner) external onlyOwner {
-        owner = _owner;
     }
 
     function setValidators(address[] calldata _validators) external onlyOwner {
