@@ -15,7 +15,7 @@ contract Bridge is Initializable {
     IERC20 public token;
 
     event Approved(bytes32 id, address validator);
-    event Deposit(address token, uint256 chainId, uint256 amount);
+    event Deposited(address token, uint256 chainId, uint256 amount);
     event Transferred(address token, address receiver, uint256 amount, address validator);
 
     modifier onlyOwner() {
@@ -59,7 +59,7 @@ contract Bridge is Initializable {
     function deposit (address _token, uint256 _chainId, uint256 _amount) external {
         require(_amount != 0, "Amount cannot be equal to 0.");
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "Transfer failed.");
-        emit Deposit (_token, _chainId, _amount);
+        emit Deposited (_token, _chainId, _amount);
     }
 
     function approveTransfer(bytes calldata _txHash, address _token, address _receiver, uint256 _amount) external onlyValidator {
