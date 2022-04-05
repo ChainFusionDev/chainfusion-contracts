@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Bridge is Initializable {
     address public owner;
@@ -11,9 +12,11 @@ contract Bridge is Initializable {
     mapping(bytes32 => uint256) public approvalsCount;
     mapping(bytes32 => bool) public executed;
     uint256 public requiredApprovals;
+    IERC20 public token;
 
     event Approved(bytes32 id, address validator);
-    event Executed(bytes32 id, bytes data, address validator);
+    event Deposited(address token, uint256 chainId, uint256 amount);
+    event Transferred(address token, address receiver, uint256 amount, address validator);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "only owner");
@@ -53,8 +56,15 @@ contract Bridge is Initializable {
         requiredApprovals = _requiredApprovals;
     }
 
-    function approve(bytes calldata _data) external onlyValidator {
-        bytes32 id = keccak256(_data);
+    function deposit (address _token, uint256 _chainId, uint256 _amount) external {
+        require(_amount != 0, "Amount cannot be equal to 0.");
+        require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "Transfer failed.");
+        emit Deposited (_token, _chainId, _amount);
+    }
+
+    function approveTransfer(bytes calldata _txHash, address _token, address _receiver, uint256 _amount) external onlyValidator {
+        bytes32 id = keccak256(abi.encodePacked(_txHash, _token, _receiver, _amount));
+        
         if (!approvals[id][msg.sender]) {
             approvals[id][msg.sender] = true;
             approvalsCount[id]++;
@@ -66,13 +76,9 @@ contract Bridge is Initializable {
         }
 
         if (approvalsCount[id] >= requiredApprovals) {
-            _execute(_data);
+            executed[id] = true;
+            require(IERC20(_token).transfer(_receiver, _amount), "Failed transfer");
+            emit Transferred(_token, _receiver, _amount, msg.sender);
         }
-    }
-
-    function _execute(bytes calldata _data) private {
-        bytes32 id = keccak256(_data);
-        executed[id] = true;
-        emit Executed(id, _data, msg.sender);
     }
 }
