@@ -85,23 +85,38 @@ describe("Bridge", function () {
 });
 
 describe("TokenManager", function () {
-  it("Should add support token", async function () {
-    const [owner] = await ethers.getSigners();
-    const ownerAddress = owner.address;
-    const addressToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
-    const destinationToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
+  it("Should called addSupportedToken() only by owner", async function () {
+    const [owner, v1] = await ethers.getSigners();
 
     const chainId = 123;
+    const addressToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
+    const destinationToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
 
     const TokenManager = await ethers.getContractFactory("TokenManager");
     const tokenManager = await TokenManager.deploy();
     await tokenManager.deployed();
-
-    await (await tokenManager.initialize(ownerAddress)).wait();
-
-    await expect(tokenManager.addSupportedToken(chainId, addressToken, destinationToken)).to.be
-    .revertedWith("only owner"); // ERROR 
     
+    await (await tokenManager.initialize(v1.address)).wait();
+    await expect(tokenManager.addSupportedToken(chainId, addressToken, destinationToken)).to.be
+    .revertedWith("Ownable: caller is not the owner");
+
+  });
+  
+  it("Should adds token addresses to supportedTokens mapping", async function () {
+    const [owner] = await ethers.getSigners();
+    const ownerAddress = owner.address;
+
+    const chainId = 123;
+    const addressToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
+    const destinationToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
+
+    const TokenManager = await ethers.getContractFactory("TokenManager");
+    const tokenManager = await TokenManager.deploy();
+    await tokenManager.deployed();
+    
+    await (await tokenManager.initialize(ownerAddress)).wait();
+    await expect(tokenManager.addSupportedToken(chainId, addressToken, destinationToken));
+
     expect(await tokenManager.supportedTokens(chainId, addressToken)).to.equal(destinationToken);
   });
 });
