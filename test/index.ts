@@ -8,6 +8,7 @@ describe("Bridge", function () {
     const [owner] = await ethers.getSigners();
     const ownerAddress = owner.address;
     const validators = [ownerAddress];
+    const addressToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
 
     const initialRequiredApprovals = 1;
     const newRequiredApprovals = 2;
@@ -15,7 +16,7 @@ describe("Bridge", function () {
     const Bridge = await ethers.getContractFactory("Bridge");
     const bridge = await Bridge.deploy();
     await bridge.deployed();
-    await (await bridge.initialize(ownerAddress, validators, initialRequiredApprovals)).wait();
+    await (await bridge.initialize(ownerAddress, validators, initialRequiredApprovals, addressToken)).wait();
     expect(await bridge.requiredApprovals()).to.equal(initialRequiredApprovals);
 
     await (await bridge.setRequiredApprovals(newRequiredApprovals)).wait();
@@ -23,6 +24,11 @@ describe("Bridge", function () {
   });
     
   it("Should deposit tokens to bridge", async function () {
+    const [owner] = await ethers.getSigners();
+    const ownerAddress = owner.address;
+    const addressToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
+    const destinationToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
+    
     const chainId = 123;
     const mintAmount = "100000000000000000000";
     const depositAmount = "10000000000000000000";
@@ -34,6 +40,15 @@ describe("Bridge", function () {
     const MockToken = await ethers.getContractFactory("MockToken");
     const mockToken = await MockToken.deploy("Token", "TKN", mintAmount);
     await mockToken.deployed();
+
+    const TokenManager = await ethers.getContractFactory("TokenManager");
+    const tokenManager = await TokenManager.deploy();
+    await tokenManager.deployed();
+
+    await (await tokenManager.initialize(ownerAddress)).wait();
+
+    await expect(tokenManager.addSupportedToken(chainId, addressToken, destinationToken)).to.be
+    .revertedWith("only owner"); // ERROR 
 
     await mockToken.approve(bridge.address, depositAmount);
     await bridge.deposit(mockToken.address, chainId, depositAmount);
@@ -48,14 +63,14 @@ describe("Bridge", function () {
     
     const txHash = "0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f";
 
-    const Bridge = await ethers.getContractFactory("Bridge");
-    const bridge = await Bridge.deploy();
-    await bridge.deployed();
-    await (await bridge.initialize(owner.address, [v1.address, v2.address, v3.address], 2)).wait();
-
     const MockToken = await ethers.getContractFactory("MockToken");
     const mockToken = await MockToken.deploy("Token", "TKN", mintAmount);
     await mockToken.deployed();
+
+    const Bridge = await ethers.getContractFactory("Bridge");
+    const bridge = await Bridge.deploy();
+    await bridge.deployed();
+    await (await bridge.initialize(owner.address, [v1.address, v2.address, v3.address], 2, mockToken.address)).wait();
 
     await mockToken.approve(bridge.address, depositAmount);
     await bridge.deposit(mockToken.address, chainId, depositAmount);
