@@ -83,3 +83,25 @@ describe("Bridge", function () {
     expect(await bridge.executed(id)).to.equal(true);
   });
 });
+
+describe("TokenManager", function () {
+  it("Should add support token", async function () {
+    const [owner] = await ethers.getSigners();
+    const ownerAddress = owner.address;
+    const addressToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
+    const destinationToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
+
+    const chainId = 123;
+
+    const TokenManager = await ethers.getContractFactory("TokenManager");
+    const tokenManager = await TokenManager.deploy();
+    await tokenManager.deployed();
+
+    await (await tokenManager.initialize(ownerAddress)).wait();
+
+    await expect(tokenManager.addSupportedToken(chainId, addressToken, destinationToken)).to.be
+    .revertedWith("only owner"); // ERROR 
+    
+    expect(await tokenManager.supportedTokens(chainId, addressToken)).to.equal(destinationToken);
+  });
+});

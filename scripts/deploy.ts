@@ -11,6 +11,13 @@ async function main() {
   await (await bridge.initialize(ownerAddress, [ownerAddress], 1)).wait();
 
   console.log("Bridge deployed to:", bridge.address);
+
+  const TokenManager = await ethers.getContractFactory("TokenManager");
+  const tokenManager = await TokenManager.deploy();
+  await tokenManager.deployed();
+  await (await tokenManager.initialize(ownerAddress)).wait();
+
+  console.log("TokenManager deployed to:", tokenManager.address);
 }
 
 main().catch((error) => {

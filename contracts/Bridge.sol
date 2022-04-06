@@ -73,3 +73,15 @@ contract Bridge is Initializable, Ownable {
         }
     }
 }
+
+contract TokenManager is Initializable, Ownable {
+    mapping(uint256 => mapping(address => address)) public supportedTokens;
+
+    function initialize(address _owner) external initializer {
+       _transferOwnership(_owner);
+    }
+
+    function addSupportedToken(uint256 _chainId, address _token, address _destinationToken) external onlyOwner{
+        supportedTokens[_chainId][_token] = _destinationToken;
+    }
+}
