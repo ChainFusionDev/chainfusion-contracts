@@ -8,7 +8,7 @@ describe("Bridge", function () {
     const [owner] = await ethers.getSigners();
     const ownerAddress = owner.address;
     const validators = [ownerAddress];
-    const addressToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
+    const tokenManagerAddress = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
 
     const initialRequiredApprovals = 1;
     const newRequiredApprovals = 2;
@@ -16,7 +16,7 @@ describe("Bridge", function () {
     const Bridge = await ethers.getContractFactory("Bridge");
     const bridge = await Bridge.deploy();
     await bridge.deployed();
-    await (await bridge.initialize(ownerAddress, validators, initialRequiredApprovals, addressToken)).wait();
+    await (await bridge.initialize(ownerAddress, validators, initialRequiredApprovals, tokenManagerAddress)).wait();
     expect(await bridge.requiredApprovals()).to.equal(initialRequiredApprovals);
 
     await (await bridge.setRequiredApprovals(newRequiredApprovals)).wait();
@@ -153,7 +153,7 @@ describe("TokenManager", function () {
     const [owner, v1] = await ethers.getSigners();
 
     const chainId = 123;
-    const addressToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
+    const tokenManagerAddress = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
     const destinationToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
 
     const TokenManager = await ethers.getContractFactory("TokenManager");
@@ -161,7 +161,7 @@ describe("TokenManager", function () {
     await tokenManager.deployed();
     
     await (await tokenManager.initialize(v1.address)).wait();
-    await expect(tokenManager.addSupportedToken(chainId, addressToken, destinationToken)).to.be
+    await expect(tokenManager.addSupportedToken(chainId, tokenManagerAddress, destinationToken)).to.be
     .revertedWith("Ownable: caller is not the owner");
 
   });
@@ -171,7 +171,7 @@ describe("TokenManager", function () {
     const ownerAddress = owner.address;
 
     const chainId = 123;
-    const addressToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
+    const tokenManagerAddress = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
     const destinationToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
 
     const TokenManager = await ethers.getContractFactory("TokenManager");
@@ -179,8 +179,8 @@ describe("TokenManager", function () {
     await tokenManager.deployed();
     
     await (await tokenManager.initialize(ownerAddress)).wait();
-    await expect(tokenManager.addSupportedToken(chainId, addressToken, destinationToken));
-    expect(await tokenManager.supportedTokens(chainId, addressToken)).to.equal(destinationToken);
+    await expect(tokenManager.addSupportedToken(chainId, tokenManagerAddress, destinationToken));
+    expect(await tokenManager.supportedTokens(chainId, tokenManagerAddress)).to.equal(destinationToken);
   });
 });
 
