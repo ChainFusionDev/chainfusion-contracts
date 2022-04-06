@@ -23,7 +23,12 @@ contract Bridge is Initializable, Ownable {
         _;
     }
 
-    function initialize(address _owner, address[] calldata _validators, uint256 _requiredApprovals, address _tokenManager) external initializer {
+    function initialize(
+        address _owner,
+        address[] calldata _validators,
+        uint256 _requiredApprovals,
+        address _tokenManager
+    ) external initializer {
         _transferOwnership(_owner);
         validators = _validators;
         for (uint256 i = 0; i < _validators.length; i++) {
@@ -48,20 +53,29 @@ contract Bridge is Initializable, Ownable {
         requiredApprovals = _requiredApprovals;
     }
 
-    function setTokenManager(address _tokenManager) external onlyOwner{
-        tokenManager = TokenManager(_tokenManager); 
+    function setTokenManager(address _tokenManager) external onlyOwner {
+        tokenManager = TokenManager(_tokenManager);
     }
 
-    function deposit (address _token, uint256 _chainId, uint256 _amount) external {
+    function deposit(
+        address _token,
+        uint256 _chainId,
+        uint256 _amount
+    ) external {
         require(_amount != 0, "Amount cannot be equal to 0.");
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "Transfer failed.");
         require(tokenManager.supportedTokens(_chainId, _token) != address(0), "Token is not supported");
-        emit Deposited (_token, tokenManager.supportedTokens(_chainId, _token), _chainId, _amount);
+        emit Deposited(_token, tokenManager.supportedTokens(_chainId, _token), _chainId, _amount);
     }
 
-    function approveTransfer(bytes calldata _txHash, address _token, address _receiver, uint256 _amount) external onlyValidator {
+    function approveTransfer(
+        bytes calldata _txHash,
+        address _token,
+        address _receiver,
+        uint256 _amount
+    ) external onlyValidator {
         bytes32 id = keccak256(abi.encodePacked(_txHash, _token, _receiver, _amount));
-        
+
         if (!approvals[id][msg.sender]) {
             approvals[id][msg.sender] = true;
             approvalsCount[id]++;
@@ -84,10 +98,14 @@ contract TokenManager is Initializable, Ownable {
     mapping(uint256 => mapping(address => address)) public supportedTokens;
 
     function initialize(address _owner) external initializer {
-       _transferOwnership(_owner);
+        _transferOwnership(_owner);
     }
 
-    function addSupportedToken(uint256 _chainId, address _token, address _destinationToken) external onlyOwner{
+    function addSupportedToken(
+        uint256 _chainId,
+        address _token,
+        address _destinationToken
+    ) external onlyOwner {
         supportedTokens[_chainId][_token] = _destinationToken;
     }
 }
