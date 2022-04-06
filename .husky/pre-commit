@@ -3,3 +3,5 @@
 
 npm run lint:fix
 npm run prettier:fix
+npm run compile
+npm run test
