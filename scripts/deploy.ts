@@ -5,19 +5,19 @@ async function main() {
   const [owner] = await ethers.getSigners();
   const ownerAddress = owner.address;
 
-  const Bridge = await ethers.getContractFactory("Bridge");
-  const bridge = await Bridge.deploy();
-  await bridge.deployed();
-  await (await bridge.initialize(ownerAddress, [ownerAddress], 1)).wait();
-
-  console.log("Bridge deployed to:", bridge.address);
-
   const TokenManager = await ethers.getContractFactory("TokenManager");
   const tokenManager = await TokenManager.deploy();
   await tokenManager.deployed();
   await (await tokenManager.initialize(ownerAddress)).wait();
 
   console.log("TokenManager deployed to:", tokenManager.address);
+
+  const Bridge = await ethers.getContractFactory("Bridge");
+  const bridge = await Bridge.deploy();
+  await bridge.deployed();
+  await (await bridge.initialize(ownerAddress, [ownerAddress], 1, tokenManager.address)).wait();
+
+  console.log("Bridge deployed to:", bridge.address);
 }
 
 main().catch((error) => {
