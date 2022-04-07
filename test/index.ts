@@ -5,28 +5,33 @@ import { utils } from "ethers";
 
 describe("Bridge", function () {
   it("Should change required approvals", async function () {
-    const [owner] = await ethers.getSigners();
+    const [owner,v1] = await ethers.getSigners();
     const ownerAddress = owner.address;
-    const validators = [ownerAddress];
     const tokenManagerAddress = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
 
     const initialRequiredApprovals = 1;
     const newRequiredApprovals = 2;
 
+    const ValidatorManager = await ethers.getContractFactory("ValidatorManager");
+    const validatorManager = await ValidatorManager.deploy();
+    await validatorManager.deployed();
+
     const Bridge = await ethers.getContractFactory("Bridge");
     const bridge = await Bridge.deploy();
     await bridge.deployed();
-    await (await bridge.initialize(ownerAddress, validators, initialRequiredApprovals, tokenManagerAddress)).wait();
-    expect(await bridge.requiredApprovals()).to.equal(initialRequiredApprovals);
 
-    await (await bridge.setRequiredApprovals(newRequiredApprovals)).wait();
-    expect(await bridge.requiredApprovals()).to.equal(newRequiredApprovals);
+    await (await bridge.initialize(ownerAddress, validatorManager.address, tokenManagerAddress)).wait();
+
+    await (await validatorManager.setRequiredApprovals(initialRequiredApprovals)).wait();
+    await (await validatorManager.setValidators([v1.address])).wait();
+
+    await (await validatorManager.setRequiredApprovals(newRequiredApprovals)).wait();
+    expect(await validatorManager.requiredApprovals()).to.equal(newRequiredApprovals);
   });
     
   it("Should deposit tokens to bridge", async function () {
-    const [owner] = await ethers.getSigners();
+    const [owner, v1] = await ethers.getSigners();
     const ownerAddress = owner.address;
-    const validators = [ownerAddress];
     const destinationToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
     
     const chainId = 123;
@@ -45,10 +50,18 @@ describe("Bridge", function () {
     await (await tokenManager.initialize(ownerAddress)).wait();
     await expect(tokenManager.addSupportedToken(chainId, mockToken.address, destinationToken));
 
+    const ValidatorManager = await ethers.getContractFactory("ValidatorManager");
+    const validatorManager = await ValidatorManager.deploy();
+    await validatorManager.deployed();
+
     const Bridge = await ethers.getContractFactory("Bridge");
     const bridge = await Bridge.deploy();
     await bridge.deployed();
-    await (await bridge.initialize(ownerAddress, validators, initialRequiredApprovals, tokenManager.address)).wait();
+
+    await (await bridge.initialize(ownerAddress, validatorManager.address, tokenManager.address)).wait();
+
+    await (await validatorManager.setRequiredApprovals(initialRequiredApprovals)).wait();
+    await (await validatorManager.setValidators([v1.address])).wait();
 
     await mockToken.approve(bridge.address, depositAmount);
     await bridge.deposit(mockToken.address, chainId, depositAmount);
@@ -60,6 +73,7 @@ describe("Bridge", function () {
     const chainId = 123;
     const mintAmount = "100000000000000000000";
     const depositAmount = "10000000000000000000";
+    const initialRequiredApprovals = 2;
     
     const txHash = "0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f";
     const destinationToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
@@ -76,10 +90,18 @@ describe("Bridge", function () {
     await (await tokenManager.initialize(owner.address)).wait();
     await expect(tokenManager.addSupportedToken(chainId, mockToken.address, destinationToken));
 
+    const ValidatorManager = await ethers.getContractFactory("ValidatorManager");
+    const validatorManager = await ValidatorManager.deploy();
+    await validatorManager.deployed();
+
     const Bridge = await ethers.getContractFactory("Bridge");
     const bridge = await Bridge.deploy();
     await bridge.deployed();
-    await (await bridge.initialize(owner.address, [v1.address, v2.address, v3.address], 2, tokenManager.address)).wait();
+
+    await (await bridge.initialize(owner.address, validatorManager.address, tokenManager.address)).wait();
+
+    await (await validatorManager.setRequiredApprovals(initialRequiredApprovals)).wait();
+    await (await validatorManager.setValidators([v1.address, v2.address, v3.address])).wait();
 
     await mockToken.approve(bridge.address, depositAmount);
     await bridge.deposit(mockToken.address, chainId, depositAmount);
@@ -110,7 +132,6 @@ describe("Bridge", function () {
   it("Should deposit supported tokens to bridge", async function () {
     const [owner] = await ethers.getSigners();
     const ownerAddress = owner.address;
-    const validators = [ownerAddress];
     const destinationToken = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF";
     
     const chainId = 123;
@@ -133,10 +154,18 @@ describe("Bridge", function () {
     await (await tokenManager.initialize(ownerAddress)).wait();
     await expect(tokenManager.addSupportedToken(chainId, mockToken.address, destinationToken));
 
+    const ValidatorManager = await ethers.getContractFactory("ValidatorManager");
+    const validatorManager = await ValidatorManager.deploy();
+    await validatorManager.deployed();
+
     const Bridge = await ethers.getContractFactory("Bridge");
     const bridge = await Bridge.deploy();
     await bridge.deployed();
-    await (await bridge.initialize(ownerAddress, validators, initialRequiredApprovals, tokenManager.address)).wait();
+
+    await (await bridge.initialize(owner.address, validatorManager.address, tokenManager.address)).wait();
+
+    await (await validatorManager.setRequiredApprovals(initialRequiredApprovals)).wait();
+    await (await validatorManager.setValidators([ownerAddress])).wait();
 
     await mockToken.approve(bridge.address, depositAmount);
     await mockToken2.approve(bridge.address, depositAmount);
