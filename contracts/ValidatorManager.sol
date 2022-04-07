@@ -5,7 +5,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Bridge.sol";
 
-contract ValidatorManager is Ownable, Initializable{ 
+contract ValidatorManager is Ownable, Initializable {
     address[] public validators;
     mapping(address => bool) public isValidator;
     uint256 public requiredApprovals;
@@ -24,5 +24,4 @@ contract ValidatorManager is Ownable, Initializable{
         require(_requiredApprovals > 0, "required approvals too small");
         requiredApprovals = _requiredApprovals;
     }
-
 }

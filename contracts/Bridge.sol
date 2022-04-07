@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./TokenManager.sol";
 import "./ValidatorManager.sol";
 
-contract Bridge is Initializable, Ownable{
+contract Bridge is Initializable, Ownable {
     mapping(bytes32 => mapping(address => bool)) public approvals;
     mapping(bytes32 => uint256) public approvalsCount;
     mapping(bytes32 => bool) public executed;
