@@ -1,7 +1,8 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npm run lint:fix
+npm run solhint:fix
+npm run eslint:fix
 npm run prettier:fix
 npm run compile
 npm run test

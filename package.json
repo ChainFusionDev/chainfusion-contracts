@@ -3,8 +3,10 @@
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
-    "lint": "solhint contracts/**/*.sol",
-    "lint:fix": "solhint contracts/**/*.sol --fix",
+    "solhint": "solhint contracts/**/*.sol",
+    "solhint:fix": "solhint contracts/**/*.sol --fix",
+    "eslint": "eslint -c .eslintrc.js scripts/**/* test/**/*",
+    "eslint:fix": "eslint -c .eslintrc.js scripts/**/* test/**/* --fix",
     "prettier": "prettier --check 'contracts/**/*.sol'",
     "prettier:fix": "prettier --write 'contracts/**/*.sol'",
     "prepare": "husky install"
@@ -20,8 +22,8 @@
     "@types/chai": "^4.3.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^12.20.47",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
     "chai": "^4.3.6",
     "dotenv": "^10.0.0",
     "eslint": "^7.32.0",

@@ -7,15 +7,24 @@ module.exports = {
   },
   plugins: ["@typescript-eslint"],
   extends: [
-    "standard",
+    "eslint:recommended",
     "plugin:prettier/recommended",
     "plugin:node/recommended",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 12,
+    project: ["./tsconfig.json"],
   },
   rules: {
+    "max-len": [
+      "error",
+      { code: 120 },
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always",
+    ],
     "node/no-unsupported-features/es-syntax": [
       "error",
       { ignores: ["modules"] },

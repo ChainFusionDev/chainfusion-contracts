@@ -7,7 +7,8 @@ test:lint:
   stage: test
   script:
     - npm install
-    - npm run lint
+    - npm run solhint
+    - npm run eslint
     - npm run prettier
 
 test:build:
