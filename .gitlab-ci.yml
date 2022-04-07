@@ -3,11 +3,16 @@ image: node:16
 stages:
   - test
 
-test:lint:
+test:lint:sol:
   stage: test
   script:
     - npm install
     - npm run solhint
+
+test:lint:ts:
+  stage: test
+  script:
+    - npm install
     - npm run eslint
     - npm run prettier
 
