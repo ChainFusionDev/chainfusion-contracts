@@ -21,7 +21,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 const accounts = process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [];
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.4",
+  solidity: "0.8.9",
   networks: {
     ganache: {
       url: `http://ganache:8545`,
