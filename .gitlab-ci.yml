@@ -13,6 +13,7 @@ test:lint:ts:
   stage: test
   script:
     - npm install
+    - npm run compile
     - npm run eslint
     - npm run prettier
 
@@ -36,4 +37,5 @@ test:unit:
   stage: test
   script:
     - npm install
+    - npm run compile
     - npx hardhat test
