@@ -37,4 +37,5 @@ test:unit:
   stage: test
   script:
     - npm install
+    - npm run compile
     - npx hardhat test
