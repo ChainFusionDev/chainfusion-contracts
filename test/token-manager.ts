@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
+import { deployBridge } from './utils/deploy';
 
 describe('TokenManager', function () {
   it('Should called addSupportedToken() only by owner', async function () {
@@ -21,16 +22,12 @@ describe('TokenManager', function () {
 
   it('Should adds token addresses to supportedTokens mapping', async function () {
     const [owner] = await ethers.getSigners();
-    const ownerAddress = owner.address;
+    const initialRequiredApprovals = 1;
 
-    const chainId = 123;
     const tokenManagerAddress = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     const destinationToken = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
 
-    const TokenManager = await ethers.getContractFactory('TokenManager');
-    const tokenManager = await TokenManager.deploy();
-    await tokenManager.deployed();
-    await tokenManager.initialize(ownerAddress);
+    const {tokenManager, chainId} = await deployBridge(owner.address, [owner.address], initialRequiredApprovals);
 
     await tokenManager.addSupportedToken(chainId, tokenManagerAddress, destinationToken);
     expect(await tokenManager.supportedTokens(chainId, tokenManagerAddress)).to.equal(destinationToken);
