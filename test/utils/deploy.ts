@@ -13,7 +13,7 @@ export async function deployBridge(
   owner: string,
   validators: string[],
   requiredSignatures: number,
-  chainId: number = 123,
+  chainId: number = 123
 ): Promise<BridgeDeployment> {
   const mintAmount = '100000000000000000000';
   const destinationToken = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
