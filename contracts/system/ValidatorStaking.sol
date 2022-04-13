@@ -6,19 +6,18 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract ValidatorStaking is Ownable, Initializable {
     uint256 public minimalStake;
-    mapping (address => uint256) public stakes;
+    mapping(address => uint256) public stakes;
 
-    function initialize (uint256 _minimalStake) external initializer{
+    function initialize(uint256 _minimalStake) external initializer {
         minimalStake = _minimalStake;
     }
 
-    function setMinimalStake(uint256 _minimalStake) external onlyOwner{
+    function setMinimalStake(uint256 _minimalStake) external onlyOwner {
         minimalStake = _minimalStake;
     }
 
-    function stake() public payable{
+    function stake() public payable {
         require(msg.value >= minimalStake, "insufficient stake provided");
         stakes[msg.sender] = msg.value;
     }
-    
 }
