@@ -18,6 +18,6 @@ contract ValidatorStaking is Ownable, Initializable {
 
     function stake() public payable {
         require(msg.value >= minimalStake, "insufficient stake provided");
-        stakes[msg.sender] = msg.value;
+        stakes[msg.sender] += msg.value;
     }
 }
