@@ -2,6 +2,18 @@
 . "$(dirname "$0")/_/husky.sh"
 
 npm run compile
-npm run solhint
-npm run eslint
-npm run prettier
+
+if ! npm run solhint; then
+    echo "Run: npm run solhint:fix"
+    return 1
+fi
+
+if ! npm run eslint; then
+    echo "Run: npm run eslint:fix"
+    return 1
+fi
+
+if ! npm run prettier; then
+    echo "Run: npm run prettier:fix"
+    return 1
+fi
