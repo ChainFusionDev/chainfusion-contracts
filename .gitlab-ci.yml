@@ -31,7 +31,8 @@ test:deploy:
       alias: ganache
   script:
     - npm install
-    - npx hardhat --network ganache run scripts/deploy.ts
+    - npx hardhat --network ganache run scripts/deploy-bridge.ts
+    - npx hardhat --network ganache run scripts/deploy-system.ts
 
 test:unit:
   stage: test
