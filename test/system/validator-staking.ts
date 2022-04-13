@@ -9,7 +9,7 @@ describe('ValidatorStaking', function () {
     const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
     const validatorStaking = await ValidatorStaking.deploy();
     await validatorStaking.deployed();
-    await (await validatorStaking.initialize(initialminimalStake)).wait();
+    await (await validatorStaking.initialize(initialminimalStake))
 
     await validatorStaking.setMinimalStake(newminimalStake);
     expect(await validatorStaking.minimalStake()).to.equal(newminimalStake);
@@ -21,7 +21,7 @@ describe('ValidatorStaking', function () {
     const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
     const validatorStaking = await ValidatorStaking.deploy();
     await validatorStaking.deployed();
-    await (await validatorStaking.initialize(initialminimalStake)).wait();
+    await (await validatorStaking.initialize(initialminimalStake))
 
     await expect(validatorStaking.stake({ value: ethers.utils.parseEther('1') })).to.be.revertedWith(
       'insufficient stake provided'
@@ -36,7 +36,7 @@ describe('ValidatorStaking', function () {
     const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
     const validatorStaking = await ValidatorStaking.deploy();
     await validatorStaking.deployed();
-    await (await validatorStaking.initialize(initialminimalStake)).wait();
+    await (await validatorStaking.initialize(initialminimalStake))
 
     await validatorStaking.stake({ value: ethers.utils.parseEther('5') });
     await expect(await validatorStaking.stakes(owner.address)).to.equal(value);
