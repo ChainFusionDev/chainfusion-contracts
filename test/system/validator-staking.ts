@@ -38,7 +38,23 @@ describe('ValidatorStaking', function () {
     await validatorStaking.deployed();
     await await validatorStaking.initialize(initialminimalStake);
 
-    await validatorStaking.stake({ value: ethers.utils.parseEther('5') });
+    await validatorStaking.stake({ value: value });
     await expect(await validatorStaking.stakes(owner.address)).to.equal(value);
+  });
+
+  it('Should check if it is possible to stake several times', async function () {
+    const [owner] = await ethers.getSigners();
+    const initialminimalStake = ethers.utils.parseEther('3');
+    const value = ethers.utils.parseEther('5');
+
+    const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
+    const validatorStaking = await ValidatorStaking.deploy();
+    await validatorStaking.deployed();
+    await await validatorStaking.initialize(initialminimalStake);
+
+    await validatorStaking.stake({ value: value });
+    await validatorStaking.stake({ value: value });
+
+    await expect(await validatorStaking.stakes(owner.address)).to.equal(ethers.utils.parseEther('10'));
   });
 });
