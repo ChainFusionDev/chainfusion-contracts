@@ -1,19 +1,31 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+GREEN='\033[0;32m'
+RESET='\033[0m'
+
 npm run compile
 
 if ! npm run solhint; then
-    echo "Run: npm run solhint:fix"
-    return 1
+    echo
+    printf "Run: ${GREEN}npm run solhint:fix${RESET}\n"
+    echo
+
+    exit 1
 fi
 
 if ! npm run eslint; then
-    echo "Run: npm run eslint:fix"
-    return 1
+    echo
+    printf "Run: ${GREEN}npm run eslint:fix${RESET}\n"
+    echo
+
+    exit 1
 fi
 
 if ! npm run prettier; then
-    echo "Run: npm run prettier:fix"
-    return 1
+    echo
+    printf "Run: ${GREEN}npm run prettier:fix${RESET}\n"
+    echo
+
+    exit 1
 fi
