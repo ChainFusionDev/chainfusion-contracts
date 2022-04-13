@@ -5,8 +5,13 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract ValidatorStaking is Ownable, Initializable {
-    enum ValidatorStatus{ INACTIVE, ACTIVE, SLASHED, WITHDRAWINGSMALL }
-    struct ValidatorInfo{
+    enum ValidatorStatus {
+        INACTIVE,
+        ACTIVE,
+        SLASHED,
+        WITHDRAWINGSMALL
+    }
+    struct ValidatorInfo {
         address validator;
         uint256 stake;
         ValidatorStatus status;
