@@ -41,10 +41,9 @@ describe('ValidatorStaking', function () {
 
     await validatorStaking.stake({ value: value });
     const { validator, stake, status } = await validatorStaking.stakes(owner.address);
-    expect (validator).to.equal(owner.address);
-    expect (stake).to.equal(value);
-    expect (status).to.equal(ValidatorStatusActive);
-
+    expect(validator).to.equal(owner.address);
+    expect(stake).to.equal(value);
+    expect(status).to.equal(ValidatorStatusActive);
   });
 
   it('Should check if it is possible to stake several times', async function () {
@@ -61,9 +60,8 @@ describe('ValidatorStaking', function () {
     await validatorStaking.stake({ value: value });
 
     const { validator, stake, status } = await validatorStaking.stakes(owner.address);
-    expect (validator).to.equal(owner.address);
-    expect (stake).to.equal(ethers.utils.parseEther('10'));
-    expect (status).to.equal(ValidatorStatusActive);
+    expect(validator).to.equal(owner.address);
+    expect(stake).to.equal(ethers.utils.parseEther('10'));
+    expect(status).to.equal(ValidatorStatusActive);
   });
-
 });
