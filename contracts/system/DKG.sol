@@ -109,6 +109,10 @@ contract DKG is Ownable, Initializable {
         return round3BroadcastData[_id].data[_validator];
     }
 
+    function getValidators() external view returns (address[] memory) {
+        return validators;
+    }
+
     function _setValidators(address[] memory _validators) private {
         for (uint256 i = 0; i < validators.length; i++) {
             isValidator[validators[i]] = false;
