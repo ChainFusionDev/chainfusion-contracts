@@ -1,5 +1,6 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
+import { ValidatorStatusActive } from '../utils/helpers';
 
 describe('ValidatorStaking', function () {
   it('Should change minimal stake', async function () {
@@ -36,10 +37,14 @@ describe('ValidatorStaking', function () {
     const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
     const validatorStaking = await ValidatorStaking.deploy();
     await validatorStaking.deployed();
-    await await validatorStaking.initialize(initialminimalStake);
+    await validatorStaking.initialize(initialminimalStake);
 
     await validatorStaking.stake({ value: value });
-    await expect(await validatorStaking.stakes(owner.address)).to.equal(value);
+    const { validator, stake, status } = await validatorStaking.stakes(owner.address);
+    expect (validator).to.equal(owner.address);
+    expect (stake).to.equal(value);
+    expect (status).to.equal(ValidatorStatusActive);
+
   });
 
   it('Should check if it is possible to stake several times', async function () {
@@ -50,11 +55,15 @@ describe('ValidatorStaking', function () {
     const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
     const validatorStaking = await ValidatorStaking.deploy();
     await validatorStaking.deployed();
-    await await validatorStaking.initialize(initialminimalStake);
+    await validatorStaking.initialize(initialminimalStake);
 
     await validatorStaking.stake({ value: value });
     await validatorStaking.stake({ value: value });
 
-    await expect(await validatorStaking.stakes(owner.address)).to.equal(ethers.utils.parseEther('10'));
+    const { validator, stake, status } = await validatorStaking.stakes(owner.address);
+    expect (validator).to.equal(owner.address);
+    expect (stake).to.equal(ethers.utils.parseEther('10'));
+    expect (status).to.equal(ValidatorStatusActive);
   });
+
 });
