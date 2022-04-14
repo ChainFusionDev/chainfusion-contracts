@@ -1,4 +1,4 @@
-module chainfusion-contracts
+module gitlab.com/neatfusion/chainfusion/chainfusion-contracts
 
 go 1.17
 
