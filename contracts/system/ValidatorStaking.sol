@@ -18,7 +18,6 @@ contract ValidatorStaking is Ownable, Initializable {
         ValidatorStatus status;
     }
 
-    ValidatorStatus public validatorStatus;
     uint256 public minimalStake;
     mapping(address => ValidatorInfo) public stakes;
 
@@ -35,7 +34,6 @@ contract ValidatorStaking is Ownable, Initializable {
         require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "validator is slashed");
         stakes[msg.sender].validator = msg.sender;
         stakes[msg.sender].stake += msg.value;
-        validatorStatus = ValidatorStatus.ACTIVE;
-        stakes[msg.sender].status = validatorStatus;
+        stakes[msg.sender].status = ValidatorStatus.ACTIVE;
     }
 }
