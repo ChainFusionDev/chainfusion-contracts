@@ -1,9 +1,13 @@
 {
   "name": "hardhat-project",
+  "engines": {
+    "node": ">=12"
+  },
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
     "node": "hardhat node",
+    "extract-abi": "hardhat run scripts/extract-abi.ts",
     "lint": "npm run solhint && npm run eslint && npm run prettier",
     "lint:fix": "npm run solhint:fix && npm run eslint:fix && npm run prettier:fix",
     "solhint": "solhint contracts/**/*.sol",

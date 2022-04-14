@@ -1,0 +1,10 @@
+FROM ethereum/client-go:alltools-v1.10.17
+
+WORKDIR /
+
+COPY artifacts/ artifacts/
+
+RUN mkdir system
+
+RUN abigen --abi artifacts/abi/system/DKG.sol/DKG.json --pkg system --type DKG --out system/dkg.go
+RUN abigen --abi artifacts/abi/system/ValidatorStaking.sol/ValidatorStaking.json --pkg system --type ValidatorStaking --out system/validator-staking.go
