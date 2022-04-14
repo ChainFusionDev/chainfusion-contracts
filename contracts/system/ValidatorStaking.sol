@@ -9,15 +9,17 @@ contract ValidatorStaking is Ownable, Initializable {
         INACTIVE,
         ACTIVE,
         SLASHED,
-        WITHDRAWINGSMALL
+        WITHDRAWING
     }
+
     struct ValidatorInfo {
         address validator;
         uint256 stake;
         ValidatorStatus status;
     }
+
     uint256 public minimalStake;
-    mapping(address => uint256) public stakes;
+    mapping(address => ValidatorInfo) public stakes;
 
     function initialize(uint256 _minimalStake) external initializer {
         minimalStake = _minimalStake;
@@ -29,6 +31,9 @@ contract ValidatorStaking is Ownable, Initializable {
 
     function stake() public payable {
         require(msg.value >= minimalStake, "insufficient stake provided");
-        stakes[msg.sender] += msg.value;
+        require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "validator is slashed");
+        stakes[msg.sender].validator = msg.sender;
+        stakes[msg.sender].stake += msg.value;
+        stakes[msg.sender].status = ValidatorStatus.ACTIVE;
     }
 }
