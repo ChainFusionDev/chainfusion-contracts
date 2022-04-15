@@ -2,11 +2,12 @@ import { ethers } from 'hardhat';
 
 async function main() {
   const minimalStake = 1;
+  const withdrawalPeriod = 1;
 
   const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
   const validatorStaking = await ValidatorStaking.deploy();
   await validatorStaking.deployed();
-  await (await validatorStaking.initialize(minimalStake)).wait();
+  await (await validatorStaking.initialize(minimalStake, withdrawalPeriod)).wait();
 
   console.log('ValidatorStaking deployed to:', validatorStaking.address);
 }
