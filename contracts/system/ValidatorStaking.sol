@@ -42,8 +42,9 @@ contract ValidatorStaking is Ownable, Initializable {
             slashingCount[_validator] += 1;
         }
 
-        if (slashingCount[_validator] > ((validatorCount / 2) + 1)) {
+        if (slashingCount[_validator] >= ((validatorCount / 2) + 1)) {
             validatorCount--;
+            stakes[msg.sender].status = ValidatorStatus.SLASHED;
         }
     }
 

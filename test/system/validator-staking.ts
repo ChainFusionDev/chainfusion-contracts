@@ -127,6 +127,6 @@ describe('ValidatorStaking', function () {
     await validatorStaking3.slash(v5.address);
     await validatorStaking4.slash(v5.address);
 
-    expect(await validatorStaking.validatorCount()).to.be.equal(4);
+    expect(await validatorStaking.validatorCount()).to.be.equal(3);
   });
 });
