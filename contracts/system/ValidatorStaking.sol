@@ -17,23 +17,36 @@ contract ValidatorStaking is Ownable, Initializable {
         ValidatorStatus status;
     }
 
+    struct WithdrawalAnnouncement {
+        uint256 amount;
+        uint256 time;
+    }
+
     uint256 public minimalStake;
     uint256 public validatorCount;
+    uint256 public withdrawalPeriod;
+    uint256 public withdrawalAmount;
     mapping(address => ValidatorInfo) public stakes;
     mapping(address => mapping(address => bool)) public slashingVotes;
     mapping(address => uint256) public slashingCount;
+    mapping(address => WithdrawalAnnouncement) public withdrawalAnnouncements;
 
     modifier onlyValidator() {
         require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "only active validator");
         _;
     }
 
-    function initialize(uint256 _minimalStake) external initializer {
+    function initialize(uint256 _minimalStake, uint256 _withdrawalPeriod) external initializer {
         minimalStake = _minimalStake;
+        withdrawalPeriod = _withdrawalPeriod;
     }
 
     function setMinimalStake(uint256 _minimalStake) external onlyOwner {
         minimalStake = _minimalStake;
+    }
+
+    function setwithdrawalPeriod(uint256 _withdrawalPeriod) external onlyOwner {
+        withdrawalPeriod = _withdrawalPeriod;
     }
 
     function slash(address _validator) external onlyValidator {
@@ -42,9 +55,34 @@ contract ValidatorStaking is Ownable, Initializable {
             slashingCount[_validator] += 1;
         }
 
-        if (slashingCount[_validator] > ((validatorCount / 2) + 1)) {
+        if (slashingCount[_validator] >= ((validatorCount / 2) + 1)) {
             validatorCount--;
+            stakes[_validator].status = ValidatorStatus.SLASHED;
         }
+    }
+
+    function announceWithdrawal(uint256 _amount) external onlyValidator {
+        require(_amount <= stakes[msg.sender].stake, "amount must be <= to stake");
+        withdrawalAnnouncements[msg.sender].amount = _amount;
+        // solhint-disable-next-line not-rely-on-time
+        withdrawalAnnouncements[msg.sender].time = block.timestamp;
+    }
+
+    function withdraw() external onlyValidator {
+        require(withdrawalAnnouncements[msg.sender].amount > 0, "amount must be greater than zero");
+        // solhint-disable-next-line not-rely-on-time
+        require(
+            withdrawalAnnouncements[msg.sender].time + withdrawalPeriod <= block.timestamp,
+            "withdrawalPeriod not passed"
+        );
+
+        withdrawalAmount = withdrawalAnnouncements[msg.sender].amount;
+        withdrawalAnnouncements[msg.sender].amount = 0;
+        withdrawalAnnouncements[msg.sender].time = 0;
+
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool success, ) = msg.sender.call{value: withdrawalAmount, gas: 21000}("");
+        require(success, "Transfer failed.");
     }
 
     function stake() public payable {
