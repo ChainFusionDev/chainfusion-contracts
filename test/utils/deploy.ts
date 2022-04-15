@@ -1,5 +1,6 @@
 import { ethers } from 'hardhat';
-import { Bridge, MockToken, TokenManager, ValidatorManager } from '../../typechain';
+import { BigNumber } from 'ethers';
+import { Bridge, MockToken, TokenManager, ValidatorManager, ValidatorStaking } from '../../typechain';
 
 interface BridgeDeployment {
   bridge: Bridge;
@@ -7,6 +8,10 @@ interface BridgeDeployment {
   validatorManager: ValidatorManager;
   mockToken: MockToken;
   chainId: number;
+}
+
+interface ValidatorStakingDeployment {
+  validatorStaking: ValidatorStaking;
 }
 
 export async function deployBridge(
@@ -46,5 +51,16 @@ export async function deployBridge(
     validatorManager: validatorManager,
     mockToken: mockToken,
     chainId: chainId,
+  };
+}
+
+export async function deployValidatorStaking(initialminimalStake: BigNumber): Promise<ValidatorStakingDeployment> {
+  const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
+  const validatorStaking = await ValidatorStaking.deploy();
+  await validatorStaking.deployed();
+  await validatorStaking.initialize(initialminimalStake);
+
+  return {
+    validatorStaking: validatorStaking,
   };
 }
