@@ -5,7 +5,12 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract TokenManager is Initializable, Ownable {
-    mapping(uint256 => mapping(address => address)) public supportedTokens;
+    struct TokenInfo {
+        mapping(uint256 => address) chainToToken;
+        bool isSupported;
+    }
+
+    mapping(address => TokenInfo) public supportedTokens;
 
     function initialize(address _owner) external initializer {
         _transferOwnership(_owner);
@@ -16,6 +21,15 @@ contract TokenManager is Initializable, Ownable {
         address _token,
         address _destinationToken
     ) external onlyOwner {
-        supportedTokens[_chainId][_token] = _destinationToken;
+        supportedTokens[_token].chainToToken[_chainId] = _destinationToken;
+        supportedTokens[_token].isSupported = true;
+    }
+
+    function isTokenSupported(address _token) public view returns (bool) {
+        return supportedTokens[_token].isSupported;
+    }
+
+    function getDestinationToken(address _token, uint256 _chainId) public view returns (address) {
+        return supportedTokens[_token].chainToToken[_chainId];
     }
 }

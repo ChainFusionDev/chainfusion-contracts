@@ -3,7 +3,7 @@ import { ethers } from 'hardhat';
 import { deployBridge } from '../utils/deploy';
 
 describe('TokenManager', function () {
-  it('Should called addSupportedToken() only by owner', async function () {
+  it('should called addSupportedToken() only by owner', async function () {
     const [, v1] = await ethers.getSigners();
 
     const chainId = 123;
@@ -20,7 +20,7 @@ describe('TokenManager', function () {
     );
   });
 
-  it('Should adds token addresses to supportedTokens mapping', async function () {
+  it('should adds token addresses to supportedTokens mapping', async function () {
     const [owner] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
@@ -30,6 +30,19 @@ describe('TokenManager', function () {
     const { tokenManager, chainId } = await deployBridge(owner.address, [owner.address], initialRequiredApprovals);
 
     await tokenManager.addSupportedToken(chainId, tokenManagerAddress, destinationToken);
-    expect(await tokenManager.supportedTokens(chainId, tokenManagerAddress)).to.equal(destinationToken);
+    expect(await tokenManager.getDestinationToken(tokenManagerAddress, chainId)).to.equal(destinationToken);
+  });
+
+  it('should check if token supported', async function () {
+    const [owner] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+
+    const tokenManagerAddress = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+    const destinationToken = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+
+    const { tokenManager, chainId } = await deployBridge(owner.address, [owner.address], initialRequiredApprovals);
+
+    await tokenManager.addSupportedToken(chainId, tokenManagerAddress, destinationToken);
+    expect(await tokenManager.isTokenSupported(tokenManagerAddress)).to.equal(true);
   });
 });

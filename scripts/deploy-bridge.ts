@@ -11,6 +11,13 @@ async function main() {
 
   console.log('TokenManager deployed to:', tokenManager.address);
 
+  const LiquidityPools = await ethers.getContractFactory('LiquidityPools');
+  const liquidityPools = await LiquidityPools.deploy();
+  await liquidityPools.deployed();
+  await liquidityPools.initialize(tokenManager.address);
+
+  console.log('LiquidityPools deployed to:', liquidityPools.address);
+
   const ValidatorManager = await ethers.getContractFactory('ValidatorManager');
   const validatorManager = await ValidatorManager.deploy();
   await validatorManager.deployed();

@@ -4,7 +4,7 @@ import { utils } from 'ethers';
 import { deployBridge } from '../utils/deploy';
 
 describe('Bridge', function () {
-  it('Should change required approvals', async function () {
+  it('should change required approvals', async function () {
     const [owner, v1] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
@@ -16,7 +16,7 @@ describe('Bridge', function () {
     expect(await validatorManager.requiredApprovals()).to.equal(newRequiredApprovals);
   });
 
-  it('Should deposit tokens to bridge', async function () {
+  it('should deposit tokens to bridge', async function () {
     const [owner, v1] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
@@ -30,7 +30,7 @@ describe('Bridge', function () {
     expect(await mockToken.balanceOf(bridge.address)).to.equal(depositAmount);
   });
 
-  it('Should execute transfer', async function () {
+  it('should execute transfer', async function () {
     const [owner, v1, v2, v3, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 2;
     const depositAmount = '10000000000000000000';
@@ -75,7 +75,7 @@ describe('Bridge', function () {
     expect(await bridge.executed(id)).to.equal(true);
   });
 
-  it('Should deposit supported tokens to bridge', async function () {
+  it('should deposit supported tokens to bridge', async function () {
     const [owner, v1] = await ethers.getSigners();
     const initialRequiredApprovals = 2;
     const depositAmount = '10000000000000000000';
@@ -92,7 +92,7 @@ describe('Bridge', function () {
     await bridge.deposit(mockToken.address, chainId, depositAmount);
 
     await expect(bridge.deposit(mockToken2.address, chainId, depositAmount)).to.be.revertedWith(
-      'Token is not supported'
+      'TokenManager: token is not supported'
     );
   });
 });
