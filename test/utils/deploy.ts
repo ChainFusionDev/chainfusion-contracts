@@ -55,10 +55,11 @@ export async function deployBridge(
 }
 
 export async function deployValidatorStaking(initialminimalStake: BigNumber): Promise<ValidatorStakingDeployment> {
+  const withdrawalPeriod = 1;
   const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
   const validatorStaking = await ValidatorStaking.deploy();
   await validatorStaking.deployed();
-  await validatorStaking.initialize(initialminimalStake);
+  await validatorStaking.initialize(initialminimalStake, withdrawalPeriod);
 
   return {
     validatorStaking: validatorStaking,

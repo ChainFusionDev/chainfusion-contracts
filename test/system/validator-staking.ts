@@ -129,4 +129,113 @@ describe('ValidatorStaking', function () {
 
     expect(await validatorStaking.validatorCount()).to.be.equal(3);
   });
+
+  it('Should change setwithdrawal period', async function () {
+    const initialminimalStake = ethers.utils.parseEther('1');
+    const newWithdrawalPeriod = 2;
+
+    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+
+    await validatorStaking.setwithdrawalPeriod(newWithdrawalPeriod);
+    expect(await validatorStaking.withdrawalPeriod()).to.equal(newWithdrawalPeriod);
+  });
+
+  it('Should check if only validator can announceWithdrawal', async function () {
+    const [, v2] = await ethers.getSigners();
+    const initialminimalStake = ethers.utils.parseEther('3');
+    const value = ethers.utils.parseEther('5');
+
+    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+
+    const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
+
+    await validatorStaking.stake({ value: value });
+
+    await expect(validatorStaking2.announceWithdrawal(value)).to.be.revertedWith('only active validator');
+  });
+
+  it('Should check if only validator can announceWithdrawal', async function () {
+    const [, v2] = await ethers.getSigners();
+    const initialminimalStake = ethers.utils.parseEther('3');
+    const value = ethers.utils.parseEther('5');
+
+    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+
+    const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
+
+    await validatorStaking.stake({ value: value });
+
+    await expect(validatorStaking2.announceWithdrawal(value)).to.be.revertedWith('only active validator');
+  });
+
+  it('Should check if amount more than stake', async function () {
+    const initialminimalStake = ethers.utils.parseEther('3');
+    const value = ethers.utils.parseEther('5');
+
+    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+
+    await validatorStaking.stake({ value: value });
+    await expect(validatorStaking.announceWithdrawal(ethers.utils.parseEther('10'))).to.be.revertedWith(
+      'amount must be <= to stake'
+    );
+  });
+
+  it('Should check if amount must be less or equal to stake', async function () {
+    const [owner] = await ethers.getSigners();
+    const initialminimalStake = ethers.utils.parseEther('3');
+    const value = ethers.utils.parseEther('5');
+
+    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+
+    await validatorStaking.stake({ value: value });
+    await validatorStaking.announceWithdrawal(value);
+
+    const { amount } = await validatorStaking.withdrawalAnnouncements(owner.address);
+
+    expect(amount).to.equal(value);
+  });
+
+  it('Should check if only validator can withdraw', async function () {
+    const [, v2] = await ethers.getSigners();
+    const initialminimalStake = ethers.utils.parseEther('3');
+    const value = ethers.utils.parseEther('5');
+
+    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+
+    const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
+
+    await validatorStaking.stake({ value: value });
+    await validatorStaking.announceWithdrawal(value);
+
+    await expect(validatorStaking2.withdraw()).to.be.revertedWith('only active validator');
+  });
+
+  it('Should check if withdrawalPeriod not passed', async function () {
+    const initialminimalStake = ethers.utils.parseEther('3');
+    const value = ethers.utils.parseEther('5');
+
+    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    await validatorStaking.setwithdrawalPeriod(1000000);
+    await validatorStaking.stake({ value: value });
+    await validatorStaking.announceWithdrawal(value);
+
+    await expect(validatorStaking.withdraw()).to.be.revertedWith('withdrawalPeriod not passed');
+  });
+
+  it('Should validator can withdraw', async function () {
+    const [owner] = await ethers.getSigners();
+    const initialminimalStake = ethers.utils.parseEther('3');
+    const value = ethers.utils.parseEther('5');
+
+    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+
+    await validatorStaking.stake({ value: value });
+    await validatorStaking.announceWithdrawal(value);
+    await validatorStaking.withdraw();
+
+    const { amount, time } = await validatorStaking.withdrawalAnnouncements(owner.address);
+
+    expect(amount).to.equal(0);
+    expect(time).to.equal(0);
+  });
 });
