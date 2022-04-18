@@ -11,7 +11,9 @@ describe('DKG', function () {
     const [, v1] = await ethers.getSigners();
     const DKG = await ethers.getContractFactory('DKG');
     const dkg = await DKG.deploy();
-    await dkg.initialize([v1.address]);
+    expect(await dkg.initialize([v1.address]))
+      .to.emit(dkg, 'ValidatorsUpdated')
+      .withArgs([v1.address]);
 
     await expect(dkg.round1Broadcast(id, [data1], [data1])).to.be.revertedWith('not a validator');
 

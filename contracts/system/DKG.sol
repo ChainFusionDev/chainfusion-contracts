@@ -31,6 +31,8 @@ contract DKG is Ownable, Initializable {
     event Round2Filled(bytes32 id);
     event Round3Filled(bytes32 id);
 
+    event ValidatorsUpdated(address[] validators);
+
     modifier onlyValidator() {
         require(isValidator[msg.sender], "not a validator");
         _;
@@ -119,5 +121,6 @@ contract DKG is Ownable, Initializable {
         }
 
         validators = _validators;
+        emit ValidatorsUpdated(_validators);
     }
 }
