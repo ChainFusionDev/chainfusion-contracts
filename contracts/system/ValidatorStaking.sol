@@ -25,7 +25,6 @@ contract ValidatorStaking is Ownable, Initializable {
     uint256 public minimalStake;
     uint256 public validatorCount;
     uint256 public withdrawalPeriod;
-    uint256 public withdrawalAmount;
     mapping(address => ValidatorInfo) public stakes;
     mapping(address => mapping(address => bool)) public slashingVotes;
     mapping(address => uint256) public slashingCount;
@@ -56,8 +55,8 @@ contract ValidatorStaking is Ownable, Initializable {
         }
 
         if (slashingCount[_validator] >= ((validatorCount / 2) + 1)) {
-            validatorCount--;
             stakes[_validator].status = ValidatorStatus.SLASHED;
+            validatorCount--;
         }
     }
 
@@ -70,13 +69,13 @@ contract ValidatorStaking is Ownable, Initializable {
 
     function withdraw() external onlyValidator {
         require(withdrawalAnnouncements[msg.sender].amount > 0, "amount must be greater than zero");
-        // solhint-disable-next-line not-rely-on-time
         require(
+            // solhint-disable-next-line not-rely-on-time
             withdrawalAnnouncements[msg.sender].time + withdrawalPeriod <= block.timestamp,
             "withdrawalPeriod not passed"
         );
 
-        withdrawalAmount = withdrawalAnnouncements[msg.sender].amount;
+        uint256 withdrawalAmount = withdrawalAnnouncements[msg.sender].amount;
         withdrawalAnnouncements[msg.sender].amount = 0;
         withdrawalAnnouncements[msg.sender].time = 0;
 
