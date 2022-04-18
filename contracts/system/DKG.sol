@@ -49,8 +49,6 @@ contract DKG is Ownable, Initializable {
         bytes[] memory _public,
         bytes[] memory _private
     ) external onlyValidator {
-        require(validators.length == _public.length, "invalid public data length");
-        require(validators.length == _private.length, "invalid private data length");
         require(!round1BroadcastData[_id].data[msg.sender].provided, "data already provided");
         round1BroadcastData[_id].count++;
         round1BroadcastData[_id].data[msg.sender] = BroadcastData(true, _public, _private);
@@ -61,9 +59,8 @@ contract DKG is Ownable, Initializable {
     }
 
     function round2Broadcast(bytes32 _id, bytes[] memory _public) external onlyValidator {
-        require(validators.length == _public.length, "invalid public data length");
-        require(!round2BroadcastData[_id].data[msg.sender].provided, "data already provided");
         require(round1BroadcastData[_id].count == validators.length, "round 1 not finished");
+        require(!round2BroadcastData[_id].data[msg.sender].provided, "data already provided");
         round2BroadcastData[_id].count++;
         round2BroadcastData[_id].data[msg.sender] = BroadcastData(true, _public, new bytes[](0));
         emit Round2Provided(_id, msg.sender);
@@ -73,10 +70,9 @@ contract DKG is Ownable, Initializable {
     }
 
     function round3Broadcast(bytes32 _id, bytes[] memory _public) external onlyValidator {
-        require(validators.length == _public.length, "invalid public data length");
-        require(!round3BroadcastData[_id].data[msg.sender].provided, "data already provided");
         require(round1BroadcastData[_id].count == validators.length, "round 1 not finished");
         require(round2BroadcastData[_id].count == validators.length, "round 2 not finished");
+        require(!round3BroadcastData[_id].data[msg.sender].provided, "data already provided");
         round3BroadcastData[_id].count++;
         round3BroadcastData[_id].data[msg.sender] = BroadcastData(true, _public, new bytes[](0));
         emit Round3Provided(_id, msg.sender);
