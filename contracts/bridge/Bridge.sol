@@ -44,8 +44,8 @@ contract Bridge is Initializable, Ownable {
     ) external {
         require(_amount != 0, "Amount cannot be equal to 0.");
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "Transfer failed.");
-        require(tokenManager.supportedTokens(_chainId, _token) != address(0), "Token is not supported");
-        emit Deposited(_token, tokenManager.supportedTokens(_chainId, _token), _chainId, _amount);
+        require(tokenManager.isTokenSupported(_token), "Token is not supported");
+        emit Deposited(_token, tokenManager.getDestinationToken(_token, _chainId), _chainId, _amount);
     }
 
     function approveTransfer(

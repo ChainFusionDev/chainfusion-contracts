@@ -1,12 +1,13 @@
 import { ethers } from 'hardhat';
 import { BigNumber } from 'ethers';
-import { Bridge, MockToken, TokenManager, ValidatorManager, ValidatorStaking } from '../../typechain';
+import { Bridge, MockToken, TokenManager, ValidatorManager, ValidatorStaking, LiquidityPools } from '../../typechain';
 
 interface BridgeDeployment {
   bridge: Bridge;
   tokenManager: TokenManager;
   validatorManager: ValidatorManager;
   mockToken: MockToken;
+  liquidityPools: LiquidityPools;
   chainId: number;
 }
 
@@ -33,6 +34,11 @@ export async function deployBridge(
   await tokenManager.initialize(owner);
   await tokenManager.addSupportedToken(chainId, mockToken.address, destinationToken);
 
+  const LiquidityPools = await ethers.getContractFactory('LiquidityPools');
+  const liquidityPools = await LiquidityPools.deploy();
+  await liquidityPools.deployed();
+  await liquidityPools.initialize(tokenManager.address);
+
   const ValidatorManager = await ethers.getContractFactory('ValidatorManager');
   const validatorManager = await ValidatorManager.deploy();
   await validatorManager.deployed();
@@ -50,6 +56,7 @@ export async function deployBridge(
     tokenManager: tokenManager,
     validatorManager: validatorManager,
     mockToken: mockToken,
+    liquidityPools: liquidityPools,
     chainId: chainId,
   };
 }

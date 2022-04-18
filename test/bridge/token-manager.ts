@@ -30,6 +30,19 @@ describe('TokenManager', function () {
     const { tokenManager, chainId } = await deployBridge(owner.address, [owner.address], initialRequiredApprovals);
 
     await tokenManager.addSupportedToken(chainId, tokenManagerAddress, destinationToken);
-    expect(await tokenManager.supportedTokens(chainId, tokenManagerAddress)).to.equal(destinationToken);
+    expect(await tokenManager.getDestinationToken(tokenManagerAddress, chainId)).to.equal(destinationToken);
+  });
+
+  it('Should check if token is supportedToken', async function () {
+    const [owner] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+
+    const tokenManagerAddress = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+    const destinationToken = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+
+    const { tokenManager, chainId } = await deployBridge(owner.address, [owner.address], initialRequiredApprovals);
+
+    await tokenManager.addSupportedToken(chainId, tokenManagerAddress, destinationToken);
+    expect(await tokenManager.isTokenSupported(tokenManagerAddress)).to.equal(true);
   });
 });
