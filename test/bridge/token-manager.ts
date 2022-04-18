@@ -3,7 +3,7 @@ import { ethers } from 'hardhat';
 import { deployBridge } from '../utils/deploy';
 
 describe('TokenManager', function () {
-  it('Should called addSupportedToken() only by owner', async function () {
+  it('should called addSupportedToken() only by owner', async function () {
     const [, v1] = await ethers.getSigners();
 
     const chainId = 123;
@@ -20,7 +20,7 @@ describe('TokenManager', function () {
     );
   });
 
-  it('Should adds token addresses to supportedTokens mapping', async function () {
+  it('should adds token addresses to supportedTokens mapping', async function () {
     const [owner] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
@@ -33,7 +33,7 @@ describe('TokenManager', function () {
     expect(await tokenManager.getDestinationToken(tokenManagerAddress, chainId)).to.equal(destinationToken);
   });
 
-  it('Should check if token is supportedToken', async function () {
+  it('should check if token supported', async function () {
     const [owner] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 

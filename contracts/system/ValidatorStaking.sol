@@ -31,7 +31,8 @@ contract ValidatorStaking is Ownable, Initializable {
     mapping(address => WithdrawalAnnouncement) public withdrawalAnnouncements;
 
     modifier onlyValidator() {
-        require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "only active validator");
+        // solhint-disable-next-line reason-string
+        require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "ValidatorStaking: only active validator");
         _;
     }
 
@@ -61,14 +62,16 @@ contract ValidatorStaking is Ownable, Initializable {
     }
 
     function announceWithdrawal(uint256 _amount) external onlyValidator {
-        require(_amount <= stakes[msg.sender].stake, "amount must be <= to stake");
+        // solhint-disable-next-line reason-string
+        require(_amount <= stakes[msg.sender].stake, "ValidatorStaking: amount must be <= to stake");
         withdrawalAnnouncements[msg.sender].amount = _amount;
         // solhint-disable-next-line not-rely-on-time
         withdrawalAnnouncements[msg.sender].time = block.timestamp;
     }
 
     function withdraw() external onlyValidator {
-        require(withdrawalAnnouncements[msg.sender].amount > 0, "amount must be greater than zero");
+        // solhint-disable-next-line reason-string
+        require(withdrawalAnnouncements[msg.sender].amount > 0, "ValidatorStaking: amount must be greater than zero");
         require(
             // solhint-disable-next-line not-rely-on-time
             withdrawalAnnouncements[msg.sender].time + withdrawalPeriod <= block.timestamp,
@@ -81,12 +84,15 @@ contract ValidatorStaking is Ownable, Initializable {
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = msg.sender.call{value: withdrawalAmount, gas: 21000}("");
-        require(success, "Transfer failed.");
+        // solhint-disable-next-line reason-string
+        require(success, "ValidatorStaking: transfer failed.");
     }
 
     function stake() public payable {
-        require(msg.value >= minimalStake, "insufficient stake provided");
-        require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "validator is slashed");
+        // solhint-disable-next-line reason-string
+        require(msg.value >= minimalStake, "ValidatorStaking: insufficient stake provided");
+        // solhint-disable-next-line reason-string
+        require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator is slashed");
 
         if (stakes[msg.sender].status == ValidatorStatus.INACTIVE) {
             stakes[msg.sender].validator = msg.sender;

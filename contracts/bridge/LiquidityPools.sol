@@ -13,6 +13,7 @@ contract LiquidityPools is Initializable, Ownable {
     TokenManager public tokenManager;
 
     event LiquidityAdded(address token, address account, uint256 amount);
+    event LiquidityRemoved(address token, address account, uint256 amount);
 
     function initialize(address _tokenManager) external initializer {
         tokenManager = TokenManager(_tokenManager);
@@ -23,8 +24,9 @@ contract LiquidityPools is Initializable, Ownable {
     }
 
     function addLiquidity(address _token, uint256 _amount) public {
-        require(tokenManager.isTokenSupported(_token), "Token is not supported");
-        require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "Transfer failed");
+        // solhint-disable-next-line reason-string
+        require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
+        require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "IERC20: transfer failed");
 
         providedLiquidity[_token] += _amount;
         availableLiquidity[_token] += _amount;
@@ -34,15 +36,18 @@ contract LiquidityPools is Initializable, Ownable {
     }
 
     function removeLiquidity(address _token, uint256 _amount) public {
-        require(tokenManager.isTokenSupported(_token), "Token is not supported");
-        require(liquidityPositions[_token][msg.sender] >= _amount, "Too much amount");
+        // solhint-disable-next-line reason-string
+        require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
+        // solhint-disable-next-line reason-string
+        require(IERC20(_token).balanceOf(address(this)) >= _amount, "IERC20: amount more than contract balance");
+        require(liquidityPositions[_token][msg.sender] >= _amount, "LiquidityPools: too much amount");
 
         providedLiquidity[_token] -= _amount;
         availableLiquidity[_token] -= _amount;
         liquidityPositions[_token][msg.sender] -= _amount;
 
-        require(IERC20(_token).transfer(msg.sender, _amount), "Transfer failed");
+        require(IERC20(_token).transfer(msg.sender, _amount), "IERC20: transfer failed");
 
-        emit LiquidityAdded(_token, msg.sender, _amount);
+        emit LiquidityRemoved(_token, msg.sender, _amount);
     }
 }

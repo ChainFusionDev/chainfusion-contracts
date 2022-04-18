@@ -3,7 +3,7 @@ import { ethers } from 'hardhat';
 import { deployBridge } from '../utils/deploy';
 
 describe('LiquidityPools', function () {
-  it('Should check if add liquidity for supported tocken', async function () {
+  it('should add liquidity for supported token', async function () {
     const [owner] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
@@ -27,7 +27,7 @@ describe('LiquidityPools', function () {
     expect(await liquidityPools.liquidityPositions(mockToken.address, owner.address)).to.equal(amount);
   });
 
-  it('Should check if add liquidity for unsupported tocken', async function () {
+  it('should not add liquidity for unsupported token', async function () {
     const [owner] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
@@ -43,10 +43,12 @@ describe('LiquidityPools', function () {
     await mockToken.approve(liquidityPools.address, amount);
     await mockToken2.approve(liquidityPools.address, amount);
 
-    await expect(liquidityPools.addLiquidity(mockToken2.address, amount)).to.be.revertedWith('Token is not supported');
+    await expect(liquidityPools.addLiquidity(mockToken2.address, amount)).to.be.revertedWith(
+      'TokenManager: token is not supported'
+    );
   });
 
-  it('Should check if remove liquidity', async function () {
+  it('should remove liquidity', async function () {
     const [owner] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
@@ -66,7 +68,7 @@ describe('LiquidityPools', function () {
       .withArgs(mockToken.address, owner.address, amount);
 
     await expect(liquidityPools.removeLiquidity(mockToken.address, amount))
-      .to.emit(liquidityPools, 'LiquidityAdded')
+      .to.emit(liquidityPools, 'LiquidityRemoved')
       .withArgs(mockToken.address, owner.address, amount);
 
     expect(await liquidityPools.providedLiquidity(mockToken.address)).to.equal(0);
@@ -74,7 +76,7 @@ describe('LiquidityPools', function () {
     expect(await liquidityPools.liquidityPositions(mockToken.address, owner.address)).to.equal(0);
   });
 
-  it('Should check if remove liquidity more than provided', async function () {
+  it('should not remove liquidity more than provided', async function () {
     const [owner] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
@@ -94,6 +96,8 @@ describe('LiquidityPools', function () {
       .to.emit(liquidityPools, 'LiquidityAdded')
       .withArgs(mockToken.address, owner.address, amount);
 
-    await expect(liquidityPools.removeLiquidity(mockToken.address, amountRemove)).to.be.revertedWith('Too much amount');
+    await expect(liquidityPools.removeLiquidity(mockToken.address, amountRemove)).to.be.revertedWith(
+      'IERC20: amount more than contract balance'
+    );
   });
 });

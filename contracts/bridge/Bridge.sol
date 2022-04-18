@@ -19,7 +19,7 @@ contract Bridge is Initializable, Ownable {
     event Transferred(address token, address receiver, uint256 amount, address validator);
 
     modifier onlyValidator() {
-        require(validatorManager.isValidator(msg.sender), "only validator");
+        require(validatorManager.isValidator(msg.sender), "Bridge: only validator");
         _;
     }
 
@@ -43,8 +43,9 @@ contract Bridge is Initializable, Ownable {
         uint256 _amount
     ) external {
         require(_amount != 0, "Amount cannot be equal to 0.");
-        require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "Transfer failed.");
-        require(tokenManager.isTokenSupported(_token), "Token is not supported");
+        require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "IERC20: transfer failed");
+        // solhint-disable-next-line reason-string
+        require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
         emit Deposited(_token, tokenManager.getDestinationToken(_token, _chainId), _chainId, _amount);
     }
 
@@ -68,7 +69,7 @@ contract Bridge is Initializable, Ownable {
 
         if (approvalsCount[id] >= validatorManager.requiredApprovals()) {
             executed[id] = true;
-            require(IERC20(_token).transfer(_receiver, _amount), "Failed transfer");
+            require(IERC20(_token).transfer(_receiver, _amount), "IERC20: transfer failed");
             emit Transferred(_token, _receiver, _amount, msg.sender);
         }
     }
