@@ -30,7 +30,7 @@ var (
 
 // ValidatorStakingMetaData contains all meta data concerning the ValidatorStaking contract.
 var ValidatorStakingMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minimalStake\",\"type\":\"uint256\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"minimalStake\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minimalStake\",\"type\":\"uint256\"}],\"name\":\"setMinimalStake\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"stake\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"stakes\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"stake\",\"type\":\"uint256\"},{\"internalType\":\"enumValidatorStaking.ValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"announceWithdrawal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minimalStake\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_withdrawalPeriod\",\"type\":\"uint256\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"minimalStake\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minimalStake\",\"type\":\"uint256\"}],\"name\":\"setMinimalStake\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_withdrawalPeriod\",\"type\":\"uint256\"}],\"name\":\"setwithdrawalPeriod\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"slash\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"slashingCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"slashingVotes\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"stake\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"stakes\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"stake\",\"type\":\"uint256\"},{\"internalType\":\"enumValidatorStaking.ValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"withdrawalAnnouncements\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"time\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdrawalPeriod\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // ValidatorStakingABI is the input ABI used to generate the binding from.
@@ -241,6 +241,68 @@ func (_ValidatorStaking *ValidatorStakingCallerSession) Owner() (common.Address,
 	return _ValidatorStaking.Contract.Owner(&_ValidatorStaking.CallOpts)
 }
 
+// SlashingCount is a free data retrieval call binding the contract method 0xffe7ecc8.
+//
+// Solidity: function slashingCount(address ) view returns(uint256)
+func (_ValidatorStaking *ValidatorStakingCaller) SlashingCount(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
+	var out []interface{}
+	err := _ValidatorStaking.contract.Call(opts, &out, "slashingCount", arg0)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// SlashingCount is a free data retrieval call binding the contract method 0xffe7ecc8.
+//
+// Solidity: function slashingCount(address ) view returns(uint256)
+func (_ValidatorStaking *ValidatorStakingSession) SlashingCount(arg0 common.Address) (*big.Int, error) {
+	return _ValidatorStaking.Contract.SlashingCount(&_ValidatorStaking.CallOpts, arg0)
+}
+
+// SlashingCount is a free data retrieval call binding the contract method 0xffe7ecc8.
+//
+// Solidity: function slashingCount(address ) view returns(uint256)
+func (_ValidatorStaking *ValidatorStakingCallerSession) SlashingCount(arg0 common.Address) (*big.Int, error) {
+	return _ValidatorStaking.Contract.SlashingCount(&_ValidatorStaking.CallOpts, arg0)
+}
+
+// SlashingVotes is a free data retrieval call binding the contract method 0x752abe1a.
+//
+// Solidity: function slashingVotes(address , address ) view returns(bool)
+func (_ValidatorStaking *ValidatorStakingCaller) SlashingVotes(opts *bind.CallOpts, arg0 common.Address, arg1 common.Address) (bool, error) {
+	var out []interface{}
+	err := _ValidatorStaking.contract.Call(opts, &out, "slashingVotes", arg0, arg1)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// SlashingVotes is a free data retrieval call binding the contract method 0x752abe1a.
+//
+// Solidity: function slashingVotes(address , address ) view returns(bool)
+func (_ValidatorStaking *ValidatorStakingSession) SlashingVotes(arg0 common.Address, arg1 common.Address) (bool, error) {
+	return _ValidatorStaking.Contract.SlashingVotes(&_ValidatorStaking.CallOpts, arg0, arg1)
+}
+
+// SlashingVotes is a free data retrieval call binding the contract method 0x752abe1a.
+//
+// Solidity: function slashingVotes(address , address ) view returns(bool)
+func (_ValidatorStaking *ValidatorStakingCallerSession) SlashingVotes(arg0 common.Address, arg1 common.Address) (bool, error) {
+	return _ValidatorStaking.Contract.SlashingVotes(&_ValidatorStaking.CallOpts, arg0, arg1)
+}
+
 // Stakes is a free data retrieval call binding the contract method 0x16934fc4.
 //
 // Solidity: function stakes(address ) view returns(address validator, uint256 stake, uint8 status)
@@ -291,25 +353,153 @@ func (_ValidatorStaking *ValidatorStakingCallerSession) Stakes(arg0 common.Addre
 	return _ValidatorStaking.Contract.Stakes(&_ValidatorStaking.CallOpts, arg0)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xfe4b84df.
+// ValidatorCount is a free data retrieval call binding the contract method 0x0f43a677.
 //
-// Solidity: function initialize(uint256 _minimalStake) returns()
-func (_ValidatorStaking *ValidatorStakingTransactor) Initialize(opts *bind.TransactOpts, _minimalStake *big.Int) (*types.Transaction, error) {
-	return _ValidatorStaking.contract.Transact(opts, "initialize", _minimalStake)
+// Solidity: function validatorCount() view returns(uint256)
+func (_ValidatorStaking *ValidatorStakingCaller) ValidatorCount(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _ValidatorStaking.contract.Call(opts, &out, "validatorCount")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xfe4b84df.
+// ValidatorCount is a free data retrieval call binding the contract method 0x0f43a677.
 //
-// Solidity: function initialize(uint256 _minimalStake) returns()
-func (_ValidatorStaking *ValidatorStakingSession) Initialize(_minimalStake *big.Int) (*types.Transaction, error) {
-	return _ValidatorStaking.Contract.Initialize(&_ValidatorStaking.TransactOpts, _minimalStake)
+// Solidity: function validatorCount() view returns(uint256)
+func (_ValidatorStaking *ValidatorStakingSession) ValidatorCount() (*big.Int, error) {
+	return _ValidatorStaking.Contract.ValidatorCount(&_ValidatorStaking.CallOpts)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xfe4b84df.
+// ValidatorCount is a free data retrieval call binding the contract method 0x0f43a677.
 //
-// Solidity: function initialize(uint256 _minimalStake) returns()
-func (_ValidatorStaking *ValidatorStakingTransactorSession) Initialize(_minimalStake *big.Int) (*types.Transaction, error) {
-	return _ValidatorStaking.Contract.Initialize(&_ValidatorStaking.TransactOpts, _minimalStake)
+// Solidity: function validatorCount() view returns(uint256)
+func (_ValidatorStaking *ValidatorStakingCallerSession) ValidatorCount() (*big.Int, error) {
+	return _ValidatorStaking.Contract.ValidatorCount(&_ValidatorStaking.CallOpts)
+}
+
+// WithdrawalAnnouncements is a free data retrieval call binding the contract method 0xe7f166ed.
+//
+// Solidity: function withdrawalAnnouncements(address ) view returns(uint256 amount, uint256 time)
+func (_ValidatorStaking *ValidatorStakingCaller) WithdrawalAnnouncements(opts *bind.CallOpts, arg0 common.Address) (struct {
+	Amount *big.Int
+	Time   *big.Int
+}, error) {
+	var out []interface{}
+	err := _ValidatorStaking.contract.Call(opts, &out, "withdrawalAnnouncements", arg0)
+
+	outstruct := new(struct {
+		Amount *big.Int
+		Time   *big.Int
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.Amount = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	outstruct.Time = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
+
+	return *outstruct, err
+
+}
+
+// WithdrawalAnnouncements is a free data retrieval call binding the contract method 0xe7f166ed.
+//
+// Solidity: function withdrawalAnnouncements(address ) view returns(uint256 amount, uint256 time)
+func (_ValidatorStaking *ValidatorStakingSession) WithdrawalAnnouncements(arg0 common.Address) (struct {
+	Amount *big.Int
+	Time   *big.Int
+}, error) {
+	return _ValidatorStaking.Contract.WithdrawalAnnouncements(&_ValidatorStaking.CallOpts, arg0)
+}
+
+// WithdrawalAnnouncements is a free data retrieval call binding the contract method 0xe7f166ed.
+//
+// Solidity: function withdrawalAnnouncements(address ) view returns(uint256 amount, uint256 time)
+func (_ValidatorStaking *ValidatorStakingCallerSession) WithdrawalAnnouncements(arg0 common.Address) (struct {
+	Amount *big.Int
+	Time   *big.Int
+}, error) {
+	return _ValidatorStaking.Contract.WithdrawalAnnouncements(&_ValidatorStaking.CallOpts, arg0)
+}
+
+// WithdrawalPeriod is a free data retrieval call binding the contract method 0xbca7093d.
+//
+// Solidity: function withdrawalPeriod() view returns(uint256)
+func (_ValidatorStaking *ValidatorStakingCaller) WithdrawalPeriod(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _ValidatorStaking.contract.Call(opts, &out, "withdrawalPeriod")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// WithdrawalPeriod is a free data retrieval call binding the contract method 0xbca7093d.
+//
+// Solidity: function withdrawalPeriod() view returns(uint256)
+func (_ValidatorStaking *ValidatorStakingSession) WithdrawalPeriod() (*big.Int, error) {
+	return _ValidatorStaking.Contract.WithdrawalPeriod(&_ValidatorStaking.CallOpts)
+}
+
+// WithdrawalPeriod is a free data retrieval call binding the contract method 0xbca7093d.
+//
+// Solidity: function withdrawalPeriod() view returns(uint256)
+func (_ValidatorStaking *ValidatorStakingCallerSession) WithdrawalPeriod() (*big.Int, error) {
+	return _ValidatorStaking.Contract.WithdrawalPeriod(&_ValidatorStaking.CallOpts)
+}
+
+// AnnounceWithdrawal is a paid mutator transaction binding the contract method 0xba7e3128.
+//
+// Solidity: function announceWithdrawal(uint256 _amount) returns()
+func (_ValidatorStaking *ValidatorStakingTransactor) AnnounceWithdrawal(opts *bind.TransactOpts, _amount *big.Int) (*types.Transaction, error) {
+	return _ValidatorStaking.contract.Transact(opts, "announceWithdrawal", _amount)
+}
+
+// AnnounceWithdrawal is a paid mutator transaction binding the contract method 0xba7e3128.
+//
+// Solidity: function announceWithdrawal(uint256 _amount) returns()
+func (_ValidatorStaking *ValidatorStakingSession) AnnounceWithdrawal(_amount *big.Int) (*types.Transaction, error) {
+	return _ValidatorStaking.Contract.AnnounceWithdrawal(&_ValidatorStaking.TransactOpts, _amount)
+}
+
+// AnnounceWithdrawal is a paid mutator transaction binding the contract method 0xba7e3128.
+//
+// Solidity: function announceWithdrawal(uint256 _amount) returns()
+func (_ValidatorStaking *ValidatorStakingTransactorSession) AnnounceWithdrawal(_amount *big.Int) (*types.Transaction, error) {
+	return _ValidatorStaking.Contract.AnnounceWithdrawal(&_ValidatorStaking.TransactOpts, _amount)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0xe4a30116.
+//
+// Solidity: function initialize(uint256 _minimalStake, uint256 _withdrawalPeriod) returns()
+func (_ValidatorStaking *ValidatorStakingTransactor) Initialize(opts *bind.TransactOpts, _minimalStake *big.Int, _withdrawalPeriod *big.Int) (*types.Transaction, error) {
+	return _ValidatorStaking.contract.Transact(opts, "initialize", _minimalStake, _withdrawalPeriod)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0xe4a30116.
+//
+// Solidity: function initialize(uint256 _minimalStake, uint256 _withdrawalPeriod) returns()
+func (_ValidatorStaking *ValidatorStakingSession) Initialize(_minimalStake *big.Int, _withdrawalPeriod *big.Int) (*types.Transaction, error) {
+	return _ValidatorStaking.Contract.Initialize(&_ValidatorStaking.TransactOpts, _minimalStake, _withdrawalPeriod)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0xe4a30116.
+//
+// Solidity: function initialize(uint256 _minimalStake, uint256 _withdrawalPeriod) returns()
+func (_ValidatorStaking *ValidatorStakingTransactorSession) Initialize(_minimalStake *big.Int, _withdrawalPeriod *big.Int) (*types.Transaction, error) {
+	return _ValidatorStaking.Contract.Initialize(&_ValidatorStaking.TransactOpts, _minimalStake, _withdrawalPeriod)
 }
 
 // RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
@@ -354,6 +544,48 @@ func (_ValidatorStaking *ValidatorStakingTransactorSession) SetMinimalStake(_min
 	return _ValidatorStaking.Contract.SetMinimalStake(&_ValidatorStaking.TransactOpts, _minimalStake)
 }
 
+// SetwithdrawalPeriod is a paid mutator transaction binding the contract method 0xd472822d.
+//
+// Solidity: function setwithdrawalPeriod(uint256 _withdrawalPeriod) returns()
+func (_ValidatorStaking *ValidatorStakingTransactor) SetwithdrawalPeriod(opts *bind.TransactOpts, _withdrawalPeriod *big.Int) (*types.Transaction, error) {
+	return _ValidatorStaking.contract.Transact(opts, "setwithdrawalPeriod", _withdrawalPeriod)
+}
+
+// SetwithdrawalPeriod is a paid mutator transaction binding the contract method 0xd472822d.
+//
+// Solidity: function setwithdrawalPeriod(uint256 _withdrawalPeriod) returns()
+func (_ValidatorStaking *ValidatorStakingSession) SetwithdrawalPeriod(_withdrawalPeriod *big.Int) (*types.Transaction, error) {
+	return _ValidatorStaking.Contract.SetwithdrawalPeriod(&_ValidatorStaking.TransactOpts, _withdrawalPeriod)
+}
+
+// SetwithdrawalPeriod is a paid mutator transaction binding the contract method 0xd472822d.
+//
+// Solidity: function setwithdrawalPeriod(uint256 _withdrawalPeriod) returns()
+func (_ValidatorStaking *ValidatorStakingTransactorSession) SetwithdrawalPeriod(_withdrawalPeriod *big.Int) (*types.Transaction, error) {
+	return _ValidatorStaking.Contract.SetwithdrawalPeriod(&_ValidatorStaking.TransactOpts, _withdrawalPeriod)
+}
+
+// Slash is a paid mutator transaction binding the contract method 0xc96be4cb.
+//
+// Solidity: function slash(address _validator) returns()
+func (_ValidatorStaking *ValidatorStakingTransactor) Slash(opts *bind.TransactOpts, _validator common.Address) (*types.Transaction, error) {
+	return _ValidatorStaking.contract.Transact(opts, "slash", _validator)
+}
+
+// Slash is a paid mutator transaction binding the contract method 0xc96be4cb.
+//
+// Solidity: function slash(address _validator) returns()
+func (_ValidatorStaking *ValidatorStakingSession) Slash(_validator common.Address) (*types.Transaction, error) {
+	return _ValidatorStaking.Contract.Slash(&_ValidatorStaking.TransactOpts, _validator)
+}
+
+// Slash is a paid mutator transaction binding the contract method 0xc96be4cb.
+//
+// Solidity: function slash(address _validator) returns()
+func (_ValidatorStaking *ValidatorStakingTransactorSession) Slash(_validator common.Address) (*types.Transaction, error) {
+	return _ValidatorStaking.Contract.Slash(&_ValidatorStaking.TransactOpts, _validator)
+}
+
 // Stake is a paid mutator transaction binding the contract method 0x3a4b66f1.
 //
 // Solidity: function stake() payable returns()
@@ -394,6 +626,27 @@ func (_ValidatorStaking *ValidatorStakingSession) TransferOwnership(newOwner com
 // Solidity: function transferOwnership(address newOwner) returns()
 func (_ValidatorStaking *ValidatorStakingTransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
 	return _ValidatorStaking.Contract.TransferOwnership(&_ValidatorStaking.TransactOpts, newOwner)
+}
+
+// Withdraw is a paid mutator transaction binding the contract method 0x3ccfd60b.
+//
+// Solidity: function withdraw() returns()
+func (_ValidatorStaking *ValidatorStakingTransactor) Withdraw(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _ValidatorStaking.contract.Transact(opts, "withdraw")
+}
+
+// Withdraw is a paid mutator transaction binding the contract method 0x3ccfd60b.
+//
+// Solidity: function withdraw() returns()
+func (_ValidatorStaking *ValidatorStakingSession) Withdraw() (*types.Transaction, error) {
+	return _ValidatorStaking.Contract.Withdraw(&_ValidatorStaking.TransactOpts)
+}
+
+// Withdraw is a paid mutator transaction binding the contract method 0x3ccfd60b.
+//
+// Solidity: function withdraw() returns()
+func (_ValidatorStaking *ValidatorStakingTransactorSession) Withdraw() (*types.Transaction, error) {
+	return _ValidatorStaking.Contract.Withdraw(&_ValidatorStaking.TransactOpts)
 }
 
 // ValidatorStakingOwnershipTransferredIterator is returned from FilterOwnershipTransferred and is used to iterate over the raw logs and unpacked data for OwnershipTransferred events raised by the ValidatorStaking contract.
