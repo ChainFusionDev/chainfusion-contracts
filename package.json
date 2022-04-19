@@ -14,8 +14,8 @@
     "solhint:fix": "solhint contracts/**/*.sol --fix",
     "eslint": "eslint -c .eslintrc.js scripts/**/* test/**/*",
     "eslint:fix": "eslint -c .eslintrc.js scripts/**/* test/**/* --fix",
-    "prettier": "prettier --check 'contracts/**/*.sol'",
-    "prettier:fix": "prettier --write 'contracts/**/*.sol'",
+    "prettier": "prettier --check scripts/**/* test/**/* contracts/**/*",
+    "prettier:fix": "prettier --write scripts/**/* test/**/* contracts/**/*",
     "prepare": "husky install"
   },
   "devDependencies": {
