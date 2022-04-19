@@ -14,7 +14,6 @@ async function main() {
   const LiquidityPools = await ethers.getContractFactory('LiquidityPools');
   const liquidityPools = await LiquidityPools.deploy();
   await liquidityPools.deployed();
-  await liquidityPools.initialize(tokenManager.address);
 
   console.log('LiquidityPools deployed to:', liquidityPools.address);
 
@@ -27,7 +26,10 @@ async function main() {
   const Bridge = await ethers.getContractFactory('Bridge');
   const bridge = await Bridge.deploy();
   await bridge.deployed();
-  await (await bridge.initialize(ownerAddress, validatorManager.address, tokenManager.address)).wait();
+  await (
+    await bridge.initialize(ownerAddress, validatorManager.address, tokenManager.address, liquidityPools.address)
+  ).wait();
+  await (await liquidityPools.initialize(tokenManager.address, bridge.address)).wait();
 
   console.log('Bridge deployed to:', bridge.address);
 }
