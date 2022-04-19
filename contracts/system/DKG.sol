@@ -4,24 +4,18 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-struct BroacastInfo {
+struct BroacastData {
     uint256 count;
-    mapping(address => BroadcastData) data;
-}
-
-struct BroadcastData {
-    bool provided;
-    bytes[] publicData;
-    bytes[] privateData;
+    mapping(address => bytes) data;
 }
 
 contract DKG is Ownable, Initializable {
     address[][] public validators;
     mapping(address => bool) public isValidator;
 
-    mapping(uint256 => BroacastInfo) private round1BroadcastData;
-    mapping(uint256 => BroacastInfo) private round2BroadcastData;
-    mapping(uint256 => BroacastInfo) private round3BroadcastData;
+    mapping(uint256 => BroacastData) private round1BroadcastData;
+    mapping(uint256 => BroacastData) private round2BroadcastData;
+    mapping(uint256 => BroacastData) private round3BroadcastData;
 
     event Round1Provided(uint256 id, address validator);
     event Round2Provided(uint256 id, address validator);
@@ -46,37 +40,33 @@ contract DKG is Ownable, Initializable {
         _setValidators(_validators);
     }
 
-    function round1Broadcast(
-        uint256 _id,
-        bytes[] memory _public,
-        bytes[] memory _private
-    ) external onlyValidator {
-        require(!round1BroadcastData[_id].data[msg.sender].provided, "data already provided");
+    function round1Broadcast(uint256 _id, bytes memory _rawData) external onlyValidator {
+        require(round1BroadcastData[_id].data[msg.sender].length == 0, "data already provided");
         round1BroadcastData[_id].count++;
-        round1BroadcastData[_id].data[msg.sender] = BroadcastData(true, _public, _private);
+        round1BroadcastData[_id].data[msg.sender] = _rawData;
         emit Round1Provided(_id, msg.sender);
         if (round1BroadcastData[_id].count == validators.length) {
             emit Round1Filled(_id);
         }
     }
 
-    function round2Broadcast(uint256 _id, bytes[] memory _public) external onlyValidator {
+    function round2Broadcast(uint256 _id, bytes memory _rawData) external onlyValidator {
         require(round1BroadcastData[_id].count == validators.length, "round 1 not finished");
-        require(!round2BroadcastData[_id].data[msg.sender].provided, "data already provided");
+        require(round2BroadcastData[_id].data[msg.sender].length == 0, "data already provided");
         round2BroadcastData[_id].count++;
-        round2BroadcastData[_id].data[msg.sender] = BroadcastData(true, _public, new bytes[](0));
+        round2BroadcastData[_id].data[msg.sender] = _rawData;
         emit Round2Provided(_id, msg.sender);
         if (round2BroadcastData[_id].count == validators.length) {
             emit Round2Filled(_id);
         }
     }
 
-    function round3Broadcast(uint256 _id, bytes[] memory _public) external onlyValidator {
+    function round3Broadcast(uint256 _id, bytes memory _rawData) external onlyValidator {
         require(round1BroadcastData[_id].count == validators.length, "round 1 not finished");
         require(round2BroadcastData[_id].count == validators.length, "round 2 not finished");
-        require(!round3BroadcastData[_id].data[msg.sender].provided, "data already provided");
+        require(round3BroadcastData[_id].data[msg.sender].length == 0, "data already provided");
         round3BroadcastData[_id].count++;
-        round3BroadcastData[_id].data[msg.sender] = BroadcastData(true, _public, new bytes[](0));
+        round3BroadcastData[_id].data[msg.sender] = _rawData;
         emit Round3Provided(_id, msg.sender);
         if (round3BroadcastData[_id].count == validators.length) {
             emit Round3Filled(_id);
@@ -95,15 +85,15 @@ contract DKG is Ownable, Initializable {
         return round3BroadcastData[_id].count;
     }
 
-    function getRound1BroadcastData(uint256 _id, address _validator) external view returns (BroadcastData memory) {
+    function getRound1BroadcastData(uint256 _id, address _validator) external view returns (bytes memory) {
         return round1BroadcastData[_id].data[_validator];
     }
 
-    function getRound2BroadcastData(uint256 _id, address _validator) external view returns (BroadcastData memory) {
+    function getRound2BroadcastData(uint256 _id, address _validator) external view returns (bytes memory) {
         return round2BroadcastData[_id].data[_validator];
     }
 
-    function getRound3BroadcastData(uint256 _id, address _validator) external view returns (BroadcastData memory) {
+    function getRound3BroadcastData(uint256 _id, address _validator) external view returns (bytes memory) {
         return round3BroadcastData[_id].data[_validator];
     }
 
