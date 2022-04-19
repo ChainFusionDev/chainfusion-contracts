@@ -121,7 +121,7 @@ contract DKG is Ownable, Initializable {
 
     function _setValidators(address[] memory _validators) private {
         address[] memory currentValidators = this.getCurrentValidators();
-        for (uint256 i = 0; i < validators.length; i++) {
+        for (uint256 i = 0; i < currentValidators.length; i++) {
             isValidator[currentValidators[i]] = false;
         }
 
