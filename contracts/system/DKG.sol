@@ -120,6 +120,6 @@ contract DKG is Ownable, Initializable {
         }
 
         validators.push(_validators);
-        emit ValidatorsUpdated(_validators.length - 1, _validators);
+        emit ValidatorsUpdated(validators.length - 1, _validators);
     }
 }
