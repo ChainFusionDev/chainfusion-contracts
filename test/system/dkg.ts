@@ -3,7 +3,7 @@ import { expect } from 'chai';
 
 describe('DKG', function () {
   it('should broadcast all rounds', async function () {
-    const id = ethers.utils.keccak256([0]);
+    const id = 0;
     const data1 = ethers.utils.keccak256([1]);
     const data2 = ethers.utils.keccak256([2]);
     const data3 = ethers.utils.keccak256([3]);

@@ -16,20 +16,20 @@ struct BroadcastData {
 }
 
 contract DKG is Ownable, Initializable {
-    address[] public validators;
+    address[][] public validators;
     mapping(address => bool) public isValidator;
 
-    mapping(bytes32 => BroacastInfo) private round1BroadcastData;
-    mapping(bytes32 => BroacastInfo) private round2BroadcastData;
-    mapping(bytes32 => BroacastInfo) private round3BroadcastData;
+    mapping(uint256 => BroacastInfo) private round1BroadcastData;
+    mapping(uint256 => BroacastInfo) private round2BroadcastData;
+    mapping(uint256 => BroacastInfo) private round3BroadcastData;
 
-    event Round1Provided(bytes32 id, address validator);
-    event Round2Provided(bytes32 id, address validator);
-    event Round3Provided(bytes32 id, address validator);
+    event Round1Provided(uint256 id, address validator);
+    event Round2Provided(uint256 id, address validator);
+    event Round3Provided(uint256 id, address validator);
 
-    event Round1Filled(bytes32 id);
-    event Round2Filled(bytes32 id);
-    event Round3Filled(bytes32 id);
+    event Round1Filled(uint256 id);
+    event Round2Filled(uint256 id);
+    event Round3Filled(uint256 id);
 
     event ValidatorsUpdated(address[] validators);
 
@@ -47,7 +47,7 @@ contract DKG is Ownable, Initializable {
     }
 
     function round1Broadcast(
-        bytes32 _id,
+        uint256 _id,
         bytes[] memory _public,
         bytes[] memory _private
     ) external onlyValidator {
@@ -60,7 +60,7 @@ contract DKG is Ownable, Initializable {
         }
     }
 
-    function round2Broadcast(bytes32 _id, bytes[] memory _public) external onlyValidator {
+    function round2Broadcast(uint256 _id, bytes[] memory _public) external onlyValidator {
         require(round1BroadcastData[_id].count == validators.length, "round 1 not finished");
         require(!round2BroadcastData[_id].data[msg.sender].provided, "data already provided");
         round2BroadcastData[_id].count++;
@@ -71,7 +71,7 @@ contract DKG is Ownable, Initializable {
         }
     }
 
-    function round3Broadcast(bytes32 _id, bytes[] memory _public) external onlyValidator {
+    function round3Broadcast(uint256 _id, bytes[] memory _public) external onlyValidator {
         require(round1BroadcastData[_id].count == validators.length, "round 1 not finished");
         require(round2BroadcastData[_id].count == validators.length, "round 2 not finished");
         require(!round3BroadcastData[_id].data[msg.sender].provided, "data already provided");
@@ -83,44 +83,49 @@ contract DKG is Ownable, Initializable {
         }
     }
 
-    function getRound1BroadcastCount(bytes32 _id) external view returns (uint256) {
+    function getRound1BroadcastCount(uint256 _id) external view returns (uint256) {
         return round1BroadcastData[_id].count;
     }
 
-    function getRound2BroadcastCount(bytes32 _id) external view returns (uint256) {
+    function getRound2BroadcastCount(uint256 _id) external view returns (uint256) {
         return round2BroadcastData[_id].count;
     }
 
-    function getRound3BroadcastCount(bytes32 _id) external view returns (uint256) {
+    function getRound3BroadcastCount(uint256 _id) external view returns (uint256) {
         return round3BroadcastData[_id].count;
     }
 
-    function getRound1BroadcastData(bytes32 _id, address _validator) external view returns (BroadcastData memory) {
+    function getRound1BroadcastData(uint256 _id, address _validator) external view returns (BroadcastData memory) {
         return round1BroadcastData[_id].data[_validator];
     }
 
-    function getRound2BroadcastData(bytes32 _id, address _validator) external view returns (BroadcastData memory) {
+    function getRound2BroadcastData(uint256 _id, address _validator) external view returns (BroadcastData memory) {
         return round2BroadcastData[_id].data[_validator];
     }
 
-    function getRound3BroadcastData(bytes32 _id, address _validator) external view returns (BroadcastData memory) {
+    function getRound3BroadcastData(uint256 _id, address _validator) external view returns (BroadcastData memory) {
         return round3BroadcastData[_id].data[_validator];
     }
 
     function getValidators() external view returns (address[] memory) {
-        return validators;
+        if (validators.length == 0) {
+            return new address[](0);
+        }
+
+        return validators[validators.length - 1];
     }
 
     function _setValidators(address[] memory _validators) private {
+        address[] memory currentValidators = this.getValidators();
         for (uint256 i = 0; i < validators.length; i++) {
-            isValidator[validators[i]] = false;
+            isValidator[currentValidators[i]] = false;
         }
 
         for (uint256 i = 0; i < _validators.length; i++) {
             isValidator[_validators[i]] = true;
         }
 
-        validators = _validators;
+        validators.push(_validators);
         emit ValidatorsUpdated(_validators);
     }
 }
