@@ -107,7 +107,7 @@ contract DKG is Ownable, Initializable {
         return round3BroadcastData[_id].data[_validator];
     }
 
-    function getValidators() external view returns (address[] memory) {
+    function getCurrentValidators() external view returns (address[] memory) {
         if (validators.length == 0) {
             return new address[](0);
         }
@@ -115,8 +115,12 @@ contract DKG is Ownable, Initializable {
         return validators[validators.length - 1];
     }
 
+    function getValidators(uint256 _id) external view returns (address[] memory) {
+        return validators[_id];
+    }
+
     function _setValidators(address[] memory _validators) private {
-        address[] memory currentValidators = this.getValidators();
+        address[] memory currentValidators = this.getCurrentValidators();
         for (uint256 i = 0; i < validators.length; i++) {
             isValidator[currentValidators[i]] = false;
         }

@@ -37,7 +37,7 @@ type BroadcastData struct {
 
 // DKGMetaData contains all meta data concerning the DKG contract.
 var DKGMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"Round1Filled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Round1Provided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"Round2Filled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Round2Provided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"Round3Filled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Round3Provided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"validators\",\"type\":\"address[]\"}],\"name\":\"ValidatorsUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getRound1BroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRound1BroadcastData\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"provided\",\"type\":\"bool\"},{\"internalType\":\"bytes[]\",\"name\":\"publicData\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"privateData\",\"type\":\"bytes[]\"}],\"internalType\":\"structBroadcastData\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getRound2BroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRound2BroadcastData\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"provided\",\"type\":\"bool\"},{\"internalType\":\"bytes[]\",\"name\":\"publicData\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"privateData\",\"type\":\"bytes[]\"}],\"internalType\":\"structBroadcastData\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getRound3BroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRound3BroadcastData\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"provided\",\"type\":\"bool\"},{\"internalType\":\"bytes[]\",\"name\":\"publicData\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"privateData\",\"type\":\"bytes[]\"}],\"internalType\":\"structBroadcastData\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isValidator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"bytes[]\",\"name\":\"_public\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"_private\",\"type\":\"bytes[]\"}],\"name\":\"round1Broadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"bytes[]\",\"name\":\"_public\",\"type\":\"bytes[]\"}],\"name\":\"round2Broadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"bytes[]\",\"name\":\"_public\",\"type\":\"bytes[]\"}],\"name\":\"round3Broadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"setValidators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"Round1Filled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Round1Provided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"Round2Filled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Round2Provided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"Round3Filled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Round3Provided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"validators\",\"type\":\"address[]\"}],\"name\":\"ValidatorsUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getCurrentValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getRound1BroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRound1BroadcastData\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"provided\",\"type\":\"bool\"},{\"internalType\":\"bytes[]\",\"name\":\"publicData\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"privateData\",\"type\":\"bytes[]\"}],\"internalType\":\"structBroadcastData\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getRound2BroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRound2BroadcastData\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"provided\",\"type\":\"bool\"},{\"internalType\":\"bytes[]\",\"name\":\"publicData\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"privateData\",\"type\":\"bytes[]\"}],\"internalType\":\"structBroadcastData\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getRound3BroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRound3BroadcastData\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"provided\",\"type\":\"bool\"},{\"internalType\":\"bytes[]\",\"name\":\"publicData\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"privateData\",\"type\":\"bytes[]\"}],\"internalType\":\"structBroadcastData\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isValidator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"bytes[]\",\"name\":\"_public\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"_private\",\"type\":\"bytes[]\"}],\"name\":\"round1Broadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"bytes[]\",\"name\":\"_public\",\"type\":\"bytes[]\"}],\"name\":\"round2Broadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"bytes[]\",\"name\":\"_public\",\"type\":\"bytes[]\"}],\"name\":\"round3Broadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"setValidators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // DKGABI is the input ABI used to generate the binding from.
@@ -184,6 +184,37 @@ func (_DKG *DKGTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transact
 // Transact invokes the (paid) contract method with params as input values.
 func (_DKG *DKGTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	return _DKG.Contract.contract.Transact(opts, method, params...)
+}
+
+// GetCurrentValidators is a free data retrieval call binding the contract method 0xc5f9dff0.
+//
+// Solidity: function getCurrentValidators() view returns(address[])
+func (_DKG *DKGCaller) GetCurrentValidators(opts *bind.CallOpts) ([]common.Address, error) {
+	var out []interface{}
+	err := _DKG.contract.Call(opts, &out, "getCurrentValidators")
+
+	if err != nil {
+		return *new([]common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([]common.Address)).(*[]common.Address)
+
+	return out0, err
+
+}
+
+// GetCurrentValidators is a free data retrieval call binding the contract method 0xc5f9dff0.
+//
+// Solidity: function getCurrentValidators() view returns(address[])
+func (_DKG *DKGSession) GetCurrentValidators() ([]common.Address, error) {
+	return _DKG.Contract.GetCurrentValidators(&_DKG.CallOpts)
+}
+
+// GetCurrentValidators is a free data retrieval call binding the contract method 0xc5f9dff0.
+//
+// Solidity: function getCurrentValidators() view returns(address[])
+func (_DKG *DKGCallerSession) GetCurrentValidators() ([]common.Address, error) {
+	return _DKG.Contract.GetCurrentValidators(&_DKG.CallOpts)
 }
 
 // GetRound1BroadcastCount is a free data retrieval call binding the contract method 0x9e605e09.
@@ -372,12 +403,12 @@ func (_DKG *DKGCallerSession) GetRound3BroadcastData(_id *big.Int, _validator co
 	return _DKG.Contract.GetRound3BroadcastData(&_DKG.CallOpts, _id, _validator)
 }
 
-// GetValidators is a free data retrieval call binding the contract method 0xb7ab4db5.
+// GetValidators is a free data retrieval call binding the contract method 0x471f40fb.
 //
-// Solidity: function getValidators() view returns(address[])
-func (_DKG *DKGCaller) GetValidators(opts *bind.CallOpts) ([]common.Address, error) {
+// Solidity: function getValidators(uint256 _id) view returns(address[])
+func (_DKG *DKGCaller) GetValidators(opts *bind.CallOpts, _id *big.Int) ([]common.Address, error) {
 	var out []interface{}
-	err := _DKG.contract.Call(opts, &out, "getValidators")
+	err := _DKG.contract.Call(opts, &out, "getValidators", _id)
 
 	if err != nil {
 		return *new([]common.Address), err
@@ -389,18 +420,18 @@ func (_DKG *DKGCaller) GetValidators(opts *bind.CallOpts) ([]common.Address, err
 
 }
 
-// GetValidators is a free data retrieval call binding the contract method 0xb7ab4db5.
+// GetValidators is a free data retrieval call binding the contract method 0x471f40fb.
 //
-// Solidity: function getValidators() view returns(address[])
-func (_DKG *DKGSession) GetValidators() ([]common.Address, error) {
-	return _DKG.Contract.GetValidators(&_DKG.CallOpts)
+// Solidity: function getValidators(uint256 _id) view returns(address[])
+func (_DKG *DKGSession) GetValidators(_id *big.Int) ([]common.Address, error) {
+	return _DKG.Contract.GetValidators(&_DKG.CallOpts, _id)
 }
 
-// GetValidators is a free data retrieval call binding the contract method 0xb7ab4db5.
+// GetValidators is a free data retrieval call binding the contract method 0x471f40fb.
 //
-// Solidity: function getValidators() view returns(address[])
-func (_DKG *DKGCallerSession) GetValidators() ([]common.Address, error) {
-	return _DKG.Contract.GetValidators(&_DKG.CallOpts)
+// Solidity: function getValidators(uint256 _id) view returns(address[])
+func (_DKG *DKGCallerSession) GetValidators(_id *big.Int) ([]common.Address, error) {
+	return _DKG.Contract.GetValidators(&_DKG.CallOpts, _id)
 }
 
 // IsValidator is a free data retrieval call binding the contract method 0xfacd743b.
