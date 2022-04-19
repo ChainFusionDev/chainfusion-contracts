@@ -31,7 +31,6 @@ contract ValidatorStaking is Ownable, Initializable {
     mapping(address => WithdrawalAnnouncement) public withdrawalAnnouncements;
 
     modifier onlyValidator() {
-        // solhint-disable-next-line reason-string
         require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "ValidatorStaking: only active validator");
         _;
     }
@@ -62,7 +61,6 @@ contract ValidatorStaking is Ownable, Initializable {
     }
 
     function announceWithdrawal(uint256 _amount) external onlyValidator {
-        // solhint-disable-next-line reason-string
         require(_amount <= stakes[msg.sender].stake, "ValidatorStaking: amount must be <= to stake");
         withdrawalAnnouncements[msg.sender].amount = _amount;
         // solhint-disable-next-line not-rely-on-time
@@ -70,7 +68,6 @@ contract ValidatorStaking is Ownable, Initializable {
     }
 
     function withdraw() external onlyValidator {
-        // solhint-disable-next-line reason-string
         require(withdrawalAnnouncements[msg.sender].amount > 0, "ValidatorStaking: amount must be greater than zero");
         require(
             // solhint-disable-next-line not-rely-on-time
@@ -84,14 +81,11 @@ contract ValidatorStaking is Ownable, Initializable {
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = msg.sender.call{value: withdrawalAmount, gas: 21000}("");
-        // solhint-disable-next-line reason-string
         require(success, "ValidatorStaking: transfer failed.");
     }
 
     function stake() public payable {
-        // solhint-disable-next-line reason-string
         require(msg.value >= minimalStake, "ValidatorStaking: insufficient stake provided");
-        // solhint-disable-next-line reason-string
         require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator is slashed");
 
         if (stakes[msg.sender].status == ValidatorStatus.INACTIVE) {
