@@ -37,7 +37,6 @@ export async function deployBridge(
   const LiquidityPools = await ethers.getContractFactory('LiquidityPools');
   const liquidityPools = await LiquidityPools.deploy();
   await liquidityPools.deployed();
-  await liquidityPools.initialize(tokenManager.address);
 
   const ValidatorManager = await ethers.getContractFactory('ValidatorManager');
   const validatorManager = await ValidatorManager.deploy();
@@ -46,7 +45,9 @@ export async function deployBridge(
   const Bridge = await ethers.getContractFactory('Bridge');
   const bridge = await Bridge.deploy();
   await bridge.deployed();
-  await bridge.initialize(owner, validatorManager.address, tokenManager.address);
+  await bridge.initialize(owner, validatorManager.address, tokenManager.address, liquidityPools.address);
+
+  await liquidityPools.initialize(tokenManager.address, bridge.address);
 
   await validatorManager.setRequiredApprovals(requiredSignatures);
   await validatorManager.setValidators(validators);

@@ -100,4 +100,25 @@ describe('LiquidityPools', function () {
       'IERC20: amount more than contract balance'
     );
   });
+
+  it('should transfer token', async function () {
+    const [owner, receiver] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+
+    const amount = '100000';
+
+    const { liquidityPools, tokenManager, mockToken, bridge } = await deployBridge(
+      owner.address,
+      [owner.address],
+      initialRequiredApprovals
+    );
+
+    expect(await tokenManager.isTokenSupported(mockToken.address)).to.equal(true);
+
+    await mockToken.approve(bridge.address, amount);
+    await mockToken.approve(liquidityPools.address, amount);
+    await liquidityPools.addLiquidity(mockToken.address, amount);
+
+    await bridge.deposit(mockToken.address, receiver.address, amount);
+  });
 });

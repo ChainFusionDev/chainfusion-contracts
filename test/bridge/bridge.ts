@@ -22,12 +22,17 @@ describe('Bridge', function () {
 
     const depositAmount = '10000000000000000000';
 
-    const { mockToken, bridge, chainId } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
+    const { mockToken, bridge, chainId, liquidityPools } = await deployBridge(
+      owner.address,
+      [v1.address],
+      initialRequiredApprovals
+    );
 
     await mockToken.approve(bridge.address, depositAmount);
+    await mockToken.approve(liquidityPools.address, depositAmount);
     await bridge.deposit(mockToken.address, chainId, depositAmount);
 
-    expect(await mockToken.balanceOf(bridge.address)).to.equal(depositAmount);
+    expect(await mockToken.balanceOf(liquidityPools.address)).to.equal(depositAmount);
   });
 
   it('should execute transfer', async function () {
@@ -35,7 +40,7 @@ describe('Bridge', function () {
     const initialRequiredApprovals = 2;
     const depositAmount = '10000000000000000000';
 
-    const { mockToken, bridge, chainId } = await deployBridge(
+    const { mockToken, bridge, chainId, liquidityPools, tokenManager } = await deployBridge(
       owner.address,
       [v1.address, v2.address, v3.address],
       initialRequiredApprovals
@@ -43,10 +48,13 @@ describe('Bridge', function () {
 
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
 
-    await mockToken.approve(bridge.address, depositAmount);
-    await bridge.deposit(mockToken.address, chainId, depositAmount);
-    expect(await mockToken.balanceOf(bridge.address)).to.equal(depositAmount);
+    expect(await tokenManager.isTokenSupported(mockToken.address)).to.equal(true);
 
+    await mockToken.approve(bridge.address, depositAmount);
+    await mockToken.approve(liquidityPools.address, depositAmount);
+    await bridge.deposit(mockToken.address, chainId, depositAmount);
+
+    expect(await mockToken.balanceOf(liquidityPools.address)).to.equal(depositAmount);
     const id = utils.solidityKeccak256(
       ['bytes', 'address', 'address', 'uint256'],
       [txHash, mockToken.address, receiver.address, depositAmount]
