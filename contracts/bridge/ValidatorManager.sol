@@ -21,7 +21,6 @@ contract ValidatorManager is Ownable, Initializable {
     }
 
     function setRequiredApprovals(uint256 _requiredApprovals) external onlyOwner {
-        // solhint-disable-next-line reason-string
         require(_requiredApprovals > 0, "ValidatorManager: required approvals too small");
         requiredApprovals = _requiredApprovals;
     }

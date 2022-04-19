@@ -54,10 +54,8 @@ contract Bridge is Initializable, Ownable {
         uint256 _chainId,
         uint256 _amount
     ) external {
-        // solhint-disable-next-line reason-string
         require(_amount != 0, "Bridge: amount cannot be equal to 0.");
         require(IERC20(_token).transferFrom(msg.sender, address(liquidityPools), _amount), "IERC20: transfer failed");
-        // solhint-disable-next-line reason-string
         require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
         emit Deposited(_token, tokenManager.getDestinationToken(_token, _chainId), _chainId, _amount);
     }

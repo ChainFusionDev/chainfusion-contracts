@@ -36,15 +36,12 @@ contract LiquidityPools is Initializable, Ownable {
         address _receiver,
         uint256 _amount
     ) external onlyBridge {
-        // solhint-disable-next-line reason-string
         require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
-        // solhint-disable-next-line reason-string
         require(IERC20(_token).balanceOf(address(this)) >= _amount, "IERC20: amount more than contract balance");
         require(IERC20(_token).transfer(_receiver, _amount), "IERC20: transfer failed");
     }
 
     function addLiquidity(address _token, uint256 _amount) public {
-        // solhint-disable-next-line reason-string
         require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "IERC20: transfer failed");
 
@@ -56,9 +53,7 @@ contract LiquidityPools is Initializable, Ownable {
     }
 
     function removeLiquidity(address _token, uint256 _amount) public {
-        // solhint-disable-next-line reason-string
         require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
-        // solhint-disable-next-line reason-string
         require(IERC20(_token).balanceOf(address(this)) >= _amount, "IERC20: amount more than contract balance");
         require(liquidityPositions[_token][msg.sender] >= _amount, "LiquidityPools: too much amount");
 
