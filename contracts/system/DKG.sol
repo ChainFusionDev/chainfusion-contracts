@@ -45,30 +45,30 @@ contract DKG is Ownable, Initializable {
         round1BroadcastData[_id].count++;
         round1BroadcastData[_id].data[msg.sender] = _rawData;
         emit Round1Provided(_id, msg.sender);
-        if (round1BroadcastData[_id].count == validators.length) {
+        if (round1BroadcastData[_id].count == validators[_id].length) {
             emit Round1Filled(_id);
         }
     }
 
     function round2Broadcast(uint256 _id, bytes memory _rawData) external onlyValidator {
-        require(round1BroadcastData[_id].count == validators.length, "round 1 not finished");
+        require(round1BroadcastData[_id].count == validators[_id].length, "round 1 not finished");
         require(round2BroadcastData[_id].data[msg.sender].length == 0, "data already provided");
         round2BroadcastData[_id].count++;
         round2BroadcastData[_id].data[msg.sender] = _rawData;
         emit Round2Provided(_id, msg.sender);
-        if (round2BroadcastData[_id].count == validators.length) {
+        if (round2BroadcastData[_id].count == validators[_id].length) {
             emit Round2Filled(_id);
         }
     }
 
     function round3Broadcast(uint256 _id, bytes memory _rawData) external onlyValidator {
-        require(round1BroadcastData[_id].count == validators.length, "round 1 not finished");
-        require(round2BroadcastData[_id].count == validators.length, "round 2 not finished");
+        require(round1BroadcastData[_id].count == validators[_id].length, "round 1 not finished");
+        require(round2BroadcastData[_id].count == validators[_id].length, "round 2 not finished");
         require(round3BroadcastData[_id].data[msg.sender].length == 0, "data already provided");
         round3BroadcastData[_id].count++;
         round3BroadcastData[_id].data[msg.sender] = _rawData;
         emit Round3Provided(_id, msg.sender);
-        if (round3BroadcastData[_id].count == validators.length) {
+        if (round3BroadcastData[_id].count == validators[_id].length) {
             emit Round3Filled(_id);
         }
     }
