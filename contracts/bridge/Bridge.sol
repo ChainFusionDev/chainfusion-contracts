@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./TokenManager.sol";
 import "./ValidatorManager.sol";
+import "./LiquidityPools.sol";
 
 contract Bridge is Initializable, Ownable {
     mapping(bytes32 => mapping(address => bool)) public approvals;
@@ -13,6 +14,7 @@ contract Bridge is Initializable, Ownable {
     mapping(bytes32 => bool) public executed;
     TokenManager public tokenManager;
     ValidatorManager public validatorManager;
+    LiquidityPools public liquidityPools;
 
     event Approved(bytes32 id, address validator);
     event Deposited(address token, address destinationToken, uint256 chainId, uint256 amount);
@@ -26,15 +28,25 @@ contract Bridge is Initializable, Ownable {
     function initialize(
         address _owner,
         ValidatorManager _validatorManager,
-        address _tokenManager
+        address _tokenManager,
+        address _liquidityPools
     ) external initializer {
         _transferOwnership(_owner);
         validatorManager = _validatorManager;
         tokenManager = TokenManager(_tokenManager);
+        liquidityPools = LiquidityPools(_liquidityPools);
     }
 
     function setTokenManager(address _tokenManager) external onlyOwner {
         tokenManager = TokenManager(_tokenManager);
+    }
+
+    function setValidatorManager(address _validatorManager) external onlyOwner {
+        validatorManager = ValidatorManager(_validatorManager);
+    }
+
+    function setLiquidityPools(address _liquidityPools) external onlyOwner {
+        liquidityPools = LiquidityPools(_liquidityPools);
     }
 
     function deposit(
@@ -42,8 +54,9 @@ contract Bridge is Initializable, Ownable {
         uint256 _chainId,
         uint256 _amount
     ) external {
-        require(_amount != 0, "Amount cannot be equal to 0.");
-        require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "IERC20: transfer failed");
+        // solhint-disable-next-line reason-string
+        require(_amount != 0, "Bridge: amount cannot be equal to 0.");
+        require(IERC20(_token).transferFrom(msg.sender, address(liquidityPools), _amount), "IERC20: transfer failed");
         // solhint-disable-next-line reason-string
         require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
         emit Deposited(_token, tokenManager.getDestinationToken(_token, _chainId), _chainId, _amount);
@@ -69,7 +82,7 @@ contract Bridge is Initializable, Ownable {
 
         if (approvalsCount[id] >= validatorManager.requiredApprovals()) {
             executed[id] = true;
-            require(IERC20(_token).transfer(_receiver, _amount), "IERC20: transfer failed");
+            liquidityPools.transfer(_token, _receiver, _amount);
             emit Transferred(_token, _receiver, _amount, msg.sender);
         }
     }
