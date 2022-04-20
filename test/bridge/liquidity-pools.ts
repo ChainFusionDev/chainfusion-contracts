@@ -121,4 +121,34 @@ describe('LiquidityPools', function () {
 
     await bridge.deposit(mockToken.address, receiver.address, amount);
   });
+
+  it('should collect fees', async function () {
+    const [owner, v1, receiver] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+    const amount = '1000000';
+    const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
+    const fee = '10000';
+    const transferAmount = '990000';
+
+    const { liquidityPools, tokenManager, mockToken, bridge } = await deployBridge(
+      owner.address,
+      [v1.address],
+      initialRequiredApprovals
+    );
+
+    expect(await tokenManager.isTokenSupported(mockToken.address)).to.equal(true);
+
+    await mockToken.approve(bridge.address, amount);
+    await mockToken.approve(liquidityPools.address, amount);
+    await liquidityPools.addLiquidity(mockToken.address, amount);
+
+    await bridge.deposit(mockToken.address, receiver.address, amount);
+
+    const bridge1 = await ethers.getContractAt('Bridge', bridge.address, v1);
+
+    await bridge1.approveTransfer(txHash, mockToken.address, receiver.address, amount);
+
+    expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(fee);
+    expect(await mockToken.balanceOf(receiver.address)).to.equal(transferAmount);
+  });
 });
