@@ -3,6 +3,7 @@ import { ethers } from 'hardhat';
 async function main() {
   const [owner] = await ethers.getSigners();
   const ownerAddress = owner.address;
+  const feePercentage = '10000000000000000';
 
   const TokenManager = await ethers.getContractFactory('TokenManager');
   const tokenManager = await TokenManager.deploy();
@@ -29,7 +30,8 @@ async function main() {
   await (
     await bridge.initialize(ownerAddress, validatorManager.address, tokenManager.address, liquidityPools.address)
   ).wait();
-  await (await liquidityPools.initialize(tokenManager.address, bridge.address)).wait();
+
+  await (await liquidityPools.initialize(tokenManager.address, bridge.address, feePercentage)).wait();
 
   console.log('Bridge deployed to:', bridge.address);
 }

@@ -47,7 +47,8 @@ export async function deployBridge(
   await bridge.deployed();
   await bridge.initialize(owner, validatorManager.address, tokenManager.address, liquidityPools.address);
 
-  await liquidityPools.initialize(tokenManager.address, bridge.address);
+  const feePercentage = '10000000000000000';
+  await liquidityPools.initialize(tokenManager.address, bridge.address, feePercentage);
 
   await validatorManager.setRequiredApprovals(requiredSignatures);
   await validatorManager.setValidators(validators);
