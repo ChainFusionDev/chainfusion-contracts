@@ -15,8 +15,7 @@ contract LiquidityPools is Initializable, Ownable {
     mapping(address => uint256) public collectedFees;
     TokenManager public tokenManager;
     Bridge public bridge;
-    // solhint-disable-next-line var-name-mixedcase
-    uint256 public BASE_DIVISOR = 1 ether;
+    uint256 public constant BASE_DIVISOR = 1 ether;
     uint256 public feePercentage;
 
     event LiquidityAdded(address token, address account, uint256 amount);
