@@ -52,9 +52,9 @@ describe('Bridge', function () {
 
     await mockToken.approve(bridge.address, depositAmount);
     await mockToken.approve(liquidityPools.address, depositAmount);
+    await liquidityPools.addLiquidity(mockToken.address, depositAmount);
     await bridge.deposit(mockToken.address, chainId, depositAmount);
 
-    expect(await mockToken.balanceOf(liquidityPools.address)).to.equal(depositAmount);
     const id = utils.solidityKeccak256(
       ['bytes', 'address', 'address', 'uint256'],
       [txHash, mockToken.address, receiver.address, depositAmount]

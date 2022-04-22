@@ -24,7 +24,7 @@ describe('LiquidityPools', function () {
 
     expect(await liquidityPools.providedLiquidity(mockToken.address)).to.equal(amount);
     expect(await liquidityPools.availableLiquidity(mockToken.address)).to.equal(amount);
-    expect(await liquidityPools.liquidityPositions(mockToken.address, owner.address)).to.equal(amount);
+    expect((await liquidityPools.liquidityPositions(mockToken.address, owner.address)).balance).to.equal(amount);
   });
 
   it('should not add liquidity for unsupported token', async function () {
@@ -73,7 +73,7 @@ describe('LiquidityPools', function () {
 
     expect(await liquidityPools.providedLiquidity(mockToken.address)).to.equal(0);
     expect(await liquidityPools.availableLiquidity(mockToken.address)).to.equal(0);
-    expect(await liquidityPools.liquidityPositions(mockToken.address, owner.address)).to.equal(0);
+    expect((await liquidityPools.liquidityPositions(mockToken.address, owner.address)).balance).to.equal(0);
   });
 
   it('should not remove liquidity more than provided', async function () {
@@ -150,5 +150,101 @@ describe('LiquidityPools', function () {
 
     expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(fee);
     expect(await mockToken.balanceOf(receiver.address)).to.equal(transferAmount);
+  });
+
+  it('should claim rewards', async function () {
+    const [owner, receiver] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+    const amount = '1000000';
+    const fee = '10000';
+    const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
+
+    const { liquidityPools, mockToken, bridge } = await deployBridge(
+      owner.address,
+      [owner.address],
+      initialRequiredApprovals
+    );
+
+    await mockToken.approve(bridge.address, amount);
+    await mockToken.approve(liquidityPools.address, amount);
+    await liquidityPools.addLiquidity(mockToken.address, amount);
+
+    await bridge.approveTransfer(txHash, mockToken.address, receiver.address, amount);
+
+    expect(await liquidityPools.rewardsOwing(mockToken.address)).to.equal(fee);
+    await liquidityPools.claimRewards(mockToken.address);
+    expect(await liquidityPools.rewardsOwing(mockToken.address)).to.equal(0);
+  });
+
+  it('should add and remove liquidity several times', async function () {
+    const [owner] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+    const amount = '1000000';
+    const amountLiquidity = '100';
+
+    const { liquidityPools, mockToken, bridge } = await deployBridge(
+      owner.address,
+      [owner.address],
+      initialRequiredApprovals
+    );
+
+    await mockToken.approve(bridge.address, amount);
+    await mockToken.approve(liquidityPools.address, amount);
+    await liquidityPools.addLiquidity(mockToken.address, amountLiquidity);
+    await liquidityPools.addLiquidity(mockToken.address, amountLiquidity);
+    await liquidityPools.addLiquidity(mockToken.address, amountLiquidity);
+
+    expect(await liquidityPools.providedLiquidity(mockToken.address)).to.equal(3 * Number(amountLiquidity));
+
+    await liquidityPools.removeLiquidity(mockToken.address, amountLiquidity);
+    await liquidityPools.removeLiquidity(mockToken.address, amountLiquidity);
+    await liquidityPools.removeLiquidity(mockToken.address, amountLiquidity);
+    expect(await liquidityPools.providedLiquidity(mockToken.address)).to.equal(0);
+  });
+
+  it('should distribute the reward equally', async function () {
+    const [owner, v1, v2, receiver] = await ethers.getSigners();
+    const initialRequiredApprovals = 2;
+    const amount = '10000000000000';
+    const fee = '100000000000';
+    const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
+
+    const { liquidityPools, mockToken, bridge } = await deployBridge(
+      owner.address,
+      [v1.address, v2.address],
+      initialRequiredApprovals
+    );
+
+    await mockToken.transfer(v1.address, amount);
+    await mockToken.transfer(v2.address, amount);
+
+    const mockToken1 = await ethers.getContractAt('MockToken', mockToken.address, v1);
+    const mockToken2 = await ethers.getContractAt('MockToken', mockToken.address, v2);
+
+    const bridge1 = await ethers.getContractAt('Bridge', bridge.address, v1);
+    const bridge2 = await ethers.getContractAt('Bridge', bridge.address, v2);
+
+    const liquidityPools1 = await ethers.getContractAt('LiquidityPools', liquidityPools.address, v1);
+    const liquidityPools2 = await ethers.getContractAt('LiquidityPools', liquidityPools.address, v2);
+
+    await mockToken1.approve(liquidityPools1.address, amount);
+    await mockToken2.approve(liquidityPools2.address, amount);
+
+    await mockToken1.approve(bridge1.address, amount);
+    await mockToken2.approve(bridge2.address, amount);
+
+    await liquidityPools1.addLiquidity(mockToken1.address, amount);
+    await liquidityPools2.addLiquidity(mockToken2.address, amount);
+
+    await bridge1.approveTransfer(txHash, mockToken.address, receiver.address, amount);
+    await bridge2.approveTransfer(txHash, mockToken.address, receiver.address, amount);
+
+    expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(fee);
+
+    await liquidityPools1.claimRewards(mockToken1.address);
+    expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(Number(fee) / 2);
+
+    await liquidityPools2.claimRewards(mockToken2.address);
+    expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(0);
   });
 });

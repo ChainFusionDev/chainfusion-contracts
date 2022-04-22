@@ -9,10 +9,16 @@ import "./TokenManager.sol";
 import "./Bridge.sol";
 
 contract LiquidityPools is Initializable, Ownable {
+    struct LiquidityPosition {
+        uint256 balance;
+        uint256 lastRewardPoints;
+    }
+
     mapping(address => uint256) public providedLiquidity;
     mapping(address => uint256) public availableLiquidity;
-    mapping(address => mapping(address => uint256)) public liquidityPositions;
+    mapping(address => mapping(address => LiquidityPosition)) public liquidityPositions;
     mapping(address => uint256) public collectedFees;
+    mapping(address => uint256) public totalRewardPoints;
     TokenManager public tokenManager;
     Bridge public bridge;
     uint256 public constant BASE_DIVISOR = 1 ether;
@@ -54,34 +60,56 @@ contract LiquidityPools is Initializable, Ownable {
 
         uint256 fee = (_amount * feePercentage) / BASE_DIVISOR;
         uint256 transferAmount = _amount - fee;
-
-        collectedFees[_token] += fee;
+        distributeFee(_token, fee);
 
         require(ERC20(_token).transfer(_receiver, transferAmount), "ERC20: transfer failed");
     }
 
     function addLiquidity(address _token, uint256 _amount) public {
+        claimRewards(_token);
         require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "IERC20: transfer failed");
 
         providedLiquidity[_token] += _amount;
         availableLiquidity[_token] += _amount;
-        liquidityPositions[_token][msg.sender] += _amount;
+        liquidityPositions[_token][msg.sender].balance += _amount;
 
         emit LiquidityAdded(_token, msg.sender, _amount);
     }
 
     function removeLiquidity(address _token, uint256 _amount) public {
+        claimRewards(_token);
         require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
         require(IERC20(_token).balanceOf(address(this)) >= _amount, "IERC20: amount more than contract balance");
-        require(liquidityPositions[_token][msg.sender] >= _amount, "LiquidityPools: too much amount");
+        require(liquidityPositions[_token][msg.sender].balance >= _amount, "LiquidityPools: too much amount");
 
         providedLiquidity[_token] -= _amount;
         availableLiquidity[_token] -= _amount;
-        liquidityPositions[_token][msg.sender] -= _amount;
+        liquidityPositions[_token][msg.sender].balance -= _amount;
 
         require(IERC20(_token).transfer(msg.sender, _amount), "IERC20: transfer failed");
 
         emit LiquidityRemoved(_token, msg.sender, _amount);
+    }
+
+    function claimRewards(address _token) public {
+        uint256 rewardsOwingAmount = rewardsOwing(_token);
+        if (rewardsOwingAmount > 0) {
+            collectedFees[_token] -= rewardsOwingAmount;
+            liquidityPositions[_token][msg.sender].balance += rewardsOwingAmount;
+            liquidityPositions[_token][msg.sender].lastRewardPoints = totalRewardPoints[_token];
+        }
+    }
+
+    function rewardsOwing(address _token) public view returns (uint256) {
+        uint256 newRewardPoints = totalRewardPoints[_token] - liquidityPositions[_token][msg.sender].lastRewardPoints;
+        return (liquidityPositions[_token][msg.sender].balance * newRewardPoints) / BASE_DIVISOR;
+    }
+
+    function distributeFee(address _token, uint256 _amount) private {
+        require(_amount > 0, "LiquidityPools: amount must be greater than zero");
+        totalRewardPoints[_token] += (_amount * BASE_DIVISOR) / providedLiquidity[_token];
+        providedLiquidity[_token] += _amount;
+        collectedFees[_token] += _amount;
     }
 }
