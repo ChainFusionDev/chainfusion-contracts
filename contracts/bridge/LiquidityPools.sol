@@ -66,7 +66,7 @@ contract LiquidityPools is Initializable, Ownable {
     }
 
     function addLiquidity(address _token, uint256 _amount) public {
-        claimedRewards(_token);
+        claimRewards(_token);
         require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "IERC20: transfer failed");
 
@@ -78,7 +78,7 @@ contract LiquidityPools is Initializable, Ownable {
     }
 
     function removeLiquidity(address _token, uint256 _amount) public {
-        claimedRewards(_token);
+        claimRewards(_token);
         require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
         require(IERC20(_token).balanceOf(address(this)) >= _amount, "IERC20: amount more than contract balance");
         require(liquidityPositions[_token][msg.sender].balance >= _amount, "LiquidityPools: too much amount");
@@ -92,7 +92,7 @@ contract LiquidityPools is Initializable, Ownable {
         emit LiquidityRemoved(_token, msg.sender, _amount);
     }
 
-    function claimedRewards(address _token) public {
+    function claimRewards(address _token) public {
         uint256 rewardsOwingAmount = rewardsOwing(_token);
         if (rewardsOwingAmount > 0) {
             collectedFees[_token] -= rewardsOwingAmount;
