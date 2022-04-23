@@ -18,7 +18,10 @@ contract Bridge is Initializable, Ownable {
 
     event Approved(bytes32 id, address validator);
     event Deposited(address token, address destinationToken, uint256 chainId, uint256 amount);
-    event Transferred(address token, address receiver, uint256 amount, address validator);
+    event Transferred(address token, address receiver, uint256 fee, uint256 transferAmount, address validator);
+    event TokenManagerUpdated(address _tokenManager);
+    event ValidatorManagerUpdated(address _validatorManager);
+    event LiquidityPoolsUpdated(address _liquidityPools);
 
     modifier onlyValidator() {
         require(validatorManager.isValidator(msg.sender), "Bridge: only validator");
@@ -39,14 +42,17 @@ contract Bridge is Initializable, Ownable {
 
     function setTokenManager(address _tokenManager) external onlyOwner {
         tokenManager = TokenManager(_tokenManager);
+        emit TokenManagerUpdated(_tokenManager);
     }
 
     function setValidatorManager(address _validatorManager) external onlyOwner {
         validatorManager = ValidatorManager(_validatorManager);
+        emit ValidatorManagerUpdated(_validatorManager);
     }
 
     function setLiquidityPools(address _liquidityPools) external onlyOwner {
         liquidityPools = LiquidityPools(_liquidityPools);
+        emit LiquidityPoolsUpdated(_liquidityPools);
     }
 
     function deposit(
@@ -80,8 +86,10 @@ contract Bridge is Initializable, Ownable {
 
         if (approvalsCount[id] >= validatorManager.requiredApprovals()) {
             executed[id] = true;
-            liquidityPools.transfer(_token, _receiver, _amount);
-            emit Transferred(_token, _receiver, _amount, msg.sender);
+            uint256 fee = (_amount * liquidityPools.feePercentage()) / liquidityPools.BASE_DIVISOR();
+            uint256 transferAmount = _amount - fee;
+            liquidityPools.transfer(_token, _receiver, fee, transferAmount);
+            emit Transferred(_token, _receiver, fee, transferAmount, msg.sender);
         }
     }
 }

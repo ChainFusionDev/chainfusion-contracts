@@ -30,6 +30,9 @@ contract ValidatorStaking is Ownable, Initializable {
     mapping(address => uint256) public slashingCount;
     mapping(address => WithdrawalAnnouncement) public withdrawalAnnouncements;
 
+    event MinimalStakeUpdated(uint256 minimalStake);
+    event WithdrawalPeriodUpdated(uint256 withdrawalPeriod);
+
     modifier onlyValidator() {
         require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "ValidatorStaking: only active validator");
         _;
@@ -42,10 +45,12 @@ contract ValidatorStaking is Ownable, Initializable {
 
     function setMinimalStake(uint256 _minimalStake) external onlyOwner {
         minimalStake = _minimalStake;
+        emit MinimalStakeUpdated(_minimalStake);
     }
 
-    function setwithdrawalPeriod(uint256 _withdrawalPeriod) external onlyOwner {
+    function setWithdrawalPeriod(uint256 _withdrawalPeriod) external onlyOwner {
         withdrawalPeriod = _withdrawalPeriod;
+        emit WithdrawalPeriodUpdated(_withdrawalPeriod);
     }
 
     function slash(address _validator) external onlyValidator {

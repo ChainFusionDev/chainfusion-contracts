@@ -12,8 +12,61 @@ describe('Bridge', function () {
 
     const { validatorManager } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
 
-    await validatorManager.setRequiredApprovals(newRequiredApprovals);
+    expect(await validatorManager.setRequiredApprovals(newRequiredApprovals))
+      .to.emit(validatorManager, 'RequiredApprovalsUpdated')
+      .withArgs(newRequiredApprovals);
     expect(await validatorManager.requiredApprovals()).to.equal(newRequiredApprovals);
+  });
+
+  it('should change validators', async function () {
+    const [owner, v1, v2] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+
+    const { validatorManager } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
+
+    expect(await validatorManager.setValidators([v2.address]))
+      .to.emit(validatorManager, 'ValidatorsUpdated')
+      .withArgs(v2.address);
+    expect(await validatorManager.validators(0)).to.equal(v2.address);
+  });
+
+  it('should change token manager', async function () {
+    const [owner, v1] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+
+    const { bridge, tokenManager } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
+    const newTokenManager = await ethers.getContractAt('TokenManager', tokenManager.address, v1);
+
+    expect(await bridge.setTokenManager(newTokenManager.address))
+      .to.emit(bridge, 'TokenManagerUpdated')
+      .withArgs(newTokenManager);
+    expect(await bridge.tokenManager()).to.equal(newTokenManager.address);
+  });
+
+  it('should change validator manager', async function () {
+    const [owner, v1] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+
+    const { bridge, validatorManager } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
+    const newValidatorManager = await ethers.getContractAt('ValidatorManager', validatorManager.address, v1);
+
+    expect(await bridge.setValidatorManager(newValidatorManager.address))
+      .to.emit(bridge, 'ValidatorManagerUpdated')
+      .withArgs(newValidatorManager);
+    expect(await bridge.validatorManager()).to.equal(newValidatorManager.address);
+  });
+
+  it('should change liquidity pools', async function () {
+    const [owner, v1] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+
+    const { bridge, liquidityPools } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
+    const newLiquidityPools = await ethers.getContractAt('LiquidityPools', liquidityPools.address, v1);
+
+    expect(await bridge.setLiquidityPools(newLiquidityPools.address))
+      .to.emit(bridge, 'LiquidityPoolsUpdated')
+      .withArgs(newLiquidityPools);
+    expect(await bridge.liquidityPools()).to.equal(newLiquidityPools.address);
   });
 
   it('should deposit tokens to bridge', async function () {
@@ -39,6 +92,8 @@ describe('Bridge', function () {
     const [owner, v1, v2, v3, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 2;
     const depositAmount = '10000000000000000000';
+    const fee = '100000000000000000';
+    const transferAmount = '9900000000000000000';
 
     const { mockToken, bridge, chainId, liquidityPools, tokenManager } = await deployBridge(
       owner.address,
@@ -71,7 +126,7 @@ describe('Bridge', function () {
       .to.emit(bridge2, 'Approved')
       .withArgs(id, v2.address)
       .emit(bridge2, 'Transferred')
-      .withArgs(mockToken.address, receiver.address, depositAmount, v2.address);
+      .withArgs(mockToken.address, receiver.address, fee, transferAmount, v2.address);
 
     const bridge3 = await ethers.getContractAt('Bridge', bridge.address, v3);
     await bridge3.approveTransfer(txHash, mockToken.address, receiver.address, depositAmount);
