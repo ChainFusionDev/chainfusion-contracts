@@ -23,6 +23,9 @@ const accounts = process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KE
 const config: HardhatUserConfig = {
   solidity: "0.8.9",
   networks: {
+    hardhat: {
+      blockGasLimit: 100_000_000,
+    },
     ganache: {
       url: `http://ganache:8545`,
     },
