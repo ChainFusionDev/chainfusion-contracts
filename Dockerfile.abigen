@@ -4,7 +4,16 @@ WORKDIR /
 
 COPY artifacts/ artifacts/
 
+RUN mkdir bridge
 RUN mkdir system
 
+# Bridge contracts
+
+RUN abigen --abi artifacts/abi/bridge/Bridge.sol/Bridge.json --pkg bridge --type Bridge --out bridge/bridge.go
+RUN abigen --abi artifacts/abi/bridge/LiquidityPools.sol/LiquidityPools.json --pkg bridge --type LiquidityPools --out bridge/liquidity-pools.go
+RUN abigen --abi artifacts/abi/bridge/TokenManager.sol/TokenManager.json --pkg bridge --type TokenManager --out bridge/token-manager.go
+RUN abigen --abi artifacts/abi/bridge/ValidatorManager.sol/ValidatorManager.json --pkg bridge --type ValidatorManager --out bridge/validator-manager.go
+
+# System contracts
 RUN abigen --abi artifacts/abi/system/DKG.sol/DKG.json --pkg system --type DKG --out system/dkg.go
 RUN abigen --abi artifacts/abi/system/ValidatorStaking.sol/ValidatorStaking.json --pkg system --type ValidatorStaking --out system/validator-staking.go
