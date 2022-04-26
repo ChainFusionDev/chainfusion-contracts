@@ -7,8 +7,11 @@ import "./Bridge.sol";
 
 contract ValidatorManager is Ownable, Initializable {
     address[] public validators;
-    mapping(address => bool) public isValidator;
     uint256 public requiredApprovals;
+    mapping(address => bool) public isValidator;
+
+    event ValidatorsUpdated(address[] validators);
+    event RequiredApprovalsUpdated(uint256 requiredApprovals);
 
     function setValidators(address[] calldata _validators) external onlyOwner {
         for (uint256 i = 0; i < validators.length; i++) {
@@ -18,10 +21,12 @@ contract ValidatorManager is Ownable, Initializable {
             isValidator[_validators[i]] = true;
         }
         validators = _validators;
+        emit ValidatorsUpdated(_validators);
     }
 
     function setRequiredApprovals(uint256 _requiredApprovals) external onlyOwner {
         require(_requiredApprovals > 0, "ValidatorManager: required approvals too small");
         requiredApprovals = _requiredApprovals;
+        emit RequiredApprovalsUpdated(_requiredApprovals);
     }
 }

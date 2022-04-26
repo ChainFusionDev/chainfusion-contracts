@@ -6,12 +6,26 @@ import { deployValidatorStaking } from '../utils/deploy';
 describe('ValidatorStaking', function () {
   it('should change minimal stake', async function () {
     const initialminimalStake = ethers.utils.parseEther('1');
-    const newminimalStake = ethers.utils.parseEther('2');
+    const newMinimalStake = ethers.utils.parseEther('2');
 
     const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
 
-    await validatorStaking.setMinimalStake(newminimalStake);
-    expect(await validatorStaking.minimalStake()).to.equal(newminimalStake);
+    expect(await validatorStaking.setMinimalStake(newMinimalStake))
+      .to.emit(validatorStaking, 'MinimalStakeUpdated')
+      .withArgs(newMinimalStake);
+    expect(await validatorStaking.minimalStake()).to.equal(newMinimalStake);
+  });
+
+  it('should change setwithdrawal period', async function () {
+    const initialminimalStake = ethers.utils.parseEther('1');
+    const newWithdrawalPeriod = 2;
+
+    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+
+    expect(await validatorStaking.setWithdrawalPeriod(newWithdrawalPeriod))
+      .to.emit(validatorStaking, 'WithdrawalPeriodUpdated')
+      .withArgs(newWithdrawalPeriod);
+    expect(await validatorStaking.withdrawalPeriod()).to.equal(newWithdrawalPeriod);
   });
 
   it('should verify error on staking less than minimal stake', async function () {
@@ -130,16 +144,6 @@ describe('ValidatorStaking', function () {
     expect(await validatorStaking.validatorCount()).to.be.equal(3);
   });
 
-  it('should change setwithdrawal period', async function () {
-    const initialminimalStake = ethers.utils.parseEther('1');
-    const newWithdrawalPeriod = 2;
-
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
-
-    await validatorStaking.setwithdrawalPeriod(newWithdrawalPeriod);
-    expect(await validatorStaking.withdrawalPeriod()).to.equal(newWithdrawalPeriod);
-  });
-
   it('should check if only validator can announceWithdrawal', async function () {
     const [, v2] = await ethers.getSigners();
     const initialminimalStake = ethers.utils.parseEther('3');
@@ -215,7 +219,7 @@ describe('ValidatorStaking', function () {
     const value = ethers.utils.parseEther('5');
 
     const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
-    await validatorStaking.setwithdrawalPeriod(1000000);
+    await validatorStaking.setWithdrawalPeriod(1000000);
     await validatorStaking.stake({ value: value });
     await validatorStaking.announceWithdrawal(value);
 

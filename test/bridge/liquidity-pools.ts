@@ -3,6 +3,32 @@ import { ethers } from 'hardhat';
 import { deployBridge } from '../utils/deploy';
 
 describe('LiquidityPools', function () {
+  it('should change token manager', async function () {
+    const [owner, v1] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+
+    const { tokenManager, liquidityPools } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
+    const newTokenManager = await ethers.getContractAt('TokenManager', tokenManager.address, v1);
+
+    expect(await liquidityPools.setTokenManager(newTokenManager.address))
+      .to.emit(liquidityPools, 'TokenManagerUpdated')
+      .withArgs(newTokenManager);
+    expect(await liquidityPools.tokenManager()).to.equal(newTokenManager.address);
+  });
+
+  it('should change fee percentage', async function () {
+    const [owner, v1] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+    const newFeePercentage = '10000';
+
+    const { liquidityPools } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
+
+    expect(await liquidityPools.setFeePercentage(newFeePercentage))
+      .to.emit(liquidityPools, 'FeePercentageUpdated')
+      .withArgs(newFeePercentage);
+    expect(await liquidityPools.feePercentage()).to.equal(newFeePercentage);
+  });
+
   it('should add liquidity for supported token', async function () {
     const [owner] = await ethers.getSigners();
     const initialRequiredApprovals = 1;

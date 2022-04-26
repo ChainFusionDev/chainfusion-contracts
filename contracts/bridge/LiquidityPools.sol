@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./TokenManager.sol";
 import "./Bridge.sol";
+import "./Globals.sol";
 
 contract LiquidityPools is Initializable, Ownable {
     struct LiquidityPosition {
@@ -21,11 +22,12 @@ contract LiquidityPools is Initializable, Ownable {
     mapping(address => uint256) public totalRewardPoints;
     TokenManager public tokenManager;
     Bridge public bridge;
-    uint256 public constant BASE_DIVISOR = 1 ether;
     uint256 public feePercentage;
 
     event LiquidityAdded(address token, address account, uint256 amount);
     event LiquidityRemoved(address token, address account, uint256 amount);
+    event TokenManagerUpdated(address tokenManager);
+    event FeePercentageUpdated(uint256 feePercentage);
 
     modifier onlyBridge() {
         require(msg.sender == address(bridge), "LiquidityPools: only bridge");
@@ -44,25 +46,29 @@ contract LiquidityPools is Initializable, Ownable {
 
     function setTokenManager(address _tokenManager) external onlyOwner {
         tokenManager = TokenManager(_tokenManager);
+        emit TokenManagerUpdated(_tokenManager);
     }
 
     function setFeePercentage(uint256 _feePercentage) external onlyOwner {
         feePercentage = _feePercentage;
+        emit FeePercentageUpdated(_feePercentage);
     }
 
     function transfer(
         address _token,
         address _receiver,
-        uint256 _amount
+        uint256 _fee,
+        uint256 _transferAmount
     ) external onlyBridge {
         require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
-        require(IERC20(_token).balanceOf(address(this)) >= _amount, "IERC20: amount more than contract balance");
+        require(
+            IERC20(_token).balanceOf(address(this)) >= _transferAmount + _fee,
+            "IERC20: amount more than contract balance"
+        );
 
-        uint256 fee = (_amount * feePercentage) / BASE_DIVISOR;
-        uint256 transferAmount = _amount - fee;
-        distributeFee(_token, fee);
+        distributeFee(_token, _fee);
 
-        require(ERC20(_token).transfer(_receiver, transferAmount), "ERC20: transfer failed");
+        require(ERC20(_token).transfer(_receiver, _transferAmount), "ERC20: transfer failed");
     }
 
     function addLiquidity(address _token, uint256 _amount) public {
