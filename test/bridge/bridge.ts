@@ -70,7 +70,7 @@ describe('Bridge', function () {
   });
 
   it('should deposit tokens to bridge', async function () {
-    const [owner, v1] = await ethers.getSigners();
+    const [owner, v1, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
     const depositAmount = '10000000000000000000';
@@ -83,7 +83,7 @@ describe('Bridge', function () {
 
     await mockToken.approve(bridge.address, depositAmount);
     await mockToken.approve(liquidityPools.address, depositAmount);
-    await bridge.deposit(mockToken.address, chainId, depositAmount);
+    await bridge.deposit(mockToken.address, chainId, receiver.address, depositAmount);
 
     expect(await mockToken.balanceOf(liquidityPools.address)).to.equal(depositAmount);
   });
@@ -94,6 +94,7 @@ describe('Bridge', function () {
     const depositAmount = '10000000000000000000';
     const fee = '100000000000000000';
     const transferAmount = '9900000000000000000';
+    const sourceChainId = 123;
 
     const { mockToken, bridge, chainId, liquidityPools, tokenManager } = await deployBridge(
       owner.address,
@@ -108,7 +109,7 @@ describe('Bridge', function () {
     await mockToken.approve(bridge.address, depositAmount);
     await mockToken.approve(liquidityPools.address, depositAmount);
     await liquidityPools.addLiquidity(mockToken.address, depositAmount);
-    await bridge.deposit(mockToken.address, chainId, depositAmount);
+    await bridge.deposit(mockToken.address, chainId, receiver.address, depositAmount);
 
     const id = utils.solidityKeccak256(
       ['bytes', 'address', 'address', 'uint256'],
@@ -117,29 +118,29 @@ describe('Bridge', function () {
 
     const bridge1 = await ethers.getContractAt('Bridge', bridge.address, v1);
 
-    await expect(bridge1.approveTransfer(txHash, mockToken.address, receiver.address, depositAmount))
+    await expect(bridge1.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount))
       .to.emit(bridge1, 'Approved')
       .withArgs(id, v1.address);
 
     const bridge2 = await ethers.getContractAt('Bridge', bridge.address, v2);
-    await expect(bridge2.approveTransfer(txHash, mockToken.address, receiver.address, depositAmount))
+    await expect(bridge2.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount))
       .to.emit(bridge2, 'Approved')
       .withArgs(id, v2.address)
       .emit(bridge2, 'Transferred')
-      .withArgs(mockToken.address, receiver.address, fee, transferAmount, v2.address);
+      .withArgs(mockToken.address, chainId, receiver.address, fee, transferAmount, v2.address);
 
     const bridge3 = await ethers.getContractAt('Bridge', bridge.address, v3);
-    await bridge3.approveTransfer(txHash, mockToken.address, receiver.address, depositAmount);
+    await bridge3.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount);
 
-    await expect(bridge.approveTransfer(txHash, mockToken.address, receiver.address, depositAmount)).to.be.revertedWith(
-      'only validator'
-    );
+    await expect(
+      bridge.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount)
+    ).to.be.revertedWith('only validator');
 
     expect(await bridge.executed(id)).to.equal(true);
   });
 
   it('should deposit supported tokens to bridge', async function () {
-    const [owner, v1] = await ethers.getSigners();
+    const [owner, v1, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 2;
     const depositAmount = '10000000000000000000';
     const mintAmount = '100000000000000000000';
@@ -152,9 +153,9 @@ describe('Bridge', function () {
     await mockToken.approve(bridge.address, depositAmount);
     await mockToken2.approve(bridge.address, depositAmount);
 
-    await bridge.deposit(mockToken.address, chainId, depositAmount);
+    await bridge.deposit(mockToken.address, chainId, receiver.address, depositAmount);
 
-    await expect(bridge.deposit(mockToken2.address, chainId, depositAmount)).to.be.revertedWith(
+    await expect(bridge.deposit(mockToken2.address, chainId, receiver.address, depositAmount)).to.be.revertedWith(
       'TokenManager: token is not supported'
     );
   });
