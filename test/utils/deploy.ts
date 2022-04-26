@@ -24,10 +24,6 @@ export async function deployBridge(
   const mintAmount = '100000000000000000000';
   const destinationToken = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
 
-  const Globals = await ethers.getContractFactory('Globals');
-  const globals = await Globals.deploy();
-  await globals.deployed();
-
   const MockToken = await ethers.getContractFactory('MockToken');
   const mockToken = await MockToken.deploy('Token', 'TKN', mintAmount);
   await mockToken.deployed();
@@ -49,16 +45,10 @@ export async function deployBridge(
   const Bridge = await ethers.getContractFactory('Bridge');
   const bridge = await Bridge.deploy();
   await bridge.deployed();
-  await bridge.initialize(
-    owner,
-    validatorManager.address,
-    tokenManager.address,
-    liquidityPools.address,
-    globals.address
-  );
+  await bridge.initialize(owner, validatorManager.address, tokenManager.address, liquidityPools.address);
 
   const feePercentage = '10000000000000000';
-  await liquidityPools.initialize(tokenManager.address, bridge.address, globals.address, feePercentage);
+  await liquidityPools.initialize(tokenManager.address, bridge.address, feePercentage);
 
   await validatorManager.setRequiredApprovals(requiredSignatures);
   await validatorManager.setValidators(validators);

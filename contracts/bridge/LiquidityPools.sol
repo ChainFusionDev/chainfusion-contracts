@@ -22,7 +22,6 @@ contract LiquidityPools is Initializable, Ownable {
     mapping(address => uint256) public totalRewardPoints;
     TokenManager public tokenManager;
     Bridge public bridge;
-    Globals public globals;
     uint256 public feePercentage;
 
     event LiquidityAdded(address token, address account, uint256 amount);
@@ -38,12 +37,10 @@ contract LiquidityPools is Initializable, Ownable {
     function initialize(
         address _tokenManager,
         address _bridge,
-        address _globals,
         uint256 _feePercentage
     ) external initializer {
         tokenManager = TokenManager(_tokenManager);
         bridge = Bridge(_bridge);
-        globals = Globals(_globals);
         feePercentage = _feePercentage;
     }
 
@@ -112,12 +109,12 @@ contract LiquidityPools is Initializable, Ownable {
 
     function rewardsOwing(address _token) public view returns (uint256) {
         uint256 newRewardPoints = totalRewardPoints[_token] - liquidityPositions[_token][msg.sender].lastRewardPoints;
-        return (liquidityPositions[_token][msg.sender].balance * newRewardPoints) / globals.BASE_DIVISOR();
+        return (liquidityPositions[_token][msg.sender].balance * newRewardPoints) / BASE_DIVISOR;
     }
 
     function distributeFee(address _token, uint256 _amount) private {
         require(_amount > 0, "LiquidityPools: amount must be greater than zero");
-        totalRewardPoints[_token] += (_amount * globals.BASE_DIVISOR()) / providedLiquidity[_token];
+        totalRewardPoints[_token] += (_amount * BASE_DIVISOR) / providedLiquidity[_token];
         providedLiquidity[_token] += _amount;
         collectedFees[_token] += _amount;
     }
