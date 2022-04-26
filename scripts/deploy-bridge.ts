@@ -5,6 +5,11 @@ async function main() {
   const ownerAddress = owner.address;
   const feePercentage = '10000000000000000';
 
+  const Globals = await ethers.getContractFactory('Globals');
+  const globals = await Globals.deploy();
+  await globals.deployed();
+  console.log('Globals deployed to:', globals.address);
+
   const TokenManager = await ethers.getContractFactory('TokenManager');
   const tokenManager = await TokenManager.deploy();
   await tokenManager.deployed();
@@ -28,10 +33,16 @@ async function main() {
   const bridge = await Bridge.deploy();
   await bridge.deployed();
   await (
-    await bridge.initialize(ownerAddress, validatorManager.address, tokenManager.address, liquidityPools.address)
+    await bridge.initialize(
+      ownerAddress,
+      validatorManager.address,
+      tokenManager.address,
+      liquidityPools.address,
+      globals.address
+    )
   ).wait();
 
-  await (await liquidityPools.initialize(tokenManager.address, bridge.address, feePercentage)).wait();
+  await (await liquidityPools.initialize(tokenManager.address, bridge.address, globals.address, feePercentage)).wait();
 
   console.log('Bridge deployed to:', bridge.address);
 }

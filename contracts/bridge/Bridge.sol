@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./TokenManager.sol";
 import "./ValidatorManager.sol";
 import "./LiquidityPools.sol";
+import "./Globals.sol";
 
 contract Bridge is Initializable, Ownable {
     mapping(bytes32 => mapping(address => bool)) public approvals;
@@ -15,6 +16,7 @@ contract Bridge is Initializable, Ownable {
     TokenManager public tokenManager;
     ValidatorManager public validatorManager;
     LiquidityPools public liquidityPools;
+    Globals public globals;
 
     event Approved(bytes32 id, address validator);
     event Deposited(address token, address destinationToken, uint256 chainId, uint256 amount);
@@ -32,12 +34,14 @@ contract Bridge is Initializable, Ownable {
         address _owner,
         ValidatorManager _validatorManager,
         address _tokenManager,
-        address _liquidityPools
+        address _liquidityPools,
+        address _globals
     ) external initializer {
         _transferOwnership(_owner);
         validatorManager = _validatorManager;
         tokenManager = TokenManager(_tokenManager);
         liquidityPools = LiquidityPools(_liquidityPools);
+        globals = Globals(_globals);
     }
 
     function setTokenManager(address _tokenManager) external onlyOwner {
@@ -86,7 +90,7 @@ contract Bridge is Initializable, Ownable {
 
         if (approvalsCount[id] >= validatorManager.requiredApprovals()) {
             executed[id] = true;
-            uint256 fee = (_amount * liquidityPools.feePercentage()) / liquidityPools.BASE_DIVISOR();
+            uint256 fee = (_amount * liquidityPools.feePercentage()) / globals.BASE_DIVISOR();
             uint256 transferAmount = _amount - fee;
             liquidityPools.transfer(_token, _receiver, fee, transferAmount);
             emit Transferred(_token, _receiver, fee, transferAmount, msg.sender);
