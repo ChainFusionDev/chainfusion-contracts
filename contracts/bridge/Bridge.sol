@@ -18,8 +18,21 @@ contract Bridge is Initializable, Ownable {
     LiquidityPools public liquidityPools;
 
     event Approved(bytes32 id, address validator);
-    event Deposited(address token, address destinationToken, uint256 chainId, uint256 amount);
-    event Transferred(address token, address receiver, uint256 fee, uint256 transferAmount, address validator);
+    event Deposited(
+        address token,
+        address destinationToken,
+        uint256 destinationChainId,
+        address receiver,
+        uint256 amount
+    );
+    event Transferred(
+        address token,
+        uint256 sourceChainId,
+        address receiver,
+        uint256 fee,
+        uint256 transferAmount,
+        address validator
+    );
     event TokenManagerUpdated(address _tokenManager);
     event ValidatorManagerUpdated(address _validatorManager);
     event LiquidityPoolsUpdated(address _liquidityPools);
@@ -59,17 +72,19 @@ contract Bridge is Initializable, Ownable {
     function deposit(
         address _token,
         uint256 _chainId,
+        address _receiver,
         uint256 _amount
     ) external {
         require(_amount != 0, "Bridge: amount cannot be equal to 0.");
         require(IERC20(_token).transferFrom(msg.sender, address(liquidityPools), _amount), "IERC20: transfer failed");
         require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
-        emit Deposited(_token, tokenManager.getDestinationToken(_token, _chainId), _chainId, _amount);
+        emit Deposited(_token, tokenManager.getDestinationToken(_token, _chainId), _chainId, _receiver, _amount);
     }
 
     function approveTransfer(
         bytes calldata _txHash,
         address _token,
+        uint256 _sourceChainId,
         address _receiver,
         uint256 _amount
     ) external onlyValidator {
@@ -90,7 +105,7 @@ contract Bridge is Initializable, Ownable {
             uint256 fee = (_amount * liquidityPools.feePercentage()) / BASE_DIVISOR;
             uint256 transferAmount = _amount - fee;
             liquidityPools.transfer(_token, _receiver, fee, transferAmount);
-            emit Transferred(_token, _receiver, fee, transferAmount, msg.sender);
+            emit Transferred(_token, _sourceChainId, _receiver, fee, transferAmount, msg.sender);
         }
     }
 }

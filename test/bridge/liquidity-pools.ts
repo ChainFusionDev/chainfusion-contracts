@@ -130,10 +130,9 @@ describe('LiquidityPools', function () {
   it('should transfer token', async function () {
     const [owner, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
-
     const amount = '100000';
 
-    const { liquidityPools, tokenManager, mockToken, bridge } = await deployBridge(
+    const { liquidityPools, tokenManager, mockToken, bridge, chainId } = await deployBridge(
       owner.address,
       [owner.address],
       initialRequiredApprovals
@@ -145,7 +144,7 @@ describe('LiquidityPools', function () {
     await mockToken.approve(liquidityPools.address, amount);
     await liquidityPools.addLiquidity(mockToken.address, amount);
 
-    await bridge.deposit(mockToken.address, receiver.address, amount);
+    await bridge.deposit(mockToken.address, chainId, receiver.address, amount);
   });
 
   it('should collect fees', async function () {
@@ -155,8 +154,9 @@ describe('LiquidityPools', function () {
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
     const fee = '10000';
     const transferAmount = '990000';
+    const sourceChainId = 5;
 
-    const { liquidityPools, tokenManager, mockToken, bridge } = await deployBridge(
+    const { liquidityPools, tokenManager, mockToken, bridge, chainId } = await deployBridge(
       owner.address,
       [v1.address],
       initialRequiredApprovals
@@ -168,11 +168,11 @@ describe('LiquidityPools', function () {
     await mockToken.approve(liquidityPools.address, amount);
     await liquidityPools.addLiquidity(mockToken.address, amount);
 
-    await bridge.deposit(mockToken.address, receiver.address, amount);
+    await bridge.deposit(mockToken.address, chainId, receiver.address, amount);
 
     const bridge1 = await ethers.getContractAt('Bridge', bridge.address, v1);
 
-    await bridge1.approveTransfer(txHash, mockToken.address, receiver.address, amount);
+    await bridge1.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, amount);
 
     expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(fee);
     expect(await mockToken.balanceOf(receiver.address)).to.equal(transferAmount);
@@ -183,6 +183,7 @@ describe('LiquidityPools', function () {
     const initialRequiredApprovals = 1;
     const amount = '1000000';
     const fee = '10000';
+    const sourceChainId = 5;
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
 
     const { liquidityPools, mockToken, bridge } = await deployBridge(
@@ -195,7 +196,7 @@ describe('LiquidityPools', function () {
     await mockToken.approve(liquidityPools.address, amount);
     await liquidityPools.addLiquidity(mockToken.address, amount);
 
-    await bridge.approveTransfer(txHash, mockToken.address, receiver.address, amount);
+    await bridge.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, amount);
 
     expect(await liquidityPools.rewardsOwing(mockToken.address)).to.equal(fee);
     await liquidityPools.claimRewards(mockToken.address);
@@ -233,6 +234,7 @@ describe('LiquidityPools', function () {
     const initialRequiredApprovals = 2;
     const amount = '10000000000000';
     const fee = '100000000000';
+    const sourceChainId = 5;
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
 
     const { liquidityPools, mockToken, bridge } = await deployBridge(
@@ -262,8 +264,8 @@ describe('LiquidityPools', function () {
     await liquidityPools1.addLiquidity(mockToken1.address, amount);
     await liquidityPools2.addLiquidity(mockToken2.address, amount);
 
-    await bridge1.approveTransfer(txHash, mockToken.address, receiver.address, amount);
-    await bridge2.approveTransfer(txHash, mockToken.address, receiver.address, amount);
+    await bridge1.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, amount);
+    await bridge2.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, amount);
 
     expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(fee);
 
