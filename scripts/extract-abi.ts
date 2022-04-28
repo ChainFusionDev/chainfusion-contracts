@@ -7,7 +7,7 @@ async function main() {
 
 async function extractAbi(from: string, to: string): Promise<void> {
   if (!(await fileExists(to))) {
-    fs.promises.mkdir(to);
+    await fs.promises.mkdir(to);
   }
 
   const items = await fs.promises.readdir(from);

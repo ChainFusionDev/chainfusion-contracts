@@ -30,7 +30,7 @@ var (
 
 // ValidatorManagerMetaData contains all meta data concerning the ValidatorManager contract.
 var ValidatorManagerMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isValidator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"requiredApprovals\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_requiredApprovals\",\"type\":\"uint256\"}],\"name\":\"setRequiredApprovals\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"setValidators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"requiredApprovals\",\"type\":\"uint256\"}],\"name\":\"RequiredApprovalsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"validators\",\"type\":\"address[]\"}],\"name\":\"ValidatorsUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isValidator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"requiredApprovals\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_requiredApprovals\",\"type\":\"uint256\"}],\"name\":\"setRequiredApprovals\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"setValidators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // ValidatorManagerABI is the input ABI used to generate the binding from.
@@ -534,6 +534,274 @@ func (_ValidatorManager *ValidatorManagerFilterer) WatchOwnershipTransferred(opt
 func (_ValidatorManager *ValidatorManagerFilterer) ParseOwnershipTransferred(log types.Log) (*ValidatorManagerOwnershipTransferred, error) {
 	event := new(ValidatorManagerOwnershipTransferred)
 	if err := _ValidatorManager.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// ValidatorManagerRequiredApprovalsUpdatedIterator is returned from FilterRequiredApprovalsUpdated and is used to iterate over the raw logs and unpacked data for RequiredApprovalsUpdated events raised by the ValidatorManager contract.
+type ValidatorManagerRequiredApprovalsUpdatedIterator struct {
+	Event *ValidatorManagerRequiredApprovalsUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *ValidatorManagerRequiredApprovalsUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(ValidatorManagerRequiredApprovalsUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(ValidatorManagerRequiredApprovalsUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *ValidatorManagerRequiredApprovalsUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *ValidatorManagerRequiredApprovalsUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// ValidatorManagerRequiredApprovalsUpdated represents a RequiredApprovalsUpdated event raised by the ValidatorManager contract.
+type ValidatorManagerRequiredApprovalsUpdated struct {
+	RequiredApprovals *big.Int
+	Raw               types.Log // Blockchain specific contextual infos
+}
+
+// FilterRequiredApprovalsUpdated is a free log retrieval operation binding the contract event 0xdb445dd03a560dac1b5553e3d3a8d6396138df6ab80174d52bfb898a57f42936.
+//
+// Solidity: event RequiredApprovalsUpdated(uint256 requiredApprovals)
+func (_ValidatorManager *ValidatorManagerFilterer) FilterRequiredApprovalsUpdated(opts *bind.FilterOpts) (*ValidatorManagerRequiredApprovalsUpdatedIterator, error) {
+
+	logs, sub, err := _ValidatorManager.contract.FilterLogs(opts, "RequiredApprovalsUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &ValidatorManagerRequiredApprovalsUpdatedIterator{contract: _ValidatorManager.contract, event: "RequiredApprovalsUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchRequiredApprovalsUpdated is a free log subscription operation binding the contract event 0xdb445dd03a560dac1b5553e3d3a8d6396138df6ab80174d52bfb898a57f42936.
+//
+// Solidity: event RequiredApprovalsUpdated(uint256 requiredApprovals)
+func (_ValidatorManager *ValidatorManagerFilterer) WatchRequiredApprovalsUpdated(opts *bind.WatchOpts, sink chan<- *ValidatorManagerRequiredApprovalsUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _ValidatorManager.contract.WatchLogs(opts, "RequiredApprovalsUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(ValidatorManagerRequiredApprovalsUpdated)
+				if err := _ValidatorManager.contract.UnpackLog(event, "RequiredApprovalsUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseRequiredApprovalsUpdated is a log parse operation binding the contract event 0xdb445dd03a560dac1b5553e3d3a8d6396138df6ab80174d52bfb898a57f42936.
+//
+// Solidity: event RequiredApprovalsUpdated(uint256 requiredApprovals)
+func (_ValidatorManager *ValidatorManagerFilterer) ParseRequiredApprovalsUpdated(log types.Log) (*ValidatorManagerRequiredApprovalsUpdated, error) {
+	event := new(ValidatorManagerRequiredApprovalsUpdated)
+	if err := _ValidatorManager.contract.UnpackLog(event, "RequiredApprovalsUpdated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// ValidatorManagerValidatorsUpdatedIterator is returned from FilterValidatorsUpdated and is used to iterate over the raw logs and unpacked data for ValidatorsUpdated events raised by the ValidatorManager contract.
+type ValidatorManagerValidatorsUpdatedIterator struct {
+	Event *ValidatorManagerValidatorsUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *ValidatorManagerValidatorsUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(ValidatorManagerValidatorsUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(ValidatorManagerValidatorsUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *ValidatorManagerValidatorsUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *ValidatorManagerValidatorsUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// ValidatorManagerValidatorsUpdated represents a ValidatorsUpdated event raised by the ValidatorManager contract.
+type ValidatorManagerValidatorsUpdated struct {
+	Validators []common.Address
+	Raw        types.Log // Blockchain specific contextual infos
+}
+
+// FilterValidatorsUpdated is a free log retrieval operation binding the contract event 0x095f1141a8102fc81879f247c8ea3c0aa8a60f19127b978c5f1397ecc245b40d.
+//
+// Solidity: event ValidatorsUpdated(address[] validators)
+func (_ValidatorManager *ValidatorManagerFilterer) FilterValidatorsUpdated(opts *bind.FilterOpts) (*ValidatorManagerValidatorsUpdatedIterator, error) {
+
+	logs, sub, err := _ValidatorManager.contract.FilterLogs(opts, "ValidatorsUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &ValidatorManagerValidatorsUpdatedIterator{contract: _ValidatorManager.contract, event: "ValidatorsUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchValidatorsUpdated is a free log subscription operation binding the contract event 0x095f1141a8102fc81879f247c8ea3c0aa8a60f19127b978c5f1397ecc245b40d.
+//
+// Solidity: event ValidatorsUpdated(address[] validators)
+func (_ValidatorManager *ValidatorManagerFilterer) WatchValidatorsUpdated(opts *bind.WatchOpts, sink chan<- *ValidatorManagerValidatorsUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _ValidatorManager.contract.WatchLogs(opts, "ValidatorsUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(ValidatorManagerValidatorsUpdated)
+				if err := _ValidatorManager.contract.UnpackLog(event, "ValidatorsUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseValidatorsUpdated is a log parse operation binding the contract event 0x095f1141a8102fc81879f247c8ea3c0aa8a60f19127b978c5f1397ecc245b40d.
+//
+// Solidity: event ValidatorsUpdated(address[] validators)
+func (_ValidatorManager *ValidatorManagerFilterer) ParseValidatorsUpdated(log types.Log) (*ValidatorManagerValidatorsUpdated, error) {
+	event := new(ValidatorManagerValidatorsUpdated)
+	if err := _ValidatorManager.contract.UnpackLog(event, "ValidatorsUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

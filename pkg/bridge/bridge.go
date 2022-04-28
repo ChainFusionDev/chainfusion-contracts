@@ -30,7 +30,7 @@ var (
 
 // BridgeMetaData contains all meta data concerning the Bridge contract.
 var BridgeMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"id\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Approved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"destinationToken\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Deposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Transferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"approvals\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"approvalsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_txHash\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"approveTransfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"deposit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"executed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"},{\"internalType\":\"contractValidatorManager\",\"name\":\"_validatorManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_liquidityPools\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"liquidityPools\",\"outputs\":[{\"internalType\":\"contractLiquidityPools\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_liquidityPools\",\"type\":\"address\"}],\"name\":\"setLiquidityPools\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"setTokenManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validatorManager\",\"type\":\"address\"}],\"name\":\"setValidatorManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenManager\",\"outputs\":[{\"internalType\":\"contractTokenManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorManager\",\"outputs\":[{\"internalType\":\"contractValidatorManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"id\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Approved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"destinationToken\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Deposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_liquidityPools\",\"type\":\"address\"}],\"name\":\"LiquidityPoolsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"TokenManagerUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"transferAmount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Transferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_validatorManager\",\"type\":\"address\"}],\"name\":\"ValidatorManagerUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"approvals\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"approvalsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_txHash\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sourceChainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"approveTransfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"deposit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"executed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"},{\"internalType\":\"contractValidatorManager\",\"name\":\"_validatorManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_liquidityPools\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"liquidityPools\",\"outputs\":[{\"internalType\":\"contractLiquidityPools\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_liquidityPools\",\"type\":\"address\"}],\"name\":\"setLiquidityPools\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"setTokenManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validatorManager\",\"type\":\"address\"}],\"name\":\"setValidatorManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenManager\",\"outputs\":[{\"internalType\":\"contractTokenManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorManager\",\"outputs\":[{\"internalType\":\"contractValidatorManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // BridgeABI is the input ABI used to generate the binding from.
@@ -396,46 +396,46 @@ func (_Bridge *BridgeCallerSession) ValidatorManager() (common.Address, error) {
 	return _Bridge.Contract.ValidatorManager(&_Bridge.CallOpts)
 }
 
-// ApproveTransfer is a paid mutator transaction binding the contract method 0xf29850b3.
+// ApproveTransfer is a paid mutator transaction binding the contract method 0x7871e4e0.
 //
-// Solidity: function approveTransfer(bytes _txHash, address _token, address _receiver, uint256 _amount) returns()
-func (_Bridge *BridgeTransactor) ApproveTransfer(opts *bind.TransactOpts, _txHash []byte, _token common.Address, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
-	return _Bridge.contract.Transact(opts, "approveTransfer", _txHash, _token, _receiver, _amount)
+// Solidity: function approveTransfer(bytes _txHash, address _token, uint256 _sourceChainId, address _receiver, uint256 _amount) returns()
+func (_Bridge *BridgeTransactor) ApproveTransfer(opts *bind.TransactOpts, _txHash []byte, _token common.Address, _sourceChainId *big.Int, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _Bridge.contract.Transact(opts, "approveTransfer", _txHash, _token, _sourceChainId, _receiver, _amount)
 }
 
-// ApproveTransfer is a paid mutator transaction binding the contract method 0xf29850b3.
+// ApproveTransfer is a paid mutator transaction binding the contract method 0x7871e4e0.
 //
-// Solidity: function approveTransfer(bytes _txHash, address _token, address _receiver, uint256 _amount) returns()
-func (_Bridge *BridgeSession) ApproveTransfer(_txHash []byte, _token common.Address, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
-	return _Bridge.Contract.ApproveTransfer(&_Bridge.TransactOpts, _txHash, _token, _receiver, _amount)
+// Solidity: function approveTransfer(bytes _txHash, address _token, uint256 _sourceChainId, address _receiver, uint256 _amount) returns()
+func (_Bridge *BridgeSession) ApproveTransfer(_txHash []byte, _token common.Address, _sourceChainId *big.Int, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _Bridge.Contract.ApproveTransfer(&_Bridge.TransactOpts, _txHash, _token, _sourceChainId, _receiver, _amount)
 }
 
-// ApproveTransfer is a paid mutator transaction binding the contract method 0xf29850b3.
+// ApproveTransfer is a paid mutator transaction binding the contract method 0x7871e4e0.
 //
-// Solidity: function approveTransfer(bytes _txHash, address _token, address _receiver, uint256 _amount) returns()
-func (_Bridge *BridgeTransactorSession) ApproveTransfer(_txHash []byte, _token common.Address, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
-	return _Bridge.Contract.ApproveTransfer(&_Bridge.TransactOpts, _txHash, _token, _receiver, _amount)
+// Solidity: function approveTransfer(bytes _txHash, address _token, uint256 _sourceChainId, address _receiver, uint256 _amount) returns()
+func (_Bridge *BridgeTransactorSession) ApproveTransfer(_txHash []byte, _token common.Address, _sourceChainId *big.Int, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _Bridge.Contract.ApproveTransfer(&_Bridge.TransactOpts, _txHash, _token, _sourceChainId, _receiver, _amount)
 }
 
-// Deposit is a paid mutator transaction binding the contract method 0x0efe6a8b.
+// Deposit is a paid mutator transaction binding the contract method 0x90d25074.
 //
-// Solidity: function deposit(address _token, uint256 _chainId, uint256 _amount) returns()
-func (_Bridge *BridgeTransactor) Deposit(opts *bind.TransactOpts, _token common.Address, _chainId *big.Int, _amount *big.Int) (*types.Transaction, error) {
-	return _Bridge.contract.Transact(opts, "deposit", _token, _chainId, _amount)
+// Solidity: function deposit(address _token, uint256 _chainId, address _receiver, uint256 _amount) returns()
+func (_Bridge *BridgeTransactor) Deposit(opts *bind.TransactOpts, _token common.Address, _chainId *big.Int, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _Bridge.contract.Transact(opts, "deposit", _token, _chainId, _receiver, _amount)
 }
 
-// Deposit is a paid mutator transaction binding the contract method 0x0efe6a8b.
+// Deposit is a paid mutator transaction binding the contract method 0x90d25074.
 //
-// Solidity: function deposit(address _token, uint256 _chainId, uint256 _amount) returns()
-func (_Bridge *BridgeSession) Deposit(_token common.Address, _chainId *big.Int, _amount *big.Int) (*types.Transaction, error) {
-	return _Bridge.Contract.Deposit(&_Bridge.TransactOpts, _token, _chainId, _amount)
+// Solidity: function deposit(address _token, uint256 _chainId, address _receiver, uint256 _amount) returns()
+func (_Bridge *BridgeSession) Deposit(_token common.Address, _chainId *big.Int, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _Bridge.Contract.Deposit(&_Bridge.TransactOpts, _token, _chainId, _receiver, _amount)
 }
 
-// Deposit is a paid mutator transaction binding the contract method 0x0efe6a8b.
+// Deposit is a paid mutator transaction binding the contract method 0x90d25074.
 //
-// Solidity: function deposit(address _token, uint256 _chainId, uint256 _amount) returns()
-func (_Bridge *BridgeTransactorSession) Deposit(_token common.Address, _chainId *big.Int, _amount *big.Int) (*types.Transaction, error) {
-	return _Bridge.Contract.Deposit(&_Bridge.TransactOpts, _token, _chainId, _amount)
+// Solidity: function deposit(address _token, uint256 _chainId, address _receiver, uint256 _amount) returns()
+func (_Bridge *BridgeTransactorSession) Deposit(_token common.Address, _chainId *big.Int, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _Bridge.Contract.Deposit(&_Bridge.TransactOpts, _token, _chainId, _receiver, _amount)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0xf8c8765e.
@@ -768,16 +768,17 @@ func (it *BridgeDepositedIterator) Close() error {
 
 // BridgeDeposited represents a Deposited event raised by the Bridge contract.
 type BridgeDeposited struct {
-	Token            common.Address
-	DestinationToken common.Address
-	ChainId          *big.Int
-	Amount           *big.Int
-	Raw              types.Log // Blockchain specific contextual infos
+	Token              common.Address
+	DestinationToken   common.Address
+	DestinationChainId *big.Int
+	Receiver           common.Address
+	Amount             *big.Int
+	Raw                types.Log // Blockchain specific contextual infos
 }
 
-// FilterDeposited is a free log retrieval operation binding the contract event 0xf5681f9d0db1b911ac18ee83d515a1cf1051853a9eae418316a2fdf7dea427c5.
+// FilterDeposited is a free log retrieval operation binding the contract event 0xbff4812e409bb3904216e9fa161d3a7760e4baeac7c1f7d0aff44114fc1e1bbd.
 //
-// Solidity: event Deposited(address token, address destinationToken, uint256 chainId, uint256 amount)
+// Solidity: event Deposited(address token, address destinationToken, uint256 destinationChainId, address receiver, uint256 amount)
 func (_Bridge *BridgeFilterer) FilterDeposited(opts *bind.FilterOpts) (*BridgeDepositedIterator, error) {
 
 	logs, sub, err := _Bridge.contract.FilterLogs(opts, "Deposited")
@@ -787,9 +788,9 @@ func (_Bridge *BridgeFilterer) FilterDeposited(opts *bind.FilterOpts) (*BridgeDe
 	return &BridgeDepositedIterator{contract: _Bridge.contract, event: "Deposited", logs: logs, sub: sub}, nil
 }
 
-// WatchDeposited is a free log subscription operation binding the contract event 0xf5681f9d0db1b911ac18ee83d515a1cf1051853a9eae418316a2fdf7dea427c5.
+// WatchDeposited is a free log subscription operation binding the contract event 0xbff4812e409bb3904216e9fa161d3a7760e4baeac7c1f7d0aff44114fc1e1bbd.
 //
-// Solidity: event Deposited(address token, address destinationToken, uint256 chainId, uint256 amount)
+// Solidity: event Deposited(address token, address destinationToken, uint256 destinationChainId, address receiver, uint256 amount)
 func (_Bridge *BridgeFilterer) WatchDeposited(opts *bind.WatchOpts, sink chan<- *BridgeDeposited) (event.Subscription, error) {
 
 	logs, sub, err := _Bridge.contract.WatchLogs(opts, "Deposited")
@@ -824,12 +825,146 @@ func (_Bridge *BridgeFilterer) WatchDeposited(opts *bind.WatchOpts, sink chan<- 
 	}), nil
 }
 
-// ParseDeposited is a log parse operation binding the contract event 0xf5681f9d0db1b911ac18ee83d515a1cf1051853a9eae418316a2fdf7dea427c5.
+// ParseDeposited is a log parse operation binding the contract event 0xbff4812e409bb3904216e9fa161d3a7760e4baeac7c1f7d0aff44114fc1e1bbd.
 //
-// Solidity: event Deposited(address token, address destinationToken, uint256 chainId, uint256 amount)
+// Solidity: event Deposited(address token, address destinationToken, uint256 destinationChainId, address receiver, uint256 amount)
 func (_Bridge *BridgeFilterer) ParseDeposited(log types.Log) (*BridgeDeposited, error) {
 	event := new(BridgeDeposited)
 	if err := _Bridge.contract.UnpackLog(event, "Deposited", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// BridgeLiquidityPoolsUpdatedIterator is returned from FilterLiquidityPoolsUpdated and is used to iterate over the raw logs and unpacked data for LiquidityPoolsUpdated events raised by the Bridge contract.
+type BridgeLiquidityPoolsUpdatedIterator struct {
+	Event *BridgeLiquidityPoolsUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *BridgeLiquidityPoolsUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(BridgeLiquidityPoolsUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(BridgeLiquidityPoolsUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *BridgeLiquidityPoolsUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *BridgeLiquidityPoolsUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// BridgeLiquidityPoolsUpdated represents a LiquidityPoolsUpdated event raised by the Bridge contract.
+type BridgeLiquidityPoolsUpdated struct {
+	LiquidityPools common.Address
+	Raw            types.Log // Blockchain specific contextual infos
+}
+
+// FilterLiquidityPoolsUpdated is a free log retrieval operation binding the contract event 0xa267dfaba1c8ec87bb2497438b406981ff010a22f9def8ac81f7d79f06d85db6.
+//
+// Solidity: event LiquidityPoolsUpdated(address _liquidityPools)
+func (_Bridge *BridgeFilterer) FilterLiquidityPoolsUpdated(opts *bind.FilterOpts) (*BridgeLiquidityPoolsUpdatedIterator, error) {
+
+	logs, sub, err := _Bridge.contract.FilterLogs(opts, "LiquidityPoolsUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &BridgeLiquidityPoolsUpdatedIterator{contract: _Bridge.contract, event: "LiquidityPoolsUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchLiquidityPoolsUpdated is a free log subscription operation binding the contract event 0xa267dfaba1c8ec87bb2497438b406981ff010a22f9def8ac81f7d79f06d85db6.
+//
+// Solidity: event LiquidityPoolsUpdated(address _liquidityPools)
+func (_Bridge *BridgeFilterer) WatchLiquidityPoolsUpdated(opts *bind.WatchOpts, sink chan<- *BridgeLiquidityPoolsUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _Bridge.contract.WatchLogs(opts, "LiquidityPoolsUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(BridgeLiquidityPoolsUpdated)
+				if err := _Bridge.contract.UnpackLog(event, "LiquidityPoolsUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseLiquidityPoolsUpdated is a log parse operation binding the contract event 0xa267dfaba1c8ec87bb2497438b406981ff010a22f9def8ac81f7d79f06d85db6.
+//
+// Solidity: event LiquidityPoolsUpdated(address _liquidityPools)
+func (_Bridge *BridgeFilterer) ParseLiquidityPoolsUpdated(log types.Log) (*BridgeLiquidityPoolsUpdated, error) {
+	event := new(BridgeLiquidityPoolsUpdated)
+	if err := _Bridge.contract.UnpackLog(event, "LiquidityPoolsUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -989,6 +1124,140 @@ func (_Bridge *BridgeFilterer) ParseOwnershipTransferred(log types.Log) (*Bridge
 	return event, nil
 }
 
+// BridgeTokenManagerUpdatedIterator is returned from FilterTokenManagerUpdated and is used to iterate over the raw logs and unpacked data for TokenManagerUpdated events raised by the Bridge contract.
+type BridgeTokenManagerUpdatedIterator struct {
+	Event *BridgeTokenManagerUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *BridgeTokenManagerUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(BridgeTokenManagerUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(BridgeTokenManagerUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *BridgeTokenManagerUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *BridgeTokenManagerUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// BridgeTokenManagerUpdated represents a TokenManagerUpdated event raised by the Bridge contract.
+type BridgeTokenManagerUpdated struct {
+	TokenManager common.Address
+	Raw          types.Log // Blockchain specific contextual infos
+}
+
+// FilterTokenManagerUpdated is a free log retrieval operation binding the contract event 0x160ba3f04f73a1d23914cbe64026f708d7bea7296d144a3a2f759b97349a63fd.
+//
+// Solidity: event TokenManagerUpdated(address _tokenManager)
+func (_Bridge *BridgeFilterer) FilterTokenManagerUpdated(opts *bind.FilterOpts) (*BridgeTokenManagerUpdatedIterator, error) {
+
+	logs, sub, err := _Bridge.contract.FilterLogs(opts, "TokenManagerUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &BridgeTokenManagerUpdatedIterator{contract: _Bridge.contract, event: "TokenManagerUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchTokenManagerUpdated is a free log subscription operation binding the contract event 0x160ba3f04f73a1d23914cbe64026f708d7bea7296d144a3a2f759b97349a63fd.
+//
+// Solidity: event TokenManagerUpdated(address _tokenManager)
+func (_Bridge *BridgeFilterer) WatchTokenManagerUpdated(opts *bind.WatchOpts, sink chan<- *BridgeTokenManagerUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _Bridge.contract.WatchLogs(opts, "TokenManagerUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(BridgeTokenManagerUpdated)
+				if err := _Bridge.contract.UnpackLog(event, "TokenManagerUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTokenManagerUpdated is a log parse operation binding the contract event 0x160ba3f04f73a1d23914cbe64026f708d7bea7296d144a3a2f759b97349a63fd.
+//
+// Solidity: event TokenManagerUpdated(address _tokenManager)
+func (_Bridge *BridgeFilterer) ParseTokenManagerUpdated(log types.Log) (*BridgeTokenManagerUpdated, error) {
+	event := new(BridgeTokenManagerUpdated)
+	if err := _Bridge.contract.UnpackLog(event, "TokenManagerUpdated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // BridgeTransferredIterator is returned from FilterTransferred and is used to iterate over the raw logs and unpacked data for Transferred events raised by the Bridge contract.
 type BridgeTransferredIterator struct {
 	Event *BridgeTransferred // Event containing the contract specifics and raw log
@@ -1058,16 +1327,18 @@ func (it *BridgeTransferredIterator) Close() error {
 
 // BridgeTransferred represents a Transferred event raised by the Bridge contract.
 type BridgeTransferred struct {
-	Token     common.Address
-	Receiver  common.Address
-	Amount    *big.Int
-	Validator common.Address
-	Raw       types.Log // Blockchain specific contextual infos
+	Token          common.Address
+	SourceChainId  *big.Int
+	Receiver       common.Address
+	Fee            *big.Int
+	TransferAmount *big.Int
+	Validator      common.Address
+	Raw            types.Log // Blockchain specific contextual infos
 }
 
-// FilterTransferred is a free log retrieval operation binding the contract event 0x0fb52b545faa9c90e004f29604a41ad8cdbb14e921764129b963b88a85416f4f.
+// FilterTransferred is a free log retrieval operation binding the contract event 0x686d66bc4e3f84785fee5277e704fa71accb115159e4c7e479e1dce24bb99b6c.
 //
-// Solidity: event Transferred(address token, address receiver, uint256 amount, address validator)
+// Solidity: event Transferred(address token, uint256 sourceChainId, address receiver, uint256 fee, uint256 transferAmount, address validator)
 func (_Bridge *BridgeFilterer) FilterTransferred(opts *bind.FilterOpts) (*BridgeTransferredIterator, error) {
 
 	logs, sub, err := _Bridge.contract.FilterLogs(opts, "Transferred")
@@ -1077,9 +1348,9 @@ func (_Bridge *BridgeFilterer) FilterTransferred(opts *bind.FilterOpts) (*Bridge
 	return &BridgeTransferredIterator{contract: _Bridge.contract, event: "Transferred", logs: logs, sub: sub}, nil
 }
 
-// WatchTransferred is a free log subscription operation binding the contract event 0x0fb52b545faa9c90e004f29604a41ad8cdbb14e921764129b963b88a85416f4f.
+// WatchTransferred is a free log subscription operation binding the contract event 0x686d66bc4e3f84785fee5277e704fa71accb115159e4c7e479e1dce24bb99b6c.
 //
-// Solidity: event Transferred(address token, address receiver, uint256 amount, address validator)
+// Solidity: event Transferred(address token, uint256 sourceChainId, address receiver, uint256 fee, uint256 transferAmount, address validator)
 func (_Bridge *BridgeFilterer) WatchTransferred(opts *bind.WatchOpts, sink chan<- *BridgeTransferred) (event.Subscription, error) {
 
 	logs, sub, err := _Bridge.contract.WatchLogs(opts, "Transferred")
@@ -1114,12 +1385,146 @@ func (_Bridge *BridgeFilterer) WatchTransferred(opts *bind.WatchOpts, sink chan<
 	}), nil
 }
 
-// ParseTransferred is a log parse operation binding the contract event 0x0fb52b545faa9c90e004f29604a41ad8cdbb14e921764129b963b88a85416f4f.
+// ParseTransferred is a log parse operation binding the contract event 0x686d66bc4e3f84785fee5277e704fa71accb115159e4c7e479e1dce24bb99b6c.
 //
-// Solidity: event Transferred(address token, address receiver, uint256 amount, address validator)
+// Solidity: event Transferred(address token, uint256 sourceChainId, address receiver, uint256 fee, uint256 transferAmount, address validator)
 func (_Bridge *BridgeFilterer) ParseTransferred(log types.Log) (*BridgeTransferred, error) {
 	event := new(BridgeTransferred)
 	if err := _Bridge.contract.UnpackLog(event, "Transferred", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// BridgeValidatorManagerUpdatedIterator is returned from FilterValidatorManagerUpdated and is used to iterate over the raw logs and unpacked data for ValidatorManagerUpdated events raised by the Bridge contract.
+type BridgeValidatorManagerUpdatedIterator struct {
+	Event *BridgeValidatorManagerUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *BridgeValidatorManagerUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(BridgeValidatorManagerUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(BridgeValidatorManagerUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *BridgeValidatorManagerUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *BridgeValidatorManagerUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// BridgeValidatorManagerUpdated represents a ValidatorManagerUpdated event raised by the Bridge contract.
+type BridgeValidatorManagerUpdated struct {
+	ValidatorManager common.Address
+	Raw              types.Log // Blockchain specific contextual infos
+}
+
+// FilterValidatorManagerUpdated is a free log retrieval operation binding the contract event 0xcc1d286dbc29083de2c32a167d46163f88f978e5b16fea673f47cc4e413c9ef5.
+//
+// Solidity: event ValidatorManagerUpdated(address _validatorManager)
+func (_Bridge *BridgeFilterer) FilterValidatorManagerUpdated(opts *bind.FilterOpts) (*BridgeValidatorManagerUpdatedIterator, error) {
+
+	logs, sub, err := _Bridge.contract.FilterLogs(opts, "ValidatorManagerUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &BridgeValidatorManagerUpdatedIterator{contract: _Bridge.contract, event: "ValidatorManagerUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchValidatorManagerUpdated is a free log subscription operation binding the contract event 0xcc1d286dbc29083de2c32a167d46163f88f978e5b16fea673f47cc4e413c9ef5.
+//
+// Solidity: event ValidatorManagerUpdated(address _validatorManager)
+func (_Bridge *BridgeFilterer) WatchValidatorManagerUpdated(opts *bind.WatchOpts, sink chan<- *BridgeValidatorManagerUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _Bridge.contract.WatchLogs(opts, "ValidatorManagerUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(BridgeValidatorManagerUpdated)
+				if err := _Bridge.contract.UnpackLog(event, "ValidatorManagerUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseValidatorManagerUpdated is a log parse operation binding the contract event 0xcc1d286dbc29083de2c32a167d46163f88f978e5b16fea673f47cc4e413c9ef5.
+//
+// Solidity: event ValidatorManagerUpdated(address _validatorManager)
+func (_Bridge *BridgeFilterer) ParseValidatorManagerUpdated(log types.Log) (*BridgeValidatorManagerUpdated, error) {
+	event := new(BridgeValidatorManagerUpdated)
+	if err := _Bridge.contract.UnpackLog(event, "ValidatorManagerUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

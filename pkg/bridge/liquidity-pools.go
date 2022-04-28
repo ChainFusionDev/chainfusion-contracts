@@ -30,7 +30,7 @@ var (
 
 // LiquidityPoolsMetaData contains all meta data concerning the LiquidityPools contract.
 var LiquidityPoolsMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LiquidityAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LiquidityRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"BASE_DIVISOR\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"addLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"availableLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bridge\",\"outputs\":[{\"internalType\":\"contractBridge\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"claimRewards\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"collectedFees\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feePercentage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_bridge\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"liquidityPositions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"balance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lastRewardPoints\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"providedLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"removeLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"rewardsOwing\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"setFeePercentage\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"setTokenManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenManager\",\"outputs\":[{\"internalType\":\"contractTokenManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"totalRewardPoints\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feePercentage\",\"type\":\"uint256\"}],\"name\":\"FeePercentageUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LiquidityAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LiquidityRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenManager\",\"type\":\"address\"}],\"name\":\"TokenManagerUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"addLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"availableLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bridge\",\"outputs\":[{\"internalType\":\"contractBridge\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"claimRewards\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"collectedFees\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feePercentage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_bridge\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"liquidityPositions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"balance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lastRewardPoints\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"providedLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"removeLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"rewardsOwing\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"setFeePercentage\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"setTokenManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenManager\",\"outputs\":[{\"internalType\":\"contractTokenManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"totalRewardPoints\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_fee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_transferAmount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // LiquidityPoolsABI is the input ABI used to generate the binding from.
@@ -177,37 +177,6 @@ func (_LiquidityPools *LiquidityPoolsTransactorRaw) Transfer(opts *bind.Transact
 // Transact invokes the (paid) contract method with params as input values.
 func (_LiquidityPools *LiquidityPoolsTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	return _LiquidityPools.Contract.contract.Transact(opts, method, params...)
-}
-
-// BASEDIVISOR is a free data retrieval call binding the contract method 0x3ed77114.
-//
-// Solidity: function BASE_DIVISOR() view returns(uint256)
-func (_LiquidityPools *LiquidityPoolsCaller) BASEDIVISOR(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
-	err := _LiquidityPools.contract.Call(opts, &out, "BASE_DIVISOR")
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// BASEDIVISOR is a free data retrieval call binding the contract method 0x3ed77114.
-//
-// Solidity: function BASE_DIVISOR() view returns(uint256)
-func (_LiquidityPools *LiquidityPoolsSession) BASEDIVISOR() (*big.Int, error) {
-	return _LiquidityPools.Contract.BASEDIVISOR(&_LiquidityPools.CallOpts)
-}
-
-// BASEDIVISOR is a free data retrieval call binding the contract method 0x3ed77114.
-//
-// Solidity: function BASE_DIVISOR() view returns(uint256)
-func (_LiquidityPools *LiquidityPoolsCallerSession) BASEDIVISOR() (*big.Int, error) {
-	return _LiquidityPools.Contract.BASEDIVISOR(&_LiquidityPools.CallOpts)
 }
 
 // AvailableLiquidity is a free data retrieval call binding the contract method 0x181f37c8.
@@ -681,25 +650,25 @@ func (_LiquidityPools *LiquidityPoolsTransactorSession) SetTokenManager(_tokenMa
 	return _LiquidityPools.Contract.SetTokenManager(&_LiquidityPools.TransactOpts, _tokenManager)
 }
 
-// Transfer is a paid mutator transaction binding the contract method 0xbeabacc8.
+// Transfer is a paid mutator transaction binding the contract method 0x0411b252.
 //
-// Solidity: function transfer(address _token, address _receiver, uint256 _amount) returns()
-func (_LiquidityPools *LiquidityPoolsTransactor) Transfer(opts *bind.TransactOpts, _token common.Address, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
-	return _LiquidityPools.contract.Transact(opts, "transfer", _token, _receiver, _amount)
+// Solidity: function transfer(address _token, address _receiver, uint256 _fee, uint256 _transferAmount) returns()
+func (_LiquidityPools *LiquidityPoolsTransactor) Transfer(opts *bind.TransactOpts, _token common.Address, _receiver common.Address, _fee *big.Int, _transferAmount *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.contract.Transact(opts, "transfer", _token, _receiver, _fee, _transferAmount)
 }
 
-// Transfer is a paid mutator transaction binding the contract method 0xbeabacc8.
+// Transfer is a paid mutator transaction binding the contract method 0x0411b252.
 //
-// Solidity: function transfer(address _token, address _receiver, uint256 _amount) returns()
-func (_LiquidityPools *LiquidityPoolsSession) Transfer(_token common.Address, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
-	return _LiquidityPools.Contract.Transfer(&_LiquidityPools.TransactOpts, _token, _receiver, _amount)
+// Solidity: function transfer(address _token, address _receiver, uint256 _fee, uint256 _transferAmount) returns()
+func (_LiquidityPools *LiquidityPoolsSession) Transfer(_token common.Address, _receiver common.Address, _fee *big.Int, _transferAmount *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.Transfer(&_LiquidityPools.TransactOpts, _token, _receiver, _fee, _transferAmount)
 }
 
-// Transfer is a paid mutator transaction binding the contract method 0xbeabacc8.
+// Transfer is a paid mutator transaction binding the contract method 0x0411b252.
 //
-// Solidity: function transfer(address _token, address _receiver, uint256 _amount) returns()
-func (_LiquidityPools *LiquidityPoolsTransactorSession) Transfer(_token common.Address, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
-	return _LiquidityPools.Contract.Transfer(&_LiquidityPools.TransactOpts, _token, _receiver, _amount)
+// Solidity: function transfer(address _token, address _receiver, uint256 _fee, uint256 _transferAmount) returns()
+func (_LiquidityPools *LiquidityPoolsTransactorSession) Transfer(_token common.Address, _receiver common.Address, _fee *big.Int, _transferAmount *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.Transfer(&_LiquidityPools.TransactOpts, _token, _receiver, _fee, _transferAmount)
 }
 
 // TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
@@ -721,6 +690,140 @@ func (_LiquidityPools *LiquidityPoolsSession) TransferOwnership(newOwner common.
 // Solidity: function transferOwnership(address newOwner) returns()
 func (_LiquidityPools *LiquidityPoolsTransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
 	return _LiquidityPools.Contract.TransferOwnership(&_LiquidityPools.TransactOpts, newOwner)
+}
+
+// LiquidityPoolsFeePercentageUpdatedIterator is returned from FilterFeePercentageUpdated and is used to iterate over the raw logs and unpacked data for FeePercentageUpdated events raised by the LiquidityPools contract.
+type LiquidityPoolsFeePercentageUpdatedIterator struct {
+	Event *LiquidityPoolsFeePercentageUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *LiquidityPoolsFeePercentageUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(LiquidityPoolsFeePercentageUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(LiquidityPoolsFeePercentageUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *LiquidityPoolsFeePercentageUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *LiquidityPoolsFeePercentageUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// LiquidityPoolsFeePercentageUpdated represents a FeePercentageUpdated event raised by the LiquidityPools contract.
+type LiquidityPoolsFeePercentageUpdated struct {
+	FeePercentage *big.Int
+	Raw           types.Log // Blockchain specific contextual infos
+}
+
+// FilterFeePercentageUpdated is a free log retrieval operation binding the contract event 0x74516f05eb4bd2461d57aa1e935ee553f86a3e02bfed7759f2f772915de3d9be.
+//
+// Solidity: event FeePercentageUpdated(uint256 feePercentage)
+func (_LiquidityPools *LiquidityPoolsFilterer) FilterFeePercentageUpdated(opts *bind.FilterOpts) (*LiquidityPoolsFeePercentageUpdatedIterator, error) {
+
+	logs, sub, err := _LiquidityPools.contract.FilterLogs(opts, "FeePercentageUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &LiquidityPoolsFeePercentageUpdatedIterator{contract: _LiquidityPools.contract, event: "FeePercentageUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchFeePercentageUpdated is a free log subscription operation binding the contract event 0x74516f05eb4bd2461d57aa1e935ee553f86a3e02bfed7759f2f772915de3d9be.
+//
+// Solidity: event FeePercentageUpdated(uint256 feePercentage)
+func (_LiquidityPools *LiquidityPoolsFilterer) WatchFeePercentageUpdated(opts *bind.WatchOpts, sink chan<- *LiquidityPoolsFeePercentageUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _LiquidityPools.contract.WatchLogs(opts, "FeePercentageUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(LiquidityPoolsFeePercentageUpdated)
+				if err := _LiquidityPools.contract.UnpackLog(event, "FeePercentageUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseFeePercentageUpdated is a log parse operation binding the contract event 0x74516f05eb4bd2461d57aa1e935ee553f86a3e02bfed7759f2f772915de3d9be.
+//
+// Solidity: event FeePercentageUpdated(uint256 feePercentage)
+func (_LiquidityPools *LiquidityPoolsFilterer) ParseFeePercentageUpdated(log types.Log) (*LiquidityPoolsFeePercentageUpdated, error) {
+	event := new(LiquidityPoolsFeePercentageUpdated)
+	if err := _LiquidityPools.contract.UnpackLog(event, "FeePercentageUpdated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }
 
 // LiquidityPoolsLiquidityAddedIterator is returned from FilterLiquidityAdded and is used to iterate over the raw logs and unpacked data for LiquidityAdded events raised by the LiquidityPools contract.
@@ -1142,6 +1245,140 @@ func (_LiquidityPools *LiquidityPoolsFilterer) WatchOwnershipTransferred(opts *b
 func (_LiquidityPools *LiquidityPoolsFilterer) ParseOwnershipTransferred(log types.Log) (*LiquidityPoolsOwnershipTransferred, error) {
 	event := new(LiquidityPoolsOwnershipTransferred)
 	if err := _LiquidityPools.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// LiquidityPoolsTokenManagerUpdatedIterator is returned from FilterTokenManagerUpdated and is used to iterate over the raw logs and unpacked data for TokenManagerUpdated events raised by the LiquidityPools contract.
+type LiquidityPoolsTokenManagerUpdatedIterator struct {
+	Event *LiquidityPoolsTokenManagerUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *LiquidityPoolsTokenManagerUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(LiquidityPoolsTokenManagerUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(LiquidityPoolsTokenManagerUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *LiquidityPoolsTokenManagerUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *LiquidityPoolsTokenManagerUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// LiquidityPoolsTokenManagerUpdated represents a TokenManagerUpdated event raised by the LiquidityPools contract.
+type LiquidityPoolsTokenManagerUpdated struct {
+	TokenManager common.Address
+	Raw          types.Log // Blockchain specific contextual infos
+}
+
+// FilterTokenManagerUpdated is a free log retrieval operation binding the contract event 0x160ba3f04f73a1d23914cbe64026f708d7bea7296d144a3a2f759b97349a63fd.
+//
+// Solidity: event TokenManagerUpdated(address tokenManager)
+func (_LiquidityPools *LiquidityPoolsFilterer) FilterTokenManagerUpdated(opts *bind.FilterOpts) (*LiquidityPoolsTokenManagerUpdatedIterator, error) {
+
+	logs, sub, err := _LiquidityPools.contract.FilterLogs(opts, "TokenManagerUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &LiquidityPoolsTokenManagerUpdatedIterator{contract: _LiquidityPools.contract, event: "TokenManagerUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchTokenManagerUpdated is a free log subscription operation binding the contract event 0x160ba3f04f73a1d23914cbe64026f708d7bea7296d144a3a2f759b97349a63fd.
+//
+// Solidity: event TokenManagerUpdated(address tokenManager)
+func (_LiquidityPools *LiquidityPoolsFilterer) WatchTokenManagerUpdated(opts *bind.WatchOpts, sink chan<- *LiquidityPoolsTokenManagerUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _LiquidityPools.contract.WatchLogs(opts, "TokenManagerUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(LiquidityPoolsTokenManagerUpdated)
+				if err := _LiquidityPools.contract.UnpackLog(event, "TokenManagerUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTokenManagerUpdated is a log parse operation binding the contract event 0x160ba3f04f73a1d23914cbe64026f708d7bea7296d144a3a2f759b97349a63fd.
+//
+// Solidity: event TokenManagerUpdated(address tokenManager)
+func (_LiquidityPools *LiquidityPoolsFilterer) ParseTokenManagerUpdated(log types.Log) (*LiquidityPoolsTokenManagerUpdated, error) {
+	event := new(LiquidityPoolsTokenManagerUpdated)
+	if err := _LiquidityPools.contract.UnpackLog(event, "TokenManagerUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
