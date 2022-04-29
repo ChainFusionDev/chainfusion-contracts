@@ -28,7 +28,7 @@ contract DKG is Ownable, Initializable {
     event ValidatorsUpdated(uint256 id, address[] validators);
 
     modifier onlyValidator() {
-        require(isValidator[msg.sender], "not a validator");
+        require(isValidator[msg.sender], "DKG: not a validator");
         _;
     }
 
@@ -41,7 +41,7 @@ contract DKG is Ownable, Initializable {
     }
 
     function round1Broadcast(uint256 _id, bytes memory _rawData) external onlyValidator {
-        require(round1BroadcastData[_id].data[msg.sender].length == 0, "data already provided");
+        require(round1BroadcastData[_id].data[msg.sender].length == 0, "DKG: round 1 data already provided");
         round1BroadcastData[_id].count++;
         round1BroadcastData[_id].data[msg.sender] = _rawData;
         emit Round1Provided(_id, msg.sender);
@@ -52,7 +52,7 @@ contract DKG is Ownable, Initializable {
 
     function round2Broadcast(uint256 _id, bytes memory _rawData) external onlyValidator {
         require(round1BroadcastData[_id].count == validators[_id].length, "round 1 not finished");
-        require(round2BroadcastData[_id].data[msg.sender].length == 0, "data already provided");
+        require(round2BroadcastData[_id].data[msg.sender].length == 0, "dDKG: round 2 ata already provided");
         round2BroadcastData[_id].count++;
         round2BroadcastData[_id].data[msg.sender] = _rawData;
         emit Round2Provided(_id, msg.sender);
@@ -64,13 +64,30 @@ contract DKG is Ownable, Initializable {
     function round3Broadcast(uint256 _id, bytes memory _rawData) external onlyValidator {
         require(round1BroadcastData[_id].count == validators[_id].length, "round 1 not finished");
         require(round2BroadcastData[_id].count == validators[_id].length, "round 2 not finished");
-        require(round3BroadcastData[_id].data[msg.sender].length == 0, "data already provided");
+        require(round3BroadcastData[_id].data[msg.sender].length == 0, "DKG: round 3 data already provided");
         round3BroadcastData[_id].count++;
         round3BroadcastData[_id].data[msg.sender] = _rawData;
         emit Round3Provided(_id, msg.sender);
         if (round3BroadcastData[_id].count == validators[_id].length) {
             emit Round3Filled(_id);
         }
+    }
+
+    function getCompletedRoundsCount(uint256 _id, address _validator) external view returns (uint256) {
+        uint256 count = 0;
+        if (round1BroadcastData[_id].data[_validator].length > 0) {
+            count++;
+        }
+
+        if (round2BroadcastData[_id].data[_validator].length > 0) {
+            count++;
+        }
+
+        if (round3BroadcastData[_id].data[_validator].length > 0) {
+            count++;
+        }
+
+        return count;
     }
 
     function getRound1BroadcastCount(uint256 _id) external view returns (uint256) {

@@ -24,12 +24,11 @@ describe('DKG', function () {
       .to.emit(DKG, 'Round1Filled')
       .withArgs(id);
 
-    const bcastData1 = await dkgV1.getRound1BroadcastData(id, v1.address);
-    expect(bcastData1).to.equal(data1);
-
+    expect(await dkgV1.getRound1BroadcastData(id, v1.address)).to.equal(data1);
     expect(await dkgV1.getRound1BroadcastCount(id)).to.equal(1);
     expect(await dkgV1.getRound2BroadcastCount(id)).to.equal(0);
     expect(await dkgV1.getRound3BroadcastCount(id)).to.equal(0);
+    expect(await dkgV1.getCompletedRoundsCount(id, v1.address)).to.equal(1);
 
     expect(await dkgV1.round2Broadcast(id, data2))
       .to.emit(DKG, 'Round2Provided')
@@ -37,12 +36,11 @@ describe('DKG', function () {
       .to.emit(DKG, 'Round2Filled')
       .withArgs(id);
 
-    const bcastData2 = await dkgV1.getRound2BroadcastData(id, v1.address);
-    expect(bcastData2).to.equal(data2);
-
+    expect(await dkgV1.getRound2BroadcastData(id, v1.address)).to.equal(data2);
     expect(await dkgV1.getRound1BroadcastCount(id)).to.equal(1);
     expect(await dkgV1.getRound2BroadcastCount(id)).to.equal(1);
     expect(await dkgV1.getRound3BroadcastCount(id)).to.equal(0);
+    expect(await dkgV1.getCompletedRoundsCount(id, v1.address)).to.equal(2);
 
     expect(await dkgV1.round3Broadcast(id, data3))
       .to.emit(DKG, 'Round3Provided')
@@ -50,12 +48,11 @@ describe('DKG', function () {
       .to.emit(DKG, 'Round3Filled')
       .withArgs(id);
 
-    const bcastData3 = await dkgV1.getRound3BroadcastData(id, v1.address);
-    expect(bcastData3).to.equal(data3);
-
+    expect(await dkgV1.getRound3BroadcastData(id, v1.address)).to.equal(data3);
     expect(await dkgV1.getRound1BroadcastCount(id)).to.equal(1);
     expect(await dkgV1.getRound2BroadcastCount(id)).to.equal(1);
     expect(await dkgV1.getRound3BroadcastCount(id)).to.equal(1);
+    expect(await dkgV1.getCompletedRoundsCount(id, v1.address)).to.equal(3);
   });
 
   it('should broadcast all rounds one after another', async function () {
