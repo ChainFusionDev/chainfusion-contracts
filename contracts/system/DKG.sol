@@ -13,17 +13,10 @@ contract DKG is Ownable, Initializable {
     address[][] public validators;
     mapping(address => bool) public isValidator;
 
-    mapping(uint256 => BroacastData) private round1BroadcastData;
-    mapping(uint256 => BroacastData) private round2BroadcastData;
-    mapping(uint256 => BroacastData) private round3BroadcastData;
+    mapping(uint256 => mapping(uint256 => BroacastData)) private roundBroadcastData;
 
-    event Round1Provided(uint256 id, address validator);
-    event Round2Provided(uint256 id, address validator);
-    event Round3Provided(uint256 id, address validator);
-
-    event Round1Filled(uint256 id);
-    event Round2Filled(uint256 id);
-    event Round3Filled(uint256 id);
+    event RoundDataProvided(uint256 id, uint256 round, address validator);
+    event RoundDataFilled(uint256 id, uint256 round);
 
     event ValidatorsUpdated(uint256 id, address[] validators);
 
@@ -40,78 +33,34 @@ contract DKG is Ownable, Initializable {
         _setValidators(_validators);
     }
 
-    function round1Broadcast(uint256 _id, bytes memory _rawData) external onlyValidator {
-        require(round1BroadcastData[_id].data[msg.sender].length == 0, "DKG: round 1 data already provided");
-        round1BroadcastData[_id].count++;
-        round1BroadcastData[_id].data[msg.sender] = _rawData;
-        emit Round1Provided(_id, msg.sender);
-        if (round1BroadcastData[_id].count == validators[_id].length) {
-            emit Round1Filled(_id);
+    function roundBroadcast(
+        uint256 _id,
+        uint256 _round,
+        bytes memory _rawData
+    ) external onlyValidator {
+        require(roundBroadcastData[_id][_round].data[msg.sender].length == 0, "DKG: round data already provided");
+        roundBroadcastData[_id][_round].count++;
+        roundBroadcastData[_id][_round].data[msg.sender] = _rawData;
+        emit RoundDataProvided(_id, _round, msg.sender);
+        if (roundBroadcastData[_id][_round].count == validators[_id].length) {
+            emit RoundDataFilled(_id, _round);
         }
     }
 
-    function round2Broadcast(uint256 _id, bytes memory _rawData) external onlyValidator {
-        require(round1BroadcastData[_id].count == validators[_id].length, "round 1 not finished");
-        require(round2BroadcastData[_id].data[msg.sender].length == 0, "dDKG: round 2 ata already provided");
-        round2BroadcastData[_id].count++;
-        round2BroadcastData[_id].data[msg.sender] = _rawData;
-        emit Round2Provided(_id, msg.sender);
-        if (round2BroadcastData[_id].count == validators[_id].length) {
-            emit Round2Filled(_id);
-        }
+    function isRoundFilled(uint256 _id, uint256 _round) external view returns (bool) {
+        return roundBroadcastData[_id][_round].count == validators[_id].length;
     }
 
-    function round3Broadcast(uint256 _id, bytes memory _rawData) external onlyValidator {
-        require(round1BroadcastData[_id].count == validators[_id].length, "round 1 not finished");
-        require(round2BroadcastData[_id].count == validators[_id].length, "round 2 not finished");
-        require(round3BroadcastData[_id].data[msg.sender].length == 0, "DKG: round 3 data already provided");
-        round3BroadcastData[_id].count++;
-        round3BroadcastData[_id].data[msg.sender] = _rawData;
-        emit Round3Provided(_id, msg.sender);
-        if (round3BroadcastData[_id].count == validators[_id].length) {
-            emit Round3Filled(_id);
-        }
+    function getRoundBroadcastCount(uint256 _id, uint256 _round) external view returns (uint256) {
+        return roundBroadcastData[_id][_round].count;
     }
 
-    function getCompletedRoundsCount(uint256 _id, address _validator) external view returns (uint256) {
-        uint256 count = 0;
-        if (round1BroadcastData[_id].data[_validator].length > 0) {
-            count++;
-        }
-
-        if (round2BroadcastData[_id].data[_validator].length > 0) {
-            count++;
-        }
-
-        if (round3BroadcastData[_id].data[_validator].length > 0) {
-            count++;
-        }
-
-        return count;
-    }
-
-    function getRound1BroadcastCount(uint256 _id) external view returns (uint256) {
-        return round1BroadcastData[_id].count;
-    }
-
-    function getRound2BroadcastCount(uint256 _id) external view returns (uint256) {
-        return round2BroadcastData[_id].count;
-    }
-
-    function getRound3BroadcastCount(uint256 _id) external view returns (uint256) {
-        return round3BroadcastData[_id].count;
-    }
-
-    function getRound1BroadcastData(uint256 _id, address _validator) external view returns (bytes memory) {
-        return round1BroadcastData[_id].data[_validator];
-    }
-
-    function getRound2BroadcastData(uint256 _id, address _validator) external view returns (bytes memory) {
-        return round2BroadcastData[_id].data[_validator];
-    }
-
-    function getRound3BroadcastData(uint256 _id, address _validator) external view returns (bytes memory) {
-        return round3BroadcastData[_id].data[_validator];
+    function getRoundBroadcastData(
+        uint256 _id,
+        uint256 _round,
+        address _validator
+    ) external view returns (bytes memory) {
+        return roundBroadcastData[_id][_round].data[_validator];
     }
 
     function getCurrentValidators() external view returns (address[] memory) {

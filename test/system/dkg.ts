@@ -15,64 +15,41 @@ describe('DKG', function () {
       .to.emit(dkg, 'ValidatorsUpdated')
       .withArgs([v1.address]);
 
-    await expect(dkg.round1Broadcast(id, data1)).to.be.revertedWith('not a validator');
+    await expect(dkg.roundBroadcast(id, 1, data1)).to.be.revertedWith('not a validator');
 
     const dkgV1 = await ethers.getContractAt('DKG', dkg.address, v1);
-    expect(await dkgV1.round1Broadcast(id, data1))
-      .to.emit(DKG, 'Round1Provided')
-      .withArgs(id, v1.address)
-      .to.emit(DKG, 'Round1Filled')
-      .withArgs(id);
+    expect(await dkgV1.roundBroadcast(id, 1, data1))
+      .to.emit(DKG, 'RoundDataProvided')
+      .withArgs(id, 1, v1.address)
+      .to.emit(DKG, 'RoundDataFilled')
+      .withArgs(id, 1);
 
-    expect(await dkgV1.getRound1BroadcastData(id, v1.address)).to.equal(data1);
-    expect(await dkgV1.getRound1BroadcastCount(id)).to.equal(1);
-    expect(await dkgV1.getRound2BroadcastCount(id)).to.equal(0);
-    expect(await dkgV1.getRound3BroadcastCount(id)).to.equal(0);
-    expect(await dkgV1.getCompletedRoundsCount(id, v1.address)).to.equal(1);
+    expect(await dkgV1.getRoundBroadcastData(id, 1, v1.address)).to.equal(data1);
+    expect(await dkgV1.getRoundBroadcastCount(id, 1)).to.equal(1);
+    expect(await dkgV1.getRoundBroadcastCount(id, 2)).to.equal(0);
+    expect(await dkgV1.getRoundBroadcastCount(id, 3)).to.equal(0);
 
-    expect(await dkgV1.round2Broadcast(id, data2))
-      .to.emit(DKG, 'Round2Provided')
-      .withArgs(id, v1.address)
-      .to.emit(DKG, 'Round2Filled')
-      .withArgs(id);
+    expect(await dkgV1.roundBroadcast(id, 2, data2))
+      .to.emit(DKG, 'RoundDataProvided')
+      .withArgs(id, 2, v1.address)
+      .to.emit(DKG, 'RoundDataFilled')
+      .withArgs(id, 2);
 
-    expect(await dkgV1.getRound2BroadcastData(id, v1.address)).to.equal(data2);
-    expect(await dkgV1.getRound1BroadcastCount(id)).to.equal(1);
-    expect(await dkgV1.getRound2BroadcastCount(id)).to.equal(1);
-    expect(await dkgV1.getRound3BroadcastCount(id)).to.equal(0);
-    expect(await dkgV1.getCompletedRoundsCount(id, v1.address)).to.equal(2);
+    expect(await dkgV1.getRoundBroadcastData(id, 2, v1.address)).to.equal(data2);
+    expect(await dkgV1.getRoundBroadcastCount(id, 1)).to.equal(1);
+    expect(await dkgV1.getRoundBroadcastCount(id, 2)).to.equal(1);
+    expect(await dkgV1.getRoundBroadcastCount(id, 3)).to.equal(0);
 
-    expect(await dkgV1.round3Broadcast(id, data3))
-      .to.emit(DKG, 'Round3Provided')
-      .withArgs(id, v1.address)
-      .to.emit(DKG, 'Round3Filled')
-      .withArgs(id);
+    expect(await dkgV1.roundBroadcast(id, 3, data3))
+      .to.emit(DKG, 'RoundDataProvided')
+      .withArgs(id, 3, v1.address)
+      .to.emit(DKG, 'RoundDataFilled')
+      .withArgs(id, 3);
 
-    expect(await dkgV1.getRound3BroadcastData(id, v1.address)).to.equal(data3);
-    expect(await dkgV1.getRound1BroadcastCount(id)).to.equal(1);
-    expect(await dkgV1.getRound2BroadcastCount(id)).to.equal(1);
-    expect(await dkgV1.getRound3BroadcastCount(id)).to.equal(1);
-    expect(await dkgV1.getCompletedRoundsCount(id, v1.address)).to.equal(3);
-  });
-
-  it('should broadcast all rounds one after another', async function () {
-    const id = 0;
-    const data = ethers.utils.keccak256([]);
-
-    const [, v1] = await ethers.getSigners();
-    const DKG = await ethers.getContractFactory('DKG');
-    const dkg = await DKG.deploy();
-    await dkg.initialize([v1.address]);
-
-    const dkgV1 = await ethers.getContractAt('DKG', dkg.address, v1);
-    await expect(dkgV1.round2Broadcast(id, data)).to.be.revertedWith('round 1 not finished');
-    await expect(dkgV1.round3Broadcast(id, data)).to.be.revertedWith('round 1 not finished');
-
-    await dkgV1.round1Broadcast(id, data);
-    await expect(dkgV1.round3Broadcast(id, data)).to.be.revertedWith('round 2 not finished');
-
-    await dkgV1.round2Broadcast(id, data);
-    await dkgV1.round3Broadcast(id, data);
+    expect(await dkgV1.getRoundBroadcastData(id, 3, v1.address)).to.equal(data3);
+    expect(await dkgV1.getRoundBroadcastCount(id, 1)).to.equal(1);
+    expect(await dkgV1.getRoundBroadcastCount(id, 2)).to.equal(1);
+    expect(await dkgV1.getRoundBroadcastCount(id, 3)).to.equal(1);
   });
 
   it('should set validators by owner', async function () {

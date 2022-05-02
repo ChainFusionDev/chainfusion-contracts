@@ -30,7 +30,7 @@ var (
 
 // DKGMetaData contains all meta data concerning the DKG contract.
 var DKGMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"Round1Filled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Round1Provided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"Round2Filled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Round2Provided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"Round3Filled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Round3Provided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"validators\",\"type\":\"address[]\"}],\"name\":\"ValidatorsUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getCompletedRoundsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCurrentValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getRound1BroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRound1BroadcastData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getRound2BroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRound2BroadcastData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getRound3BroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRound3BroadcastData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isValidator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_rawData\",\"type\":\"bytes\"}],\"name\":\"round1Broadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_rawData\",\"type\":\"bytes\"}],\"name\":\"round2Broadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_rawData\",\"type\":\"bytes\"}],\"name\":\"round3Broadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"setValidators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"round\",\"type\":\"uint256\"}],\"name\":\"RoundDataFilled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"round\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"RoundDataProvided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"validators\",\"type\":\"address[]\"}],\"name\":\"ValidatorsUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getCurrentValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"}],\"name\":\"getRoundBroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRoundBroadcastData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"}],\"name\":\"isRoundFilled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isValidator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_rawData\",\"type\":\"bytes\"}],\"name\":\"roundBroadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"setValidators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // DKGABI is the input ABI used to generate the binding from.
@@ -179,37 +179,6 @@ func (_DKG *DKGTransactorRaw) Transact(opts *bind.TransactOpts, method string, p
 	return _DKG.Contract.contract.Transact(opts, method, params...)
 }
 
-// GetCompletedRoundsCount is a free data retrieval call binding the contract method 0xac740540.
-//
-// Solidity: function getCompletedRoundsCount(uint256 _id, address _validator) view returns(uint256)
-func (_DKG *DKGCaller) GetCompletedRoundsCount(opts *bind.CallOpts, _id *big.Int, _validator common.Address) (*big.Int, error) {
-	var out []interface{}
-	err := _DKG.contract.Call(opts, &out, "getCompletedRoundsCount", _id, _validator)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// GetCompletedRoundsCount is a free data retrieval call binding the contract method 0xac740540.
-//
-// Solidity: function getCompletedRoundsCount(uint256 _id, address _validator) view returns(uint256)
-func (_DKG *DKGSession) GetCompletedRoundsCount(_id *big.Int, _validator common.Address) (*big.Int, error) {
-	return _DKG.Contract.GetCompletedRoundsCount(&_DKG.CallOpts, _id, _validator)
-}
-
-// GetCompletedRoundsCount is a free data retrieval call binding the contract method 0xac740540.
-//
-// Solidity: function getCompletedRoundsCount(uint256 _id, address _validator) view returns(uint256)
-func (_DKG *DKGCallerSession) GetCompletedRoundsCount(_id *big.Int, _validator common.Address) (*big.Int, error) {
-	return _DKG.Contract.GetCompletedRoundsCount(&_DKG.CallOpts, _id, _validator)
-}
-
 // GetCurrentValidators is a free data retrieval call binding the contract method 0xc5f9dff0.
 //
 // Solidity: function getCurrentValidators() view returns(address[])
@@ -241,12 +210,12 @@ func (_DKG *DKGCallerSession) GetCurrentValidators() ([]common.Address, error) {
 	return _DKG.Contract.GetCurrentValidators(&_DKG.CallOpts)
 }
 
-// GetRound1BroadcastCount is a free data retrieval call binding the contract method 0x9e605e09.
+// GetRoundBroadcastCount is a free data retrieval call binding the contract method 0x50c8548f.
 //
-// Solidity: function getRound1BroadcastCount(uint256 _id) view returns(uint256)
-func (_DKG *DKGCaller) GetRound1BroadcastCount(opts *bind.CallOpts, _id *big.Int) (*big.Int, error) {
+// Solidity: function getRoundBroadcastCount(uint256 _id, uint256 _round) view returns(uint256)
+func (_DKG *DKGCaller) GetRoundBroadcastCount(opts *bind.CallOpts, _id *big.Int, _round *big.Int) (*big.Int, error) {
 	var out []interface{}
-	err := _DKG.contract.Call(opts, &out, "getRound1BroadcastCount", _id)
+	err := _DKG.contract.Call(opts, &out, "getRoundBroadcastCount", _id, _round)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -258,26 +227,26 @@ func (_DKG *DKGCaller) GetRound1BroadcastCount(opts *bind.CallOpts, _id *big.Int
 
 }
 
-// GetRound1BroadcastCount is a free data retrieval call binding the contract method 0x9e605e09.
+// GetRoundBroadcastCount is a free data retrieval call binding the contract method 0x50c8548f.
 //
-// Solidity: function getRound1BroadcastCount(uint256 _id) view returns(uint256)
-func (_DKG *DKGSession) GetRound1BroadcastCount(_id *big.Int) (*big.Int, error) {
-	return _DKG.Contract.GetRound1BroadcastCount(&_DKG.CallOpts, _id)
+// Solidity: function getRoundBroadcastCount(uint256 _id, uint256 _round) view returns(uint256)
+func (_DKG *DKGSession) GetRoundBroadcastCount(_id *big.Int, _round *big.Int) (*big.Int, error) {
+	return _DKG.Contract.GetRoundBroadcastCount(&_DKG.CallOpts, _id, _round)
 }
 
-// GetRound1BroadcastCount is a free data retrieval call binding the contract method 0x9e605e09.
+// GetRoundBroadcastCount is a free data retrieval call binding the contract method 0x50c8548f.
 //
-// Solidity: function getRound1BroadcastCount(uint256 _id) view returns(uint256)
-func (_DKG *DKGCallerSession) GetRound1BroadcastCount(_id *big.Int) (*big.Int, error) {
-	return _DKG.Contract.GetRound1BroadcastCount(&_DKG.CallOpts, _id)
+// Solidity: function getRoundBroadcastCount(uint256 _id, uint256 _round) view returns(uint256)
+func (_DKG *DKGCallerSession) GetRoundBroadcastCount(_id *big.Int, _round *big.Int) (*big.Int, error) {
+	return _DKG.Contract.GetRoundBroadcastCount(&_DKG.CallOpts, _id, _round)
 }
 
-// GetRound1BroadcastData is a free data retrieval call binding the contract method 0xfa23fba8.
+// GetRoundBroadcastData is a free data retrieval call binding the contract method 0x130b9702.
 //
-// Solidity: function getRound1BroadcastData(uint256 _id, address _validator) view returns(bytes)
-func (_DKG *DKGCaller) GetRound1BroadcastData(opts *bind.CallOpts, _id *big.Int, _validator common.Address) ([]byte, error) {
+// Solidity: function getRoundBroadcastData(uint256 _id, uint256 _round, address _validator) view returns(bytes)
+func (_DKG *DKGCaller) GetRoundBroadcastData(opts *bind.CallOpts, _id *big.Int, _round *big.Int, _validator common.Address) ([]byte, error) {
 	var out []interface{}
-	err := _DKG.contract.Call(opts, &out, "getRound1BroadcastData", _id, _validator)
+	err := _DKG.contract.Call(opts, &out, "getRoundBroadcastData", _id, _round, _validator)
 
 	if err != nil {
 		return *new([]byte), err
@@ -289,142 +258,18 @@ func (_DKG *DKGCaller) GetRound1BroadcastData(opts *bind.CallOpts, _id *big.Int,
 
 }
 
-// GetRound1BroadcastData is a free data retrieval call binding the contract method 0xfa23fba8.
+// GetRoundBroadcastData is a free data retrieval call binding the contract method 0x130b9702.
 //
-// Solidity: function getRound1BroadcastData(uint256 _id, address _validator) view returns(bytes)
-func (_DKG *DKGSession) GetRound1BroadcastData(_id *big.Int, _validator common.Address) ([]byte, error) {
-	return _DKG.Contract.GetRound1BroadcastData(&_DKG.CallOpts, _id, _validator)
+// Solidity: function getRoundBroadcastData(uint256 _id, uint256 _round, address _validator) view returns(bytes)
+func (_DKG *DKGSession) GetRoundBroadcastData(_id *big.Int, _round *big.Int, _validator common.Address) ([]byte, error) {
+	return _DKG.Contract.GetRoundBroadcastData(&_DKG.CallOpts, _id, _round, _validator)
 }
 
-// GetRound1BroadcastData is a free data retrieval call binding the contract method 0xfa23fba8.
+// GetRoundBroadcastData is a free data retrieval call binding the contract method 0x130b9702.
 //
-// Solidity: function getRound1BroadcastData(uint256 _id, address _validator) view returns(bytes)
-func (_DKG *DKGCallerSession) GetRound1BroadcastData(_id *big.Int, _validator common.Address) ([]byte, error) {
-	return _DKG.Contract.GetRound1BroadcastData(&_DKG.CallOpts, _id, _validator)
-}
-
-// GetRound2BroadcastCount is a free data retrieval call binding the contract method 0xf119535e.
-//
-// Solidity: function getRound2BroadcastCount(uint256 _id) view returns(uint256)
-func (_DKG *DKGCaller) GetRound2BroadcastCount(opts *bind.CallOpts, _id *big.Int) (*big.Int, error) {
-	var out []interface{}
-	err := _DKG.contract.Call(opts, &out, "getRound2BroadcastCount", _id)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// GetRound2BroadcastCount is a free data retrieval call binding the contract method 0xf119535e.
-//
-// Solidity: function getRound2BroadcastCount(uint256 _id) view returns(uint256)
-func (_DKG *DKGSession) GetRound2BroadcastCount(_id *big.Int) (*big.Int, error) {
-	return _DKG.Contract.GetRound2BroadcastCount(&_DKG.CallOpts, _id)
-}
-
-// GetRound2BroadcastCount is a free data retrieval call binding the contract method 0xf119535e.
-//
-// Solidity: function getRound2BroadcastCount(uint256 _id) view returns(uint256)
-func (_DKG *DKGCallerSession) GetRound2BroadcastCount(_id *big.Int) (*big.Int, error) {
-	return _DKG.Contract.GetRound2BroadcastCount(&_DKG.CallOpts, _id)
-}
-
-// GetRound2BroadcastData is a free data retrieval call binding the contract method 0x759b01aa.
-//
-// Solidity: function getRound2BroadcastData(uint256 _id, address _validator) view returns(bytes)
-func (_DKG *DKGCaller) GetRound2BroadcastData(opts *bind.CallOpts, _id *big.Int, _validator common.Address) ([]byte, error) {
-	var out []interface{}
-	err := _DKG.contract.Call(opts, &out, "getRound2BroadcastData", _id, _validator)
-
-	if err != nil {
-		return *new([]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([]byte)).(*[]byte)
-
-	return out0, err
-
-}
-
-// GetRound2BroadcastData is a free data retrieval call binding the contract method 0x759b01aa.
-//
-// Solidity: function getRound2BroadcastData(uint256 _id, address _validator) view returns(bytes)
-func (_DKG *DKGSession) GetRound2BroadcastData(_id *big.Int, _validator common.Address) ([]byte, error) {
-	return _DKG.Contract.GetRound2BroadcastData(&_DKG.CallOpts, _id, _validator)
-}
-
-// GetRound2BroadcastData is a free data retrieval call binding the contract method 0x759b01aa.
-//
-// Solidity: function getRound2BroadcastData(uint256 _id, address _validator) view returns(bytes)
-func (_DKG *DKGCallerSession) GetRound2BroadcastData(_id *big.Int, _validator common.Address) ([]byte, error) {
-	return _DKG.Contract.GetRound2BroadcastData(&_DKG.CallOpts, _id, _validator)
-}
-
-// GetRound3BroadcastCount is a free data retrieval call binding the contract method 0x8aa5fefd.
-//
-// Solidity: function getRound3BroadcastCount(uint256 _id) view returns(uint256)
-func (_DKG *DKGCaller) GetRound3BroadcastCount(opts *bind.CallOpts, _id *big.Int) (*big.Int, error) {
-	var out []interface{}
-	err := _DKG.contract.Call(opts, &out, "getRound3BroadcastCount", _id)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// GetRound3BroadcastCount is a free data retrieval call binding the contract method 0x8aa5fefd.
-//
-// Solidity: function getRound3BroadcastCount(uint256 _id) view returns(uint256)
-func (_DKG *DKGSession) GetRound3BroadcastCount(_id *big.Int) (*big.Int, error) {
-	return _DKG.Contract.GetRound3BroadcastCount(&_DKG.CallOpts, _id)
-}
-
-// GetRound3BroadcastCount is a free data retrieval call binding the contract method 0x8aa5fefd.
-//
-// Solidity: function getRound3BroadcastCount(uint256 _id) view returns(uint256)
-func (_DKG *DKGCallerSession) GetRound3BroadcastCount(_id *big.Int) (*big.Int, error) {
-	return _DKG.Contract.GetRound3BroadcastCount(&_DKG.CallOpts, _id)
-}
-
-// GetRound3BroadcastData is a free data retrieval call binding the contract method 0x70338bb9.
-//
-// Solidity: function getRound3BroadcastData(uint256 _id, address _validator) view returns(bytes)
-func (_DKG *DKGCaller) GetRound3BroadcastData(opts *bind.CallOpts, _id *big.Int, _validator common.Address) ([]byte, error) {
-	var out []interface{}
-	err := _DKG.contract.Call(opts, &out, "getRound3BroadcastData", _id, _validator)
-
-	if err != nil {
-		return *new([]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([]byte)).(*[]byte)
-
-	return out0, err
-
-}
-
-// GetRound3BroadcastData is a free data retrieval call binding the contract method 0x70338bb9.
-//
-// Solidity: function getRound3BroadcastData(uint256 _id, address _validator) view returns(bytes)
-func (_DKG *DKGSession) GetRound3BroadcastData(_id *big.Int, _validator common.Address) ([]byte, error) {
-	return _DKG.Contract.GetRound3BroadcastData(&_DKG.CallOpts, _id, _validator)
-}
-
-// GetRound3BroadcastData is a free data retrieval call binding the contract method 0x70338bb9.
-//
-// Solidity: function getRound3BroadcastData(uint256 _id, address _validator) view returns(bytes)
-func (_DKG *DKGCallerSession) GetRound3BroadcastData(_id *big.Int, _validator common.Address) ([]byte, error) {
-	return _DKG.Contract.GetRound3BroadcastData(&_DKG.CallOpts, _id, _validator)
+// Solidity: function getRoundBroadcastData(uint256 _id, uint256 _round, address _validator) view returns(bytes)
+func (_DKG *DKGCallerSession) GetRoundBroadcastData(_id *big.Int, _round *big.Int, _validator common.Address) ([]byte, error) {
+	return _DKG.Contract.GetRoundBroadcastData(&_DKG.CallOpts, _id, _round, _validator)
 }
 
 // GetValidators is a free data retrieval call binding the contract method 0x471f40fb.
@@ -456,6 +301,37 @@ func (_DKG *DKGSession) GetValidators(_id *big.Int) ([]common.Address, error) {
 // Solidity: function getValidators(uint256 _id) view returns(address[])
 func (_DKG *DKGCallerSession) GetValidators(_id *big.Int) ([]common.Address, error) {
 	return _DKG.Contract.GetValidators(&_DKG.CallOpts, _id)
+}
+
+// IsRoundFilled is a free data retrieval call binding the contract method 0xc1718e53.
+//
+// Solidity: function isRoundFilled(uint256 _id, uint256 _round) view returns(bool)
+func (_DKG *DKGCaller) IsRoundFilled(opts *bind.CallOpts, _id *big.Int, _round *big.Int) (bool, error) {
+	var out []interface{}
+	err := _DKG.contract.Call(opts, &out, "isRoundFilled", _id, _round)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsRoundFilled is a free data retrieval call binding the contract method 0xc1718e53.
+//
+// Solidity: function isRoundFilled(uint256 _id, uint256 _round) view returns(bool)
+func (_DKG *DKGSession) IsRoundFilled(_id *big.Int, _round *big.Int) (bool, error) {
+	return _DKG.Contract.IsRoundFilled(&_DKG.CallOpts, _id, _round)
+}
+
+// IsRoundFilled is a free data retrieval call binding the contract method 0xc1718e53.
+//
+// Solidity: function isRoundFilled(uint256 _id, uint256 _round) view returns(bool)
+func (_DKG *DKGCallerSession) IsRoundFilled(_id *big.Int, _round *big.Int) (bool, error) {
+	return _DKG.Contract.IsRoundFilled(&_DKG.CallOpts, _id, _round)
 }
 
 // IsValidator is a free data retrieval call binding the contract method 0xfacd743b.
@@ -593,67 +469,25 @@ func (_DKG *DKGTransactorSession) RenounceOwnership() (*types.Transaction, error
 	return _DKG.Contract.RenounceOwnership(&_DKG.TransactOpts)
 }
 
-// Round1Broadcast is a paid mutator transaction binding the contract method 0xc3db0c89.
+// RoundBroadcast is a paid mutator transaction binding the contract method 0x100c11c3.
 //
-// Solidity: function round1Broadcast(uint256 _id, bytes _rawData) returns()
-func (_DKG *DKGTransactor) Round1Broadcast(opts *bind.TransactOpts, _id *big.Int, _rawData []byte) (*types.Transaction, error) {
-	return _DKG.contract.Transact(opts, "round1Broadcast", _id, _rawData)
+// Solidity: function roundBroadcast(uint256 _id, uint256 _round, bytes _rawData) returns()
+func (_DKG *DKGTransactor) RoundBroadcast(opts *bind.TransactOpts, _id *big.Int, _round *big.Int, _rawData []byte) (*types.Transaction, error) {
+	return _DKG.contract.Transact(opts, "roundBroadcast", _id, _round, _rawData)
 }
 
-// Round1Broadcast is a paid mutator transaction binding the contract method 0xc3db0c89.
+// RoundBroadcast is a paid mutator transaction binding the contract method 0x100c11c3.
 //
-// Solidity: function round1Broadcast(uint256 _id, bytes _rawData) returns()
-func (_DKG *DKGSession) Round1Broadcast(_id *big.Int, _rawData []byte) (*types.Transaction, error) {
-	return _DKG.Contract.Round1Broadcast(&_DKG.TransactOpts, _id, _rawData)
+// Solidity: function roundBroadcast(uint256 _id, uint256 _round, bytes _rawData) returns()
+func (_DKG *DKGSession) RoundBroadcast(_id *big.Int, _round *big.Int, _rawData []byte) (*types.Transaction, error) {
+	return _DKG.Contract.RoundBroadcast(&_DKG.TransactOpts, _id, _round, _rawData)
 }
 
-// Round1Broadcast is a paid mutator transaction binding the contract method 0xc3db0c89.
+// RoundBroadcast is a paid mutator transaction binding the contract method 0x100c11c3.
 //
-// Solidity: function round1Broadcast(uint256 _id, bytes _rawData) returns()
-func (_DKG *DKGTransactorSession) Round1Broadcast(_id *big.Int, _rawData []byte) (*types.Transaction, error) {
-	return _DKG.Contract.Round1Broadcast(&_DKG.TransactOpts, _id, _rawData)
-}
-
-// Round2Broadcast is a paid mutator transaction binding the contract method 0x79143578.
-//
-// Solidity: function round2Broadcast(uint256 _id, bytes _rawData) returns()
-func (_DKG *DKGTransactor) Round2Broadcast(opts *bind.TransactOpts, _id *big.Int, _rawData []byte) (*types.Transaction, error) {
-	return _DKG.contract.Transact(opts, "round2Broadcast", _id, _rawData)
-}
-
-// Round2Broadcast is a paid mutator transaction binding the contract method 0x79143578.
-//
-// Solidity: function round2Broadcast(uint256 _id, bytes _rawData) returns()
-func (_DKG *DKGSession) Round2Broadcast(_id *big.Int, _rawData []byte) (*types.Transaction, error) {
-	return _DKG.Contract.Round2Broadcast(&_DKG.TransactOpts, _id, _rawData)
-}
-
-// Round2Broadcast is a paid mutator transaction binding the contract method 0x79143578.
-//
-// Solidity: function round2Broadcast(uint256 _id, bytes _rawData) returns()
-func (_DKG *DKGTransactorSession) Round2Broadcast(_id *big.Int, _rawData []byte) (*types.Transaction, error) {
-	return _DKG.Contract.Round2Broadcast(&_DKG.TransactOpts, _id, _rawData)
-}
-
-// Round3Broadcast is a paid mutator transaction binding the contract method 0x293aab64.
-//
-// Solidity: function round3Broadcast(uint256 _id, bytes _rawData) returns()
-func (_DKG *DKGTransactor) Round3Broadcast(opts *bind.TransactOpts, _id *big.Int, _rawData []byte) (*types.Transaction, error) {
-	return _DKG.contract.Transact(opts, "round3Broadcast", _id, _rawData)
-}
-
-// Round3Broadcast is a paid mutator transaction binding the contract method 0x293aab64.
-//
-// Solidity: function round3Broadcast(uint256 _id, bytes _rawData) returns()
-func (_DKG *DKGSession) Round3Broadcast(_id *big.Int, _rawData []byte) (*types.Transaction, error) {
-	return _DKG.Contract.Round3Broadcast(&_DKG.TransactOpts, _id, _rawData)
-}
-
-// Round3Broadcast is a paid mutator transaction binding the contract method 0x293aab64.
-//
-// Solidity: function round3Broadcast(uint256 _id, bytes _rawData) returns()
-func (_DKG *DKGTransactorSession) Round3Broadcast(_id *big.Int, _rawData []byte) (*types.Transaction, error) {
-	return _DKG.Contract.Round3Broadcast(&_DKG.TransactOpts, _id, _rawData)
+// Solidity: function roundBroadcast(uint256 _id, uint256 _round, bytes _rawData) returns()
+func (_DKG *DKGTransactorSession) RoundBroadcast(_id *big.Int, _round *big.Int, _rawData []byte) (*types.Transaction, error) {
+	return _DKG.Contract.RoundBroadcast(&_DKG.TransactOpts, _id, _round, _rawData)
 }
 
 // SetValidators is a paid mutator transaction binding the contract method 0x9300c926.
@@ -851,9 +685,9 @@ func (_DKG *DKGFilterer) ParseOwnershipTransferred(log types.Log) (*DKGOwnership
 	return event, nil
 }
 
-// DKGRound1FilledIterator is returned from FilterRound1Filled and is used to iterate over the raw logs and unpacked data for Round1Filled events raised by the DKG contract.
-type DKGRound1FilledIterator struct {
-	Event *DKGRound1Filled // Event containing the contract specifics and raw log
+// DKGRoundDataFilledIterator is returned from FilterRoundDataFilled and is used to iterate over the raw logs and unpacked data for RoundDataFilled events raised by the DKG contract.
+type DKGRoundDataFilledIterator struct {
+	Event *DKGRoundDataFilled // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -867,7 +701,7 @@ type DKGRound1FilledIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *DKGRound1FilledIterator) Next() bool {
+func (it *DKGRoundDataFilledIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -876,7 +710,7 @@ func (it *DKGRound1FilledIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(DKGRound1Filled)
+			it.Event = new(DKGRoundDataFilled)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -891,7 +725,7 @@ func (it *DKGRound1FilledIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(DKGRound1Filled)
+		it.Event = new(DKGRoundDataFilled)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -907,41 +741,42 @@ func (it *DKGRound1FilledIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *DKGRound1FilledIterator) Error() error {
+func (it *DKGRoundDataFilledIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *DKGRound1FilledIterator) Close() error {
+func (it *DKGRoundDataFilledIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// DKGRound1Filled represents a Round1Filled event raised by the DKG contract.
-type DKGRound1Filled struct {
-	Id  *big.Int
-	Raw types.Log // Blockchain specific contextual infos
+// DKGRoundDataFilled represents a RoundDataFilled event raised by the DKG contract.
+type DKGRoundDataFilled struct {
+	Id    *big.Int
+	Round *big.Int
+	Raw   types.Log // Blockchain specific contextual infos
 }
 
-// FilterRound1Filled is a free log retrieval operation binding the contract event 0xba2dadbc8652b603a4d3684e367639e3672305a73b165a6eb4fa35f6eb445337.
+// FilterRoundDataFilled is a free log retrieval operation binding the contract event 0xab74ab6fc458020cf5d6116f5c013ebf3c0ad518f10de1391427c225f75db5f9.
 //
-// Solidity: event Round1Filled(uint256 id)
-func (_DKG *DKGFilterer) FilterRound1Filled(opts *bind.FilterOpts) (*DKGRound1FilledIterator, error) {
+// Solidity: event RoundDataFilled(uint256 id, uint256 round)
+func (_DKG *DKGFilterer) FilterRoundDataFilled(opts *bind.FilterOpts) (*DKGRoundDataFilledIterator, error) {
 
-	logs, sub, err := _DKG.contract.FilterLogs(opts, "Round1Filled")
+	logs, sub, err := _DKG.contract.FilterLogs(opts, "RoundDataFilled")
 	if err != nil {
 		return nil, err
 	}
-	return &DKGRound1FilledIterator{contract: _DKG.contract, event: "Round1Filled", logs: logs, sub: sub}, nil
+	return &DKGRoundDataFilledIterator{contract: _DKG.contract, event: "RoundDataFilled", logs: logs, sub: sub}, nil
 }
 
-// WatchRound1Filled is a free log subscription operation binding the contract event 0xba2dadbc8652b603a4d3684e367639e3672305a73b165a6eb4fa35f6eb445337.
+// WatchRoundDataFilled is a free log subscription operation binding the contract event 0xab74ab6fc458020cf5d6116f5c013ebf3c0ad518f10de1391427c225f75db5f9.
 //
-// Solidity: event Round1Filled(uint256 id)
-func (_DKG *DKGFilterer) WatchRound1Filled(opts *bind.WatchOpts, sink chan<- *DKGRound1Filled) (event.Subscription, error) {
+// Solidity: event RoundDataFilled(uint256 id, uint256 round)
+func (_DKG *DKGFilterer) WatchRoundDataFilled(opts *bind.WatchOpts, sink chan<- *DKGRoundDataFilled) (event.Subscription, error) {
 
-	logs, sub, err := _DKG.contract.WatchLogs(opts, "Round1Filled")
+	logs, sub, err := _DKG.contract.WatchLogs(opts, "RoundDataFilled")
 	if err != nil {
 		return nil, err
 	}
@@ -951,8 +786,8 @@ func (_DKG *DKGFilterer) WatchRound1Filled(opts *bind.WatchOpts, sink chan<- *DK
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(DKGRound1Filled)
-				if err := _DKG.contract.UnpackLog(event, "Round1Filled", log); err != nil {
+				event := new(DKGRoundDataFilled)
+				if err := _DKG.contract.UnpackLog(event, "RoundDataFilled", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -973,21 +808,21 @@ func (_DKG *DKGFilterer) WatchRound1Filled(opts *bind.WatchOpts, sink chan<- *DK
 	}), nil
 }
 
-// ParseRound1Filled is a log parse operation binding the contract event 0xba2dadbc8652b603a4d3684e367639e3672305a73b165a6eb4fa35f6eb445337.
+// ParseRoundDataFilled is a log parse operation binding the contract event 0xab74ab6fc458020cf5d6116f5c013ebf3c0ad518f10de1391427c225f75db5f9.
 //
-// Solidity: event Round1Filled(uint256 id)
-func (_DKG *DKGFilterer) ParseRound1Filled(log types.Log) (*DKGRound1Filled, error) {
-	event := new(DKGRound1Filled)
-	if err := _DKG.contract.UnpackLog(event, "Round1Filled", log); err != nil {
+// Solidity: event RoundDataFilled(uint256 id, uint256 round)
+func (_DKG *DKGFilterer) ParseRoundDataFilled(log types.Log) (*DKGRoundDataFilled, error) {
+	event := new(DKGRoundDataFilled)
+	if err := _DKG.contract.UnpackLog(event, "RoundDataFilled", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// DKGRound1ProvidedIterator is returned from FilterRound1Provided and is used to iterate over the raw logs and unpacked data for Round1Provided events raised by the DKG contract.
-type DKGRound1ProvidedIterator struct {
-	Event *DKGRound1Provided // Event containing the contract specifics and raw log
+// DKGRoundDataProvidedIterator is returned from FilterRoundDataProvided and is used to iterate over the raw logs and unpacked data for RoundDataProvided events raised by the DKG contract.
+type DKGRoundDataProvidedIterator struct {
+	Event *DKGRoundDataProvided // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -1001,7 +836,7 @@ type DKGRound1ProvidedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *DKGRound1ProvidedIterator) Next() bool {
+func (it *DKGRoundDataProvidedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -1010,7 +845,7 @@ func (it *DKGRound1ProvidedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(DKGRound1Provided)
+			it.Event = new(DKGRoundDataProvided)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -1025,7 +860,7 @@ func (it *DKGRound1ProvidedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(DKGRound1Provided)
+		it.Event = new(DKGRoundDataProvided)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -1041,42 +876,43 @@ func (it *DKGRound1ProvidedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *DKGRound1ProvidedIterator) Error() error {
+func (it *DKGRoundDataProvidedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *DKGRound1ProvidedIterator) Close() error {
+func (it *DKGRoundDataProvidedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// DKGRound1Provided represents a Round1Provided event raised by the DKG contract.
-type DKGRound1Provided struct {
+// DKGRoundDataProvided represents a RoundDataProvided event raised by the DKG contract.
+type DKGRoundDataProvided struct {
 	Id        *big.Int
+	Round     *big.Int
 	Validator common.Address
 	Raw       types.Log // Blockchain specific contextual infos
 }
 
-// FilterRound1Provided is a free log retrieval operation binding the contract event 0xcab2a03ec39d40205b180d5d56e65f4429d1845a4c75eea17c384d21cef98576.
+// FilterRoundDataProvided is a free log retrieval operation binding the contract event 0xca56b6e939787236f062daae635dc1afa2b46ad9a24ad09aa98833c637009606.
 //
-// Solidity: event Round1Provided(uint256 id, address validator)
-func (_DKG *DKGFilterer) FilterRound1Provided(opts *bind.FilterOpts) (*DKGRound1ProvidedIterator, error) {
+// Solidity: event RoundDataProvided(uint256 id, uint256 round, address validator)
+func (_DKG *DKGFilterer) FilterRoundDataProvided(opts *bind.FilterOpts) (*DKGRoundDataProvidedIterator, error) {
 
-	logs, sub, err := _DKG.contract.FilterLogs(opts, "Round1Provided")
+	logs, sub, err := _DKG.contract.FilterLogs(opts, "RoundDataProvided")
 	if err != nil {
 		return nil, err
 	}
-	return &DKGRound1ProvidedIterator{contract: _DKG.contract, event: "Round1Provided", logs: logs, sub: sub}, nil
+	return &DKGRoundDataProvidedIterator{contract: _DKG.contract, event: "RoundDataProvided", logs: logs, sub: sub}, nil
 }
 
-// WatchRound1Provided is a free log subscription operation binding the contract event 0xcab2a03ec39d40205b180d5d56e65f4429d1845a4c75eea17c384d21cef98576.
+// WatchRoundDataProvided is a free log subscription operation binding the contract event 0xca56b6e939787236f062daae635dc1afa2b46ad9a24ad09aa98833c637009606.
 //
-// Solidity: event Round1Provided(uint256 id, address validator)
-func (_DKG *DKGFilterer) WatchRound1Provided(opts *bind.WatchOpts, sink chan<- *DKGRound1Provided) (event.Subscription, error) {
+// Solidity: event RoundDataProvided(uint256 id, uint256 round, address validator)
+func (_DKG *DKGFilterer) WatchRoundDataProvided(opts *bind.WatchOpts, sink chan<- *DKGRoundDataProvided) (event.Subscription, error) {
 
-	logs, sub, err := _DKG.contract.WatchLogs(opts, "Round1Provided")
+	logs, sub, err := _DKG.contract.WatchLogs(opts, "RoundDataProvided")
 	if err != nil {
 		return nil, err
 	}
@@ -1086,8 +922,8 @@ func (_DKG *DKGFilterer) WatchRound1Provided(opts *bind.WatchOpts, sink chan<- *
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(DKGRound1Provided)
-				if err := _DKG.contract.UnpackLog(event, "Round1Provided", log); err != nil {
+				event := new(DKGRoundDataProvided)
+				if err := _DKG.contract.UnpackLog(event, "RoundDataProvided", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1108,550 +944,12 @@ func (_DKG *DKGFilterer) WatchRound1Provided(opts *bind.WatchOpts, sink chan<- *
 	}), nil
 }
 
-// ParseRound1Provided is a log parse operation binding the contract event 0xcab2a03ec39d40205b180d5d56e65f4429d1845a4c75eea17c384d21cef98576.
+// ParseRoundDataProvided is a log parse operation binding the contract event 0xca56b6e939787236f062daae635dc1afa2b46ad9a24ad09aa98833c637009606.
 //
-// Solidity: event Round1Provided(uint256 id, address validator)
-func (_DKG *DKGFilterer) ParseRound1Provided(log types.Log) (*DKGRound1Provided, error) {
-	event := new(DKGRound1Provided)
-	if err := _DKG.contract.UnpackLog(event, "Round1Provided", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// DKGRound2FilledIterator is returned from FilterRound2Filled and is used to iterate over the raw logs and unpacked data for Round2Filled events raised by the DKG contract.
-type DKGRound2FilledIterator struct {
-	Event *DKGRound2Filled // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *DKGRound2FilledIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(DKGRound2Filled)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(DKGRound2Filled)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *DKGRound2FilledIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *DKGRound2FilledIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// DKGRound2Filled represents a Round2Filled event raised by the DKG contract.
-type DKGRound2Filled struct {
-	Id  *big.Int
-	Raw types.Log // Blockchain specific contextual infos
-}
-
-// FilterRound2Filled is a free log retrieval operation binding the contract event 0xdbca37f53635ac78743347155531461af1ec150f5caad53894fcb35bce902246.
-//
-// Solidity: event Round2Filled(uint256 id)
-func (_DKG *DKGFilterer) FilterRound2Filled(opts *bind.FilterOpts) (*DKGRound2FilledIterator, error) {
-
-	logs, sub, err := _DKG.contract.FilterLogs(opts, "Round2Filled")
-	if err != nil {
-		return nil, err
-	}
-	return &DKGRound2FilledIterator{contract: _DKG.contract, event: "Round2Filled", logs: logs, sub: sub}, nil
-}
-
-// WatchRound2Filled is a free log subscription operation binding the contract event 0xdbca37f53635ac78743347155531461af1ec150f5caad53894fcb35bce902246.
-//
-// Solidity: event Round2Filled(uint256 id)
-func (_DKG *DKGFilterer) WatchRound2Filled(opts *bind.WatchOpts, sink chan<- *DKGRound2Filled) (event.Subscription, error) {
-
-	logs, sub, err := _DKG.contract.WatchLogs(opts, "Round2Filled")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(DKGRound2Filled)
-				if err := _DKG.contract.UnpackLog(event, "Round2Filled", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseRound2Filled is a log parse operation binding the contract event 0xdbca37f53635ac78743347155531461af1ec150f5caad53894fcb35bce902246.
-//
-// Solidity: event Round2Filled(uint256 id)
-func (_DKG *DKGFilterer) ParseRound2Filled(log types.Log) (*DKGRound2Filled, error) {
-	event := new(DKGRound2Filled)
-	if err := _DKG.contract.UnpackLog(event, "Round2Filled", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// DKGRound2ProvidedIterator is returned from FilterRound2Provided and is used to iterate over the raw logs and unpacked data for Round2Provided events raised by the DKG contract.
-type DKGRound2ProvidedIterator struct {
-	Event *DKGRound2Provided // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *DKGRound2ProvidedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(DKGRound2Provided)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(DKGRound2Provided)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *DKGRound2ProvidedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *DKGRound2ProvidedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// DKGRound2Provided represents a Round2Provided event raised by the DKG contract.
-type DKGRound2Provided struct {
-	Id        *big.Int
-	Validator common.Address
-	Raw       types.Log // Blockchain specific contextual infos
-}
-
-// FilterRound2Provided is a free log retrieval operation binding the contract event 0x99788364cec600a83ddfb62151e23b27db550f20ddc0314f7987be31b1ae1efc.
-//
-// Solidity: event Round2Provided(uint256 id, address validator)
-func (_DKG *DKGFilterer) FilterRound2Provided(opts *bind.FilterOpts) (*DKGRound2ProvidedIterator, error) {
-
-	logs, sub, err := _DKG.contract.FilterLogs(opts, "Round2Provided")
-	if err != nil {
-		return nil, err
-	}
-	return &DKGRound2ProvidedIterator{contract: _DKG.contract, event: "Round2Provided", logs: logs, sub: sub}, nil
-}
-
-// WatchRound2Provided is a free log subscription operation binding the contract event 0x99788364cec600a83ddfb62151e23b27db550f20ddc0314f7987be31b1ae1efc.
-//
-// Solidity: event Round2Provided(uint256 id, address validator)
-func (_DKG *DKGFilterer) WatchRound2Provided(opts *bind.WatchOpts, sink chan<- *DKGRound2Provided) (event.Subscription, error) {
-
-	logs, sub, err := _DKG.contract.WatchLogs(opts, "Round2Provided")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(DKGRound2Provided)
-				if err := _DKG.contract.UnpackLog(event, "Round2Provided", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseRound2Provided is a log parse operation binding the contract event 0x99788364cec600a83ddfb62151e23b27db550f20ddc0314f7987be31b1ae1efc.
-//
-// Solidity: event Round2Provided(uint256 id, address validator)
-func (_DKG *DKGFilterer) ParseRound2Provided(log types.Log) (*DKGRound2Provided, error) {
-	event := new(DKGRound2Provided)
-	if err := _DKG.contract.UnpackLog(event, "Round2Provided", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// DKGRound3FilledIterator is returned from FilterRound3Filled and is used to iterate over the raw logs and unpacked data for Round3Filled events raised by the DKG contract.
-type DKGRound3FilledIterator struct {
-	Event *DKGRound3Filled // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *DKGRound3FilledIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(DKGRound3Filled)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(DKGRound3Filled)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *DKGRound3FilledIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *DKGRound3FilledIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// DKGRound3Filled represents a Round3Filled event raised by the DKG contract.
-type DKGRound3Filled struct {
-	Id  *big.Int
-	Raw types.Log // Blockchain specific contextual infos
-}
-
-// FilterRound3Filled is a free log retrieval operation binding the contract event 0x4c416ead111c2e96fc29e398ae81e215f4fd24a8be8371e63ba865020e155ae0.
-//
-// Solidity: event Round3Filled(uint256 id)
-func (_DKG *DKGFilterer) FilterRound3Filled(opts *bind.FilterOpts) (*DKGRound3FilledIterator, error) {
-
-	logs, sub, err := _DKG.contract.FilterLogs(opts, "Round3Filled")
-	if err != nil {
-		return nil, err
-	}
-	return &DKGRound3FilledIterator{contract: _DKG.contract, event: "Round3Filled", logs: logs, sub: sub}, nil
-}
-
-// WatchRound3Filled is a free log subscription operation binding the contract event 0x4c416ead111c2e96fc29e398ae81e215f4fd24a8be8371e63ba865020e155ae0.
-//
-// Solidity: event Round3Filled(uint256 id)
-func (_DKG *DKGFilterer) WatchRound3Filled(opts *bind.WatchOpts, sink chan<- *DKGRound3Filled) (event.Subscription, error) {
-
-	logs, sub, err := _DKG.contract.WatchLogs(opts, "Round3Filled")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(DKGRound3Filled)
-				if err := _DKG.contract.UnpackLog(event, "Round3Filled", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseRound3Filled is a log parse operation binding the contract event 0x4c416ead111c2e96fc29e398ae81e215f4fd24a8be8371e63ba865020e155ae0.
-//
-// Solidity: event Round3Filled(uint256 id)
-func (_DKG *DKGFilterer) ParseRound3Filled(log types.Log) (*DKGRound3Filled, error) {
-	event := new(DKGRound3Filled)
-	if err := _DKG.contract.UnpackLog(event, "Round3Filled", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// DKGRound3ProvidedIterator is returned from FilterRound3Provided and is used to iterate over the raw logs and unpacked data for Round3Provided events raised by the DKG contract.
-type DKGRound3ProvidedIterator struct {
-	Event *DKGRound3Provided // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *DKGRound3ProvidedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(DKGRound3Provided)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(DKGRound3Provided)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *DKGRound3ProvidedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *DKGRound3ProvidedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// DKGRound3Provided represents a Round3Provided event raised by the DKG contract.
-type DKGRound3Provided struct {
-	Id        *big.Int
-	Validator common.Address
-	Raw       types.Log // Blockchain specific contextual infos
-}
-
-// FilterRound3Provided is a free log retrieval operation binding the contract event 0xb0cdc0cd89029b220af454829bd32a3e664f901430c44632c7c306ed36da57e7.
-//
-// Solidity: event Round3Provided(uint256 id, address validator)
-func (_DKG *DKGFilterer) FilterRound3Provided(opts *bind.FilterOpts) (*DKGRound3ProvidedIterator, error) {
-
-	logs, sub, err := _DKG.contract.FilterLogs(opts, "Round3Provided")
-	if err != nil {
-		return nil, err
-	}
-	return &DKGRound3ProvidedIterator{contract: _DKG.contract, event: "Round3Provided", logs: logs, sub: sub}, nil
-}
-
-// WatchRound3Provided is a free log subscription operation binding the contract event 0xb0cdc0cd89029b220af454829bd32a3e664f901430c44632c7c306ed36da57e7.
-//
-// Solidity: event Round3Provided(uint256 id, address validator)
-func (_DKG *DKGFilterer) WatchRound3Provided(opts *bind.WatchOpts, sink chan<- *DKGRound3Provided) (event.Subscription, error) {
-
-	logs, sub, err := _DKG.contract.WatchLogs(opts, "Round3Provided")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(DKGRound3Provided)
-				if err := _DKG.contract.UnpackLog(event, "Round3Provided", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseRound3Provided is a log parse operation binding the contract event 0xb0cdc0cd89029b220af454829bd32a3e664f901430c44632c7c306ed36da57e7.
-//
-// Solidity: event Round3Provided(uint256 id, address validator)
-func (_DKG *DKGFilterer) ParseRound3Provided(log types.Log) (*DKGRound3Provided, error) {
-	event := new(DKGRound3Provided)
-	if err := _DKG.contract.UnpackLog(event, "Round3Provided", log); err != nil {
+// Solidity: event RoundDataProvided(uint256 id, uint256 round, address validator)
+func (_DKG *DKGFilterer) ParseRoundDataProvided(log types.Log) (*DKGRoundDataProvided, error) {
+	event := new(DKGRoundDataProvided)
+	if err := _DKG.contract.UnpackLog(event, "RoundDataProvided", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
