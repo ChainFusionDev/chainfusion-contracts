@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./Signer.sol";
+import "./ThresholdSigner.sol";
 
 struct BroacastData {
     uint256 count;
@@ -11,7 +11,7 @@ struct BroacastData {
 }
 
 contract DKG is Ownable, Initializable {
-    Signer public signer;
+    ThresholdSigner public thresholdSigner;
 
     address[][] public validators;
     mapping(address => bool) public isValidator;
@@ -19,15 +19,15 @@ contract DKG is Ownable, Initializable {
     // DKG rounds data
     mapping(uint256 => mapping(uint256 => BroacastData)) private roundBroadcastData;
 
-    // Collective address voting
-    mapping(uint256 => mapping(address => address)) private roundVotes;
-    mapping(uint256 => mapping(address => uint256)) private roundVoteCounts;
+    // Signer address voting
+    mapping(uint256 => mapping(address => address)) private signerVotes;
+    mapping(uint256 => mapping(address => uint256)) private signerVoteCounts;
 
     event RoundDataProvided(uint256 generation, uint256 round, address validator);
     event RoundDataFilled(uint256 generation, uint256 round);
     event ValidatorsUpdated(uint256 generation, address[] validators);
-    event CollectiveSignerVoted(uint256 generation, address validator, address collectiveSigner);
-    event SigningUpdated(address signing);
+    event SignerVoted(uint256 generation, address validator, address collectiveSigner);
+    event ThresholdSignerUpdated(address signer);
 
     modifier onlyValidator() {
         require(isValidator[msg.sender], "DKG: not a validator");
@@ -46,9 +46,9 @@ contract DKG is Ownable, Initializable {
         _setValidators(_validators);
     }
 
-    function setSigner(address _signing) external onlyOwner {
-        signer = Signer(_signing);
-        emit SigningUpdated(_signing);
+    function setThresholdSigner(address _thresholdSigner) external onlyOwner {
+        thresholdSigner = ThresholdSigner(_thresholdSigner);
+        emit ThresholdSignerUpdated(_thresholdSigner);
     }
 
     function setValidators(address[] memory _validators) external onlyOwner {
@@ -73,21 +73,21 @@ contract DKG is Ownable, Initializable {
         }
     }
 
-    function voteCollectiveSigner(uint256 _generation, address _collectiveSigner)
+    function voteSigner(uint256 _generation, address _signerAddress)
         external
         onlyValidator
         roundIsCorrect(_generation, 4)
     {
-        require(roundVotes[_generation][msg.sender] == address(0), "DKG: already voted");
-        roundVotes[_generation][msg.sender] = _collectiveSigner;
-        roundVoteCounts[_generation][_collectiveSigner]++;
+        require(signerVotes[_generation][msg.sender] == address(0), "DKG: already voted");
+        signerVotes[_generation][msg.sender] = _signerAddress;
+        signerVoteCounts[_generation][_signerAddress]++;
 
-        emit CollectiveSignerVoted(_generation, msg.sender, _collectiveSigner);
+        emit SignerVoted(_generation, msg.sender, _signerAddress);
 
-        bool enoughVotes = _enoughVotes(_generation, roundVoteCounts[_generation][_collectiveSigner]);
-        bool signerChanged = signer.activeSigner() != _collectiveSigner;
+        bool enoughVotes = _enoughVotes(_generation, signerVoteCounts[_generation][_signerAddress]);
+        bool signerChanged = thresholdSigner.activeAddress() != _signerAddress;
         if (enoughVotes && signerChanged) {
-            signer.updateCollectiveSigner(_generation, _collectiveSigner);
+            thresholdSigner.updateSignerAddress(_generation, _signerAddress);
         }
     }
 
