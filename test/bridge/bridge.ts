@@ -12,9 +12,10 @@ describe('Bridge', function () {
 
     const { validatorManager } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
 
-    expect(await validatorManager.setRequiredApprovals(newRequiredApprovals))
+    await expect(validatorManager.setRequiredApprovals(newRequiredApprovals))
       .to.emit(validatorManager, 'RequiredApprovalsUpdated')
       .withArgs(newRequiredApprovals);
+
     expect(await validatorManager.requiredApprovals()).to.equal(newRequiredApprovals);
   });
 
@@ -24,9 +25,10 @@ describe('Bridge', function () {
 
     const { validatorManager } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
 
-    expect(await validatorManager.setValidators([v2.address]))
+    await expect(validatorManager.setValidators([v2.address]))
       .to.emit(validatorManager, 'ValidatorsUpdated')
-      .withArgs(v2.address);
+      .withArgs([v2.address]);
+
     expect(await validatorManager.validators(0)).to.equal(v2.address);
   });
 
@@ -37,9 +39,10 @@ describe('Bridge', function () {
     const { bridge, tokenManager } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
     const newTokenManager = await ethers.getContractAt('TokenManager', tokenManager.address, v1);
 
-    expect(await bridge.setTokenManager(newTokenManager.address))
+    await expect(bridge.setTokenManager(newTokenManager.address))
       .to.emit(bridge, 'TokenManagerUpdated')
-      .withArgs(newTokenManager);
+      .withArgs(newTokenManager.address);
+
     expect(await bridge.tokenManager()).to.equal(newTokenManager.address);
   });
 
@@ -50,9 +53,10 @@ describe('Bridge', function () {
     const { bridge, validatorManager } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
     const newValidatorManager = await ethers.getContractAt('ValidatorManager', validatorManager.address, v1);
 
-    expect(await bridge.setValidatorManager(newValidatorManager.address))
+    await expect(bridge.setValidatorManager(newValidatorManager.address))
       .to.emit(bridge, 'ValidatorManagerUpdated')
-      .withArgs(newValidatorManager);
+      .withArgs(newValidatorManager.address);
+
     expect(await bridge.validatorManager()).to.equal(newValidatorManager.address);
   });
 
@@ -63,9 +67,10 @@ describe('Bridge', function () {
     const { bridge, liquidityPools } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
     const newLiquidityPools = await ethers.getContractAt('LiquidityPools', liquidityPools.address, v1);
 
-    expect(await bridge.setLiquidityPools(newLiquidityPools.address))
+    await expect(bridge.setLiquidityPools(newLiquidityPools.address))
       .to.emit(bridge, 'LiquidityPoolsUpdated')
-      .withArgs(newLiquidityPools);
+      .withArgs(newLiquidityPools.address);
+
     expect(await bridge.liquidityPools()).to.equal(newLiquidityPools.address);
   });
 
@@ -124,8 +129,6 @@ describe('Bridge', function () {
 
     const bridge2 = await ethers.getContractAt('Bridge', bridge.address, v2);
     await expect(bridge2.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount))
-      .to.emit(bridge2, 'Approved')
-      .withArgs(id, v2.address)
       .emit(bridge2, 'Transferred')
       .withArgs(mockToken.address, chainId, receiver.address, fee, transferAmount, v2.address);
 
