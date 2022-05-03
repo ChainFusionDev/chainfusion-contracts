@@ -10,9 +10,10 @@ describe('LiquidityPools', function () {
     const { tokenManager, liquidityPools } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
     const newTokenManager = await ethers.getContractAt('TokenManager', tokenManager.address, v1);
 
-    expect(await liquidityPools.setTokenManager(newTokenManager.address))
+    await expect(liquidityPools.setTokenManager(newTokenManager.address))
       .to.emit(liquidityPools, 'TokenManagerUpdated')
-      .withArgs(newTokenManager);
+      .withArgs(newTokenManager.address);
+
     expect(await liquidityPools.tokenManager()).to.equal(newTokenManager.address);
   });
 
@@ -23,9 +24,10 @@ describe('LiquidityPools', function () {
 
     const { liquidityPools } = await deployBridge(owner.address, [v1.address], initialRequiredApprovals);
 
-    expect(await liquidityPools.setFeePercentage(newFeePercentage))
+    await expect(liquidityPools.setFeePercentage(newFeePercentage))
       .to.emit(liquidityPools, 'FeePercentageUpdated')
       .withArgs(newFeePercentage);
+
     expect(await liquidityPools.feePercentage()).to.equal(newFeePercentage);
   });
 

@@ -10,9 +10,10 @@ describe('ValidatorStaking', function () {
 
     const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
 
-    expect(await validatorStaking.setMinimalStake(newMinimalStake))
+    await expect(validatorStaking.setMinimalStake(newMinimalStake))
       .to.emit(validatorStaking, 'MinimalStakeUpdated')
       .withArgs(newMinimalStake);
+
     expect(await validatorStaking.minimalStake()).to.equal(newMinimalStake);
   });
 
@@ -22,9 +23,10 @@ describe('ValidatorStaking', function () {
 
     const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
 
-    expect(await validatorStaking.setWithdrawalPeriod(newWithdrawalPeriod))
+    await expect(validatorStaking.setWithdrawalPeriod(newWithdrawalPeriod))
       .to.emit(validatorStaking, 'WithdrawalPeriodUpdated')
       .withArgs(newWithdrawalPeriod);
+
     expect(await validatorStaking.withdrawalPeriod()).to.equal(newWithdrawalPeriod);
   });
 

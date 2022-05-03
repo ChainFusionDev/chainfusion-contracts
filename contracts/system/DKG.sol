@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./ThresholdSigner.sol";
 
 struct BroacastData {
     uint256 count;
@@ -10,23 +11,44 @@ struct BroacastData {
 }
 
 contract DKG is Ownable, Initializable {
+    ThresholdSigner public thresholdSigner;
+
     address[][] public validators;
     mapping(address => bool) public isValidator;
 
+    // DKG rounds data
     mapping(uint256 => mapping(uint256 => BroacastData)) private roundBroadcastData;
+
+    // Signer address voting
+    mapping(uint256 => mapping(address => address)) private signerVotes;
+    mapping(uint256 => mapping(address => uint256)) private signerVoteCounts;
 
     event RoundDataProvided(uint256 generation, uint256 round, address validator);
     event RoundDataFilled(uint256 generation, uint256 round);
-
     event ValidatorsUpdated(uint256 generation, address[] validators);
+    event SignerVoted(uint256 generation, address validator, address collectiveSigner);
+    event ThresholdSignerUpdated(address signer);
 
     modifier onlyValidator() {
         require(isValidator[msg.sender], "DKG: not a validator");
         _;
     }
 
+    modifier roundIsCorrect(uint256 _generation, uint256 _round) {
+        require(
+            _round == 1 || roundBroadcastData[_generation][_round - 1].count == this.getValidatorsCount(_generation),
+            "DKG: previous round was not filled"
+        );
+        _;
+    }
+
     function initialize(address[] memory _validators) external initializer {
         _setValidators(_validators);
+    }
+
+    function setThresholdSigner(address _thresholdSigner) external onlyOwner {
+        thresholdSigner = ThresholdSigner(_thresholdSigner);
+        emit ThresholdSignerUpdated(_thresholdSigner);
     }
 
     function setValidators(address[] memory _validators) external onlyOwner {
@@ -37,16 +59,35 @@ contract DKG is Ownable, Initializable {
         uint256 _generation,
         uint256 _round,
         bytes memory _rawData
-    ) external onlyValidator {
+    ) external onlyValidator roundIsCorrect(_generation, _round) {
         require(
             roundBroadcastData[_generation][_round].data[msg.sender].length == 0,
             "DKG: round data already provided"
         );
+
         roundBroadcastData[_generation][_round].count++;
         roundBroadcastData[_generation][_round].data[msg.sender] = _rawData;
         emit RoundDataProvided(_generation, _round, msg.sender);
         if (roundBroadcastData[_generation][_round].count == validators[_generation].length) {
             emit RoundDataFilled(_generation, _round);
+        }
+    }
+
+    function voteSigner(uint256 _generation, address _signerAddress)
+        external
+        onlyValidator
+        roundIsCorrect(_generation, 4)
+    {
+        require(signerVotes[_generation][msg.sender] == address(0), "DKG: already voted");
+        signerVotes[_generation][msg.sender] = _signerAddress;
+        signerVoteCounts[_generation][_signerAddress]++;
+
+        emit SignerVoted(_generation, msg.sender, _signerAddress);
+
+        bool enoughVotes = _enoughVotes(_generation, signerVoteCounts[_generation][_signerAddress]);
+        bool signerChanged = thresholdSigner.activeAddress() != _signerAddress;
+        if (enoughVotes && signerChanged) {
+            thresholdSigner.updateSignerAddress(_generation, _signerAddress);
         }
     }
 
@@ -78,6 +119,10 @@ contract DKG is Ownable, Initializable {
         return validators[_generation];
     }
 
+    function getValidatorsCount(uint256 _generation) external view returns (uint256) {
+        return validators[_generation].length;
+    }
+
     function _setValidators(address[] memory _validators) private {
         address[] memory currentValidators = this.getCurrentValidators();
         for (uint256 i = 0; i < currentValidators.length; i++) {
@@ -90,5 +135,9 @@ contract DKG is Ownable, Initializable {
 
         validators.push(_validators);
         emit ValidatorsUpdated(validators.length - 1, _validators);
+    }
+
+    function _enoughVotes(uint256 _generation, uint256 votes) private view returns (bool) {
+        return votes > (validators[_generation].length / 2);
     }
 }
