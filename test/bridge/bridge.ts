@@ -159,4 +159,33 @@ describe('Bridge', function () {
       'TokenManager: token is not supported'
     );
   });
+
+  it('should check if transfer was already approved', async function () {
+    const [owner, v1, receiver] = await ethers.getSigners();
+    const initialRequiredApprovals = 2;
+    const depositAmount = '10000000000000000000';
+    const sourceChainId = 123;
+
+    const { mockToken, bridge, chainId, liquidityPools } = await deployBridge(
+      owner.address,
+      [owner.address, v1.address],
+      initialRequiredApprovals
+    );
+
+    const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
+
+    await mockToken.approve(bridge.address, depositAmount);
+    await mockToken.approve(liquidityPools.address, depositAmount);
+
+    await liquidityPools.addLiquidity(mockToken.address, depositAmount);
+
+    await bridge.deposit(mockToken.address, chainId, receiver.address, depositAmount);
+
+    const bridge1 = await ethers.getContractAt('Bridge', bridge.address, v1);
+
+    await bridge1.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount);
+    await bridge.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount);
+
+    expect(await bridge.isApproved(txHash, mockToken.address, receiver.address, depositAmount)).to.equal(true);
+  });
 });
