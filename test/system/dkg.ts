@@ -3,7 +3,7 @@ import { expect } from 'chai';
 
 describe('DKG', function () {
   it('should broadcast all rounds', async function () {
-    const id = 0;
+    const generation = 0;
     const data1 = ethers.utils.keccak256([1]);
     const data2 = ethers.utils.keccak256([2]);
     const data3 = ethers.utils.keccak256([3]);
@@ -15,41 +15,41 @@ describe('DKG', function () {
       .to.emit(dkg, 'ValidatorsUpdated')
       .withArgs([v1.address]);
 
-    await expect(dkg.roundBroadcast(id, 1, data1)).to.be.revertedWith('not a validator');
+    await expect(dkg.roundBroadcast(generation, 1, data1)).to.be.revertedWith('not a validator');
 
     const dkgV1 = await ethers.getContractAt('DKG', dkg.address, v1);
-    expect(await dkgV1.roundBroadcast(id, 1, data1))
+    expect(await dkgV1.roundBroadcast(generation, 1, data1))
       .to.emit(DKG, 'RoundDataProvided')
-      .withArgs(id, 1, v1.address)
+      .withArgs(generation, 1, v1.address)
       .to.emit(DKG, 'RoundDataFilled')
-      .withArgs(id, 1);
+      .withArgs(generation, 1);
 
-    expect(await dkgV1.getRoundBroadcastData(id, 1, v1.address)).to.equal(data1);
-    expect(await dkgV1.getRoundBroadcastCount(id, 1)).to.equal(1);
-    expect(await dkgV1.getRoundBroadcastCount(id, 2)).to.equal(0);
-    expect(await dkgV1.getRoundBroadcastCount(id, 3)).to.equal(0);
+    expect(await dkgV1.getRoundBroadcastData(generation, 1, v1.address)).to.equal(data1);
+    expect(await dkgV1.getRoundBroadcastCount(generation, 1)).to.equal(1);
+    expect(await dkgV1.getRoundBroadcastCount(generation, 2)).to.equal(0);
+    expect(await dkgV1.getRoundBroadcastCount(generation, 3)).to.equal(0);
 
-    expect(await dkgV1.roundBroadcast(id, 2, data2))
+    expect(await dkgV1.roundBroadcast(generation, 2, data2))
       .to.emit(DKG, 'RoundDataProvided')
-      .withArgs(id, 2, v1.address)
+      .withArgs(generation, 2, v1.address)
       .to.emit(DKG, 'RoundDataFilled')
-      .withArgs(id, 2);
+      .withArgs(generation, 2);
 
-    expect(await dkgV1.getRoundBroadcastData(id, 2, v1.address)).to.equal(data2);
-    expect(await dkgV1.getRoundBroadcastCount(id, 1)).to.equal(1);
-    expect(await dkgV1.getRoundBroadcastCount(id, 2)).to.equal(1);
-    expect(await dkgV1.getRoundBroadcastCount(id, 3)).to.equal(0);
+    expect(await dkgV1.getRoundBroadcastData(generation, 2, v1.address)).to.equal(data2);
+    expect(await dkgV1.getRoundBroadcastCount(generation, 1)).to.equal(1);
+    expect(await dkgV1.getRoundBroadcastCount(generation, 2)).to.equal(1);
+    expect(await dkgV1.getRoundBroadcastCount(generation, 3)).to.equal(0);
 
-    expect(await dkgV1.roundBroadcast(id, 3, data3))
+    expect(await dkgV1.roundBroadcast(generation, 3, data3))
       .to.emit(DKG, 'RoundDataProvided')
-      .withArgs(id, 3, v1.address)
+      .withArgs(generation, 3, v1.address)
       .to.emit(DKG, 'RoundDataFilled')
-      .withArgs(id, 3);
+      .withArgs(generation, 3);
 
-    expect(await dkgV1.getRoundBroadcastData(id, 3, v1.address)).to.equal(data3);
-    expect(await dkgV1.getRoundBroadcastCount(id, 1)).to.equal(1);
-    expect(await dkgV1.getRoundBroadcastCount(id, 2)).to.equal(1);
-    expect(await dkgV1.getRoundBroadcastCount(id, 3)).to.equal(1);
+    expect(await dkgV1.getRoundBroadcastData(generation, 3, v1.address)).to.equal(data3);
+    expect(await dkgV1.getRoundBroadcastCount(generation, 1)).to.equal(1);
+    expect(await dkgV1.getRoundBroadcastCount(generation, 2)).to.equal(1);
+    expect(await dkgV1.getRoundBroadcastCount(generation, 3)).to.equal(1);
   });
 
   it('should set validators by owner', async function () {

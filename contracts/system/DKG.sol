@@ -15,10 +15,10 @@ contract DKG is Ownable, Initializable {
 
     mapping(uint256 => mapping(uint256 => BroacastData)) private roundBroadcastData;
 
-    event RoundDataProvided(uint256 id, uint256 round, address validator);
-    event RoundDataFilled(uint256 id, uint256 round);
+    event RoundDataProvided(uint256 generation, uint256 round, address validator);
+    event RoundDataFilled(uint256 generation, uint256 round);
 
-    event ValidatorsUpdated(uint256 id, address[] validators);
+    event ValidatorsUpdated(uint256 generation, address[] validators);
 
     modifier onlyValidator() {
         require(isValidator[msg.sender], "DKG: not a validator");
@@ -34,33 +34,36 @@ contract DKG is Ownable, Initializable {
     }
 
     function roundBroadcast(
-        uint256 _id,
+        uint256 _generation,
         uint256 _round,
         bytes memory _rawData
     ) external onlyValidator {
-        require(roundBroadcastData[_id][_round].data[msg.sender].length == 0, "DKG: round data already provided");
-        roundBroadcastData[_id][_round].count++;
-        roundBroadcastData[_id][_round].data[msg.sender] = _rawData;
-        emit RoundDataProvided(_id, _round, msg.sender);
-        if (roundBroadcastData[_id][_round].count == validators[_id].length) {
-            emit RoundDataFilled(_id, _round);
+        require(
+            roundBroadcastData[_generation][_round].data[msg.sender].length == 0,
+            "DKG: round data already provided"
+        );
+        roundBroadcastData[_generation][_round].count++;
+        roundBroadcastData[_generation][_round].data[msg.sender] = _rawData;
+        emit RoundDataProvided(_generation, _round, msg.sender);
+        if (roundBroadcastData[_generation][_round].count == validators[_generation].length) {
+            emit RoundDataFilled(_generation, _round);
         }
     }
 
-    function isRoundFilled(uint256 _id, uint256 _round) external view returns (bool) {
-        return roundBroadcastData[_id][_round].count == validators[_id].length;
+    function isRoundFilled(uint256 _generation, uint256 _round) external view returns (bool) {
+        return roundBroadcastData[_generation][_round].count == validators[_generation].length;
     }
 
-    function getRoundBroadcastCount(uint256 _id, uint256 _round) external view returns (uint256) {
-        return roundBroadcastData[_id][_round].count;
+    function getRoundBroadcastCount(uint256 _generation, uint256 _round) external view returns (uint256) {
+        return roundBroadcastData[_generation][_round].count;
     }
 
     function getRoundBroadcastData(
-        uint256 _id,
+        uint256 _generation,
         uint256 _round,
         address _validator
     ) external view returns (bytes memory) {
-        return roundBroadcastData[_id][_round].data[_validator];
+        return roundBroadcastData[_generation][_round].data[_validator];
     }
 
     function getCurrentValidators() external view returns (address[] memory) {
@@ -71,8 +74,8 @@ contract DKG is Ownable, Initializable {
         return validators[validators.length - 1];
     }
 
-    function getValidators(uint256 _id) external view returns (address[] memory) {
-        return validators[_id];
+    function getValidators(uint256 _generation) external view returns (address[] memory) {
+        return validators[_generation];
     }
 
     function _setValidators(address[] memory _validators) private {

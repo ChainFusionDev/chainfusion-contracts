@@ -30,7 +30,7 @@ var (
 
 // DKGMetaData contains all meta data concerning the DKG contract.
 var DKGMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"round\",\"type\":\"uint256\"}],\"name\":\"RoundDataFilled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"round\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"RoundDataProvided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"validators\",\"type\":\"address[]\"}],\"name\":\"ValidatorsUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getCurrentValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"}],\"name\":\"getRoundBroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRoundBroadcastData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"}],\"name\":\"isRoundFilled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isValidator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_rawData\",\"type\":\"bytes\"}],\"name\":\"roundBroadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"setValidators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"generation\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"round\",\"type\":\"uint256\"}],\"name\":\"RoundDataFilled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"generation\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"round\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"RoundDataProvided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"generation\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"validators\",\"type\":\"address[]\"}],\"name\":\"ValidatorsUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getCurrentValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"}],\"name\":\"getRoundBroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRoundBroadcastData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"}],\"name\":\"getValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"}],\"name\":\"isRoundFilled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isValidator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_rawData\",\"type\":\"bytes\"}],\"name\":\"roundBroadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"setValidators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // DKGABI is the input ABI used to generate the binding from.
@@ -212,10 +212,10 @@ func (_DKG *DKGCallerSession) GetCurrentValidators() ([]common.Address, error) {
 
 // GetRoundBroadcastCount is a free data retrieval call binding the contract method 0x50c8548f.
 //
-// Solidity: function getRoundBroadcastCount(uint256 _id, uint256 _round) view returns(uint256)
-func (_DKG *DKGCaller) GetRoundBroadcastCount(opts *bind.CallOpts, _id *big.Int, _round *big.Int) (*big.Int, error) {
+// Solidity: function getRoundBroadcastCount(uint256 _generation, uint256 _round) view returns(uint256)
+func (_DKG *DKGCaller) GetRoundBroadcastCount(opts *bind.CallOpts, _generation *big.Int, _round *big.Int) (*big.Int, error) {
 	var out []interface{}
-	err := _DKG.contract.Call(opts, &out, "getRoundBroadcastCount", _id, _round)
+	err := _DKG.contract.Call(opts, &out, "getRoundBroadcastCount", _generation, _round)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -229,24 +229,24 @@ func (_DKG *DKGCaller) GetRoundBroadcastCount(opts *bind.CallOpts, _id *big.Int,
 
 // GetRoundBroadcastCount is a free data retrieval call binding the contract method 0x50c8548f.
 //
-// Solidity: function getRoundBroadcastCount(uint256 _id, uint256 _round) view returns(uint256)
-func (_DKG *DKGSession) GetRoundBroadcastCount(_id *big.Int, _round *big.Int) (*big.Int, error) {
-	return _DKG.Contract.GetRoundBroadcastCount(&_DKG.CallOpts, _id, _round)
+// Solidity: function getRoundBroadcastCount(uint256 _generation, uint256 _round) view returns(uint256)
+func (_DKG *DKGSession) GetRoundBroadcastCount(_generation *big.Int, _round *big.Int) (*big.Int, error) {
+	return _DKG.Contract.GetRoundBroadcastCount(&_DKG.CallOpts, _generation, _round)
 }
 
 // GetRoundBroadcastCount is a free data retrieval call binding the contract method 0x50c8548f.
 //
-// Solidity: function getRoundBroadcastCount(uint256 _id, uint256 _round) view returns(uint256)
-func (_DKG *DKGCallerSession) GetRoundBroadcastCount(_id *big.Int, _round *big.Int) (*big.Int, error) {
-	return _DKG.Contract.GetRoundBroadcastCount(&_DKG.CallOpts, _id, _round)
+// Solidity: function getRoundBroadcastCount(uint256 _generation, uint256 _round) view returns(uint256)
+func (_DKG *DKGCallerSession) GetRoundBroadcastCount(_generation *big.Int, _round *big.Int) (*big.Int, error) {
+	return _DKG.Contract.GetRoundBroadcastCount(&_DKG.CallOpts, _generation, _round)
 }
 
 // GetRoundBroadcastData is a free data retrieval call binding the contract method 0x130b9702.
 //
-// Solidity: function getRoundBroadcastData(uint256 _id, uint256 _round, address _validator) view returns(bytes)
-func (_DKG *DKGCaller) GetRoundBroadcastData(opts *bind.CallOpts, _id *big.Int, _round *big.Int, _validator common.Address) ([]byte, error) {
+// Solidity: function getRoundBroadcastData(uint256 _generation, uint256 _round, address _validator) view returns(bytes)
+func (_DKG *DKGCaller) GetRoundBroadcastData(opts *bind.CallOpts, _generation *big.Int, _round *big.Int, _validator common.Address) ([]byte, error) {
 	var out []interface{}
-	err := _DKG.contract.Call(opts, &out, "getRoundBroadcastData", _id, _round, _validator)
+	err := _DKG.contract.Call(opts, &out, "getRoundBroadcastData", _generation, _round, _validator)
 
 	if err != nil {
 		return *new([]byte), err
@@ -260,24 +260,24 @@ func (_DKG *DKGCaller) GetRoundBroadcastData(opts *bind.CallOpts, _id *big.Int, 
 
 // GetRoundBroadcastData is a free data retrieval call binding the contract method 0x130b9702.
 //
-// Solidity: function getRoundBroadcastData(uint256 _id, uint256 _round, address _validator) view returns(bytes)
-func (_DKG *DKGSession) GetRoundBroadcastData(_id *big.Int, _round *big.Int, _validator common.Address) ([]byte, error) {
-	return _DKG.Contract.GetRoundBroadcastData(&_DKG.CallOpts, _id, _round, _validator)
+// Solidity: function getRoundBroadcastData(uint256 _generation, uint256 _round, address _validator) view returns(bytes)
+func (_DKG *DKGSession) GetRoundBroadcastData(_generation *big.Int, _round *big.Int, _validator common.Address) ([]byte, error) {
+	return _DKG.Contract.GetRoundBroadcastData(&_DKG.CallOpts, _generation, _round, _validator)
 }
 
 // GetRoundBroadcastData is a free data retrieval call binding the contract method 0x130b9702.
 //
-// Solidity: function getRoundBroadcastData(uint256 _id, uint256 _round, address _validator) view returns(bytes)
-func (_DKG *DKGCallerSession) GetRoundBroadcastData(_id *big.Int, _round *big.Int, _validator common.Address) ([]byte, error) {
-	return _DKG.Contract.GetRoundBroadcastData(&_DKG.CallOpts, _id, _round, _validator)
+// Solidity: function getRoundBroadcastData(uint256 _generation, uint256 _round, address _validator) view returns(bytes)
+func (_DKG *DKGCallerSession) GetRoundBroadcastData(_generation *big.Int, _round *big.Int, _validator common.Address) ([]byte, error) {
+	return _DKG.Contract.GetRoundBroadcastData(&_DKG.CallOpts, _generation, _round, _validator)
 }
 
 // GetValidators is a free data retrieval call binding the contract method 0x471f40fb.
 //
-// Solidity: function getValidators(uint256 _id) view returns(address[])
-func (_DKG *DKGCaller) GetValidators(opts *bind.CallOpts, _id *big.Int) ([]common.Address, error) {
+// Solidity: function getValidators(uint256 _generation) view returns(address[])
+func (_DKG *DKGCaller) GetValidators(opts *bind.CallOpts, _generation *big.Int) ([]common.Address, error) {
 	var out []interface{}
-	err := _DKG.contract.Call(opts, &out, "getValidators", _id)
+	err := _DKG.contract.Call(opts, &out, "getValidators", _generation)
 
 	if err != nil {
 		return *new([]common.Address), err
@@ -291,24 +291,24 @@ func (_DKG *DKGCaller) GetValidators(opts *bind.CallOpts, _id *big.Int) ([]commo
 
 // GetValidators is a free data retrieval call binding the contract method 0x471f40fb.
 //
-// Solidity: function getValidators(uint256 _id) view returns(address[])
-func (_DKG *DKGSession) GetValidators(_id *big.Int) ([]common.Address, error) {
-	return _DKG.Contract.GetValidators(&_DKG.CallOpts, _id)
+// Solidity: function getValidators(uint256 _generation) view returns(address[])
+func (_DKG *DKGSession) GetValidators(_generation *big.Int) ([]common.Address, error) {
+	return _DKG.Contract.GetValidators(&_DKG.CallOpts, _generation)
 }
 
 // GetValidators is a free data retrieval call binding the contract method 0x471f40fb.
 //
-// Solidity: function getValidators(uint256 _id) view returns(address[])
-func (_DKG *DKGCallerSession) GetValidators(_id *big.Int) ([]common.Address, error) {
-	return _DKG.Contract.GetValidators(&_DKG.CallOpts, _id)
+// Solidity: function getValidators(uint256 _generation) view returns(address[])
+func (_DKG *DKGCallerSession) GetValidators(_generation *big.Int) ([]common.Address, error) {
+	return _DKG.Contract.GetValidators(&_DKG.CallOpts, _generation)
 }
 
 // IsRoundFilled is a free data retrieval call binding the contract method 0xc1718e53.
 //
-// Solidity: function isRoundFilled(uint256 _id, uint256 _round) view returns(bool)
-func (_DKG *DKGCaller) IsRoundFilled(opts *bind.CallOpts, _id *big.Int, _round *big.Int) (bool, error) {
+// Solidity: function isRoundFilled(uint256 _generation, uint256 _round) view returns(bool)
+func (_DKG *DKGCaller) IsRoundFilled(opts *bind.CallOpts, _generation *big.Int, _round *big.Int) (bool, error) {
 	var out []interface{}
-	err := _DKG.contract.Call(opts, &out, "isRoundFilled", _id, _round)
+	err := _DKG.contract.Call(opts, &out, "isRoundFilled", _generation, _round)
 
 	if err != nil {
 		return *new(bool), err
@@ -322,16 +322,16 @@ func (_DKG *DKGCaller) IsRoundFilled(opts *bind.CallOpts, _id *big.Int, _round *
 
 // IsRoundFilled is a free data retrieval call binding the contract method 0xc1718e53.
 //
-// Solidity: function isRoundFilled(uint256 _id, uint256 _round) view returns(bool)
-func (_DKG *DKGSession) IsRoundFilled(_id *big.Int, _round *big.Int) (bool, error) {
-	return _DKG.Contract.IsRoundFilled(&_DKG.CallOpts, _id, _round)
+// Solidity: function isRoundFilled(uint256 _generation, uint256 _round) view returns(bool)
+func (_DKG *DKGSession) IsRoundFilled(_generation *big.Int, _round *big.Int) (bool, error) {
+	return _DKG.Contract.IsRoundFilled(&_DKG.CallOpts, _generation, _round)
 }
 
 // IsRoundFilled is a free data retrieval call binding the contract method 0xc1718e53.
 //
-// Solidity: function isRoundFilled(uint256 _id, uint256 _round) view returns(bool)
-func (_DKG *DKGCallerSession) IsRoundFilled(_id *big.Int, _round *big.Int) (bool, error) {
-	return _DKG.Contract.IsRoundFilled(&_DKG.CallOpts, _id, _round)
+// Solidity: function isRoundFilled(uint256 _generation, uint256 _round) view returns(bool)
+func (_DKG *DKGCallerSession) IsRoundFilled(_generation *big.Int, _round *big.Int) (bool, error) {
+	return _DKG.Contract.IsRoundFilled(&_DKG.CallOpts, _generation, _round)
 }
 
 // IsValidator is a free data retrieval call binding the contract method 0xfacd743b.
@@ -471,23 +471,23 @@ func (_DKG *DKGTransactorSession) RenounceOwnership() (*types.Transaction, error
 
 // RoundBroadcast is a paid mutator transaction binding the contract method 0x100c11c3.
 //
-// Solidity: function roundBroadcast(uint256 _id, uint256 _round, bytes _rawData) returns()
-func (_DKG *DKGTransactor) RoundBroadcast(opts *bind.TransactOpts, _id *big.Int, _round *big.Int, _rawData []byte) (*types.Transaction, error) {
-	return _DKG.contract.Transact(opts, "roundBroadcast", _id, _round, _rawData)
+// Solidity: function roundBroadcast(uint256 _generation, uint256 _round, bytes _rawData) returns()
+func (_DKG *DKGTransactor) RoundBroadcast(opts *bind.TransactOpts, _generation *big.Int, _round *big.Int, _rawData []byte) (*types.Transaction, error) {
+	return _DKG.contract.Transact(opts, "roundBroadcast", _generation, _round, _rawData)
 }
 
 // RoundBroadcast is a paid mutator transaction binding the contract method 0x100c11c3.
 //
-// Solidity: function roundBroadcast(uint256 _id, uint256 _round, bytes _rawData) returns()
-func (_DKG *DKGSession) RoundBroadcast(_id *big.Int, _round *big.Int, _rawData []byte) (*types.Transaction, error) {
-	return _DKG.Contract.RoundBroadcast(&_DKG.TransactOpts, _id, _round, _rawData)
+// Solidity: function roundBroadcast(uint256 _generation, uint256 _round, bytes _rawData) returns()
+func (_DKG *DKGSession) RoundBroadcast(_generation *big.Int, _round *big.Int, _rawData []byte) (*types.Transaction, error) {
+	return _DKG.Contract.RoundBroadcast(&_DKG.TransactOpts, _generation, _round, _rawData)
 }
 
 // RoundBroadcast is a paid mutator transaction binding the contract method 0x100c11c3.
 //
-// Solidity: function roundBroadcast(uint256 _id, uint256 _round, bytes _rawData) returns()
-func (_DKG *DKGTransactorSession) RoundBroadcast(_id *big.Int, _round *big.Int, _rawData []byte) (*types.Transaction, error) {
-	return _DKG.Contract.RoundBroadcast(&_DKG.TransactOpts, _id, _round, _rawData)
+// Solidity: function roundBroadcast(uint256 _generation, uint256 _round, bytes _rawData) returns()
+func (_DKG *DKGTransactorSession) RoundBroadcast(_generation *big.Int, _round *big.Int, _rawData []byte) (*types.Transaction, error) {
+	return _DKG.Contract.RoundBroadcast(&_DKG.TransactOpts, _generation, _round, _rawData)
 }
 
 // SetValidators is a paid mutator transaction binding the contract method 0x9300c926.
@@ -754,14 +754,14 @@ func (it *DKGRoundDataFilledIterator) Close() error {
 
 // DKGRoundDataFilled represents a RoundDataFilled event raised by the DKG contract.
 type DKGRoundDataFilled struct {
-	Id    *big.Int
-	Round *big.Int
-	Raw   types.Log // Blockchain specific contextual infos
+	Generation *big.Int
+	Round      *big.Int
+	Raw        types.Log // Blockchain specific contextual infos
 }
 
 // FilterRoundDataFilled is a free log retrieval operation binding the contract event 0xab74ab6fc458020cf5d6116f5c013ebf3c0ad518f10de1391427c225f75db5f9.
 //
-// Solidity: event RoundDataFilled(uint256 id, uint256 round)
+// Solidity: event RoundDataFilled(uint256 generation, uint256 round)
 func (_DKG *DKGFilterer) FilterRoundDataFilled(opts *bind.FilterOpts) (*DKGRoundDataFilledIterator, error) {
 
 	logs, sub, err := _DKG.contract.FilterLogs(opts, "RoundDataFilled")
@@ -773,7 +773,7 @@ func (_DKG *DKGFilterer) FilterRoundDataFilled(opts *bind.FilterOpts) (*DKGRound
 
 // WatchRoundDataFilled is a free log subscription operation binding the contract event 0xab74ab6fc458020cf5d6116f5c013ebf3c0ad518f10de1391427c225f75db5f9.
 //
-// Solidity: event RoundDataFilled(uint256 id, uint256 round)
+// Solidity: event RoundDataFilled(uint256 generation, uint256 round)
 func (_DKG *DKGFilterer) WatchRoundDataFilled(opts *bind.WatchOpts, sink chan<- *DKGRoundDataFilled) (event.Subscription, error) {
 
 	logs, sub, err := _DKG.contract.WatchLogs(opts, "RoundDataFilled")
@@ -810,7 +810,7 @@ func (_DKG *DKGFilterer) WatchRoundDataFilled(opts *bind.WatchOpts, sink chan<- 
 
 // ParseRoundDataFilled is a log parse operation binding the contract event 0xab74ab6fc458020cf5d6116f5c013ebf3c0ad518f10de1391427c225f75db5f9.
 //
-// Solidity: event RoundDataFilled(uint256 id, uint256 round)
+// Solidity: event RoundDataFilled(uint256 generation, uint256 round)
 func (_DKG *DKGFilterer) ParseRoundDataFilled(log types.Log) (*DKGRoundDataFilled, error) {
 	event := new(DKGRoundDataFilled)
 	if err := _DKG.contract.UnpackLog(event, "RoundDataFilled", log); err != nil {
@@ -889,15 +889,15 @@ func (it *DKGRoundDataProvidedIterator) Close() error {
 
 // DKGRoundDataProvided represents a RoundDataProvided event raised by the DKG contract.
 type DKGRoundDataProvided struct {
-	Id        *big.Int
-	Round     *big.Int
-	Validator common.Address
-	Raw       types.Log // Blockchain specific contextual infos
+	Generation *big.Int
+	Round      *big.Int
+	Validator  common.Address
+	Raw        types.Log // Blockchain specific contextual infos
 }
 
 // FilterRoundDataProvided is a free log retrieval operation binding the contract event 0xca56b6e939787236f062daae635dc1afa2b46ad9a24ad09aa98833c637009606.
 //
-// Solidity: event RoundDataProvided(uint256 id, uint256 round, address validator)
+// Solidity: event RoundDataProvided(uint256 generation, uint256 round, address validator)
 func (_DKG *DKGFilterer) FilterRoundDataProvided(opts *bind.FilterOpts) (*DKGRoundDataProvidedIterator, error) {
 
 	logs, sub, err := _DKG.contract.FilterLogs(opts, "RoundDataProvided")
@@ -909,7 +909,7 @@ func (_DKG *DKGFilterer) FilterRoundDataProvided(opts *bind.FilterOpts) (*DKGRou
 
 // WatchRoundDataProvided is a free log subscription operation binding the contract event 0xca56b6e939787236f062daae635dc1afa2b46ad9a24ad09aa98833c637009606.
 //
-// Solidity: event RoundDataProvided(uint256 id, uint256 round, address validator)
+// Solidity: event RoundDataProvided(uint256 generation, uint256 round, address validator)
 func (_DKG *DKGFilterer) WatchRoundDataProvided(opts *bind.WatchOpts, sink chan<- *DKGRoundDataProvided) (event.Subscription, error) {
 
 	logs, sub, err := _DKG.contract.WatchLogs(opts, "RoundDataProvided")
@@ -946,7 +946,7 @@ func (_DKG *DKGFilterer) WatchRoundDataProvided(opts *bind.WatchOpts, sink chan<
 
 // ParseRoundDataProvided is a log parse operation binding the contract event 0xca56b6e939787236f062daae635dc1afa2b46ad9a24ad09aa98833c637009606.
 //
-// Solidity: event RoundDataProvided(uint256 id, uint256 round, address validator)
+// Solidity: event RoundDataProvided(uint256 generation, uint256 round, address validator)
 func (_DKG *DKGFilterer) ParseRoundDataProvided(log types.Log) (*DKGRoundDataProvided, error) {
 	event := new(DKGRoundDataProvided)
 	if err := _DKG.contract.UnpackLog(event, "RoundDataProvided", log); err != nil {
@@ -1025,14 +1025,14 @@ func (it *DKGValidatorsUpdatedIterator) Close() error {
 
 // DKGValidatorsUpdated represents a ValidatorsUpdated event raised by the DKG contract.
 type DKGValidatorsUpdated struct {
-	Id         *big.Int
+	Generation *big.Int
 	Validators []common.Address
 	Raw        types.Log // Blockchain specific contextual infos
 }
 
 // FilterValidatorsUpdated is a free log retrieval operation binding the contract event 0xeadf82e9da8b1722bf1769001bdd6d52bb429e0745d9116f69495cedc7db8a95.
 //
-// Solidity: event ValidatorsUpdated(uint256 id, address[] validators)
+// Solidity: event ValidatorsUpdated(uint256 generation, address[] validators)
 func (_DKG *DKGFilterer) FilterValidatorsUpdated(opts *bind.FilterOpts) (*DKGValidatorsUpdatedIterator, error) {
 
 	logs, sub, err := _DKG.contract.FilterLogs(opts, "ValidatorsUpdated")
@@ -1044,7 +1044,7 @@ func (_DKG *DKGFilterer) FilterValidatorsUpdated(opts *bind.FilterOpts) (*DKGVal
 
 // WatchValidatorsUpdated is a free log subscription operation binding the contract event 0xeadf82e9da8b1722bf1769001bdd6d52bb429e0745d9116f69495cedc7db8a95.
 //
-// Solidity: event ValidatorsUpdated(uint256 id, address[] validators)
+// Solidity: event ValidatorsUpdated(uint256 generation, address[] validators)
 func (_DKG *DKGFilterer) WatchValidatorsUpdated(opts *bind.WatchOpts, sink chan<- *DKGValidatorsUpdated) (event.Subscription, error) {
 
 	logs, sub, err := _DKG.contract.WatchLogs(opts, "ValidatorsUpdated")
@@ -1081,7 +1081,7 @@ func (_DKG *DKGFilterer) WatchValidatorsUpdated(opts *bind.WatchOpts, sink chan<
 
 // ParseValidatorsUpdated is a log parse operation binding the contract event 0xeadf82e9da8b1722bf1769001bdd6d52bb429e0745d9116f69495cedc7db8a95.
 //
-// Solidity: event ValidatorsUpdated(uint256 id, address[] validators)
+// Solidity: event ValidatorsUpdated(uint256 generation, address[] validators)
 func (_DKG *DKGFilterer) ParseValidatorsUpdated(log types.Log) (*DKGValidatorsUpdated, error) {
 	event := new(DKGValidatorsUpdated)
 	if err := _DKG.contract.UnpackLog(event, "ValidatorsUpdated", log); err != nil {
