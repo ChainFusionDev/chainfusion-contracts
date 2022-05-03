@@ -108,4 +108,14 @@ contract Bridge is Initializable, Ownable {
             emit Transferred(_token, _sourceChainId, _receiver, fee, transferAmount, msg.sender);
         }
     }
+
+    function isApproved(
+        bytes calldata _txHash,
+        address _token,
+        address _receiver,
+        uint256 _amount
+    ) public view returns (bool) {
+        bytes32 id = keccak256(abi.encodePacked(_txHash, _token, _receiver, _amount));
+        return executed[id];
+    }
 }
