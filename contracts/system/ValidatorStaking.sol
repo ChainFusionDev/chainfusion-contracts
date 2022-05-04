@@ -78,7 +78,7 @@ contract ValidatorStaking is Ownable, Initializable {
         require(
             // solhint-disable-next-line not-rely-on-time
             withdrawalAnnouncements[msg.sender].time + withdrawalPeriod <= block.timestamp,
-            "withdrawalPeriod not passed"
+            "ValidatorStaking: withdrawal period not passed"
         );
 
         uint256 withdrawalAmount = withdrawalAnnouncements[msg.sender].amount;
