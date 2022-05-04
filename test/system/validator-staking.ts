@@ -119,7 +119,7 @@ describe('ValidatorStaking', function () {
     await validatorStaking3.slash(v2.address);
 
     await expect(validatorStaking3.slash(v2.address)).to.be.revertedWith(
-      'ValidatorStaking: validator already is slashed'
+      'ValidatorStaking: validator is already slashed'
     );
   });
 
