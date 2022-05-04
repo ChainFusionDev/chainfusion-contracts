@@ -54,6 +54,7 @@ contract ValidatorStaking is Ownable, Initializable {
     }
 
     function slash(address _validator) external onlyValidator {
+        require(stakes[_validator].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator already is slashed");
         if (slashingVotes[_validator][msg.sender] == false) {
             slashingVotes[_validator][msg.sender] = true;
             slashingCount[_validator] += 1;

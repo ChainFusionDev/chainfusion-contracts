@@ -101,6 +101,28 @@ describe('ValidatorStaking', function () {
     expect(await validatorStaking.slashingCount(v2.address)).to.be.equal(1);
   });
 
+  it('should check if slash() already slashed validator', async function () {
+    const [, v2, v3] = await ethers.getSigners();
+    const initialminimalStake = ethers.utils.parseEther('3');
+    const value = ethers.utils.parseEther('5');
+
+    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+
+    const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
+    const validatorStaking3 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v3);
+
+    await validatorStaking.stake({ value: value });
+    await validatorStaking2.stake({ value: value });
+    await validatorStaking3.stake({ value: value });
+
+    await validatorStaking.slash(v2.address);
+    await validatorStaking3.slash(v2.address);
+
+    await expect(validatorStaking3.slash(v2.address)).to.be.revertedWith(
+      'ValidatorStaking: validator already is slashed'
+    );
+  });
+
   it('should check if slashingCount is incremented if called by different validators', async function () {
     const [, v2, v3] = await ethers.getSigners();
     const initialminimalStake = ethers.utils.parseEther('3');
@@ -141,9 +163,8 @@ describe('ValidatorStaking', function () {
     await validatorStaking.slash(v5.address);
     await validatorStaking2.slash(v5.address);
     await validatorStaking3.slash(v5.address);
-    await validatorStaking4.slash(v5.address);
 
-    expect(await validatorStaking.validatorCount()).to.be.equal(3);
+    expect(await validatorStaking.validatorCount()).to.be.equal(4);
   });
 
   it('should check if only validator can announceWithdrawal', async function () {
