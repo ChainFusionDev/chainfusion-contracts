@@ -67,7 +67,6 @@ contract ValidatorStaking is Ownable, Initializable {
     }
 
     function announceWithdrawal(uint256 _amount) external onlyValidator {
-        require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "ValidatorStaking: only active validator");
         require(_amount <= stakes[msg.sender].stake, "ValidatorStaking: amount must be <= to stake");
         withdrawalAnnouncements[msg.sender].amount = _amount;
         // solhint-disable-next-line not-rely-on-time
@@ -75,7 +74,6 @@ contract ValidatorStaking is Ownable, Initializable {
     }
 
     function withdraw() external onlyValidator {
-        require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "ValidatorStaking: only active validator");
         require(withdrawalAnnouncements[msg.sender].amount > 0, "ValidatorStaking: amount must be greater than zero");
         require(
             // solhint-disable-next-line not-rely-on-time
