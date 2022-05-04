@@ -234,7 +234,30 @@ describe('ValidatorStaking', function () {
     await validatorStaking.stake({ value: value });
     await validatorStaking.announceWithdrawal(value);
 
-    await expect(validatorStaking2.withdraw()).to.be.revertedWith('only active validator');
+    await expect(validatorStaking2.withdraw()).to.be.revertedWith('ValidatorStaking: only active validator');
+  });
+
+  it('should check if only active validator can withdraw', async function () {
+    const [, v2, v3] = await ethers.getSigners();
+    const initialminimalStake = ethers.utils.parseEther('3');
+    const value = ethers.utils.parseEther('5');
+
+    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+
+    const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
+    const validatorStaking3 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v3);
+
+    await validatorStaking.stake({ value: value });
+    await validatorStaking2.stake({ value: value });
+    await validatorStaking3.stake({ value: value });
+
+    await validatorStaking.slash(v2.address);
+    await validatorStaking3.slash(v2.address);
+
+    await expect(validatorStaking2.announceWithdrawal(value)).to.be.revertedWith(
+      'ValidatorStaking: only active validator'
+    );
+    await expect(validatorStaking2.withdraw()).to.be.revertedWith('ValidatorStaking: only active validator');
   });
 
   it('should check if withdrawalPeriod not passed', async function () {
@@ -246,7 +269,7 @@ describe('ValidatorStaking', function () {
     await validatorStaking.stake({ value: value });
     await validatorStaking.announceWithdrawal(value);
 
-    await expect(validatorStaking.withdraw()).to.be.revertedWith('withdrawalPeriod not passed');
+    await expect(validatorStaking.withdraw()).to.be.revertedWith('ValidatorStaking: withdrawal period not passed');
   });
 
   it('should validator can withdraw', async function () {
