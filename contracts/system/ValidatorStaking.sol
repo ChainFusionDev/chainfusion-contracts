@@ -24,13 +24,12 @@ contract ValidatorStaking is Ownable, Initializable {
     }
 
     uint256 public minimalStake;
-    uint256 public validatorCount;
     uint256 public withdrawalPeriod;
     mapping(address => ValidatorInfo) public stakes;
     mapping(address => mapping(address => bool)) public slashingVotes;
     mapping(address => uint256) public slashingCount;
     mapping(address => WithdrawalAnnouncement) public withdrawalAnnouncements;
-    AddressStorage public addressStorage;
+    AddressStorage public validatorStorage;
 
     event MinimalStakeUpdated(uint256 minimalStake);
     event WithdrawalPeriodUpdated(uint256 withdrawalPeriod);
@@ -43,11 +42,11 @@ contract ValidatorStaking is Ownable, Initializable {
     function initialize(
         uint256 _minimalStake,
         uint256 _withdrawalPeriod,
-        address _addressStorage
+        address _validatorStorage
     ) external initializer {
         minimalStake = _minimalStake;
         withdrawalPeriod = _withdrawalPeriod;
-        addressStorage = AddressStorage(_addressStorage);
+        validatorStorage = AddressStorage(_validatorStorage);
     }
 
     function setMinimalStake(uint256 _minimalStake) external onlyOwner {
@@ -67,9 +66,9 @@ contract ValidatorStaking is Ownable, Initializable {
             slashingCount[_validator] += 1;
         }
 
-        if (slashingCount[_validator] >= ((addressStorage.size() / 2) + 1)) {
+        if (slashingCount[_validator] >= ((validatorStorage.size() / 2) + 1)) {
             stakes[_validator].status = ValidatorStatus.SLASHED;
-            addressStorage.mustRemove(_validator);
+            validatorStorage.mustRemove(_validator);
         }
     }
 
@@ -97,9 +96,9 @@ contract ValidatorStaking is Ownable, Initializable {
         withdrawalAnnouncements[msg.sender].amount = 0;
         withdrawalAnnouncements[msg.sender].time = 0;
 
-        if (stakes[msg.sender].stake == 0) {
+        if (stakes[msg.sender].stake <= minimalStake) {
             stakes[msg.sender].status = ValidatorStatus.INACTIVE;
-            addressStorage.mustRemove(msg.sender);
+            validatorStorage.mustRemove(msg.sender);
         }
 
         // solhint-disable-next-line avoid-low-level-calls
@@ -114,13 +113,13 @@ contract ValidatorStaking is Ownable, Initializable {
         if (stakes[msg.sender].status == ValidatorStatus.INACTIVE) {
             stakes[msg.sender].validator = msg.sender;
             stakes[msg.sender].status = ValidatorStatus.ACTIVE;
-            addressStorage.mustAdd(msg.sender);
+            validatorStorage.mustAdd(msg.sender);
         }
 
         stakes[msg.sender].stake += msg.value;
     }
 
     function getValidators() public view returns (address[] memory) {
-        return addressStorage.getAddresses();
+        return validatorStorage.getAddresses();
     }
 }

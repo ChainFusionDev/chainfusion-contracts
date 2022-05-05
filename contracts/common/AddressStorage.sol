@@ -16,11 +16,11 @@ contract AddressStorage is Ownable, Initializable {
     }
 
     function mustAdd(address _addr) external {
-        require(add(_addr), "AddressStorage: failed to add address");
+        require(_add(_addr), "AddressStorage: failed to add address");
     }
 
     function mustRemove(address _addr) external {
-        require(remove(_addr), "AddressStorage: failed to remove address");
+        require(_remove(_addr), "AddressStorage: failed to remove address");
     }
 
     function clear() external onlyOwner returns (bool) {
@@ -45,7 +45,7 @@ contract AddressStorage is Ownable, Initializable {
         return indexMap[_addr] > 0;
     }
 
-    function add(address _addr) private onlyOwner returns (bool) {
+    function _add(address _addr) private onlyOwner returns (bool) {
         if (contains(_addr)) {
             return false;
         }
@@ -58,7 +58,7 @@ contract AddressStorage is Ownable, Initializable {
         return true;
     }
 
-    function remove(address _addr) private onlyOwner returns (bool) {
+    function _remove(address _addr) private onlyOwner returns (bool) {
         if (!contains(_addr)) {
             return false;
         }
