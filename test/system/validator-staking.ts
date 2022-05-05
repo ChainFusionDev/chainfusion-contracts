@@ -1,14 +1,14 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
 import { ValidatorStatusActive } from '../utils/helpers';
-import { deployValidatorStaking } from '../utils/deploy';
+import { deploySystem } from '../utils/deploy';
 
 describe('ValidatorStaking', function () {
   it('should change minimal stake', async function () {
     const initialminimalStake = ethers.utils.parseEther('1');
     const newMinimalStake = ethers.utils.parseEther('2');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     await expect(validatorStaking.setMinimalStake(newMinimalStake))
       .to.emit(validatorStaking, 'MinimalStakeUpdated')
@@ -21,7 +21,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('1');
     const newWithdrawalPeriod = 2;
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     await expect(validatorStaking.setWithdrawalPeriod(newWithdrawalPeriod))
       .to.emit(validatorStaking, 'WithdrawalPeriodUpdated')
@@ -33,7 +33,7 @@ describe('ValidatorStaking', function () {
   it('should verify error on staking less than minimal stake', async function () {
     const initialminimalStake = ethers.utils.parseEther('3');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     await expect(validatorStaking.stake({ value: ethers.utils.parseEther('1') })).to.be.revertedWith(
       'insufficient stake provided'
@@ -44,10 +44,9 @@ describe('ValidatorStaking', function () {
     const [owner] = await ethers.getSigners();
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
-
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
-
+    const { validatorStaking } = await deploySystem(initialminimalStake);
     await validatorStaking.stake({ value: value });
+
     const { validator, stake, status } = await validatorStaking.stakes(owner.address);
     expect(validator).to.equal(owner.address);
     expect(stake).to.equal(value);
@@ -59,7 +58,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     await validatorStaking.stake({ value: value });
     await validatorStaking.stake({ value: value });
@@ -75,7 +74,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
 
@@ -89,7 +88,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
 
@@ -106,7 +105,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
     const validatorStaking3 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v3);
@@ -128,7 +127,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
     const validatorStaking3 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v3);
@@ -147,7 +146,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking, addressStorage } = await deploySystem(initialminimalStake);
 
     const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
     const validatorStaking3 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v3);
@@ -164,7 +163,7 @@ describe('ValidatorStaking', function () {
     await validatorStaking2.slash(v5.address);
     await validatorStaking3.slash(v5.address);
 
-    expect(await validatorStaking.validatorCount()).to.be.equal(4);
+    expect(await addressStorage.size()).to.be.equal(4);
   });
 
   it('should check if only validator can announceWithdrawal', async function () {
@@ -172,7 +171,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
 
@@ -186,7 +185,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
 
@@ -199,7 +198,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     await validatorStaking.stake({ value: value });
     await expect(validatorStaking.announceWithdrawal(ethers.utils.parseEther('10'))).to.be.revertedWith(
@@ -212,7 +211,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     await validatorStaking.stake({ value: value });
     await validatorStaking.announceWithdrawal(value);
@@ -227,7 +226,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
 
@@ -242,7 +241,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
     const validatorStaking3 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v3);
@@ -264,7 +263,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
     await validatorStaking.setWithdrawalPeriod(1000000);
     await validatorStaking.stake({ value: value });
     await validatorStaking.announceWithdrawal(value);
@@ -277,7 +276,7 @@ describe('ValidatorStaking', function () {
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
 
-    const { validatorStaking } = await deployValidatorStaking(initialminimalStake);
+    const { validatorStaking } = await deploySystem(initialminimalStake);
 
     await validatorStaking.stake({ value: value });
     await validatorStaking.announceWithdrawal(value);

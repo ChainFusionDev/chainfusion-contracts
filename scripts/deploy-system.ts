@@ -11,10 +11,19 @@ async function main() {
     '0x15d34aaf54267db7d7c367839aaf71a00a2c6a65',
   ];
 
+  const AddressStorage = await ethers.getContractFactory('AddressStorage');
+  const addressStorage = await AddressStorage.deploy();
+  await addressStorage.deployed();
+  await (await addressStorage.initialize(validators)).wait();
+
+  console.log('AddressStorage deployed to:', addressStorage.address);
+
   const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
   const validatorStaking = await ValidatorStaking.deploy();
   await validatorStaking.deployed();
-  await (await validatorStaking.initialize(minimalStake, withdrawalPeriod)).wait();
+  await (await validatorStaking.initialize(minimalStake, withdrawalPeriod, addressStorage.address)).wait();
+
+  await addressStorage.transferOwnership(validatorStaking.address);
 
   console.log('ValidatorStaking deployed to:', validatorStaking.address);
 

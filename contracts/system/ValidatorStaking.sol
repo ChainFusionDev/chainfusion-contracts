@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "../common/AddressStorage.sol";
 
 contract ValidatorStaking is Ownable, Initializable {
     enum ValidatorStatus {
@@ -29,6 +30,7 @@ contract ValidatorStaking is Ownable, Initializable {
     mapping(address => mapping(address => bool)) public slashingVotes;
     mapping(address => uint256) public slashingCount;
     mapping(address => WithdrawalAnnouncement) public withdrawalAnnouncements;
+    AddressStorage public addressStorage;
 
     event MinimalStakeUpdated(uint256 minimalStake);
     event WithdrawalPeriodUpdated(uint256 withdrawalPeriod);
@@ -38,9 +40,14 @@ contract ValidatorStaking is Ownable, Initializable {
         _;
     }
 
-    function initialize(uint256 _minimalStake, uint256 _withdrawalPeriod) external initializer {
+    function initialize(
+        uint256 _minimalStake,
+        uint256 _withdrawalPeriod,
+        address _addressStorage
+    ) external initializer {
         minimalStake = _minimalStake;
         withdrawalPeriod = _withdrawalPeriod;
+        addressStorage = AddressStorage(_addressStorage);
     }
 
     function setMinimalStake(uint256 _minimalStake) external onlyOwner {
@@ -60,9 +67,9 @@ contract ValidatorStaking is Ownable, Initializable {
             slashingCount[_validator] += 1;
         }
 
-        if (slashingCount[_validator] >= ((validatorCount / 2) + 1)) {
+        if (slashingCount[_validator] >= ((addressStorage.size() / 2) + 1)) {
             stakes[_validator].status = ValidatorStatus.SLASHED;
-            validatorCount--;
+            addressStorage.mustRemove(_validator);
         }
     }
 
@@ -82,12 +89,22 @@ contract ValidatorStaking is Ownable, Initializable {
         );
 
         uint256 withdrawalAmount = withdrawalAnnouncements[msg.sender].amount;
+
+        require(withdrawalAmount <= stakes[msg.sender].stake, "ValidatorStaking: amount must be <= to validator stake");
+
+        stakes[msg.sender].stake -= withdrawalAmount;
+
         withdrawalAnnouncements[msg.sender].amount = 0;
         withdrawalAnnouncements[msg.sender].time = 0;
 
+        if (stakes[msg.sender].stake == 0) {
+            stakes[msg.sender].status = ValidatorStatus.INACTIVE;
+            addressStorage.mustRemove(msg.sender);
+        }
+
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = msg.sender.call{value: withdrawalAmount, gas: 21000}("");
-        require(success, "ValidatorStaking: transfer failed.");
+        require(success, "ValidatorStaking: transfer failed");
     }
 
     function stake() public payable {
@@ -97,9 +114,13 @@ contract ValidatorStaking is Ownable, Initializable {
         if (stakes[msg.sender].status == ValidatorStatus.INACTIVE) {
             stakes[msg.sender].validator = msg.sender;
             stakes[msg.sender].status = ValidatorStatus.ACTIVE;
-            validatorCount++;
+            addressStorage.mustAdd(msg.sender);
         }
 
         stakes[msg.sender].stake += msg.value;
+    }
+
+    function getValidators() public view returns (address[] memory) {
+        return addressStorage.getAddresses();
     }
 }
