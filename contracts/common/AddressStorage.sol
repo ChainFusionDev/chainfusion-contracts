@@ -15,32 +15,12 @@ contract AddressStorage is Ownable, Initializable {
         }
     }
 
-    function mustRemove(address _addr) external {
-        require(this.remove(_addr), "AddressStorage: failed to remove address");
-    }
-
     function mustAdd(address _addr) external {
-        require(this.add(_addr), "AddressStorage: failed to add address");
+        require(_add(_addr), "AddressStorage: failed to add address");
     }
 
-    function add(address _addr) external onlyOwner returns (bool) {
-        if (contains(_addr)) {
-            return false;
-        }
-
-        _add(_addr);
-
-        return true;
-    }
-
-    function remove(address _addr) external onlyOwner returns (bool) {
-        if (!contains(_addr)) {
-            return false;
-        }
-
-        _remove(_addr);
-
-        return true;
+    function mustRemove(address _addr) external {
+        require(_remove(_addr), "AddressStorage: failed to remove address");
     }
 
     function clear() external onlyOwner returns (bool) {
@@ -65,14 +45,24 @@ contract AddressStorage is Ownable, Initializable {
         return indexMap[_addr] > 0;
     }
 
-    function _add(address _addr) private {
+    function _add(address _addr) private onlyOwner returns (bool) {
+        if (contains(_addr)) {
+            return false;
+        }
+
         addrList.push(_addr);
         indexMap[_addr] = addrList.length;
 
         _checkEntry(_addr);
+
+        return true;
     }
 
-    function _remove(address _addr) private {
+    function _remove(address _addr) private onlyOwner returns (bool) {
+        if (!contains(_addr)) {
+            return false;
+        }
+
         uint256 id = indexMap[_addr];
 
         uint256 lastListID = addrList.length - 1;
@@ -90,6 +80,8 @@ contract AddressStorage is Ownable, Initializable {
         if (lastListAddress != _addr) {
             _checkEntry(lastListAddress);
         }
+
+        return true;
     }
 
     function _checkEntry(address _addr) private view {

@@ -1,6 +1,14 @@
 import { ethers } from 'hardhat';
 import { BigNumber } from 'ethers';
-import { Bridge, MockToken, TokenManager, ValidatorManager, ValidatorStaking, LiquidityPools } from '../../typechain';
+import {
+  Bridge,
+  MockToken,
+  TokenManager,
+  ValidatorManager,
+  ValidatorStaking,
+  LiquidityPools,
+  AddressStorage,
+} from '../../typechain';
 
 interface BridgeDeployment {
   bridge: Bridge;
@@ -11,8 +19,9 @@ interface BridgeDeployment {
   chainId: number;
 }
 
-interface ValidatorStakingDeployment {
+interface SystemDeployment {
   validatorStaking: ValidatorStaking;
+  addressStorage: AddressStorage;
 }
 
 export async function deployBridge(
@@ -63,14 +72,24 @@ export async function deployBridge(
   };
 }
 
-export async function deployValidatorStaking(initialminimalStake: BigNumber): Promise<ValidatorStakingDeployment> {
+export async function deploySystem(initialminimalStake: BigNumber): Promise<SystemDeployment> {
   const withdrawalPeriod = 1;
+  const validators: string[] = [];
+
+  const AddressStorage = await ethers.getContractFactory('AddressStorage');
+  const addressStorage = await AddressStorage.deploy();
+  await addressStorage.deployed();
+  await (await addressStorage.initialize(validators)).wait();
+
   const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
   const validatorStaking = await ValidatorStaking.deploy();
   await validatorStaking.deployed();
-  await validatorStaking.initialize(initialminimalStake, withdrawalPeriod);
+  await validatorStaking.initialize(initialminimalStake, withdrawalPeriod, addressStorage.address);
+
+  await addressStorage.transferOwnership(validatorStaking.address);
 
   return {
     validatorStaking: validatorStaking,
+    addressStorage: addressStorage,
   };
 }
