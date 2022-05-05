@@ -96,7 +96,7 @@ contract ValidatorStaking is Ownable, Initializable {
         withdrawalAnnouncements[msg.sender].amount = 0;
         withdrawalAnnouncements[msg.sender].time = 0;
 
-        if (stakes[msg.sender].stake <= minimalStake) {
+        if (stakes[msg.sender].stake < minimalStake) {
             stakes[msg.sender].status = ValidatorStatus.INACTIVE;
             validatorStorage.mustRemove(msg.sender);
         }
