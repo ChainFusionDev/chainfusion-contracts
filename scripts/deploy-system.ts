@@ -21,7 +21,6 @@ async function main() {
   const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
   const validatorStaking = await ValidatorStaking.deploy();
   await validatorStaking.deployed();
-  await (await validatorStaking.initialize(minimalStake, withdrawalPeriod, addressStorage.address)).wait();
 
   await addressStorage.transferOwnership(validatorStaking.address);
 
@@ -29,7 +28,10 @@ async function main() {
 
   const DKG = await ethers.getContractFactory('DKG');
   const dkg = await DKG.deploy();
-  await (await dkg.initialize(validators)).wait();
+  await dkg.deployed();
+
+  await (await validatorStaking.initialize(minimalStake, withdrawalPeriod, addressStorage.address, dkg.address)).wait();
+  await (await dkg.initialize(validators, validatorStaking.address)).wait();
 
   console.log('DKG deployed to:', dkg.address);
 }

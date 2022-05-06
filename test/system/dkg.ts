@@ -1,5 +1,6 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
+import { deploySystem } from '../utils/deploy';
 
 describe('DKG', function () {
   it('should broadcast all rounds', async function () {
@@ -10,12 +11,15 @@ describe('DKG', function () {
     const data3 = ethers.utils.keccak256([3]);
 
     const [, v1, v2] = await ethers.getSigners();
+    const initialminimalStake = ethers.utils.parseEther('3');
+
+    const { addressStorage } = await deploySystem(initialminimalStake);
     const DKG = await ethers.getContractFactory('DKG');
     const ThresholdSigner = await ethers.getContractFactory('ThresholdSigner');
     const dkg = await DKG.deploy();
     const thresholdSigner = await ThresholdSigner.deploy();
 
-    await expect(dkg.initialize([v1.address, v2.address]))
+    await expect(dkg.initialize([v1.address, v2.address], addressStorage.address))
       .to.emit(dkg, 'ValidatorsUpdated')
       .withArgs(generation, [v1.address, v2.address]);
 
@@ -103,15 +107,13 @@ describe('DKG', function () {
       .withArgs(generation, signerAddress);
   });
 
-  it('should set validators by owner', async function () {
-    const [, v1, v2, other] = await ethers.getSigners();
-    const DKG = await ethers.getContractFactory('DKG');
-    const dkg = await DKG.deploy();
-    await dkg.initialize([v1.address]);
+  it('should set validators by validatorStaking', async function () {
+    const [, other] = await ethers.getSigners();
+    const initialminimalStake = ethers.utils.parseEther('3');
 
-    await dkg.setValidators([v1.address, v2.address]);
+    const { dkg } = await deploySystem(initialminimalStake);
 
     const dkgOther = await ethers.getContractAt('DKG', dkg.address, other);
-    await expect(dkgOther.setValidators([other.address])).to.be.revertedWith('Ownable: caller is not the owner');
+    await expect(dkgOther.setValidators([other.address])).to.be.revertedWith('DKG: not a validatorStaking');
   });
 });
