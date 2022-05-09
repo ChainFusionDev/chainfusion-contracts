@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ThresholdSigner.sol";
+import "./ValidatorStaking.sol";
 
 struct BroacastData {
     uint256 count;
@@ -12,6 +13,7 @@ struct BroacastData {
 
 contract DKG is Ownable, Initializable {
     ThresholdSigner public thresholdSigner;
+    ValidatorStaking public validatorStaking;
 
     address[][] public validators;
     mapping(address => bool) public isValidator;
@@ -28,9 +30,15 @@ contract DKG is Ownable, Initializable {
     event ValidatorsUpdated(uint256 generation, address[] validators);
     event SignerVoted(uint256 generation, address validator, address collectiveSigner);
     event ThresholdSignerUpdated(address signer);
+    event ValidatorStakingUpdated(address validatorStaking);
 
     modifier onlyValidator() {
         require(isValidator[msg.sender], "DKG: not a validator");
+        _;
+    }
+
+    modifier onlyValidatorStaking() {
+        require(msg.sender == address(validatorStaking), "DKG: not a validatorStaking");
         _;
     }
 
@@ -42,8 +50,9 @@ contract DKG is Ownable, Initializable {
         _;
     }
 
-    function initialize(address[] memory _validators) external initializer {
+    function initialize(address[] memory _validators, address _validatorStaking) external initializer {
         _setValidators(_validators);
+        validatorStaking = ValidatorStaking(_validatorStaking);
     }
 
     function setThresholdSigner(address _thresholdSigner) external onlyOwner {
@@ -51,8 +60,13 @@ contract DKG is Ownable, Initializable {
         emit ThresholdSignerUpdated(_thresholdSigner);
     }
 
-    function setValidators(address[] memory _validators) external onlyOwner {
+    function setValidators(address[] memory _validators) external onlyValidatorStaking {
         _setValidators(_validators);
+    }
+
+    function setValidatorStaking(address _validatorStaking) external onlyOwner {
+        validatorStaking = ValidatorStaking(_validatorStaking);
+        emit ValidatorStakingUpdated(_validatorStaking);
     }
 
     function roundBroadcast(

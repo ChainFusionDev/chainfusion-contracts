@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../common/AddressStorage.sol";
+import "./DKG.sol";
 
 contract ValidatorStaking is Ownable, Initializable {
     enum ValidatorStatus {
@@ -30,9 +31,11 @@ contract ValidatorStaking is Ownable, Initializable {
     mapping(address => uint256) public slashingCount;
     mapping(address => WithdrawalAnnouncement) public withdrawalAnnouncements;
     AddressStorage public validatorStorage;
+    DKG public dkg;
 
     event MinimalStakeUpdated(uint256 minimalStake);
     event WithdrawalPeriodUpdated(uint256 withdrawalPeriod);
+    event DKGUpdated(address dkg);
 
     modifier onlyValidator() {
         require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "ValidatorStaking: only active validator");
@@ -42,11 +45,13 @@ contract ValidatorStaking is Ownable, Initializable {
     function initialize(
         uint256 _minimalStake,
         uint256 _withdrawalPeriod,
-        address _validatorStorage
+        address _validatorStorage,
+        address _dkg
     ) external initializer {
         minimalStake = _minimalStake;
         withdrawalPeriod = _withdrawalPeriod;
         validatorStorage = AddressStorage(_validatorStorage);
+        dkg = DKG(_dkg);
     }
 
     function setMinimalStake(uint256 _minimalStake) external onlyOwner {
@@ -59,6 +64,11 @@ contract ValidatorStaking is Ownable, Initializable {
         emit WithdrawalPeriodUpdated(_withdrawalPeriod);
     }
 
+    function setDKG(address _dkg) external onlyOwner {
+        dkg = DKG(_dkg);
+        emit DKGUpdated(_dkg);
+    }
+
     function slash(address _validator) external onlyValidator {
         require(stakes[_validator].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator is already slashed");
         if (slashingVotes[_validator][msg.sender] == false) {
@@ -68,7 +78,7 @@ contract ValidatorStaking is Ownable, Initializable {
 
         if (slashingCount[_validator] >= ((validatorStorage.size() / 2) + 1)) {
             stakes[_validator].status = ValidatorStatus.SLASHED;
-            validatorStorage.mustRemove(_validator);
+            _removeValidator(_validator);
         }
     }
 
@@ -98,7 +108,7 @@ contract ValidatorStaking is Ownable, Initializable {
 
         if (stakes[msg.sender].stake < minimalStake) {
             stakes[msg.sender].status = ValidatorStatus.INACTIVE;
-            validatorStorage.mustRemove(msg.sender);
+            _removeValidator(msg.sender);
         }
 
         // solhint-disable-next-line avoid-low-level-calls
@@ -113,7 +123,7 @@ contract ValidatorStaking is Ownable, Initializable {
         if (stakes[msg.sender].status == ValidatorStatus.INACTIVE) {
             stakes[msg.sender].validator = msg.sender;
             stakes[msg.sender].status = ValidatorStatus.ACTIVE;
-            validatorStorage.mustAdd(msg.sender);
+            _addValidator(msg.sender);
         }
 
         stakes[msg.sender].stake += msg.value;
@@ -121,5 +131,15 @@ contract ValidatorStaking is Ownable, Initializable {
 
     function getValidators() public view returns (address[] memory) {
         return validatorStorage.getAddresses();
+    }
+
+    function _addValidator(address validator) private {
+        validatorStorage.mustAdd(validator);
+        dkg.setValidators(validatorStorage.getAddresses());
+    }
+
+    function _removeValidator(address validator) private {
+        validatorStorage.mustRemove(validator);
+        dkg.setValidators(validatorStorage.getAddresses());
     }
 }

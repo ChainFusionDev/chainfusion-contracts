@@ -8,6 +8,7 @@ import {
   ValidatorStaking,
   LiquidityPools,
   AddressStorage,
+  DKG,
 } from '../../typechain';
 
 interface BridgeDeployment {
@@ -22,6 +23,7 @@ interface BridgeDeployment {
 interface SystemDeployment {
   validatorStaking: ValidatorStaking;
   addressStorage: AddressStorage;
+  dkg: DKG;
 }
 
 export async function deployBridge(
@@ -84,12 +86,21 @@ export async function deploySystem(initialminimalStake: BigNumber): Promise<Syst
   const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
   const validatorStaking = await ValidatorStaking.deploy();
   await validatorStaking.deployed();
-  await validatorStaking.initialize(initialminimalStake, withdrawalPeriod, addressStorage.address);
+
+  const DKG = await ethers.getContractFactory('DKG');
+  const dkg = await DKG.deploy();
+  await dkg.deployed();
+
+  await (
+    await validatorStaking.initialize(initialminimalStake, withdrawalPeriod, addressStorage.address, dkg.address)
+  ).wait();
+  await (await dkg.initialize(validators, validatorStaking.address)).wait();
 
   await addressStorage.transferOwnership(validatorStaking.address);
 
   return {
     validatorStaking: validatorStaking,
     addressStorage: addressStorage,
+    dkg: dkg,
   };
 }
