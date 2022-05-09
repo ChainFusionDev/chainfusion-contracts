@@ -30,7 +30,7 @@ var (
 
 // DKGMetaData contains all meta data concerning the DKG contract.
 var DKGMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"generation\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"round\",\"type\":\"uint256\"}],\"name\":\"RoundDataFilled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"generation\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"round\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"RoundDataProvided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"generation\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"validators\",\"type\":\"address[]\"}],\"name\":\"ValidatorsUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getCurrentValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"}],\"name\":\"getRoundBroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRoundBroadcastData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"}],\"name\":\"getValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"}],\"name\":\"isRoundFilled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isValidator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_rawData\",\"type\":\"bytes\"}],\"name\":\"roundBroadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"setValidators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"generation\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"round\",\"type\":\"uint256\"}],\"name\":\"RoundDataFilled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"generation\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"round\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"RoundDataProvided\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"generation\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"collectiveSigner\",\"type\":\"address\"}],\"name\":\"SignerVoted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"signer\",\"type\":\"address\"}],\"name\":\"ThresholdSignerUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validatorStaking\",\"type\":\"address\"}],\"name\":\"ValidatorStakingUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"generation\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"validators\",\"type\":\"address[]\"}],\"name\":\"ValidatorsUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getCurrentValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"}],\"name\":\"getRoundBroadcastCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getRoundBroadcastData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"}],\"name\":\"getValidators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"}],\"name\":\"getValidatorsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"},{\"internalType\":\"address\",\"name\":\"_validatorStaking\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"}],\"name\":\"isRoundFilled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isValidator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_round\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_rawData\",\"type\":\"bytes\"}],\"name\":\"roundBroadcast\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_thresholdSigner\",\"type\":\"address\"}],\"name\":\"setThresholdSigner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validatorStaking\",\"type\":\"address\"}],\"name\":\"setValidatorStaking\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_validators\",\"type\":\"address[]\"}],\"name\":\"setValidators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"thresholdSigner\",\"outputs\":[{\"internalType\":\"contractThresholdSigner\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorStaking\",\"outputs\":[{\"internalType\":\"contractValidatorStaking\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_signerAddress\",\"type\":\"address\"}],\"name\":\"voteSigner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // DKGABI is the input ABI used to generate the binding from.
@@ -303,6 +303,37 @@ func (_DKG *DKGCallerSession) GetValidators(_generation *big.Int) ([]common.Addr
 	return _DKG.Contract.GetValidators(&_DKG.CallOpts, _generation)
 }
 
+// GetValidatorsCount is a free data retrieval call binding the contract method 0xcd5fcd15.
+//
+// Solidity: function getValidatorsCount(uint256 _generation) view returns(uint256)
+func (_DKG *DKGCaller) GetValidatorsCount(opts *bind.CallOpts, _generation *big.Int) (*big.Int, error) {
+	var out []interface{}
+	err := _DKG.contract.Call(opts, &out, "getValidatorsCount", _generation)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// GetValidatorsCount is a free data retrieval call binding the contract method 0xcd5fcd15.
+//
+// Solidity: function getValidatorsCount(uint256 _generation) view returns(uint256)
+func (_DKG *DKGSession) GetValidatorsCount(_generation *big.Int) (*big.Int, error) {
+	return _DKG.Contract.GetValidatorsCount(&_DKG.CallOpts, _generation)
+}
+
+// GetValidatorsCount is a free data retrieval call binding the contract method 0xcd5fcd15.
+//
+// Solidity: function getValidatorsCount(uint256 _generation) view returns(uint256)
+func (_DKG *DKGCallerSession) GetValidatorsCount(_generation *big.Int) (*big.Int, error) {
+	return _DKG.Contract.GetValidatorsCount(&_DKG.CallOpts, _generation)
+}
+
 // IsRoundFilled is a free data retrieval call binding the contract method 0xc1718e53.
 //
 // Solidity: function isRoundFilled(uint256 _generation, uint256 _round) view returns(bool)
@@ -396,6 +427,68 @@ func (_DKG *DKGCallerSession) Owner() (common.Address, error) {
 	return _DKG.Contract.Owner(&_DKG.CallOpts)
 }
 
+// ThresholdSigner is a free data retrieval call binding the contract method 0xcdab6ce5.
+//
+// Solidity: function thresholdSigner() view returns(address)
+func (_DKG *DKGCaller) ThresholdSigner(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _DKG.contract.Call(opts, &out, "thresholdSigner")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// ThresholdSigner is a free data retrieval call binding the contract method 0xcdab6ce5.
+//
+// Solidity: function thresholdSigner() view returns(address)
+func (_DKG *DKGSession) ThresholdSigner() (common.Address, error) {
+	return _DKG.Contract.ThresholdSigner(&_DKG.CallOpts)
+}
+
+// ThresholdSigner is a free data retrieval call binding the contract method 0xcdab6ce5.
+//
+// Solidity: function thresholdSigner() view returns(address)
+func (_DKG *DKGCallerSession) ThresholdSigner() (common.Address, error) {
+	return _DKG.Contract.ThresholdSigner(&_DKG.CallOpts)
+}
+
+// ValidatorStaking is a free data retrieval call binding the contract method 0x06424db5.
+//
+// Solidity: function validatorStaking() view returns(address)
+func (_DKG *DKGCaller) ValidatorStaking(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _DKG.contract.Call(opts, &out, "validatorStaking")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// ValidatorStaking is a free data retrieval call binding the contract method 0x06424db5.
+//
+// Solidity: function validatorStaking() view returns(address)
+func (_DKG *DKGSession) ValidatorStaking() (common.Address, error) {
+	return _DKG.Contract.ValidatorStaking(&_DKG.CallOpts)
+}
+
+// ValidatorStaking is a free data retrieval call binding the contract method 0x06424db5.
+//
+// Solidity: function validatorStaking() view returns(address)
+func (_DKG *DKGCallerSession) ValidatorStaking() (common.Address, error) {
+	return _DKG.Contract.ValidatorStaking(&_DKG.CallOpts)
+}
+
 // Validators is a free data retrieval call binding the contract method 0xdcf2793a.
 //
 // Solidity: function validators(uint256 , uint256 ) view returns(address)
@@ -427,25 +520,25 @@ func (_DKG *DKGCallerSession) Validators(arg0 *big.Int, arg1 *big.Int) (common.A
 	return _DKG.Contract.Validators(&_DKG.CallOpts, arg0, arg1)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xa224cee7.
+// Initialize is a paid mutator transaction binding the contract method 0x462d0b2e.
 //
-// Solidity: function initialize(address[] _validators) returns()
-func (_DKG *DKGTransactor) Initialize(opts *bind.TransactOpts, _validators []common.Address) (*types.Transaction, error) {
-	return _DKG.contract.Transact(opts, "initialize", _validators)
+// Solidity: function initialize(address[] _validators, address _validatorStaking) returns()
+func (_DKG *DKGTransactor) Initialize(opts *bind.TransactOpts, _validators []common.Address, _validatorStaking common.Address) (*types.Transaction, error) {
+	return _DKG.contract.Transact(opts, "initialize", _validators, _validatorStaking)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xa224cee7.
+// Initialize is a paid mutator transaction binding the contract method 0x462d0b2e.
 //
-// Solidity: function initialize(address[] _validators) returns()
-func (_DKG *DKGSession) Initialize(_validators []common.Address) (*types.Transaction, error) {
-	return _DKG.Contract.Initialize(&_DKG.TransactOpts, _validators)
+// Solidity: function initialize(address[] _validators, address _validatorStaking) returns()
+func (_DKG *DKGSession) Initialize(_validators []common.Address, _validatorStaking common.Address) (*types.Transaction, error) {
+	return _DKG.Contract.Initialize(&_DKG.TransactOpts, _validators, _validatorStaking)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xa224cee7.
+// Initialize is a paid mutator transaction binding the contract method 0x462d0b2e.
 //
-// Solidity: function initialize(address[] _validators) returns()
-func (_DKG *DKGTransactorSession) Initialize(_validators []common.Address) (*types.Transaction, error) {
-	return _DKG.Contract.Initialize(&_DKG.TransactOpts, _validators)
+// Solidity: function initialize(address[] _validators, address _validatorStaking) returns()
+func (_DKG *DKGTransactorSession) Initialize(_validators []common.Address, _validatorStaking common.Address) (*types.Transaction, error) {
+	return _DKG.Contract.Initialize(&_DKG.TransactOpts, _validators, _validatorStaking)
 }
 
 // RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
@@ -490,6 +583,48 @@ func (_DKG *DKGTransactorSession) RoundBroadcast(_generation *big.Int, _round *b
 	return _DKG.Contract.RoundBroadcast(&_DKG.TransactOpts, _generation, _round, _rawData)
 }
 
+// SetThresholdSigner is a paid mutator transaction binding the contract method 0xce8c92c9.
+//
+// Solidity: function setThresholdSigner(address _thresholdSigner) returns()
+func (_DKG *DKGTransactor) SetThresholdSigner(opts *bind.TransactOpts, _thresholdSigner common.Address) (*types.Transaction, error) {
+	return _DKG.contract.Transact(opts, "setThresholdSigner", _thresholdSigner)
+}
+
+// SetThresholdSigner is a paid mutator transaction binding the contract method 0xce8c92c9.
+//
+// Solidity: function setThresholdSigner(address _thresholdSigner) returns()
+func (_DKG *DKGSession) SetThresholdSigner(_thresholdSigner common.Address) (*types.Transaction, error) {
+	return _DKG.Contract.SetThresholdSigner(&_DKG.TransactOpts, _thresholdSigner)
+}
+
+// SetThresholdSigner is a paid mutator transaction binding the contract method 0xce8c92c9.
+//
+// Solidity: function setThresholdSigner(address _thresholdSigner) returns()
+func (_DKG *DKGTransactorSession) SetThresholdSigner(_thresholdSigner common.Address) (*types.Transaction, error) {
+	return _DKG.Contract.SetThresholdSigner(&_DKG.TransactOpts, _thresholdSigner)
+}
+
+// SetValidatorStaking is a paid mutator transaction binding the contract method 0xe6a6ad7f.
+//
+// Solidity: function setValidatorStaking(address _validatorStaking) returns()
+func (_DKG *DKGTransactor) SetValidatorStaking(opts *bind.TransactOpts, _validatorStaking common.Address) (*types.Transaction, error) {
+	return _DKG.contract.Transact(opts, "setValidatorStaking", _validatorStaking)
+}
+
+// SetValidatorStaking is a paid mutator transaction binding the contract method 0xe6a6ad7f.
+//
+// Solidity: function setValidatorStaking(address _validatorStaking) returns()
+func (_DKG *DKGSession) SetValidatorStaking(_validatorStaking common.Address) (*types.Transaction, error) {
+	return _DKG.Contract.SetValidatorStaking(&_DKG.TransactOpts, _validatorStaking)
+}
+
+// SetValidatorStaking is a paid mutator transaction binding the contract method 0xe6a6ad7f.
+//
+// Solidity: function setValidatorStaking(address _validatorStaking) returns()
+func (_DKG *DKGTransactorSession) SetValidatorStaking(_validatorStaking common.Address) (*types.Transaction, error) {
+	return _DKG.Contract.SetValidatorStaking(&_DKG.TransactOpts, _validatorStaking)
+}
+
 // SetValidators is a paid mutator transaction binding the contract method 0x9300c926.
 //
 // Solidity: function setValidators(address[] _validators) returns()
@@ -530,6 +665,27 @@ func (_DKG *DKGSession) TransferOwnership(newOwner common.Address) (*types.Trans
 // Solidity: function transferOwnership(address newOwner) returns()
 func (_DKG *DKGTransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
 	return _DKG.Contract.TransferOwnership(&_DKG.TransactOpts, newOwner)
+}
+
+// VoteSigner is a paid mutator transaction binding the contract method 0xdc263a69.
+//
+// Solidity: function voteSigner(uint256 _generation, address _signerAddress) returns()
+func (_DKG *DKGTransactor) VoteSigner(opts *bind.TransactOpts, _generation *big.Int, _signerAddress common.Address) (*types.Transaction, error) {
+	return _DKG.contract.Transact(opts, "voteSigner", _generation, _signerAddress)
+}
+
+// VoteSigner is a paid mutator transaction binding the contract method 0xdc263a69.
+//
+// Solidity: function voteSigner(uint256 _generation, address _signerAddress) returns()
+func (_DKG *DKGSession) VoteSigner(_generation *big.Int, _signerAddress common.Address) (*types.Transaction, error) {
+	return _DKG.Contract.VoteSigner(&_DKG.TransactOpts, _generation, _signerAddress)
+}
+
+// VoteSigner is a paid mutator transaction binding the contract method 0xdc263a69.
+//
+// Solidity: function voteSigner(uint256 _generation, address _signerAddress) returns()
+func (_DKG *DKGTransactorSession) VoteSigner(_generation *big.Int, _signerAddress common.Address) (*types.Transaction, error) {
+	return _DKG.Contract.VoteSigner(&_DKG.TransactOpts, _generation, _signerAddress)
 }
 
 // DKGOwnershipTransferredIterator is returned from FilterOwnershipTransferred and is used to iterate over the raw logs and unpacked data for OwnershipTransferred events raised by the DKG contract.
@@ -950,6 +1106,410 @@ func (_DKG *DKGFilterer) WatchRoundDataProvided(opts *bind.WatchOpts, sink chan<
 func (_DKG *DKGFilterer) ParseRoundDataProvided(log types.Log) (*DKGRoundDataProvided, error) {
 	event := new(DKGRoundDataProvided)
 	if err := _DKG.contract.UnpackLog(event, "RoundDataProvided", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// DKGSignerVotedIterator is returned from FilterSignerVoted and is used to iterate over the raw logs and unpacked data for SignerVoted events raised by the DKG contract.
+type DKGSignerVotedIterator struct {
+	Event *DKGSignerVoted // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *DKGSignerVotedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(DKGSignerVoted)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(DKGSignerVoted)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *DKGSignerVotedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *DKGSignerVotedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// DKGSignerVoted represents a SignerVoted event raised by the DKG contract.
+type DKGSignerVoted struct {
+	Generation       *big.Int
+	Validator        common.Address
+	CollectiveSigner common.Address
+	Raw              types.Log // Blockchain specific contextual infos
+}
+
+// FilterSignerVoted is a free log retrieval operation binding the contract event 0x4686ba7a5df3cb2d9979ee16ec58c7ea0b92273d836278488fb07c732cf8ec19.
+//
+// Solidity: event SignerVoted(uint256 generation, address validator, address collectiveSigner)
+func (_DKG *DKGFilterer) FilterSignerVoted(opts *bind.FilterOpts) (*DKGSignerVotedIterator, error) {
+
+	logs, sub, err := _DKG.contract.FilterLogs(opts, "SignerVoted")
+	if err != nil {
+		return nil, err
+	}
+	return &DKGSignerVotedIterator{contract: _DKG.contract, event: "SignerVoted", logs: logs, sub: sub}, nil
+}
+
+// WatchSignerVoted is a free log subscription operation binding the contract event 0x4686ba7a5df3cb2d9979ee16ec58c7ea0b92273d836278488fb07c732cf8ec19.
+//
+// Solidity: event SignerVoted(uint256 generation, address validator, address collectiveSigner)
+func (_DKG *DKGFilterer) WatchSignerVoted(opts *bind.WatchOpts, sink chan<- *DKGSignerVoted) (event.Subscription, error) {
+
+	logs, sub, err := _DKG.contract.WatchLogs(opts, "SignerVoted")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(DKGSignerVoted)
+				if err := _DKG.contract.UnpackLog(event, "SignerVoted", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseSignerVoted is a log parse operation binding the contract event 0x4686ba7a5df3cb2d9979ee16ec58c7ea0b92273d836278488fb07c732cf8ec19.
+//
+// Solidity: event SignerVoted(uint256 generation, address validator, address collectiveSigner)
+func (_DKG *DKGFilterer) ParseSignerVoted(log types.Log) (*DKGSignerVoted, error) {
+	event := new(DKGSignerVoted)
+	if err := _DKG.contract.UnpackLog(event, "SignerVoted", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// DKGThresholdSignerUpdatedIterator is returned from FilterThresholdSignerUpdated and is used to iterate over the raw logs and unpacked data for ThresholdSignerUpdated events raised by the DKG contract.
+type DKGThresholdSignerUpdatedIterator struct {
+	Event *DKGThresholdSignerUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *DKGThresholdSignerUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(DKGThresholdSignerUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(DKGThresholdSignerUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *DKGThresholdSignerUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *DKGThresholdSignerUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// DKGThresholdSignerUpdated represents a ThresholdSignerUpdated event raised by the DKG contract.
+type DKGThresholdSignerUpdated struct {
+	Signer common.Address
+	Raw    types.Log // Blockchain specific contextual infos
+}
+
+// FilterThresholdSignerUpdated is a free log retrieval operation binding the contract event 0x8559aaab9220e2f109d51f7d09a3cca9b41451f4698287d982dc4549a70808bf.
+//
+// Solidity: event ThresholdSignerUpdated(address signer)
+func (_DKG *DKGFilterer) FilterThresholdSignerUpdated(opts *bind.FilterOpts) (*DKGThresholdSignerUpdatedIterator, error) {
+
+	logs, sub, err := _DKG.contract.FilterLogs(opts, "ThresholdSignerUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &DKGThresholdSignerUpdatedIterator{contract: _DKG.contract, event: "ThresholdSignerUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchThresholdSignerUpdated is a free log subscription operation binding the contract event 0x8559aaab9220e2f109d51f7d09a3cca9b41451f4698287d982dc4549a70808bf.
+//
+// Solidity: event ThresholdSignerUpdated(address signer)
+func (_DKG *DKGFilterer) WatchThresholdSignerUpdated(opts *bind.WatchOpts, sink chan<- *DKGThresholdSignerUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _DKG.contract.WatchLogs(opts, "ThresholdSignerUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(DKGThresholdSignerUpdated)
+				if err := _DKG.contract.UnpackLog(event, "ThresholdSignerUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseThresholdSignerUpdated is a log parse operation binding the contract event 0x8559aaab9220e2f109d51f7d09a3cca9b41451f4698287d982dc4549a70808bf.
+//
+// Solidity: event ThresholdSignerUpdated(address signer)
+func (_DKG *DKGFilterer) ParseThresholdSignerUpdated(log types.Log) (*DKGThresholdSignerUpdated, error) {
+	event := new(DKGThresholdSignerUpdated)
+	if err := _DKG.contract.UnpackLog(event, "ThresholdSignerUpdated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// DKGValidatorStakingUpdatedIterator is returned from FilterValidatorStakingUpdated and is used to iterate over the raw logs and unpacked data for ValidatorStakingUpdated events raised by the DKG contract.
+type DKGValidatorStakingUpdatedIterator struct {
+	Event *DKGValidatorStakingUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *DKGValidatorStakingUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(DKGValidatorStakingUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(DKGValidatorStakingUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *DKGValidatorStakingUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *DKGValidatorStakingUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// DKGValidatorStakingUpdated represents a ValidatorStakingUpdated event raised by the DKG contract.
+type DKGValidatorStakingUpdated struct {
+	ValidatorStaking common.Address
+	Raw              types.Log // Blockchain specific contextual infos
+}
+
+// FilterValidatorStakingUpdated is a free log retrieval operation binding the contract event 0xd97765c0ebe60446295857eb6382abea3df9c3f09ca7114e407063ddbfb2e085.
+//
+// Solidity: event ValidatorStakingUpdated(address validatorStaking)
+func (_DKG *DKGFilterer) FilterValidatorStakingUpdated(opts *bind.FilterOpts) (*DKGValidatorStakingUpdatedIterator, error) {
+
+	logs, sub, err := _DKG.contract.FilterLogs(opts, "ValidatorStakingUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &DKGValidatorStakingUpdatedIterator{contract: _DKG.contract, event: "ValidatorStakingUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchValidatorStakingUpdated is a free log subscription operation binding the contract event 0xd97765c0ebe60446295857eb6382abea3df9c3f09ca7114e407063ddbfb2e085.
+//
+// Solidity: event ValidatorStakingUpdated(address validatorStaking)
+func (_DKG *DKGFilterer) WatchValidatorStakingUpdated(opts *bind.WatchOpts, sink chan<- *DKGValidatorStakingUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _DKG.contract.WatchLogs(opts, "ValidatorStakingUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(DKGValidatorStakingUpdated)
+				if err := _DKG.contract.UnpackLog(event, "ValidatorStakingUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseValidatorStakingUpdated is a log parse operation binding the contract event 0xd97765c0ebe60446295857eb6382abea3df9c3f09ca7114e407063ddbfb2e085.
+//
+// Solidity: event ValidatorStakingUpdated(address validatorStaking)
+func (_DKG *DKGFilterer) ParseValidatorStakingUpdated(log types.Log) (*DKGValidatorStakingUpdated, error) {
+	event := new(DKGValidatorStakingUpdated)
+	if err := _DKG.contract.UnpackLog(event, "ValidatorStakingUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
