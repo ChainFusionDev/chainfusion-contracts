@@ -149,6 +149,7 @@ contract DKG is Ownable, Initializable {
 
         validators.push(_validators);
         emit ValidatorsUpdated(validators.length - 1, _validators);
+        emit RoundDataFilled(validators.length - 1, 0);
     }
 
     function _enoughVotes(uint256 _generation, uint256 votes) private view returns (bool) {
