@@ -109,7 +109,7 @@ describe('Bridge', function () {
 
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
 
-    expect(await tokenManager.isTokenSupported(mockToken.address)).to.equal(true);
+    expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
     await mockToken.approve(bridge.address, depositAmount);
     await mockToken.approve(liquidityPools.address, depositAmount);
@@ -159,7 +159,7 @@ describe('Bridge', function () {
     await bridge.deposit(mockToken.address, chainId, receiver.address, depositAmount);
 
     await expect(bridge.deposit(mockToken2.address, chainId, receiver.address, depositAmount)).to.be.revertedWith(
-      'TokenManager: token is not supported'
+      'TokenManager: token is not enabled'
     );
   });
 
@@ -190,5 +190,42 @@ describe('Bridge', function () {
     await bridge.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount);
 
     expect(await bridge.isApproved(txHash, mockToken.address, receiver.address, depositAmount)).to.equal(true);
+  });
+
+  it('should mint and burn tokens', async function () {
+    const [owner, receiver] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+    const depositAmount = '10000000000000000000';
+    const initialSupply = '100000000000000000000';
+    const sourceChainId = 123;
+
+    const { bridge, chainId, tokenManager } = await deployBridge(
+      owner.address,
+      [owner.address],
+      initialRequiredApprovals
+    );
+
+    const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
+
+    const MintableBurnableMockToken = await ethers.getContractFactory('MintableBurnableMockToken');
+    const mintableBurnableMockToken = await MintableBurnableMockToken.deploy('Token', 'TKN');
+    await mintableBurnableMockToken.deployed();
+
+    await tokenManager.setEnabled(mintableBurnableMockToken.address, true);
+    await tokenManager.setMintable(mintableBurnableMockToken.address, true);
+    await mintableBurnableMockToken.mint(owner.address, initialSupply);
+
+    await mintableBurnableMockToken.transferOwnership(bridge.address);
+
+    await expect(
+      bridge.approveTransfer(txHash, mintableBurnableMockToken.address, sourceChainId, receiver.address, depositAmount)
+    )
+      .emit(mintableBurnableMockToken, 'Transfer')
+      .withArgs('0x0000000000000000000000000000000000000000', receiver.address, depositAmount);
+
+    await mintableBurnableMockToken.approve(bridge.address, depositAmount);
+    await expect(bridge.deposit(mintableBurnableMockToken.address, chainId, receiver.address, depositAmount))
+      .emit(mintableBurnableMockToken, 'Transfer')
+      .withArgs(owner.address, '0x0000000000000000000000000000000000000000', depositAmount);
   });
 });

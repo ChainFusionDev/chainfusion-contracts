@@ -43,7 +43,9 @@ export async function deployBridge(
   const tokenManager = await TokenManager.deploy();
   await tokenManager.deployed();
   await tokenManager.initialize(owner);
-  await tokenManager.addSupportedToken(chainId, mockToken.address, destinationToken);
+
+  await tokenManager.setDestinationToken(chainId, mockToken.address, destinationToken);
+  await tokenManager.setEnabled(mockToken.address, true);
 
   const LiquidityPools = await ethers.getContractFactory('LiquidityPools');
   const liquidityPools = await LiquidityPools.deploy();
