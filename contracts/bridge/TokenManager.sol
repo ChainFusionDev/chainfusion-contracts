@@ -7,7 +7,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract TokenManager is Initializable, Ownable {
     struct TokenInfo {
         mapping(uint256 => address) chainToToken;
-        bool isSupported;
+        bool isEnabled;
+        bool isMintable;
     }
 
     mapping(address => TokenInfo) public supportedTokens;
@@ -16,17 +17,28 @@ contract TokenManager is Initializable, Ownable {
         _transferOwnership(_owner);
     }
 
-    function addSupportedToken(
+    function setDestinationToken(
         uint256 _chainId,
         address _token,
         address _destinationToken
     ) external onlyOwner {
         supportedTokens[_token].chainToToken[_chainId] = _destinationToken;
-        supportedTokens[_token].isSupported = true;
     }
 
-    function isTokenSupported(address _token) public view returns (bool) {
-        return supportedTokens[_token].isSupported;
+    function setMintable(address _token, bool _isMintable) public {
+        supportedTokens[_token].isMintable = _isMintable;
+    }
+
+    function setEnabled(address _token, bool _isEnabled) public {
+        supportedTokens[_token].isEnabled = _isEnabled;
+    }
+
+    function isTokenEnabled(address _token) public view returns (bool) {
+        return supportedTokens[_token].isEnabled;
+    }
+
+    function isTokenMintable(address _token) public view returns (bool) {
+        return supportedTokens[_token].isMintable;
     }
 
     function getDestinationToken(address _token, uint256 _chainId) public view returns (address) {

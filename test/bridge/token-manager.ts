@@ -15,7 +15,7 @@ describe('TokenManager', function () {
     await tokenManager.deployed();
     await tokenManager.initialize(v1.address);
 
-    await expect(tokenManager.addSupportedToken(chainId, tokenManagerAddress, destinationToken)).to.be.revertedWith(
+    await expect(tokenManager.setDestinationToken(chainId, tokenManagerAddress, destinationToken)).to.be.revertedWith(
       'Ownable: caller is not the owner'
     );
   });
@@ -29,7 +29,7 @@ describe('TokenManager', function () {
 
     const { tokenManager, chainId } = await deployBridge(owner.address, [owner.address], initialRequiredApprovals);
 
-    await tokenManager.addSupportedToken(chainId, tokenManagerAddress, destinationToken);
+    await tokenManager.setDestinationToken(chainId, tokenManagerAddress, destinationToken);
     expect(await tokenManager.getDestinationToken(tokenManagerAddress, chainId)).to.equal(destinationToken);
   });
 
@@ -42,7 +42,11 @@ describe('TokenManager', function () {
 
     const { tokenManager, chainId } = await deployBridge(owner.address, [owner.address], initialRequiredApprovals);
 
-    await tokenManager.addSupportedToken(chainId, tokenManagerAddress, destinationToken);
-    expect(await tokenManager.isTokenSupported(tokenManagerAddress)).to.equal(true);
+    await tokenManager.setDestinationToken(chainId, tokenManagerAddress, destinationToken);
+
+    await tokenManager.setEnabled(tokenManagerAddress, true);
+    await tokenManager.setMintable(tokenManagerAddress, true);
+
+    expect(await tokenManager.isTokenEnabled(tokenManagerAddress)).to.equal(true);
   });
 });

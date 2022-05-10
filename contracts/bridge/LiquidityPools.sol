@@ -60,7 +60,7 @@ contract LiquidityPools is Initializable, Ownable {
         uint256 _fee,
         uint256 _transferAmount
     ) external onlyBridge {
-        require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
+        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
         require(
             IERC20(_token).balanceOf(address(this)) >= _transferAmount + _fee,
             "IERC20: amount more than contract balance"
@@ -73,7 +73,7 @@ contract LiquidityPools is Initializable, Ownable {
 
     function addLiquidity(address _token, uint256 _amount) public {
         claimRewards(_token);
-        require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
+        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "IERC20: transfer failed");
 
         providedLiquidity[_token] += _amount;
@@ -85,7 +85,7 @@ contract LiquidityPools is Initializable, Ownable {
 
     function removeLiquidity(address _token, uint256 _amount) public {
         claimRewards(_token);
-        require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
+        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
         require(IERC20(_token).balanceOf(address(this)) >= _amount, "IERC20: amount more than contract balance");
         require(liquidityPositions[_token][msg.sender].balance >= _amount, "LiquidityPools: too much amount");
 

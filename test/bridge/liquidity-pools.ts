@@ -43,7 +43,7 @@ describe('LiquidityPools', function () {
       initialRequiredApprovals
     );
 
-    expect(await tokenManager.isTokenSupported(mockToken.address)).to.equal(true);
+    expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
     await mockToken.approve(liquidityPools.address, amount);
     await expect(liquidityPools.addLiquidity(mockToken.address, amount))
@@ -88,7 +88,7 @@ describe('LiquidityPools', function () {
       initialRequiredApprovals
     );
 
-    expect(await tokenManager.isTokenSupported(mockToken.address)).to.equal(true);
+    expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
     await mockToken.approve(liquidityPools.address, amount);
     await expect(liquidityPools.addLiquidity(mockToken.address, amount))
@@ -117,7 +117,7 @@ describe('LiquidityPools', function () {
       initialRequiredApprovals
     );
 
-    expect(await tokenManager.isTokenSupported(mockToken.address)).to.equal(true);
+    expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
     await mockToken.approve(liquidityPools.address, amount);
     await expect(liquidityPools.addLiquidity(mockToken.address, amount))
@@ -140,7 +140,7 @@ describe('LiquidityPools', function () {
       initialRequiredApprovals
     );
 
-    expect(await tokenManager.isTokenSupported(mockToken.address)).to.equal(true);
+    expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
     await mockToken.approve(bridge.address, amount);
     await mockToken.approve(liquidityPools.address, amount);
@@ -164,7 +164,7 @@ describe('LiquidityPools', function () {
       initialRequiredApprovals
     );
 
-    expect(await tokenManager.isTokenSupported(mockToken.address)).to.equal(true);
+    expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
     await mockToken.approve(bridge.address, amount);
     await mockToken.approve(liquidityPools.address, amount);

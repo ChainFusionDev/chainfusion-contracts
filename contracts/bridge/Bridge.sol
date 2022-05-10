@@ -8,6 +8,7 @@ import "./TokenManager.sol";
 import "./ValidatorManager.sol";
 import "./LiquidityPools.sol";
 import "./Globals.sol";
+import "../interfaces/IERC20MintableBurnable.sol";
 
 contract Bridge is Initializable, Ownable {
     mapping(bytes32 => mapping(address => bool)) public approvals;
@@ -76,8 +77,16 @@ contract Bridge is Initializable, Ownable {
         uint256 _amount
     ) external {
         require(_amount != 0, "Bridge: amount cannot be equal to 0.");
-        require(IERC20(_token).transferFrom(msg.sender, address(liquidityPools), _amount), "IERC20: transfer failed");
-        require(tokenManager.isTokenSupported(_token), "TokenManager: token is not supported");
+        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
+
+        if (tokenManager.isTokenMintable(_token)) {
+            IERC20MintableBurnable(_token).burnFrom(msg.sender, _amount);
+        } else {
+            require(
+                IERC20(_token).transferFrom(msg.sender, address(liquidityPools), _amount),
+                "IERC20: transfer failed"
+            );
+        }
         emit Deposited(_token, tokenManager.getDestinationToken(_token, _chainId), _chainId, _receiver, _amount);
     }
 
@@ -88,6 +97,7 @@ contract Bridge is Initializable, Ownable {
         address _receiver,
         uint256 _amount
     ) external onlyValidator {
+        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
         bytes32 id = keccak256(abi.encodePacked(_txHash, _token, _receiver, _amount));
 
         if (!approvals[id][msg.sender]) {
@@ -104,7 +114,13 @@ contract Bridge is Initializable, Ownable {
             executed[id] = true;
             uint256 fee = (_amount * liquidityPools.feePercentage()) / BASE_DIVISOR;
             uint256 transferAmount = _amount - fee;
-            liquidityPools.transfer(_token, _receiver, fee, transferAmount);
+
+            if (tokenManager.isTokenMintable(_token)) {
+                IERC20MintableBurnable(_token).mint(_receiver, _amount);
+            } else {
+                liquidityPools.transfer(_token, _receiver, fee, transferAmount);
+            }
+
             emit Transferred(_token, _sourceChainId, _receiver, fee, transferAmount, msg.sender);
         }
     }
