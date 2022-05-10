@@ -45,7 +45,6 @@ describe('TokenManager', function () {
     await tokenManager.setDestinationToken(chainId, tokenManagerAddress, destinationToken);
 
     await tokenManager.setEnabled(tokenManagerAddress, true);
-    await tokenManager.setMintable(tokenManagerAddress, true);
 
     expect(await tokenManager.isTokenEnabled(tokenManagerAddress)).to.equal(true);
   });

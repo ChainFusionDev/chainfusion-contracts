@@ -159,7 +159,7 @@ describe('Bridge', function () {
     await bridge.deposit(mockToken.address, chainId, receiver.address, depositAmount);
 
     await expect(bridge.deposit(mockToken2.address, chainId, receiver.address, depositAmount)).to.be.revertedWith(
-      'TokenManager: token is not supported'
+      'TokenManager: token is not enabled'
     );
   });
 
@@ -199,7 +199,7 @@ describe('Bridge', function () {
     const initialSupply = '100000000000000000000';
     const sourceChainId = 123;
 
-    const { bridge, chainId, tokenManager, liquidityPools } = await deployBridge(
+    const { bridge, chainId, tokenManager } = await deployBridge(
       owner.address,
       [owner.address],
       initialRequiredApprovals
@@ -224,9 +224,6 @@ describe('Bridge', function () {
       .withArgs('0x0000000000000000000000000000000000000000', receiver.address, depositAmount);
 
     await mintableBurnableMockToken.approve(bridge.address, depositAmount);
-    await mintableBurnableMockToken.approve(liquidityPools.address, depositAmount);
-    await liquidityPools.addLiquidity(mintableBurnableMockToken.address, depositAmount);
-
     await expect(bridge.deposit(mintableBurnableMockToken.address, chainId, receiver.address, depositAmount))
       .emit(mintableBurnableMockToken, 'Transfer')
       .withArgs(owner.address, '0x0000000000000000000000000000000000000000', depositAmount);

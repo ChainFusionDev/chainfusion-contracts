@@ -77,7 +77,7 @@ contract Bridge is Initializable, Ownable {
         uint256 _amount
     ) external {
         require(_amount != 0, "Bridge: amount cannot be equal to 0.");
-        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
+        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not enabled");
 
         if (tokenManager.isTokenMintable(_token)) {
             IERC20MintableBurnable(_token).burnFrom(msg.sender, _amount);
@@ -97,7 +97,7 @@ contract Bridge is Initializable, Ownable {
         address _receiver,
         uint256 _amount
     ) external onlyValidator {
-        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
+        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not enabled");
         bytes32 id = keccak256(abi.encodePacked(_txHash, _token, _receiver, _amount));
 
         if (!approvals[id][msg.sender]) {
@@ -112,12 +112,14 @@ contract Bridge is Initializable, Ownable {
 
         if (approvalsCount[id] >= validatorManager.requiredApprovals()) {
             executed[id] = true;
-            uint256 fee = (_amount * liquidityPools.feePercentage()) / BASE_DIVISOR;
-            uint256 transferAmount = _amount - fee;
+            uint256 fee = 0;
+            uint256 transferAmount = _amount;
 
             if (tokenManager.isTokenMintable(_token)) {
                 IERC20MintableBurnable(_token).mint(_receiver, _amount);
             } else {
+                fee = (_amount * liquidityPools.feePercentage()) / BASE_DIVISOR;
+                transferAmount -= fee;
                 liquidityPools.transfer(_token, _receiver, fee, transferAmount);
             }
 

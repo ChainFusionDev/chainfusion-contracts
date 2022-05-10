@@ -9,9 +9,11 @@ import "hardhat/console.sol";
 
 contract MintableBurnableMockToken is ERC20, IERC20MintableBurnable, ERC20Burnable, Ownable {
     constructor(string memory name, string memory symbol)
-        // solhint-disable-next-line no-empty-blocks
         ERC20(name, symbol)
-    {}
+    // solhint-disable-next-line no-empty-blocks
+    {
+
+    }
 
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
