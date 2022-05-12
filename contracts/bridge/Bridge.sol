@@ -10,7 +10,6 @@ import "./LiquidityPools.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
 import "../interfaces/IERC20MintableBurnable.sol";
-import "hardhat/console.sol";
 
 contract Bridge is Initializable, Ownable {
     mapping(bytes32 => mapping(address => bool)) public approvals;

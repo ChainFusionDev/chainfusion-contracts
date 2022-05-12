@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./LiquidityPools.sol";
 import "./Globals.sol";
-import "hardhat/console.sol";
 
 contract FeeManager is Initializable, Ownable {
     mapping(address => uint256) public tokenFeePercentage;
@@ -87,7 +86,6 @@ contract FeeManager is Initializable, Ownable {
 
     function calculateFee(address token, uint256 amount) public view returns (uint256 fee) {
         fee = validatorRefundFee + (tokenFeePercentage[token] * amount) / BASE_DIVISOR;
-        console.log(fee);
         require(fee <= amount, "FeeManager: fee to be less than or equal to amount");
 
         return fee;
