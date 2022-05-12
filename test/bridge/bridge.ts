@@ -78,8 +78,8 @@ describe('Bridge', function () {
     const [owner, v1, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
-    const depositAmount = '10000000000000000000';
-
+    const depositAmount = '1000000000000000000';
+    const transferAmount = '990000000000000000';
     const { mockToken, bridge, chainId, liquidityPools } = await deployBridge(
       owner.address,
       [v1.address],
@@ -90,15 +90,13 @@ describe('Bridge', function () {
     await mockToken.approve(liquidityPools.address, depositAmount);
     await bridge.deposit(mockToken.address, chainId, receiver.address, depositAmount);
 
-    expect(await mockToken.balanceOf(liquidityPools.address)).to.equal(depositAmount);
+    expect(await mockToken.balanceOf(liquidityPools.address)).to.equal(transferAmount);
   });
 
   it('should execute transfer', async function () {
     const [owner, v1, v2, v3, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 2;
     const depositAmount = '10000000000000000000';
-    const fee = '100000000000000000';
-    const transferAmount = '9900000000000000000';
     const sourceChainId = 123;
 
     const { mockToken, bridge, chainId, liquidityPools, tokenManager } = await deployBridge(
@@ -130,7 +128,7 @@ describe('Bridge', function () {
     const bridge2 = await ethers.getContractAt('Bridge', bridge.address, v2);
     await expect(bridge2.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount))
       .emit(bridge2, 'Transferred')
-      .withArgs(mockToken.address, chainId, receiver.address, fee, transferAmount, v2.address);
+      .withArgs(mockToken.address, chainId, receiver.address, depositAmount, v2.address);
 
     const bridge3 = await ethers.getContractAt('Bridge', bridge.address, v3);
     await bridge3.approveTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount);
@@ -197,6 +195,7 @@ describe('Bridge', function () {
     const initialRequiredApprovals = 1;
     const depositAmount = '10000000000000000000';
     const initialSupply = '100000000000000000000';
+    const transferAmount = '9990000000000000000';
     const sourceChainId = 123;
 
     const { bridge, chainId, tokenManager } = await deployBridge(
@@ -226,6 +225,6 @@ describe('Bridge', function () {
     await mintableBurnableMockToken.approve(bridge.address, depositAmount);
     await expect(bridge.deposit(mintableBurnableMockToken.address, chainId, receiver.address, depositAmount))
       .emit(mintableBurnableMockToken, 'Transfer')
-      .withArgs(owner.address, '0x0000000000000000000000000000000000000000', depositAmount);
+      .withArgs(owner.address, '0x0000000000000000000000000000000000000000', transferAmount);
   });
 });
