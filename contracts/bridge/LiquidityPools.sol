@@ -41,10 +41,13 @@ contract LiquidityPools is Initializable, Ownable {
         _;
     }
 
+    // solhint-disable-next-line no-empty-blocks
+    receive() external payable {}
+
     function initialize(
         address _tokenManager,
         address _bridge,
-        address _feeManager,
+        address payable _feeManager,
         uint256 _feePercentage
     ) external initializer {
         tokenManager = TokenManager(_tokenManager);
@@ -85,27 +88,31 @@ contract LiquidityPools is Initializable, Ownable {
 
     function addLiquidity(address _token, uint256 _amount) public {
         claimRewards(_token);
+
         require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "IERC20: transfer failed");
 
-        providedLiquidity[_token] += _amount;
-        availableLiquidity[_token] += _amount;
-        liquidityPositions[_token][msg.sender].balance += _amount;
+        _addLiquidity(_token, _amount);
 
         emit LiquidityAdded(_token, msg.sender, _amount);
     }
 
-    function removeLiquidity(address _token, uint256 _amount) public {
+    function removeLiquidity(address _token, uint256 _amount) public payable {
         claimRewards(_token);
+
         require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
-        require(IERC20(_token).balanceOf(address(this)) >= _amount, "IERC20: amount more than contract balance");
         require(liquidityPositions[_token][msg.sender].balance >= _amount, "LiquidityPools: too much amount");
 
-        providedLiquidity[_token] -= _amount;
-        availableLiquidity[_token] -= _amount;
-        liquidityPositions[_token][msg.sender].balance -= _amount;
+        _removeLiquidity(_token, _amount);
 
-        require(IERC20(_token).transfer(msg.sender, _amount), "IERC20: transfer failed");
+        if (_token == NATIVE_TOKEN) {
+            // solhint-disable-next-line avoid-low-level-calls
+            (bool success, ) = msg.sender.call{value: msg.value, gas: 50000}("");
+            require(success, "LiquidityPools: transfer native token failed");
+        } else {
+            require(IERC20(_token).balanceOf(address(this)) >= _amount, "IERC20: amount more than contract balance");
+            require(IERC20(_token).transfer(msg.sender, _amount), "IERC20: transfer failed");
+        }
 
         emit LiquidityRemoved(_token, msg.sender, _amount);
     }
@@ -119,8 +126,38 @@ contract LiquidityPools is Initializable, Ownable {
         }
     }
 
+    function transferNative(address _receiver) public payable onlyBridge {
+        require(tokenManager.isTokenEnabled(NATIVE_TOKEN), "TokenManager: token is not supported");
+
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool success, ) = _receiver.call{value: msg.value, gas: 21000}("");
+        require(success, "LiquidityPools: transfer native token failed");
+    }
+
+    function addNativeLiquidity() public payable {
+        claimRewards(NATIVE_TOKEN);
+
+        uint256 amount = msg.value;
+
+        _addLiquidity(NATIVE_TOKEN, amount);
+
+        emit LiquidityAdded(NATIVE_TOKEN, msg.sender, amount);
+    }
+
     function rewardsOwing(address _token) public view returns (uint256) {
         uint256 newRewardPoints = totalRewardPoints[_token] - liquidityPositions[_token][msg.sender].lastRewardPoints;
         return (liquidityPositions[_token][msg.sender].balance * newRewardPoints) / BASE_DIVISOR;
+    }
+
+    function _addLiquidity(address _token, uint256 _amount) private {
+        providedLiquidity[_token] += _amount;
+        availableLiquidity[_token] += _amount;
+        liquidityPositions[_token][msg.sender].balance += _amount;
+    }
+
+    function _removeLiquidity(address _token, uint256 _amount) private {
+        providedLiquidity[_token] -= _amount;
+        availableLiquidity[_token] -= _amount;
+        liquidityPositions[_token][msg.sender].balance -= _amount;
     }
 }

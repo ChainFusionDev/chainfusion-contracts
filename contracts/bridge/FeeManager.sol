@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./LiquidityPools.sol";
 import "./Globals.sol";
+import "hardhat/console.sol";
 
 contract FeeManager is Initializable, Ownable {
     mapping(address => uint256) public tokenFeePercentage;
@@ -23,8 +24,11 @@ contract FeeManager is Initializable, Ownable {
     event FoundationAddressUpdated(address _foundationAddress);
     event ValidatorRefundFeeUpdated(uint256 _validatorRefundFee);
 
+    // solhint-disable-next-line no-empty-blocks
+    receive() external payable {}
+
     function initialize(
-        address _liquidityPools,
+        address payable _liquidityPools,
         address _validatorAddress,
         address _foundationAddress,
         uint256 _validatorRefundFee
@@ -35,7 +39,7 @@ contract FeeManager is Initializable, Ownable {
         validatorRefundFee = _validatorRefundFee;
     }
 
-    function setLiquidityPools(address _liquidityPools) external onlyOwner {
+    function setLiquidityPools(address payable _liquidityPools) external onlyOwner {
         liquidityPools = LiquidityPools(_liquidityPools);
         emit LiquidityPoolsUpdated(_liquidityPools);
     }
@@ -83,6 +87,7 @@ contract FeeManager is Initializable, Ownable {
 
     function calculateFee(address token, uint256 amount) public view returns (uint256 fee) {
         fee = validatorRefundFee + (tokenFeePercentage[token] * amount) / BASE_DIVISOR;
+        console.log(fee);
         require(fee <= amount, "FeeManager: fee to be less than or equal to amount");
 
         return fee;
