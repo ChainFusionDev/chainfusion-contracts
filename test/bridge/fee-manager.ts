@@ -25,7 +25,7 @@ describe('FeeManager', function () {
     expect(await mockToken.balanceOf(feeManager.address)).to.equal(fee);
   });
 
-  it('should fees are collected in native currency', async function () {
+  it('should collect fee in native currency', async function () {
     const [owner, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
     const amount = '10000000000000000000';
