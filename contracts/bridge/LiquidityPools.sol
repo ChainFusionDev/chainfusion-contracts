@@ -93,8 +93,6 @@ contract LiquidityPools is Initializable, Ownable {
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "IERC20: transfer failed");
 
         _addLiquidity(_token, _amount);
-
-        emit LiquidityAdded(_token, msg.sender, _amount);
     }
 
     function removeLiquidity(address _token, uint256 _amount) public payable {
@@ -107,14 +105,12 @@ contract LiquidityPools is Initializable, Ownable {
 
         if (_token == NATIVE_TOKEN) {
             // solhint-disable-next-line avoid-low-level-calls
-            (bool success, ) = msg.sender.call{value: msg.value, gas: 50000}("");
+            (bool success, ) = msg.sender.call{value: msg.value, gas: 21000}("");
             require(success, "LiquidityPools: transfer native token failed");
         } else {
             require(IERC20(_token).balanceOf(address(this)) >= _amount, "IERC20: amount more than contract balance");
             require(IERC20(_token).transfer(msg.sender, _amount), "IERC20: transfer failed");
         }
-
-        emit LiquidityRemoved(_token, msg.sender, _amount);
     }
 
     function claimRewards(address _token) public {
@@ -137,11 +133,7 @@ contract LiquidityPools is Initializable, Ownable {
     function addNativeLiquidity() public payable {
         claimRewards(NATIVE_TOKEN);
 
-        uint256 amount = msg.value;
-
-        _addLiquidity(NATIVE_TOKEN, amount);
-
-        emit LiquidityAdded(NATIVE_TOKEN, msg.sender, amount);
+        _addLiquidity(NATIVE_TOKEN, msg.value);
     }
 
     function rewardsOwing(address _token) public view returns (uint256) {
@@ -153,11 +145,15 @@ contract LiquidityPools is Initializable, Ownable {
         providedLiquidity[_token] += _amount;
         availableLiquidity[_token] += _amount;
         liquidityPositions[_token][msg.sender].balance += _amount;
+
+        emit LiquidityAdded(_token, msg.sender, _amount);
     }
 
     function _removeLiquidity(address _token, uint256 _amount) private {
         providedLiquidity[_token] -= _amount;
         availableLiquidity[_token] -= _amount;
         liquidityPositions[_token][msg.sender].balance -= _amount;
+
+        emit LiquidityRemoved(_token, msg.sender, _amount);
     }
 }

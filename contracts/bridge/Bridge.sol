@@ -160,13 +160,13 @@ contract Bridge is Initializable, Ownable {
         uint256 fee = feeManager.calculateFee(NATIVE_TOKEN, _amount);
 
         // solhint-disable-next-line avoid-low-level-calls
-        (bool success, ) = address(feeManager).call{value: fee, gas: 50000}("");
+        (bool success, ) = address(feeManager).call{value: fee, gas: 21000}("");
         require(success, "Bridge: transfer native token failed");
 
         uint256 transferAmount = _amount - fee;
 
         // solhint-disable-next-line avoid-low-level-calls
-        (success, ) = address(liquidityPools).call{value: transferAmount, gas: 50000}("");
+        (success, ) = address(liquidityPools).call{value: transferAmount, gas: 21000}("");
         require(success, "Bridge: transfer native token failed");
 
         emit DepositedNative(NATIVE_TOKEN, _chainId, _receiver, fee, transferAmount);
