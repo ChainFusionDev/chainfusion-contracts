@@ -3,6 +3,7 @@ import { BigNumber } from 'ethers';
 import {
   Bridge,
   MockToken,
+  FeeManager,
   TokenManager,
   ValidatorManager,
   ValidatorStaking,
@@ -14,6 +15,7 @@ import {
 interface BridgeDeployment {
   bridge: Bridge;
   tokenManager: TokenManager;
+  feeManager: FeeManager;
   validatorManager: ValidatorManager;
   mockToken: MockToken;
   liquidityPools: LiquidityPools;
@@ -30,10 +32,21 @@ export async function deployBridge(
   owner: string,
   validators: string[],
   requiredSignatures: number,
-  chainId: number = 123
+  chainId: number = 123,
+  validatorAddress?: string,
+  foundationAddress?: string
 ): Promise<BridgeDeployment> {
-  const mintAmount = '100000000000000000000';
+  const mintAmount = '10000000000000000000000';
+  const validatorRefundFee = '10000000000000000';
   const destinationToken = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+
+  if (validatorAddress === undefined) {
+    validatorAddress = owner;
+  }
+
+  if (foundationAddress === undefined) {
+    foundationAddress = owner;
+  }
 
   const MockToken = await ethers.getContractFactory('MockToken');
   const mockToken = await MockToken.deploy('Token', 'TKN', mintAmount);
@@ -55,13 +68,24 @@ export async function deployBridge(
   const validatorManager = await ValidatorManager.deploy();
   await validatorManager.deployed();
 
+  const FeeManager = await ethers.getContractFactory('FeeManager');
+  const feeManager = await FeeManager.deploy();
+  await feeManager.deployed();
+  await feeManager.initialize(liquidityPools.address, validatorAddress, foundationAddress, validatorRefundFee);
+
   const Bridge = await ethers.getContractFactory('Bridge');
   const bridge = await Bridge.deploy();
   await bridge.deployed();
-  await bridge.initialize(owner, validatorManager.address, tokenManager.address, liquidityPools.address);
+  await bridge.initialize(
+    owner,
+    validatorManager.address,
+    tokenManager.address,
+    liquidityPools.address,
+    feeManager.address
+  );
 
   const feePercentage = '10000000000000000';
-  await liquidityPools.initialize(tokenManager.address, bridge.address, feePercentage);
+  await liquidityPools.initialize(tokenManager.address, bridge.address, feeManager.address, feePercentage);
 
   await validatorManager.setRequiredApprovals(requiredSignatures);
   await validatorManager.setValidators(validators);
@@ -69,6 +93,7 @@ export async function deployBridge(
   return {
     bridge: bridge,
     tokenManager: tokenManager,
+    feeManager: feeManager,
     validatorManager: validatorManager,
     mockToken: mockToken,
     liquidityPools: liquidityPools,

@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./TokenManager.sol";
 import "./Bridge.sol";
+import "./FeeManager.sol";
 import "./Globals.sol";
 
 contract LiquidityPools is Initializable, Ownable {
@@ -22,6 +23,7 @@ contract LiquidityPools is Initializable, Ownable {
     mapping(address => uint256) public totalRewardPoints;
     TokenManager public tokenManager;
     Bridge public bridge;
+    FeeManager public feeManager;
     uint256 public feePercentage;
 
     event LiquidityAdded(address token, address account, uint256 amount);
@@ -34,13 +36,20 @@ contract LiquidityPools is Initializable, Ownable {
         _;
     }
 
+    modifier onlyFeeManager() {
+        require(msg.sender == address(feeManager), "LiquidityPools: only feeManager");
+        _;
+    }
+
     function initialize(
         address _tokenManager,
         address _bridge,
+        address _feeManager,
         uint256 _feePercentage
     ) external initializer {
         tokenManager = TokenManager(_tokenManager);
         bridge = Bridge(_bridge);
+        feeManager = FeeManager(_feeManager);
         feePercentage = _feePercentage;
     }
 
@@ -57,18 +66,21 @@ contract LiquidityPools is Initializable, Ownable {
     function transfer(
         address _token,
         address _receiver,
-        uint256 _fee,
         uint256 _transferAmount
     ) external onlyBridge {
         require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
         require(
-            IERC20(_token).balanceOf(address(this)) >= _transferAmount + _fee,
+            IERC20(_token).balanceOf(address(this)) >= _transferAmount,
             "IERC20: amount more than contract balance"
         );
-
-        distributeFee(_token, _fee);
-
         require(ERC20(_token).transfer(_receiver, _transferAmount), "ERC20: transfer failed");
+    }
+
+    function distributeFee(address _token, uint256 _amount) external onlyFeeManager {
+        require(_amount > 0, "LiquidityPools: amount must be greater than zero");
+        totalRewardPoints[_token] += (_amount * BASE_DIVISOR) / providedLiquidity[_token];
+        providedLiquidity[_token] += _amount;
+        collectedFees[_token] += _amount;
     }
 
     function addLiquidity(address _token, uint256 _amount) public {
@@ -110,12 +122,5 @@ contract LiquidityPools is Initializable, Ownable {
     function rewardsOwing(address _token) public view returns (uint256) {
         uint256 newRewardPoints = totalRewardPoints[_token] - liquidityPositions[_token][msg.sender].lastRewardPoints;
         return (liquidityPositions[_token][msg.sender].balance * newRewardPoints) / BASE_DIVISOR;
-    }
-
-    function distributeFee(address _token, uint256 _amount) private {
-        require(_amount > 0, "LiquidityPools: amount must be greater than zero");
-        totalRewardPoints[_token] += (_amount * BASE_DIVISOR) / providedLiquidity[_token];
-        providedLiquidity[_token] += _amount;
-        collectedFees[_token] += _amount;
     }
 }

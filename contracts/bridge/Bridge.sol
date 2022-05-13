@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./TokenManager.sol";
 import "./ValidatorManager.sol";
 import "./LiquidityPools.sol";
+import "./FeeManager.sol";
 import "./Globals.sol";
 import "../interfaces/IERC20MintableBurnable.sol";
 
@@ -17,6 +18,7 @@ contract Bridge is Initializable, Ownable {
     TokenManager public tokenManager;
     ValidatorManager public validatorManager;
     LiquidityPools public liquidityPools;
+    FeeManager public feeManager;
 
     event Approved(bytes32 id, address validator);
     event Deposited(
@@ -24,19 +26,14 @@ contract Bridge is Initializable, Ownable {
         address destinationToken,
         uint256 destinationChainId,
         address receiver,
-        uint256 amount
-    );
-    event Transferred(
-        address token,
-        uint256 sourceChainId,
-        address receiver,
         uint256 fee,
-        uint256 transferAmount,
-        address validator
+        uint256 transferAmount
     );
+    event Transferred(address token, uint256 sourceChainId, address receiver, uint256 amount, address validator);
     event TokenManagerUpdated(address _tokenManager);
     event ValidatorManagerUpdated(address _validatorManager);
     event LiquidityPoolsUpdated(address _liquidityPools);
+    event FeeManagerUpdated(address _feeManager);
 
     modifier onlyValidator() {
         require(validatorManager.isValidator(msg.sender), "Bridge: only validator");
@@ -47,12 +44,14 @@ contract Bridge is Initializable, Ownable {
         address _owner,
         ValidatorManager _validatorManager,
         address _tokenManager,
-        address _liquidityPools
+        address _liquidityPools,
+        address _feeManager
     ) external initializer {
         _transferOwnership(_owner);
         validatorManager = _validatorManager;
         tokenManager = TokenManager(_tokenManager);
         liquidityPools = LiquidityPools(_liquidityPools);
+        feeManager = FeeManager(_feeManager);
     }
 
     function setTokenManager(address _tokenManager) external onlyOwner {
@@ -70,6 +69,11 @@ contract Bridge is Initializable, Ownable {
         emit LiquidityPoolsUpdated(_liquidityPools);
     }
 
+    function setFeeManager(address _feeManager) external onlyOwner {
+        feeManager = FeeManager(_feeManager);
+        emit FeeManagerUpdated(_feeManager);
+    }
+
     function deposit(
         address _token,
         uint256 _chainId,
@@ -79,15 +83,28 @@ contract Bridge is Initializable, Ownable {
         require(_amount != 0, "Bridge: amount cannot be equal to 0.");
         require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not enabled");
 
+        uint256 fee = feeManager.calculateFee(_token, _amount);
+        require(IERC20(_token).transferFrom(msg.sender, address(feeManager), fee), "IERC20: transfer failed");
+
+        uint256 transferAmount = _amount - fee;
+
         if (tokenManager.isTokenMintable(_token)) {
-            IERC20MintableBurnable(_token).burnFrom(msg.sender, _amount);
+            IERC20MintableBurnable(_token).burnFrom(msg.sender, transferAmount);
         } else {
             require(
-                IERC20(_token).transferFrom(msg.sender, address(liquidityPools), _amount),
+                IERC20(_token).transferFrom(msg.sender, address(liquidityPools), transferAmount),
                 "IERC20: transfer failed"
             );
         }
-        emit Deposited(_token, tokenManager.getDestinationToken(_token, _chainId), _chainId, _receiver, _amount);
+
+        emit Deposited(
+            _token,
+            tokenManager.getDestinationToken(_token, _chainId),
+            _chainId,
+            _receiver,
+            fee,
+            transferAmount
+        );
     }
 
     function approveTransfer(
@@ -112,18 +129,14 @@ contract Bridge is Initializable, Ownable {
 
         if (approvalsCount[id] >= validatorManager.requiredApprovals()) {
             executed[id] = true;
-            uint256 fee = 0;
-            uint256 transferAmount = _amount;
 
             if (tokenManager.isTokenMintable(_token)) {
                 IERC20MintableBurnable(_token).mint(_receiver, _amount);
             } else {
-                fee = (_amount * liquidityPools.feePercentage()) / BASE_DIVISOR;
-                transferAmount -= fee;
-                liquidityPools.transfer(_token, _receiver, fee, transferAmount);
+                liquidityPools.transfer(_token, _receiver, _amount);
             }
 
-            emit Transferred(_token, _sourceChainId, _receiver, fee, transferAmount, msg.sender);
+            emit Transferred(_token, _sourceChainId, _receiver, _amount, msg.sender);
         }
     }
 
