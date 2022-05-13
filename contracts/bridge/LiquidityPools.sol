@@ -122,11 +122,11 @@ contract LiquidityPools is Initializable, Ownable {
         }
     }
 
-    function transferNative(address _receiver) public payable onlyBridge {
+    function transferNative(address _receiver, uint256 _amount) public payable onlyBridge {
         require(tokenManager.isTokenEnabled(NATIVE_TOKEN), "TokenManager: token is not supported");
 
         // solhint-disable-next-line avoid-low-level-calls
-        (bool success, ) = _receiver.call{value: msg.value, gas: 21000}("");
+        (bool success, ) = _receiver.call{value: _amount, gas: 21000}("");
         require(success, "LiquidityPools: transfer native token failed");
     }
 

@@ -232,7 +232,8 @@ describe('Bridge', function () {
     const [owner, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
-    const amount = '100000000000000000000';
+    const amount = '1000000000000000000';
+    const fee = '990000000000000000';
 
     const { liquidityPools, tokenManager, bridge, chainId } = await deployBridge(
       owner.address,
@@ -249,8 +250,14 @@ describe('Bridge', function () {
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
 
     await bridge.depositNative(chainId, receiver.address, { value: amount });
-    await bridge.approveTransfer(txHash, NATIVE_TOKEN, chainId, receiver.address, amount);
+    const balanceReceiverTo = await receiver.provider!.getBalance(receiver.address);
 
+    const balance = await owner.provider!.getBalance(liquidityPools.address);
+    expect(Number(balance) - Number(amount)).to.equal(Number(fee));
+
+    await bridge.approveTransfer(txHash, NATIVE_TOKEN, chainId, receiver.address, amount);
+    const balanceReceiverAfter = await owner.provider!.getBalance(receiver.address);
+    expect(Number(balanceReceiverAfter)).to.equal(Number(balanceReceiverTo) + Number(amount));
     expect(await bridge.isApproved(txHash, NATIVE_TOKEN, receiver.address, amount)).to.equal(true);
   });
 });

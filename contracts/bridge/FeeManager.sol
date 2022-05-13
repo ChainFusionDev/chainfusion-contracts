@@ -72,14 +72,35 @@ contract FeeManager is Initializable, Ownable {
     }
 
     function distributeRewards(address token) public {
-        uint256 totalRewards = IERC20(token).balanceOf(address(this));
-        uint256 validatorRewards = (validatorRewardPercentage[token] * totalRewards) / BASE_DIVISOR;
-        uint256 liquidityRewards = (liquidityRewardPercentage[token] * totalRewards) / BASE_DIVISOR;
-        uint256 foundationReward = totalRewards - validatorRewards - liquidityRewards;
+        uint256 totalRewards;
+        uint256 validatorRewards;
+        uint256 liquidityRewards;
+        uint256 foundationReward;
 
-        require(IERC20(token).transfer(validatorAddress, validatorRewards), "IERC20: transfer failed");
-        require(IERC20(token).transfer(address(liquidityPools), liquidityRewards), "IERC20: transfer failed");
-        require(IERC20(token).transfer(foundationAddress, foundationReward), "IERC20: transfer failed");
+        if (token == NATIVE_TOKEN) {
+            totalRewards = address(this).balance;
+
+            (validatorRewards, liquidityRewards, foundationReward) = _distributeRewards(token, totalRewards);
+
+            // solhint-disable-next-line avoid-low-level-calls
+            (bool success, ) = validatorAddress.call{value: validatorRewards, gas: 21000}("");
+            require(success, "FeeManager: transfer native token failed");
+
+            // solhint-disable-next-line avoid-low-level-calls
+            (success, ) = address(liquidityPools).call{value: liquidityRewards, gas: 21000}("");
+            require(success, "FeeManager: transfer native token failed");
+
+            // solhint-disable-next-line avoid-low-level-calls
+            (success, ) = foundationAddress.call{value: foundationReward, gas: 21000}("");
+            require(success, "FeeManager: transfer native token failed");
+        } else {
+            totalRewards = IERC20(token).balanceOf(address(this));
+            (validatorRewards, liquidityRewards, foundationReward) = _distributeRewards(token, totalRewards);
+
+            require(IERC20(token).transfer(validatorAddress, validatorRewards), "IERC20: transfer failed");
+            require(IERC20(token).transfer(address(liquidityPools), liquidityRewards), "IERC20: transfer failed");
+            require(IERC20(token).transfer(foundationAddress, foundationReward), "IERC20: transfer failed");
+        }
 
         liquidityPools.distributeFee(token, liquidityRewards);
     }
@@ -89,5 +110,21 @@ contract FeeManager is Initializable, Ownable {
         require(fee <= amount, "FeeManager: fee to be less than or equal to amount");
 
         return fee;
+    }
+
+    function _distributeRewards(address token, uint256 totalRewards)
+        private
+        view
+        returns (
+            uint256 validatorRewards,
+            uint256 liquidityRewards,
+            uint256 foundationReward
+        )
+    {
+        validatorRewards = (validatorRewardPercentage[token] * totalRewards) / BASE_DIVISOR;
+        liquidityRewards = (liquidityRewardPercentage[token] * totalRewards) / BASE_DIVISOR;
+        foundationReward = totalRewards - validatorRewards - liquidityRewards;
+
+        return (validatorRewards, liquidityRewards, foundationReward);
     }
 }
