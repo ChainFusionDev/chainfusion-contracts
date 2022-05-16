@@ -75,12 +75,12 @@ contract FeeManager is Initializable, Ownable {
         uint256 totalRewards;
         uint256 validatorRewards;
         uint256 liquidityRewards;
-        uint256 foundationReward;
+        uint256 foundationRewards;
 
         if (token == NATIVE_TOKEN) {
             totalRewards = address(this).balance;
 
-            (validatorRewards, liquidityRewards, foundationReward) = _distributeRewards(token, totalRewards);
+            (validatorRewards, liquidityRewards, foundationRewards) = _calculateRewards(token, totalRewards);
 
             // solhint-disable-next-line avoid-low-level-calls
             (bool success, ) = validatorAddress.call{value: validatorRewards, gas: 21000}("");
@@ -91,15 +91,15 @@ contract FeeManager is Initializable, Ownable {
             require(success, "FeeManager: transfer native token failed");
 
             // solhint-disable-next-line avoid-low-level-calls
-            (success, ) = foundationAddress.call{value: foundationReward, gas: 21000}("");
+            (success, ) = foundationAddress.call{value: foundationRewards, gas: 21000}("");
             require(success, "FeeManager: transfer native token failed");
         } else {
             totalRewards = IERC20(token).balanceOf(address(this));
-            (validatorRewards, liquidityRewards, foundationReward) = _distributeRewards(token, totalRewards);
+            (validatorRewards, liquidityRewards, foundationRewards) = _calculateRewards(token, totalRewards);
 
             require(IERC20(token).transfer(validatorAddress, validatorRewards), "IERC20: transfer failed");
             require(IERC20(token).transfer(address(liquidityPools), liquidityRewards), "IERC20: transfer failed");
-            require(IERC20(token).transfer(foundationAddress, foundationReward), "IERC20: transfer failed");
+            require(IERC20(token).transfer(foundationAddress, foundationRewards), "IERC20: transfer failed");
         }
 
         liquidityPools.distributeFee(token, liquidityRewards);
@@ -112,19 +112,19 @@ contract FeeManager is Initializable, Ownable {
         return fee;
     }
 
-    function _distributeRewards(address token, uint256 totalRewards)
+    function _calculateRewards(address token, uint256 totalRewards)
         private
         view
         returns (
             uint256 validatorRewards,
             uint256 liquidityRewards,
-            uint256 foundationReward
+            uint256 foundationRewards
         )
     {
         validatorRewards = (validatorRewardPercentage[token] * totalRewards) / BASE_DIVISOR;
         liquidityRewards = (liquidityRewardPercentage[token] * totalRewards) / BASE_DIVISOR;
-        foundationReward = totalRewards - validatorRewards - liquidityRewards;
+        foundationRewards = totalRewards - validatorRewards - liquidityRewards;
 
-        return (validatorRewards, liquidityRewards, foundationReward);
+        return (validatorRewards, liquidityRewards, foundationRewards);
     }
 }

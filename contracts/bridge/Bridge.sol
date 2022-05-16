@@ -140,12 +140,10 @@ contract Bridge is Initializable, Ownable {
 
             if (tokenManager.isTokenMintable(_token)) {
                 IERC20MintableBurnable(_token).mint(_receiver, _amount);
+            } else if (_token == NATIVE_TOKEN) {
+                liquidityPools.transferNative(_receiver, _amount);
             } else {
-                if (_token == NATIVE_TOKEN) {
-                    liquidityPools.transferNative(_receiver, _amount);
-                } else {
-                    liquidityPools.transfer(_token, _receiver, _amount);
-                }
+                liquidityPools.transfer(_token, _receiver, _amount);
             }
 
             emit Transferred(_token, _sourceChainId, _receiver, _amount, msg.sender);
