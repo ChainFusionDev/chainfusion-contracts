@@ -23,8 +23,11 @@ contract FeeManager is Initializable, Ownable {
     event FoundationAddressUpdated(address _foundationAddress);
     event ValidatorRefundFeeUpdated(uint256 _validatorRefundFee);
 
+    // solhint-disable-next-line no-empty-blocks
+    receive() external payable {}
+
     function initialize(
-        address _liquidityPools,
+        address payable _liquidityPools,
         address _validatorAddress,
         address _foundationAddress,
         uint256 _validatorRefundFee
@@ -35,7 +38,7 @@ contract FeeManager is Initializable, Ownable {
         validatorRefundFee = _validatorRefundFee;
     }
 
-    function setLiquidityPools(address _liquidityPools) external onlyOwner {
+    function setLiquidityPools(address payable _liquidityPools) external onlyOwner {
         liquidityPools = LiquidityPools(_liquidityPools);
         emit LiquidityPoolsUpdated(_liquidityPools);
     }
@@ -69,14 +72,35 @@ contract FeeManager is Initializable, Ownable {
     }
 
     function distributeRewards(address token) public {
-        uint256 totalRewards = IERC20(token).balanceOf(address(this));
-        uint256 validatorRewards = (validatorRewardPercentage[token] * totalRewards) / BASE_DIVISOR;
-        uint256 liquidityRewards = (liquidityRewardPercentage[token] * totalRewards) / BASE_DIVISOR;
-        uint256 foundationReward = totalRewards - validatorRewards - liquidityRewards;
+        uint256 totalRewards;
+        uint256 validatorRewards;
+        uint256 liquidityRewards;
+        uint256 foundationRewards;
 
-        require(IERC20(token).transfer(validatorAddress, validatorRewards), "IERC20: transfer failed");
-        require(IERC20(token).transfer(address(liquidityPools), liquidityRewards), "IERC20: transfer failed");
-        require(IERC20(token).transfer(foundationAddress, foundationReward), "IERC20: transfer failed");
+        if (token == NATIVE_TOKEN) {
+            totalRewards = address(this).balance;
+
+            (validatorRewards, liquidityRewards, foundationRewards) = _calculateRewards(token, totalRewards);
+
+            // solhint-disable-next-line avoid-low-level-calls
+            (bool success, ) = validatorAddress.call{value: validatorRewards, gas: 21000}("");
+            require(success, "FeeManager: transfer native token failed");
+
+            // solhint-disable-next-line avoid-low-level-calls
+            (success, ) = address(liquidityPools).call{value: liquidityRewards, gas: 21000}("");
+            require(success, "FeeManager: transfer native token failed");
+
+            // solhint-disable-next-line avoid-low-level-calls
+            (success, ) = foundationAddress.call{value: foundationRewards, gas: 21000}("");
+            require(success, "FeeManager: transfer native token failed");
+        } else {
+            totalRewards = IERC20(token).balanceOf(address(this));
+            (validatorRewards, liquidityRewards, foundationRewards) = _calculateRewards(token, totalRewards);
+
+            require(IERC20(token).transfer(validatorAddress, validatorRewards), "IERC20: transfer failed");
+            require(IERC20(token).transfer(address(liquidityPools), liquidityRewards), "IERC20: transfer failed");
+            require(IERC20(token).transfer(foundationAddress, foundationRewards), "IERC20: transfer failed");
+        }
 
         liquidityPools.distributeFee(token, liquidityRewards);
     }
@@ -86,5 +110,21 @@ contract FeeManager is Initializable, Ownable {
         require(fee <= amount, "FeeManager: fee to be less than or equal to amount");
 
         return fee;
+    }
+
+    function _calculateRewards(address token, uint256 totalRewards)
+        private
+        view
+        returns (
+            uint256 validatorRewards,
+            uint256 liquidityRewards,
+            uint256 foundationRewards
+        )
+    {
+        validatorRewards = (validatorRewardPercentage[token] * totalRewards) / BASE_DIVISOR;
+        liquidityRewards = (liquidityRewardPercentage[token] * totalRewards) / BASE_DIVISOR;
+        foundationRewards = totalRewards - validatorRewards - liquidityRewards;
+
+        return (validatorRewards, liquidityRewards, foundationRewards);
     }
 }

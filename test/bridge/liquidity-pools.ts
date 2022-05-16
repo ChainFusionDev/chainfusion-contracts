@@ -125,7 +125,7 @@ describe('LiquidityPools', function () {
       .withArgs(mockToken.address, owner.address, amount);
 
     await expect(liquidityPools.removeLiquidity(mockToken.address, amountRemove)).to.be.revertedWith(
-      'IERC20: amount more than contract balance'
+      'LiquidityPools: too much amount'
     );
   });
 
@@ -240,6 +240,38 @@ describe('LiquidityPools', function () {
     await liquidityPools.removeLiquidity(mockToken.address, amountLiquidity);
     await liquidityPools.removeLiquidity(mockToken.address, amountLiquidity);
     expect(await liquidityPools.providedLiquidity(mockToken.address)).to.equal(0);
+  });
+
+  it('should add and remove liquidity using native currency', async function () {
+    const [owner] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+
+    const amount = '100000';
+
+    const { liquidityPools, tokenManager } = await deployBridge(
+      owner.address,
+      [owner.address],
+      initialRequiredApprovals
+    );
+    const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+    await tokenManager.setEnabled(NATIVE_TOKEN, true);
+    expect(await tokenManager.isTokenEnabled(NATIVE_TOKEN)).to.equal(true);
+
+    await expect(liquidityPools.addNativeLiquidity({ value: amount }))
+      .to.emit(liquidityPools, 'LiquidityAdded')
+      .withArgs(NATIVE_TOKEN, owner.address, amount);
+
+    expect(await liquidityPools.providedLiquidity(NATIVE_TOKEN)).to.equal(amount);
+    expect(await liquidityPools.availableLiquidity(NATIVE_TOKEN)).to.equal(amount);
+    expect((await liquidityPools.liquidityPositions(NATIVE_TOKEN, owner.address)).balance).to.equal(amount);
+
+    await expect(liquidityPools.removeLiquidity(NATIVE_TOKEN, amount, { value: amount }))
+      .to.emit(liquidityPools, 'LiquidityRemoved')
+      .withArgs(NATIVE_TOKEN, owner.address, amount);
+
+    expect(await liquidityPools.providedLiquidity(NATIVE_TOKEN)).to.equal(0);
+    expect(await liquidityPools.availableLiquidity(NATIVE_TOKEN)).to.equal(0);
+    expect((await liquidityPools.liquidityPositions(NATIVE_TOKEN, owner.address)).balance).to.equal(0);
   });
 
   it('should distribute the reward equally', async function () {

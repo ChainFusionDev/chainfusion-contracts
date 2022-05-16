@@ -29,6 +29,14 @@ contract Bridge is Initializable, Ownable {
         uint256 fee,
         uint256 transferAmount
     );
+
+    event DepositedNative(
+        address token,
+        uint256 destinationChainId,
+        address receiver,
+        uint256 fee,
+        uint256 transferAmount
+    );
     event Transferred(address token, uint256 sourceChainId, address receiver, uint256 amount, address validator);
     event TokenManagerUpdated(address _tokenManager);
     event ValidatorManagerUpdated(address _validatorManager);
@@ -44,8 +52,8 @@ contract Bridge is Initializable, Ownable {
         address _owner,
         ValidatorManager _validatorManager,
         address _tokenManager,
-        address _liquidityPools,
-        address _feeManager
+        address payable _liquidityPools,
+        address payable _feeManager
     ) external initializer {
         _transferOwnership(_owner);
         validatorManager = _validatorManager;
@@ -64,12 +72,12 @@ contract Bridge is Initializable, Ownable {
         emit ValidatorManagerUpdated(_validatorManager);
     }
 
-    function setLiquidityPools(address _liquidityPools) external onlyOwner {
+    function setLiquidityPools(address payable _liquidityPools) external onlyOwner {
         liquidityPools = LiquidityPools(_liquidityPools);
         emit LiquidityPoolsUpdated(_liquidityPools);
     }
 
-    function setFeeManager(address _feeManager) external onlyOwner {
+    function setFeeManager(address payable _feeManager) external onlyOwner {
         feeManager = FeeManager(_feeManager);
         emit FeeManagerUpdated(_feeManager);
     }
@@ -132,12 +140,34 @@ contract Bridge is Initializable, Ownable {
 
             if (tokenManager.isTokenMintable(_token)) {
                 IERC20MintableBurnable(_token).mint(_receiver, _amount);
+            } else if (_token == NATIVE_TOKEN) {
+                liquidityPools.transferNative(_receiver, _amount);
             } else {
                 liquidityPools.transfer(_token, _receiver, _amount);
             }
 
             emit Transferred(_token, _sourceChainId, _receiver, _amount, msg.sender);
         }
+    }
+
+    function depositNative(uint256 _chainId, address _receiver) public payable {
+        uint256 _amount = msg.value;
+        require(_amount != 0, "Bridge: amount cannot be equal to 0.");
+        require(tokenManager.isTokenEnabled(NATIVE_TOKEN), "TokenManager: token is not enabled");
+
+        uint256 fee = feeManager.calculateFee(NATIVE_TOKEN, _amount);
+
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool success, ) = address(feeManager).call{value: fee, gas: 21000}("");
+        require(success, "Bridge: transfer native token failed");
+
+        uint256 transferAmount = _amount - fee;
+
+        // solhint-disable-next-line avoid-low-level-calls
+        (success, ) = address(liquidityPools).call{value: transferAmount, gas: 21000}("");
+        require(success, "Bridge: transfer native token failed");
+
+        emit DepositedNative(NATIVE_TOKEN, _chainId, _receiver, fee, transferAmount);
     }
 
     function isApproved(
