@@ -101,7 +101,7 @@ export async function deployBridge(
   };
 }
 
-export async function deploySystem(initialminimalStake: BigNumber): Promise<SystemDeployment> {
+export async function deploySystem(initialMinimalStake: BigNumber): Promise<SystemDeployment> {
   const withdrawalPeriod = 1;
 
   const AddressStorage = await ethers.getContractFactory('AddressStorage');
@@ -118,7 +118,7 @@ export async function deploySystem(initialminimalStake: BigNumber): Promise<Syst
   await dkg.deployed();
 
   await (
-    await validatorStaking.initialize(initialminimalStake, withdrawalPeriod, addressStorage.address, dkg.address)
+    await validatorStaking.initialize(initialMinimalStake, withdrawalPeriod, addressStorage.address, dkg.address)
   ).wait();
   await (await dkg.initialize(validatorStaking.address)).wait();
 

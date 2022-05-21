@@ -110,9 +110,9 @@ describe('DKG', function () {
 
   it('should set validators by validatorStaking', async function () {
     const [, other] = await ethers.getSigners();
-    const initialminimalStake = ethers.utils.parseEther('3');
+    const initialMinimalStake = ethers.utils.parseEther('3');
 
-    const { dkg } = await deploySystem(initialminimalStake);
+    const { dkg } = await deploySystem(initialMinimalStake);
 
     const dkgOther = await ethers.getContractAt('DKG', dkg.address, other);
     await expect(dkgOther.setValidators([other.address])).to.be.revertedWith('DKG: not a validatorStaking');
