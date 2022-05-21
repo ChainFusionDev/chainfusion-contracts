@@ -50,8 +50,7 @@ contract DKG is Ownable, Initializable {
         _;
     }
 
-    function initialize(address[] memory _validators, address _validatorStaking) external initializer {
-        _setValidators(_validators);
+    function initialize(address _validatorStaking) external initializer {
         validatorStaking = ValidatorStaking(_validatorStaking);
     }
 
@@ -138,6 +137,11 @@ contract DKG is Ownable, Initializable {
     }
 
     function _setValidators(address[] memory _validators) private {
+        if (_validators.length < 2) {
+            // dkg requires at least 2 validators
+            return;
+        }
+
         address[] memory currentValidators = this.getCurrentValidators();
         for (uint256 i = 0; i < currentValidators.length; i++) {
             isValidator[currentValidators[i]] = false;

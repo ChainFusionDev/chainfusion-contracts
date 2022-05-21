@@ -11,20 +11,21 @@ describe('DKG', function () {
     const data3 = ethers.utils.keccak256([3]);
 
     const [, v1, v2] = await ethers.getSigners();
-    const initialminimalStake = ethers.utils.parseEther('3');
+    const initialMinimalStake = ethers.utils.parseEther('3');
 
-    const { addressStorage } = await deploySystem(initialminimalStake);
-    const DKG = await ethers.getContractFactory('DKG');
+    const { dkg, validatorStaking } = await deploySystem(initialMinimalStake);
+
+    const validatorStaking1 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v1);
+    const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
+    await validatorStaking1.stake({ value: initialMinimalStake });
+    await validatorStaking2.stake({ value: initialMinimalStake });
+
     const ThresholdSigner = await ethers.getContractFactory('ThresholdSigner');
-    const dkg = await DKG.deploy();
     const thresholdSigner = await ThresholdSigner.deploy();
+    await thresholdSigner.initialize(dkg.address);
 
-    await expect(dkg.initialize([v1.address, v2.address], addressStorage.address))
-      .to.emit(dkg, 'ValidatorsUpdated')
-      .withArgs(generation, [v1.address, v2.address]);
-
-    await thresholdSigner.setDKG(dkg.address);
     await dkg.setThresholdSigner(thresholdSigner.address);
+    await dkg.setValidatorStaking(validatorStaking.address);
 
     await expect(dkg.roundBroadcast(generation, 1, data1)).to.be.revertedWith('DKG: not a validator');
 

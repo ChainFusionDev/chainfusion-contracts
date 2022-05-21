@@ -289,24 +289,27 @@ describe('ValidatorStaking', function () {
   });
 
   it('should check if DKG validators are being updated after staking and slashing', async function () {
-    const [owner, v1] = await ethers.getSigners();
+    const [owner, v1, v2, v3] = await ethers.getSigners();
     const initialminimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
     const valueStake = ethers.utils.parseEther('10');
 
     const { validatorStaking, dkg } = await deploySystem(initialminimalStake);
-    const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v1);
+    const validatorStaking1 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v1);
+    const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
+    const validatorStaking3 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v3);
 
-    expect(await (await dkg.getCurrentValidators()).length).to.equal(0);
+    expect((await dkg.getCurrentValidators()).length).to.equal(0);
 
-    await validatorStaking.stake({ value: value });
-    await validatorStaking.stake({ value: value });
+    await validatorStaking1.stake({ value: value });
+    await validatorStaking1.stake({ value: value });
     await validatorStaking2.stake({ value: value });
+    await validatorStaking3.stake({ value: value });
 
-    expect(await (await dkg.getCurrentValidators()).length).to.equal(2);
-    await validatorStaking.announceWithdrawal(valueStake);
-    await validatorStaking.withdraw();
-    expect(await (await dkg.getCurrentValidators()).length).to.equal(1);
+    expect((await dkg.getCurrentValidators()).length).to.equal(3);
+    await validatorStaking1.announceWithdrawal(valueStake);
+    await validatorStaking1.withdraw();
+    expect((await dkg.getCurrentValidators()).length).to.equal(2);
 
     const { amount, time } = await validatorStaking.withdrawalAnnouncements(owner.address);
 
