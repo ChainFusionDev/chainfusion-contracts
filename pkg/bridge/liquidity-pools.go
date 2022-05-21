@@ -30,7 +30,7 @@ var (
 
 // LiquidityPoolsMetaData contains all meta data concerning the LiquidityPools contract.
 var LiquidityPoolsMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feePercentage\",\"type\":\"uint256\"}],\"name\":\"FeePercentageUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LiquidityAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LiquidityRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenManager\",\"type\":\"address\"}],\"name\":\"TokenManagerUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"addLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"availableLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bridge\",\"outputs\":[{\"internalType\":\"contractBridge\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"claimRewards\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"collectedFees\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feePercentage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_bridge\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"liquidityPositions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"balance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lastRewardPoints\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"providedLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"removeLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"rewardsOwing\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"setFeePercentage\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"setTokenManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenManager\",\"outputs\":[{\"internalType\":\"contractTokenManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"totalRewardPoints\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_fee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_transferAmount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feePercentage\",\"type\":\"uint256\"}],\"name\":\"FeePercentageUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LiquidityAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LiquidityRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenManager\",\"type\":\"address\"}],\"name\":\"TokenManagerUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"addLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"addNativeLiquidity\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"availableLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bridge\",\"outputs\":[{\"internalType\":\"contractBridge\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"claimRewards\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"collectedFees\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"distributeFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeManager\",\"outputs\":[{\"internalType\":\"contractFeeManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feePercentage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_bridge\",\"type\":\"address\"},{\"internalType\":\"addresspayable\",\"name\":\"_feeManager\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"liquidityPositions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"balance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lastRewardPoints\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"providedLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"removeLiquidity\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"rewardsOwing\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"setFeePercentage\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"setTokenManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenManager\",\"outputs\":[{\"internalType\":\"contractTokenManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"totalRewardPoints\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_transferAmount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transferNative\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
 }
 
 // LiquidityPoolsABI is the input ABI used to generate the binding from.
@@ -270,6 +270,37 @@ func (_LiquidityPools *LiquidityPoolsSession) CollectedFees(arg0 common.Address)
 // Solidity: function collectedFees(address ) view returns(uint256)
 func (_LiquidityPools *LiquidityPoolsCallerSession) CollectedFees(arg0 common.Address) (*big.Int, error) {
 	return _LiquidityPools.Contract.CollectedFees(&_LiquidityPools.CallOpts, arg0)
+}
+
+// FeeManager is a free data retrieval call binding the contract method 0xd0fb0203.
+//
+// Solidity: function feeManager() view returns(address)
+func (_LiquidityPools *LiquidityPoolsCaller) FeeManager(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _LiquidityPools.contract.Call(opts, &out, "feeManager")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// FeeManager is a free data retrieval call binding the contract method 0xd0fb0203.
+//
+// Solidity: function feeManager() view returns(address)
+func (_LiquidityPools *LiquidityPoolsSession) FeeManager() (common.Address, error) {
+	return _LiquidityPools.Contract.FeeManager(&_LiquidityPools.CallOpts)
+}
+
+// FeeManager is a free data retrieval call binding the contract method 0xd0fb0203.
+//
+// Solidity: function feeManager() view returns(address)
+func (_LiquidityPools *LiquidityPoolsCallerSession) FeeManager() (common.Address, error) {
+	return _LiquidityPools.Contract.FeeManager(&_LiquidityPools.CallOpts)
 }
 
 // FeePercentage is a free data retrieval call binding the contract method 0xa001ecdd.
@@ -524,6 +555,27 @@ func (_LiquidityPools *LiquidityPoolsTransactorSession) AddLiquidity(_token comm
 	return _LiquidityPools.Contract.AddLiquidity(&_LiquidityPools.TransactOpts, _token, _amount)
 }
 
+// AddNativeLiquidity is a paid mutator transaction binding the contract method 0xb238b533.
+//
+// Solidity: function addNativeLiquidity() payable returns()
+func (_LiquidityPools *LiquidityPoolsTransactor) AddNativeLiquidity(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _LiquidityPools.contract.Transact(opts, "addNativeLiquidity")
+}
+
+// AddNativeLiquidity is a paid mutator transaction binding the contract method 0xb238b533.
+//
+// Solidity: function addNativeLiquidity() payable returns()
+func (_LiquidityPools *LiquidityPoolsSession) AddNativeLiquidity() (*types.Transaction, error) {
+	return _LiquidityPools.Contract.AddNativeLiquidity(&_LiquidityPools.TransactOpts)
+}
+
+// AddNativeLiquidity is a paid mutator transaction binding the contract method 0xb238b533.
+//
+// Solidity: function addNativeLiquidity() payable returns()
+func (_LiquidityPools *LiquidityPoolsTransactorSession) AddNativeLiquidity() (*types.Transaction, error) {
+	return _LiquidityPools.Contract.AddNativeLiquidity(&_LiquidityPools.TransactOpts)
+}
+
 // ClaimRewards is a paid mutator transaction binding the contract method 0xef5cfb8c.
 //
 // Solidity: function claimRewards(address _token) returns()
@@ -545,44 +597,65 @@ func (_LiquidityPools *LiquidityPoolsTransactorSession) ClaimRewards(_token comm
 	return _LiquidityPools.Contract.ClaimRewards(&_LiquidityPools.TransactOpts, _token)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0x1794bb3c.
+// DistributeFee is a paid mutator transaction binding the contract method 0x448e520f.
 //
-// Solidity: function initialize(address _tokenManager, address _bridge, uint256 _feePercentage) returns()
-func (_LiquidityPools *LiquidityPoolsTransactor) Initialize(opts *bind.TransactOpts, _tokenManager common.Address, _bridge common.Address, _feePercentage *big.Int) (*types.Transaction, error) {
-	return _LiquidityPools.contract.Transact(opts, "initialize", _tokenManager, _bridge, _feePercentage)
+// Solidity: function distributeFee(address _token, uint256 _amount) returns()
+func (_LiquidityPools *LiquidityPoolsTransactor) DistributeFee(opts *bind.TransactOpts, _token common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.contract.Transact(opts, "distributeFee", _token, _amount)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0x1794bb3c.
+// DistributeFee is a paid mutator transaction binding the contract method 0x448e520f.
 //
-// Solidity: function initialize(address _tokenManager, address _bridge, uint256 _feePercentage) returns()
-func (_LiquidityPools *LiquidityPoolsSession) Initialize(_tokenManager common.Address, _bridge common.Address, _feePercentage *big.Int) (*types.Transaction, error) {
-	return _LiquidityPools.Contract.Initialize(&_LiquidityPools.TransactOpts, _tokenManager, _bridge, _feePercentage)
+// Solidity: function distributeFee(address _token, uint256 _amount) returns()
+func (_LiquidityPools *LiquidityPoolsSession) DistributeFee(_token common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.DistributeFee(&_LiquidityPools.TransactOpts, _token, _amount)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0x1794bb3c.
+// DistributeFee is a paid mutator transaction binding the contract method 0x448e520f.
 //
-// Solidity: function initialize(address _tokenManager, address _bridge, uint256 _feePercentage) returns()
-func (_LiquidityPools *LiquidityPoolsTransactorSession) Initialize(_tokenManager common.Address, _bridge common.Address, _feePercentage *big.Int) (*types.Transaction, error) {
-	return _LiquidityPools.Contract.Initialize(&_LiquidityPools.TransactOpts, _tokenManager, _bridge, _feePercentage)
+// Solidity: function distributeFee(address _token, uint256 _amount) returns()
+func (_LiquidityPools *LiquidityPoolsTransactorSession) DistributeFee(_token common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.DistributeFee(&_LiquidityPools.TransactOpts, _token, _amount)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0xcf756fdf.
+//
+// Solidity: function initialize(address _tokenManager, address _bridge, address _feeManager, uint256 _feePercentage) returns()
+func (_LiquidityPools *LiquidityPoolsTransactor) Initialize(opts *bind.TransactOpts, _tokenManager common.Address, _bridge common.Address, _feeManager common.Address, _feePercentage *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.contract.Transact(opts, "initialize", _tokenManager, _bridge, _feeManager, _feePercentage)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0xcf756fdf.
+//
+// Solidity: function initialize(address _tokenManager, address _bridge, address _feeManager, uint256 _feePercentage) returns()
+func (_LiquidityPools *LiquidityPoolsSession) Initialize(_tokenManager common.Address, _bridge common.Address, _feeManager common.Address, _feePercentage *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.Initialize(&_LiquidityPools.TransactOpts, _tokenManager, _bridge, _feeManager, _feePercentage)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0xcf756fdf.
+//
+// Solidity: function initialize(address _tokenManager, address _bridge, address _feeManager, uint256 _feePercentage) returns()
+func (_LiquidityPools *LiquidityPoolsTransactorSession) Initialize(_tokenManager common.Address, _bridge common.Address, _feeManager common.Address, _feePercentage *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.Initialize(&_LiquidityPools.TransactOpts, _tokenManager, _bridge, _feeManager, _feePercentage)
 }
 
 // RemoveLiquidity is a paid mutator transaction binding the contract method 0xa201ccf6.
 //
-// Solidity: function removeLiquidity(address _token, uint256 _amount) returns()
+// Solidity: function removeLiquidity(address _token, uint256 _amount) payable returns()
 func (_LiquidityPools *LiquidityPoolsTransactor) RemoveLiquidity(opts *bind.TransactOpts, _token common.Address, _amount *big.Int) (*types.Transaction, error) {
 	return _LiquidityPools.contract.Transact(opts, "removeLiquidity", _token, _amount)
 }
 
 // RemoveLiquidity is a paid mutator transaction binding the contract method 0xa201ccf6.
 //
-// Solidity: function removeLiquidity(address _token, uint256 _amount) returns()
+// Solidity: function removeLiquidity(address _token, uint256 _amount) payable returns()
 func (_LiquidityPools *LiquidityPoolsSession) RemoveLiquidity(_token common.Address, _amount *big.Int) (*types.Transaction, error) {
 	return _LiquidityPools.Contract.RemoveLiquidity(&_LiquidityPools.TransactOpts, _token, _amount)
 }
 
 // RemoveLiquidity is a paid mutator transaction binding the contract method 0xa201ccf6.
 //
-// Solidity: function removeLiquidity(address _token, uint256 _amount) returns()
+// Solidity: function removeLiquidity(address _token, uint256 _amount) payable returns()
 func (_LiquidityPools *LiquidityPoolsTransactorSession) RemoveLiquidity(_token common.Address, _amount *big.Int) (*types.Transaction, error) {
 	return _LiquidityPools.Contract.RemoveLiquidity(&_LiquidityPools.TransactOpts, _token, _amount)
 }
@@ -650,25 +723,46 @@ func (_LiquidityPools *LiquidityPoolsTransactorSession) SetTokenManager(_tokenMa
 	return _LiquidityPools.Contract.SetTokenManager(&_LiquidityPools.TransactOpts, _tokenManager)
 }
 
-// Transfer is a paid mutator transaction binding the contract method 0x0411b252.
+// Transfer is a paid mutator transaction binding the contract method 0xbeabacc8.
 //
-// Solidity: function transfer(address _token, address _receiver, uint256 _fee, uint256 _transferAmount) returns()
-func (_LiquidityPools *LiquidityPoolsTransactor) Transfer(opts *bind.TransactOpts, _token common.Address, _receiver common.Address, _fee *big.Int, _transferAmount *big.Int) (*types.Transaction, error) {
-	return _LiquidityPools.contract.Transact(opts, "transfer", _token, _receiver, _fee, _transferAmount)
+// Solidity: function transfer(address _token, address _receiver, uint256 _transferAmount) returns()
+func (_LiquidityPools *LiquidityPoolsTransactor) Transfer(opts *bind.TransactOpts, _token common.Address, _receiver common.Address, _transferAmount *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.contract.Transact(opts, "transfer", _token, _receiver, _transferAmount)
 }
 
-// Transfer is a paid mutator transaction binding the contract method 0x0411b252.
+// Transfer is a paid mutator transaction binding the contract method 0xbeabacc8.
 //
-// Solidity: function transfer(address _token, address _receiver, uint256 _fee, uint256 _transferAmount) returns()
-func (_LiquidityPools *LiquidityPoolsSession) Transfer(_token common.Address, _receiver common.Address, _fee *big.Int, _transferAmount *big.Int) (*types.Transaction, error) {
-	return _LiquidityPools.Contract.Transfer(&_LiquidityPools.TransactOpts, _token, _receiver, _fee, _transferAmount)
+// Solidity: function transfer(address _token, address _receiver, uint256 _transferAmount) returns()
+func (_LiquidityPools *LiquidityPoolsSession) Transfer(_token common.Address, _receiver common.Address, _transferAmount *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.Transfer(&_LiquidityPools.TransactOpts, _token, _receiver, _transferAmount)
 }
 
-// Transfer is a paid mutator transaction binding the contract method 0x0411b252.
+// Transfer is a paid mutator transaction binding the contract method 0xbeabacc8.
 //
-// Solidity: function transfer(address _token, address _receiver, uint256 _fee, uint256 _transferAmount) returns()
-func (_LiquidityPools *LiquidityPoolsTransactorSession) Transfer(_token common.Address, _receiver common.Address, _fee *big.Int, _transferAmount *big.Int) (*types.Transaction, error) {
-	return _LiquidityPools.Contract.Transfer(&_LiquidityPools.TransactOpts, _token, _receiver, _fee, _transferAmount)
+// Solidity: function transfer(address _token, address _receiver, uint256 _transferAmount) returns()
+func (_LiquidityPools *LiquidityPoolsTransactorSession) Transfer(_token common.Address, _receiver common.Address, _transferAmount *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.Transfer(&_LiquidityPools.TransactOpts, _token, _receiver, _transferAmount)
+}
+
+// TransferNative is a paid mutator transaction binding the contract method 0x7d2e90c2.
+//
+// Solidity: function transferNative(address _receiver, uint256 _amount) payable returns()
+func (_LiquidityPools *LiquidityPoolsTransactor) TransferNative(opts *bind.TransactOpts, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.contract.Transact(opts, "transferNative", _receiver, _amount)
+}
+
+// TransferNative is a paid mutator transaction binding the contract method 0x7d2e90c2.
+//
+// Solidity: function transferNative(address _receiver, uint256 _amount) payable returns()
+func (_LiquidityPools *LiquidityPoolsSession) TransferNative(_receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.TransferNative(&_LiquidityPools.TransactOpts, _receiver, _amount)
+}
+
+// TransferNative is a paid mutator transaction binding the contract method 0x7d2e90c2.
+//
+// Solidity: function transferNative(address _receiver, uint256 _amount) payable returns()
+func (_LiquidityPools *LiquidityPoolsTransactorSession) TransferNative(_receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.TransferNative(&_LiquidityPools.TransactOpts, _receiver, _amount)
 }
 
 // TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
@@ -690,6 +784,27 @@ func (_LiquidityPools *LiquidityPoolsSession) TransferOwnership(newOwner common.
 // Solidity: function transferOwnership(address newOwner) returns()
 func (_LiquidityPools *LiquidityPoolsTransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
 	return _LiquidityPools.Contract.TransferOwnership(&_LiquidityPools.TransactOpts, newOwner)
+}
+
+// Receive is a paid mutator transaction binding the contract receive function.
+//
+// Solidity: receive() payable returns()
+func (_LiquidityPools *LiquidityPoolsTransactor) Receive(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _LiquidityPools.contract.RawTransact(opts, nil) // calldata is disallowed for receive function
+}
+
+// Receive is a paid mutator transaction binding the contract receive function.
+//
+// Solidity: receive() payable returns()
+func (_LiquidityPools *LiquidityPoolsSession) Receive() (*types.Transaction, error) {
+	return _LiquidityPools.Contract.Receive(&_LiquidityPools.TransactOpts)
+}
+
+// Receive is a paid mutator transaction binding the contract receive function.
+//
+// Solidity: receive() payable returns()
+func (_LiquidityPools *LiquidityPoolsTransactorSession) Receive() (*types.Transaction, error) {
+	return _LiquidityPools.Contract.Receive(&_LiquidityPools.TransactOpts)
 }
 
 // LiquidityPoolsFeePercentageUpdatedIterator is returned from FilterFeePercentageUpdated and is used to iterate over the raw logs and unpacked data for FeePercentageUpdated events raised by the LiquidityPools contract.
