@@ -86,11 +86,6 @@ contract DKG is Ownable, Initializable {
         uint256 _round,
         bytes memory _rawData
     ) external onlyValidator(_generation) roundIsFilled(_generation, _round - 1) roundNotProvided(_generation, _round) {
-        require(
-            roundBroadcastData[_generation][_round].data[msg.sender].length == 0,
-            "DKG: round data already provided"
-        );
-
         roundBroadcastData[_generation][_round].count++;
         roundBroadcastData[_generation][_round].data[msg.sender] = _rawData;
         emit RoundDataProvided(_generation, _round, msg.sender);
@@ -147,11 +142,19 @@ contract DKG is Ownable, Initializable {
     }
 
     function getValidators(uint256 _generation) external view returns (address[] memory) {
-        return validators[_generation];
+        if (validators.length > _generation) {
+            return validators[_generation];
+        }
+
+        return new address[](0);
     }
 
     function getValidatorsCount(uint256 _generation) external view returns (uint256) {
-        return validators[_generation].length;
+        if (validators.length > _generation) {
+            return validators[_generation].length;
+        }
+
+        return 0;
     }
 
     function _setValidators(address[] memory _validators) private {

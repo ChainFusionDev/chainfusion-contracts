@@ -80,6 +80,8 @@ describe('ValidatorStaking', function () {
 
     await validatorStaking.stake({ value: value });
 
+    expect(await validatorStaking.getValidators()).to.deep.equal([v1.address]);
+
     await expect(validatorStaking2.slash(v1.address)).to.be.revertedWith('only active validator');
   });
 

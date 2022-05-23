@@ -17,8 +17,6 @@ describe('DKG', function () {
 
     const validatorStaking1 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v1);
     const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
-    await validatorStaking1.stake({ value: initialMinimalStake });
-    await validatorStaking2.stake({ value: initialMinimalStake });
 
     const ThresholdSigner = await ethers.getContractFactory('ThresholdSigner');
     const thresholdSigner = await ThresholdSigner.deploy();
@@ -28,6 +26,19 @@ describe('DKG', function () {
     await dkg.setValidatorStaking(validatorStaking.address);
 
     await expect(dkg.roundBroadcast(generation, 1, data1)).to.be.revertedWith('DKG: not a validator');
+
+    expect(await dkg.isValidator(generation, v1.address)).to.equal(false);
+    expect(await dkg.isValidator(generation, v2.address)).to.equal(false);
+    expect(await dkg.getValidators(generation)).to.deep.equal([]);
+    expect(await dkg.getValidatorsCount(generation)).to.equal(0);
+
+    await validatorStaking1.stake({ value: initialMinimalStake });
+    await validatorStaking2.stake({ value: initialMinimalStake });
+
+    expect(await dkg.isValidator(generation, v1.address)).to.equal(true);
+    expect(await dkg.isValidator(generation, v2.address)).to.equal(true);
+    expect(await dkg.getValidators(generation)).to.deep.equal([v1.address, v2.address]);
+    expect(await dkg.getValidatorsCount(generation)).to.equal(2);
 
     const dkgV1 = await ethers.getContractAt('DKG', dkg.address, v1);
     const dkgV2 = await ethers.getContractAt('DKG', dkg.address, v2);
@@ -41,10 +52,13 @@ describe('DKG', function () {
       .to.emit(dkgV1, 'RoundDataProvided')
       .withArgs(generation, 1, v1.address);
 
+    await expect(dkgV1.roundBroadcast(generation, 1, data1)).to.be.revertedWith('DKG: round data already provided');
+
     expect(await dkg.getRoundBroadcastData(generation, 1, v1.address)).to.equal(data1);
     expect(await dkg.getRoundBroadcastCount(generation, 1)).to.equal(1);
     expect(await dkg.getRoundBroadcastCount(generation, 2)).to.equal(0);
     expect(await dkg.getRoundBroadcastCount(generation, 3)).to.equal(0);
+    expect(await dkg.isRoundFilled(generation, 1)).to.equal(false);
 
     // round1 - v2
 
@@ -54,6 +68,7 @@ describe('DKG', function () {
     expect(await dkg.getRoundBroadcastCount(generation, 1)).to.equal(2);
     expect(await dkg.getRoundBroadcastCount(generation, 2)).to.equal(0);
     expect(await dkg.getRoundBroadcastCount(generation, 3)).to.equal(0);
+    expect(await dkg.isRoundFilled(generation, 1)).to.equal(true);
 
     // round2 - v1
 
@@ -66,6 +81,7 @@ describe('DKG', function () {
     expect(await dkg.getRoundBroadcastCount(generation, 1)).to.equal(2);
     expect(await dkg.getRoundBroadcastCount(generation, 2)).to.equal(1);
     expect(await dkg.getRoundBroadcastCount(generation, 3)).to.equal(0);
+    expect(await dkg.isRoundFilled(generation, 2)).to.equal(false);
 
     // round2 - v2
 
@@ -76,6 +92,7 @@ describe('DKG', function () {
     expect(await dkg.getRoundBroadcastCount(generation, 1)).to.equal(2);
     expect(await dkg.getRoundBroadcastCount(generation, 2)).to.equal(2);
     expect(await dkg.getRoundBroadcastCount(generation, 3)).to.equal(0);
+    expect(await dkg.isRoundFilled(generation, 2)).to.equal(true);
 
     // round3 - v1
 
@@ -88,6 +105,7 @@ describe('DKG', function () {
     expect(await dkgV1.getRoundBroadcastCount(generation, 1)).to.equal(2);
     expect(await dkgV1.getRoundBroadcastCount(generation, 2)).to.equal(2);
     expect(await dkgV1.getRoundBroadcastCount(generation, 3)).to.equal(1);
+    expect(await dkg.isRoundFilled(generation, 3)).to.equal(false);
 
     // round3 - v2
 
@@ -98,10 +116,13 @@ describe('DKG', function () {
     expect(await dkgV2.getRoundBroadcastCount(generation, 1)).to.equal(2);
     expect(await dkgV2.getRoundBroadcastCount(generation, 2)).to.equal(2);
     expect(await dkgV2.getRoundBroadcastCount(generation, 3)).to.equal(2);
+    expect(await dkg.isRoundFilled(generation, 3)).to.equal(true);
 
     await expect(dkgV1.voteSigner(generation, signerAddress))
       .to.emit(dkgV1, 'SignerVoted')
       .withArgs(generation, v1.address, signerAddress);
+
+    await expect(dkgV1.voteSigner(generation, signerAddress)).to.be.revertedWith('DKG: already voted');
 
     await expect(dkgV2.voteSigner(generation, signerAddress))
       .to.emit(dkgV2, 'SignerAddressUpdated')
