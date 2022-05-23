@@ -32,8 +32,8 @@ describe('DKG', function () {
     const dkgV1 = await ethers.getContractAt('DKG', dkg.address, v1);
     const dkgV2 = await ethers.getContractAt('DKG', dkg.address, v2);
 
-    await expect(dkgV1.roundBroadcast(generation, 2, data2)).to.be.revertedWith('DKG: previous round was not filled');
-    await expect(dkgV2.roundBroadcast(generation, 2, data2)).to.be.revertedWith('DKG: previous round was not filled');
+    await expect(dkgV1.roundBroadcast(generation, 2, data2)).to.be.revertedWith('DKG: round was not filled');
+    await expect(dkgV2.roundBroadcast(generation, 2, data2)).to.be.revertedWith('DKG: round was not filled');
 
     // round1 - v1
 
@@ -57,7 +57,7 @@ describe('DKG', function () {
 
     // round2 - v1
 
-    await expect(dkgV1.roundBroadcast(generation, 3, data2)).to.be.revertedWith('DKG: previous round was not filled');
+    await expect(dkgV1.roundBroadcast(generation, 3, data2)).to.be.revertedWith('DKG: round was not filled');
     await expect(dkgV1.roundBroadcast(generation, 2, data2))
       .to.emit(dkgV1, 'RoundDataProvided')
       .withArgs(generation, 2, v1.address);
@@ -69,7 +69,7 @@ describe('DKG', function () {
 
     // round2 - v2
 
-    await expect(dkgV2.roundBroadcast(generation, 3, data2)).to.be.revertedWith('DKG: previous round was not filled');
+    await expect(dkgV2.roundBroadcast(generation, 3, data2)).to.be.revertedWith('DKG: round was not filled');
     await expect(dkgV2.roundBroadcast(generation, 2, data2)).to.emit(dkgV2, 'RoundDataFilled').withArgs(generation, 2);
 
     expect(await dkg.getRoundBroadcastData(generation, 2, v2.address)).to.equal(data2);
@@ -79,7 +79,7 @@ describe('DKG', function () {
 
     // round3 - v1
 
-    await expect(dkgV1.voteSigner(generation, signerAddress)).to.be.revertedWith('DKG: previous round was not filled');
+    await expect(dkgV1.voteSigner(generation, signerAddress)).to.be.revertedWith('DKG: round was not filled');
     await expect(dkgV1.roundBroadcast(generation, 3, data3))
       .to.emit(dkgV1, 'RoundDataProvided')
       .withArgs(generation, 3, v1.address);
@@ -91,7 +91,7 @@ describe('DKG', function () {
 
     // round3 - v2
 
-    await expect(dkgV2.voteSigner(generation, signerAddress)).to.be.revertedWith('DKG: previous round was not filled');
+    await expect(dkgV2.voteSigner(generation, signerAddress)).to.be.revertedWith('DKG: round was not filled');
     await expect(dkgV2.roundBroadcast(generation, 3, data3)).to.emit(dkgV2, 'RoundDataFilled').withArgs(generation, 3);
 
     expect(await dkgV2.getRoundBroadcastData(generation, 3, v1.address)).to.equal(data3);
@@ -104,7 +104,7 @@ describe('DKG', function () {
       .withArgs(generation, v1.address, signerAddress);
 
     await expect(dkgV2.voteSigner(generation, signerAddress))
-      .to.emit(thresholdSigner, 'SignerAddressUpdated')
+      .to.emit(dkgV2, 'SignerAddressUpdated')
       .withArgs(generation, signerAddress);
   });
 

@@ -5,24 +5,20 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./DKG.sol";
 
+struct SignatureData {
+    mapping(address => bytes) rounds;
+    bytes digest;
+    bytes signature;
+}
+
 contract ThresholdSigner is Ownable, Initializable {
     DKG public dkg;
 
-    mapping(uint256 => address) public signerAddresses;
-    uint256 public activeGeneration;
+    mapping(address => mapping(uint256 => SignatureData)) public signatures;
+    mapping(address => uint256) public preparedSignatures;
+    mapping(address => mapping(bytes => uint256)) public digestToSignature;
 
-    event SignerAddressUpdated(uint256 generation, address signerAddress);
     event DKGUpdated(address dkg);
-
-    modifier onlySigner() {
-        require(msg.sender == activeAddress(), "Signer: only active collective signer allowed");
-        _;
-    }
-
-    modifier onlyDKG() {
-        require(msg.sender == address(dkg), "Signer: only DKG allowed");
-        _;
-    }
 
     function initialize(address _dkg) external initializer {
         dkg = DKG(_dkg);
@@ -31,24 +27,5 @@ contract ThresholdSigner is Ownable, Initializable {
     function setDKG(address _dkg) external onlyOwner {
         dkg = DKG(_dkg);
         emit DKGUpdated(_dkg);
-    }
-
-    function updateSignerAddress(uint256 _generation, address _signerAddress) external onlyDKG {
-        if (signerAddresses[_generation] == address(0)) {
-            _updateSignerAddress(_generation, _signerAddress);
-        }
-    }
-
-    function activeAddress() public view returns (address) {
-        return signerAddresses[activeGeneration];
-    }
-
-    function _updateSignerAddress(uint256 _generation, address _signerAddress) private {
-        if (_generation > activeGeneration) {
-            activeGeneration = _generation;
-        }
-
-        signerAddresses[_generation] = _signerAddress;
-        emit SignerAddressUpdated(_generation, _signerAddress);
     }
 }
