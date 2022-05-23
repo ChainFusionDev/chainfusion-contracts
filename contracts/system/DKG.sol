@@ -64,7 +64,7 @@ contract DKG is Ownable, Initializable {
     }
 
     function initialize(address _validatorStaking) external initializer {
-        validatorStaking = ValidatorStaking(_validatorStaking);
+        setValidatorStaking(_validatorStaking);
     }
 
     function setThresholdSigner(address _thresholdSigner) external onlyOwner {
@@ -74,11 +74,6 @@ contract DKG is Ownable, Initializable {
 
     function setValidators(address[] memory _validators) external onlyValidatorStaking {
         _setValidators(_validators);
-    }
-
-    function setValidatorStaking(address _validatorStaking) external onlyOwner {
-        validatorStaking = ValidatorStaking(_validatorStaking);
-        emit ValidatorStakingUpdated(_validatorStaking);
     }
 
     function roundBroadcast(
@@ -155,6 +150,11 @@ contract DKG is Ownable, Initializable {
         }
 
         return 0;
+    }
+
+    function setValidatorStaking(address _validatorStaking) public onlyOwner {
+        validatorStaking = ValidatorStaking(_validatorStaking);
+        emit ValidatorStakingUpdated(_validatorStaking);
     }
 
     function _setValidators(address[] memory _validators) private {

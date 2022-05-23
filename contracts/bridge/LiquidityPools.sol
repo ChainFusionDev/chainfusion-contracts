@@ -16,20 +16,25 @@ contract LiquidityPools is Initializable, Ownable {
         uint256 lastRewardPoints;
     }
 
+    TokenManager public tokenManager;
+    Bridge public bridge;
+    FeeManager public feeManager;
+
+    uint256 public feePercentage;
+
     mapping(address => uint256) public providedLiquidity;
     mapping(address => uint256) public availableLiquidity;
     mapping(address => mapping(address => LiquidityPosition)) public liquidityPositions;
     mapping(address => uint256) public collectedFees;
     mapping(address => uint256) public totalRewardPoints;
-    TokenManager public tokenManager;
-    Bridge public bridge;
-    FeeManager public feeManager;
-    uint256 public feePercentage;
+
+    event TokenManagerUpdated(address tokenManager);
+    event BridgeUpdated(address bridge);
+    event FeeManagerUpdated(address feeManager);
+    event FeePercentageUpdated(uint256 feePercentage);
 
     event LiquidityAdded(address token, address account, uint256 amount);
     event LiquidityRemoved(address token, address account, uint256 amount);
-    event TokenManagerUpdated(address tokenManager);
-    event FeePercentageUpdated(uint256 feePercentage);
 
     modifier onlyBridge() {
         require(msg.sender == address(bridge), "LiquidityPools: only bridge");
@@ -50,20 +55,10 @@ contract LiquidityPools is Initializable, Ownable {
         address payable _feeManager,
         uint256 _feePercentage
     ) external initializer {
-        tokenManager = TokenManager(_tokenManager);
-        bridge = Bridge(_bridge);
-        feeManager = FeeManager(_feeManager);
-        feePercentage = _feePercentage;
-    }
-
-    function setTokenManager(address _tokenManager) external onlyOwner {
-        tokenManager = TokenManager(_tokenManager);
-        emit TokenManagerUpdated(_tokenManager);
-    }
-
-    function setFeePercentage(uint256 _feePercentage) external onlyOwner {
-        feePercentage = _feePercentage;
-        emit FeePercentageUpdated(_feePercentage);
+        setTokenManager(_tokenManager);
+        setBridge(_bridge);
+        setFeeManager(_feeManager);
+        setFeePercentage(_feePercentage);
     }
 
     function transfer(
@@ -84,6 +79,26 @@ contract LiquidityPools is Initializable, Ownable {
         totalRewardPoints[_token] += (_amount * BASE_DIVISOR) / providedLiquidity[_token];
         providedLiquidity[_token] += _amount;
         collectedFees[_token] += _amount;
+    }
+
+    function setTokenManager(address _tokenManager) public onlyOwner {
+        tokenManager = TokenManager(_tokenManager);
+        emit TokenManagerUpdated(_tokenManager);
+    }
+
+    function setBridge(address _bridge) public onlyOwner {
+        bridge = Bridge(_bridge);
+        emit BridgeUpdated(_bridge);
+    }
+
+    function setFeeManager(address payable _feeManager) public onlyOwner {
+        feeManager = FeeManager(_feeManager);
+        emit FeeManagerUpdated(_feeManager);
+    }
+
+    function setFeePercentage(uint256 _feePercentage) public onlyOwner {
+        feePercentage = _feePercentage;
+        emit FeePercentageUpdated(_feePercentage);
     }
 
     function addLiquidity(address _token, uint256 _amount) public {

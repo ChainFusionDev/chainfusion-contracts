@@ -21,10 +21,10 @@ contract ThresholdSigner is Ownable, Initializable {
     event DKGUpdated(address dkg);
 
     function initialize(address _dkg) external initializer {
-        dkg = DKG(_dkg);
+        setDKG(_dkg);
     }
 
-    function setDKG(address _dkg) external onlyOwner {
+    function setDKG(address _dkg) public onlyOwner {
         dkg = DKG(_dkg);
         emit DKGUpdated(_dkg);
     }

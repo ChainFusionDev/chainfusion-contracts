@@ -8,15 +8,15 @@ import "./LiquidityPools.sol";
 import "./Globals.sol";
 
 contract FeeManager is Initializable, Ownable {
+    LiquidityPools public liquidityPools;
+    address public validatorAddress;
+    address public foundationAddress;
+
+    uint256 public validatorRefundFee;
     mapping(address => uint256) public tokenFeePercentage;
     mapping(address => uint256) public validatorRewardPercentage;
     mapping(address => uint256) public liquidityRewardPercentage;
     mapping(address => uint256) public foundationRewardPercentage;
-
-    LiquidityPools public liquidityPools;
-    address public validatorAddress;
-    address public foundationAddress;
-    uint256 public validatorRefundFee;
 
     event LiquidityPoolsUpdated(address _liquidityPools);
     event ValidatorAddressUpdated(address _validatorAddress);
@@ -32,28 +32,28 @@ contract FeeManager is Initializable, Ownable {
         address _foundationAddress,
         uint256 _validatorRefundFee
     ) external initializer {
-        liquidityPools = LiquidityPools(_liquidityPools);
-        validatorAddress = _validatorAddress;
-        foundationAddress = _foundationAddress;
-        validatorRefundFee = _validatorRefundFee;
+        setLiquidityPools(_liquidityPools);
+        setValidatorAddress(_validatorAddress);
+        setFoundationAddress(_foundationAddress);
+        setValidatorRefundFee(_validatorRefundFee);
     }
 
-    function setLiquidityPools(address payable _liquidityPools) external onlyOwner {
+    function setLiquidityPools(address payable _liquidityPools) public onlyOwner {
         liquidityPools = LiquidityPools(_liquidityPools);
         emit LiquidityPoolsUpdated(_liquidityPools);
     }
 
-    function setValidatorAddress(address _validatorAddress) external onlyOwner {
+    function setValidatorAddress(address _validatorAddress) public onlyOwner {
         validatorAddress = _validatorAddress;
         emit ValidatorAddressUpdated(_validatorAddress);
     }
 
-    function setFoundationAddress(address _foundationAddress) external onlyOwner {
+    function setFoundationAddress(address _foundationAddress) public onlyOwner {
         foundationAddress = _foundationAddress;
         emit FoundationAddressUpdated(_foundationAddress);
     }
 
-    function setValidatorRefundFee(uint256 _validatorRefundFee) external onlyOwner {
+    function setValidatorRefundFee(uint256 _validatorRefundFee) public onlyOwner {
         validatorRefundFee = _validatorRefundFee;
         emit ValidatorRefundFeeUpdated(_validatorRefundFee);
     }
