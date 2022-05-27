@@ -15,25 +15,30 @@ contract DKG is Ownable, Initializable {
     ThresholdSigner public thresholdSigner;
     ValidatorStaking public validatorStaking;
 
+    // Validators storage
     address[][] public validators;
-    mapping(address => bool) public isValidator;
+    mapping(uint256 => mapping(address => bool)) public isGenerationValidator;
 
     // DKG rounds data
     mapping(uint256 => mapping(uint256 => BroacastData)) private roundBroadcastData;
 
     // Signer address voting
+    mapping(uint256 => address) public signerAddresses;
     mapping(uint256 => mapping(address => address)) private signerVotes;
     mapping(uint256 => mapping(address => uint256)) private signerVoteCounts;
 
     event RoundDataProvided(uint256 generation, uint256 round, address validator);
     event RoundDataFilled(uint256 generation, uint256 round);
+
     event ValidatorsUpdated(uint256 generation, address[] validators);
     event SignerVoted(uint256 generation, address validator, address collectiveSigner);
+    event SignerAddressUpdated(uint256 generation, address signerAddress);
+
     event ThresholdSignerUpdated(address signer);
     event ValidatorStakingUpdated(address validatorStaking);
 
-    modifier onlyValidator() {
-        require(isValidator[msg.sender], "DKG: not a validator");
+    modifier onlyValidator(uint256 _generation) {
+        require(isGenerationValidator[_generation][msg.sender], "DKG: not a validator");
         _;
     }
 
@@ -42,17 +47,24 @@ contract DKG is Ownable, Initializable {
         _;
     }
 
-    modifier roundIsCorrect(uint256 _generation, uint256 _round) {
+    modifier roundIsFilled(uint256 _generation, uint256 _round) {
         require(
-            _round == 1 || roundBroadcastData[_generation][_round - 1].count == this.getValidatorsCount(_generation),
-            "DKG: previous round was not filled"
+            _round == 0 || roundBroadcastData[_generation][_round].count == validators[_generation].length,
+            "DKG: round was not filled"
         );
         _;
     }
 
-    function initialize(address[] memory _validators, address _validatorStaking) external initializer {
-        _setValidators(_validators);
-        validatorStaking = ValidatorStaking(_validatorStaking);
+    modifier roundNotProvided(uint256 _generation, uint256 _round) {
+        require(
+            roundBroadcastData[_generation][_round].data[msg.sender].length == 0,
+            "DKG: round data already provided"
+        );
+        _;
+    }
+
+    function initialize(address _validatorStaking) external initializer {
+        setValidatorStaking(_validatorStaking);
     }
 
     function setThresholdSigner(address _thresholdSigner) external onlyOwner {
@@ -64,21 +76,11 @@ contract DKG is Ownable, Initializable {
         _setValidators(_validators);
     }
 
-    function setValidatorStaking(address _validatorStaking) external onlyOwner {
-        validatorStaking = ValidatorStaking(_validatorStaking);
-        emit ValidatorStakingUpdated(_validatorStaking);
-    }
-
     function roundBroadcast(
         uint256 _generation,
         uint256 _round,
         bytes memory _rawData
-    ) external onlyValidator roundIsCorrect(_generation, _round) {
-        require(
-            roundBroadcastData[_generation][_round].data[msg.sender].length == 0,
-            "DKG: round data already provided"
-        );
-
+    ) external onlyValidator(_generation) roundIsFilled(_generation, _round - 1) roundNotProvided(_generation, _round) {
         roundBroadcastData[_generation][_round].count++;
         roundBroadcastData[_generation][_round].data[msg.sender] = _rawData;
         emit RoundDataProvided(_generation, _round, msg.sender);
@@ -89,8 +91,8 @@ contract DKG is Ownable, Initializable {
 
     function voteSigner(uint256 _generation, address _signerAddress)
         external
-        onlyValidator
-        roundIsCorrect(_generation, 4)
+        onlyValidator(_generation)
+        roundIsFilled(_generation, 3)
     {
         require(signerVotes[_generation][msg.sender] == address(0), "DKG: already voted");
         signerVotes[_generation][msg.sender] = _signerAddress;
@@ -99,9 +101,10 @@ contract DKG is Ownable, Initializable {
         emit SignerVoted(_generation, msg.sender, _signerAddress);
 
         bool enoughVotes = _enoughVotes(_generation, signerVoteCounts[_generation][_signerAddress]);
-        bool signerChanged = thresholdSigner.activeAddress() != _signerAddress;
+        bool signerChanged = signerAddresses[_generation] != _signerAddress;
         if (enoughVotes && signerChanged) {
-            thresholdSigner.updateSignerAddress(_generation, _signerAddress);
+            signerAddresses[_generation] = _signerAddress;
+            emit SignerAddressUpdated(_generation, _signerAddress);
         }
     }
 
@@ -129,27 +132,45 @@ contract DKG is Ownable, Initializable {
         return validators[validators.length - 1];
     }
 
+    function isValidator(uint256 _generation, address _validator) external view returns (bool) {
+        return isGenerationValidator[_generation][_validator];
+    }
+
     function getValidators(uint256 _generation) external view returns (address[] memory) {
-        return validators[_generation];
+        if (validators.length > _generation) {
+            return validators[_generation];
+        }
+
+        return new address[](0);
     }
 
     function getValidatorsCount(uint256 _generation) external view returns (uint256) {
-        return validators[_generation].length;
+        if (validators.length > _generation) {
+            return validators[_generation].length;
+        }
+
+        return 0;
+    }
+
+    function setValidatorStaking(address _validatorStaking) public onlyOwner {
+        validatorStaking = ValidatorStaking(_validatorStaking);
+        emit ValidatorStakingUpdated(_validatorStaking);
     }
 
     function _setValidators(address[] memory _validators) private {
-        address[] memory currentValidators = this.getCurrentValidators();
-        for (uint256 i = 0; i < currentValidators.length; i++) {
-            isValidator[currentValidators[i]] = false;
+        if (_validators.length < 2) {
+            // dkg requires at least 2 validators
+            return;
         }
 
+        uint256 newGeneration = validators.length;
         for (uint256 i = 0; i < _validators.length; i++) {
-            isValidator[_validators[i]] = true;
+            isGenerationValidator[newGeneration][_validators[i]] = true;
         }
 
         validators.push(_validators);
-        emit ValidatorsUpdated(validators.length - 1, _validators);
-        emit RoundDataFilled(validators.length - 1, 0);
+        emit ValidatorsUpdated(newGeneration, _validators);
+        emit RoundDataFilled(newGeneration, 0);
     }
 
     function _enoughVotes(uint256 _generation, uint256 votes) private view returns (bool) {

@@ -101,14 +101,13 @@ export async function deployBridge(
   };
 }
 
-export async function deploySystem(initialminimalStake: BigNumber): Promise<SystemDeployment> {
+export async function deploySystem(initialMinimalStake: BigNumber): Promise<SystemDeployment> {
   const withdrawalPeriod = 1;
-  const validators: string[] = [];
 
   const AddressStorage = await ethers.getContractFactory('AddressStorage');
   const addressStorage = await AddressStorage.deploy();
   await addressStorage.deployed();
-  await (await addressStorage.initialize(validators)).wait();
+  await (await addressStorage.initialize([])).wait();
 
   const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
   const validatorStaking = await ValidatorStaking.deploy();
@@ -119,9 +118,9 @@ export async function deploySystem(initialminimalStake: BigNumber): Promise<Syst
   await dkg.deployed();
 
   await (
-    await validatorStaking.initialize(initialminimalStake, withdrawalPeriod, addressStorage.address, dkg.address)
+    await validatorStaking.initialize(initialMinimalStake, withdrawalPeriod, addressStorage.address, dkg.address)
   ).wait();
-  await (await dkg.initialize(validators, validatorStaking.address)).wait();
+  await (await dkg.initialize(validatorStaking.address)).wait();
 
   await addressStorage.transferOwnership(validatorStaking.address);
 

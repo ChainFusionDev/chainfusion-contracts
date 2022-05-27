@@ -30,7 +30,7 @@ var (
 
 // TokenManagerMetaData contains all meta data concerning the TokenManager contract.
 var TokenManagerMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_destinationToken\",\"type\":\"address\"}],\"name\":\"addSupportedToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"}],\"name\":\"getDestinationToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"isTokenSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"supportedTokens\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isSupported\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"}],\"name\":\"getDestinationToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"isTokenEnabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"isTokenMintable\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_destinationToken\",\"type\":\"address\"}],\"name\":\"setDestinationToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_isEnabled\",\"type\":\"bool\"}],\"name\":\"setEnabled\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_isMintable\",\"type\":\"bool\"}],\"name\":\"setMintable\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"supportedTokens\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isEnabled\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"isMintable\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // TokenManagerABI is the input ABI used to generate the binding from.
@@ -210,12 +210,12 @@ func (_TokenManager *TokenManagerCallerSession) GetDestinationToken(_token commo
 	return _TokenManager.Contract.GetDestinationToken(&_TokenManager.CallOpts, _token, _chainId)
 }
 
-// IsTokenSupported is a free data retrieval call binding the contract method 0x75151b63.
+// IsTokenEnabled is a free data retrieval call binding the contract method 0x748538d9.
 //
-// Solidity: function isTokenSupported(address _token) view returns(bool)
-func (_TokenManager *TokenManagerCaller) IsTokenSupported(opts *bind.CallOpts, _token common.Address) (bool, error) {
+// Solidity: function isTokenEnabled(address _token) view returns(bool)
+func (_TokenManager *TokenManagerCaller) IsTokenEnabled(opts *bind.CallOpts, _token common.Address) (bool, error) {
 	var out []interface{}
-	err := _TokenManager.contract.Call(opts, &out, "isTokenSupported", _token)
+	err := _TokenManager.contract.Call(opts, &out, "isTokenEnabled", _token)
 
 	if err != nil {
 		return *new(bool), err
@@ -227,18 +227,49 @@ func (_TokenManager *TokenManagerCaller) IsTokenSupported(opts *bind.CallOpts, _
 
 }
 
-// IsTokenSupported is a free data retrieval call binding the contract method 0x75151b63.
+// IsTokenEnabled is a free data retrieval call binding the contract method 0x748538d9.
 //
-// Solidity: function isTokenSupported(address _token) view returns(bool)
-func (_TokenManager *TokenManagerSession) IsTokenSupported(_token common.Address) (bool, error) {
-	return _TokenManager.Contract.IsTokenSupported(&_TokenManager.CallOpts, _token)
+// Solidity: function isTokenEnabled(address _token) view returns(bool)
+func (_TokenManager *TokenManagerSession) IsTokenEnabled(_token common.Address) (bool, error) {
+	return _TokenManager.Contract.IsTokenEnabled(&_TokenManager.CallOpts, _token)
 }
 
-// IsTokenSupported is a free data retrieval call binding the contract method 0x75151b63.
+// IsTokenEnabled is a free data retrieval call binding the contract method 0x748538d9.
 //
-// Solidity: function isTokenSupported(address _token) view returns(bool)
-func (_TokenManager *TokenManagerCallerSession) IsTokenSupported(_token common.Address) (bool, error) {
-	return _TokenManager.Contract.IsTokenSupported(&_TokenManager.CallOpts, _token)
+// Solidity: function isTokenEnabled(address _token) view returns(bool)
+func (_TokenManager *TokenManagerCallerSession) IsTokenEnabled(_token common.Address) (bool, error) {
+	return _TokenManager.Contract.IsTokenEnabled(&_TokenManager.CallOpts, _token)
+}
+
+// IsTokenMintable is a free data retrieval call binding the contract method 0x5da619a9.
+//
+// Solidity: function isTokenMintable(address _token) view returns(bool)
+func (_TokenManager *TokenManagerCaller) IsTokenMintable(opts *bind.CallOpts, _token common.Address) (bool, error) {
+	var out []interface{}
+	err := _TokenManager.contract.Call(opts, &out, "isTokenMintable", _token)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsTokenMintable is a free data retrieval call binding the contract method 0x5da619a9.
+//
+// Solidity: function isTokenMintable(address _token) view returns(bool)
+func (_TokenManager *TokenManagerSession) IsTokenMintable(_token common.Address) (bool, error) {
+	return _TokenManager.Contract.IsTokenMintable(&_TokenManager.CallOpts, _token)
+}
+
+// IsTokenMintable is a free data retrieval call binding the contract method 0x5da619a9.
+//
+// Solidity: function isTokenMintable(address _token) view returns(bool)
+func (_TokenManager *TokenManagerCallerSession) IsTokenMintable(_token common.Address) (bool, error) {
+	return _TokenManager.Contract.IsTokenMintable(&_TokenManager.CallOpts, _token)
 }
 
 // Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
@@ -274,54 +305,47 @@ func (_TokenManager *TokenManagerCallerSession) Owner() (common.Address, error) 
 
 // SupportedTokens is a free data retrieval call binding the contract method 0x68c4ac26.
 //
-// Solidity: function supportedTokens(address ) view returns(bool isSupported)
-func (_TokenManager *TokenManagerCaller) SupportedTokens(opts *bind.CallOpts, arg0 common.Address) (bool, error) {
+// Solidity: function supportedTokens(address ) view returns(bool isEnabled, bool isMintable)
+func (_TokenManager *TokenManagerCaller) SupportedTokens(opts *bind.CallOpts, arg0 common.Address) (struct {
+	IsEnabled  bool
+	IsMintable bool
+}, error) {
 	var out []interface{}
 	err := _TokenManager.contract.Call(opts, &out, "supportedTokens", arg0)
 
+	outstruct := new(struct {
+		IsEnabled  bool
+		IsMintable bool
+	})
 	if err != nil {
-		return *new(bool), err
+		return *outstruct, err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+	outstruct.IsEnabled = *abi.ConvertType(out[0], new(bool)).(*bool)
+	outstruct.IsMintable = *abi.ConvertType(out[1], new(bool)).(*bool)
 
-	return out0, err
+	return *outstruct, err
 
 }
 
 // SupportedTokens is a free data retrieval call binding the contract method 0x68c4ac26.
 //
-// Solidity: function supportedTokens(address ) view returns(bool isSupported)
-func (_TokenManager *TokenManagerSession) SupportedTokens(arg0 common.Address) (bool, error) {
+// Solidity: function supportedTokens(address ) view returns(bool isEnabled, bool isMintable)
+func (_TokenManager *TokenManagerSession) SupportedTokens(arg0 common.Address) (struct {
+	IsEnabled  bool
+	IsMintable bool
+}, error) {
 	return _TokenManager.Contract.SupportedTokens(&_TokenManager.CallOpts, arg0)
 }
 
 // SupportedTokens is a free data retrieval call binding the contract method 0x68c4ac26.
 //
-// Solidity: function supportedTokens(address ) view returns(bool isSupported)
-func (_TokenManager *TokenManagerCallerSession) SupportedTokens(arg0 common.Address) (bool, error) {
+// Solidity: function supportedTokens(address ) view returns(bool isEnabled, bool isMintable)
+func (_TokenManager *TokenManagerCallerSession) SupportedTokens(arg0 common.Address) (struct {
+	IsEnabled  bool
+	IsMintable bool
+}, error) {
 	return _TokenManager.Contract.SupportedTokens(&_TokenManager.CallOpts, arg0)
-}
-
-// AddSupportedToken is a paid mutator transaction binding the contract method 0x49be7387.
-//
-// Solidity: function addSupportedToken(uint256 _chainId, address _token, address _destinationToken) returns()
-func (_TokenManager *TokenManagerTransactor) AddSupportedToken(opts *bind.TransactOpts, _chainId *big.Int, _token common.Address, _destinationToken common.Address) (*types.Transaction, error) {
-	return _TokenManager.contract.Transact(opts, "addSupportedToken", _chainId, _token, _destinationToken)
-}
-
-// AddSupportedToken is a paid mutator transaction binding the contract method 0x49be7387.
-//
-// Solidity: function addSupportedToken(uint256 _chainId, address _token, address _destinationToken) returns()
-func (_TokenManager *TokenManagerSession) AddSupportedToken(_chainId *big.Int, _token common.Address, _destinationToken common.Address) (*types.Transaction, error) {
-	return _TokenManager.Contract.AddSupportedToken(&_TokenManager.TransactOpts, _chainId, _token, _destinationToken)
-}
-
-// AddSupportedToken is a paid mutator transaction binding the contract method 0x49be7387.
-//
-// Solidity: function addSupportedToken(uint256 _chainId, address _token, address _destinationToken) returns()
-func (_TokenManager *TokenManagerTransactorSession) AddSupportedToken(_chainId *big.Int, _token common.Address, _destinationToken common.Address) (*types.Transaction, error) {
-	return _TokenManager.Contract.AddSupportedToken(&_TokenManager.TransactOpts, _chainId, _token, _destinationToken)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
@@ -364,6 +388,69 @@ func (_TokenManager *TokenManagerSession) RenounceOwnership() (*types.Transactio
 // Solidity: function renounceOwnership() returns()
 func (_TokenManager *TokenManagerTransactorSession) RenounceOwnership() (*types.Transaction, error) {
 	return _TokenManager.Contract.RenounceOwnership(&_TokenManager.TransactOpts)
+}
+
+// SetDestinationToken is a paid mutator transaction binding the contract method 0xff1b14be.
+//
+// Solidity: function setDestinationToken(uint256 _chainId, address _token, address _destinationToken) returns()
+func (_TokenManager *TokenManagerTransactor) SetDestinationToken(opts *bind.TransactOpts, _chainId *big.Int, _token common.Address, _destinationToken common.Address) (*types.Transaction, error) {
+	return _TokenManager.contract.Transact(opts, "setDestinationToken", _chainId, _token, _destinationToken)
+}
+
+// SetDestinationToken is a paid mutator transaction binding the contract method 0xff1b14be.
+//
+// Solidity: function setDestinationToken(uint256 _chainId, address _token, address _destinationToken) returns()
+func (_TokenManager *TokenManagerSession) SetDestinationToken(_chainId *big.Int, _token common.Address, _destinationToken common.Address) (*types.Transaction, error) {
+	return _TokenManager.Contract.SetDestinationToken(&_TokenManager.TransactOpts, _chainId, _token, _destinationToken)
+}
+
+// SetDestinationToken is a paid mutator transaction binding the contract method 0xff1b14be.
+//
+// Solidity: function setDestinationToken(uint256 _chainId, address _token, address _destinationToken) returns()
+func (_TokenManager *TokenManagerTransactorSession) SetDestinationToken(_chainId *big.Int, _token common.Address, _destinationToken common.Address) (*types.Transaction, error) {
+	return _TokenManager.Contract.SetDestinationToken(&_TokenManager.TransactOpts, _chainId, _token, _destinationToken)
+}
+
+// SetEnabled is a paid mutator transaction binding the contract method 0x17fe72bb.
+//
+// Solidity: function setEnabled(address _token, bool _isEnabled) returns()
+func (_TokenManager *TokenManagerTransactor) SetEnabled(opts *bind.TransactOpts, _token common.Address, _isEnabled bool) (*types.Transaction, error) {
+	return _TokenManager.contract.Transact(opts, "setEnabled", _token, _isEnabled)
+}
+
+// SetEnabled is a paid mutator transaction binding the contract method 0x17fe72bb.
+//
+// Solidity: function setEnabled(address _token, bool _isEnabled) returns()
+func (_TokenManager *TokenManagerSession) SetEnabled(_token common.Address, _isEnabled bool) (*types.Transaction, error) {
+	return _TokenManager.Contract.SetEnabled(&_TokenManager.TransactOpts, _token, _isEnabled)
+}
+
+// SetEnabled is a paid mutator transaction binding the contract method 0x17fe72bb.
+//
+// Solidity: function setEnabled(address _token, bool _isEnabled) returns()
+func (_TokenManager *TokenManagerTransactorSession) SetEnabled(_token common.Address, _isEnabled bool) (*types.Transaction, error) {
+	return _TokenManager.Contract.SetEnabled(&_TokenManager.TransactOpts, _token, _isEnabled)
+}
+
+// SetMintable is a paid mutator transaction binding the contract method 0xf7eb06c4.
+//
+// Solidity: function setMintable(address _token, bool _isMintable) returns()
+func (_TokenManager *TokenManagerTransactor) SetMintable(opts *bind.TransactOpts, _token common.Address, _isMintable bool) (*types.Transaction, error) {
+	return _TokenManager.contract.Transact(opts, "setMintable", _token, _isMintable)
+}
+
+// SetMintable is a paid mutator transaction binding the contract method 0xf7eb06c4.
+//
+// Solidity: function setMintable(address _token, bool _isMintable) returns()
+func (_TokenManager *TokenManagerSession) SetMintable(_token common.Address, _isMintable bool) (*types.Transaction, error) {
+	return _TokenManager.Contract.SetMintable(&_TokenManager.TransactOpts, _token, _isMintable)
+}
+
+// SetMintable is a paid mutator transaction binding the contract method 0xf7eb06c4.
+//
+// Solidity: function setMintable(address _token, bool _isMintable) returns()
+func (_TokenManager *TokenManagerTransactorSession) SetMintable(_token common.Address, _isMintable bool) (*types.Transaction, error) {
+	return _TokenManager.Contract.SetMintable(&_TokenManager.TransactOpts, _token, _isMintable)
 }
 
 // TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.

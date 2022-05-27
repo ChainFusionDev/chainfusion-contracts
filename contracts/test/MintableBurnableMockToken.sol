@@ -19,10 +19,6 @@ contract MintableBurnableMockToken is ERC20, IERC20MintableBurnable, ERC20Burnab
         _mint(to, amount);
     }
 
-    function burn(uint256 amount) public override(IERC20MintableBurnable, ERC20Burnable) {
-        ERC20Burnable.burn(amount);
-    }
-
     function burnFrom(address account, uint256 amount) public override(IERC20MintableBurnable, ERC20Burnable) {
         ERC20Burnable.burnFrom(account, amount);
     }

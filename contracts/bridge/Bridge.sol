@@ -15,8 +15,9 @@ contract Bridge is Initializable, Ownable {
     mapping(bytes32 => mapping(address => bool)) public approvals;
     mapping(bytes32 => uint256) public approvalsCount;
     mapping(bytes32 => bool) public executed;
-    TokenManager public tokenManager;
+
     ValidatorManager public validatorManager;
+    TokenManager public tokenManager;
     LiquidityPools public liquidityPools;
     FeeManager public feeManager;
 
@@ -29,7 +30,6 @@ contract Bridge is Initializable, Ownable {
         uint256 fee,
         uint256 transferAmount
     );
-
     event DepositedNative(
         address token,
         uint256 destinationChainId,
@@ -50,36 +50,16 @@ contract Bridge is Initializable, Ownable {
 
     function initialize(
         address _owner,
-        ValidatorManager _validatorManager,
+        address _validatorManager,
         address _tokenManager,
         address payable _liquidityPools,
         address payable _feeManager
     ) external initializer {
         _transferOwnership(_owner);
-        validatorManager = _validatorManager;
-        tokenManager = TokenManager(_tokenManager);
-        liquidityPools = LiquidityPools(_liquidityPools);
-        feeManager = FeeManager(_feeManager);
-    }
-
-    function setTokenManager(address _tokenManager) external onlyOwner {
-        tokenManager = TokenManager(_tokenManager);
-        emit TokenManagerUpdated(_tokenManager);
-    }
-
-    function setValidatorManager(address _validatorManager) external onlyOwner {
-        validatorManager = ValidatorManager(_validatorManager);
-        emit ValidatorManagerUpdated(_validatorManager);
-    }
-
-    function setLiquidityPools(address payable _liquidityPools) external onlyOwner {
-        liquidityPools = LiquidityPools(_liquidityPools);
-        emit LiquidityPoolsUpdated(_liquidityPools);
-    }
-
-    function setFeeManager(address payable _feeManager) external onlyOwner {
-        feeManager = FeeManager(_feeManager);
-        emit FeeManagerUpdated(_feeManager);
+        setValidatorManager(_validatorManager);
+        setTokenManager(_tokenManager);
+        setLiquidityPools(_liquidityPools);
+        setFeeManager(_feeManager);
     }
 
     function deposit(
@@ -148,6 +128,26 @@ contract Bridge is Initializable, Ownable {
 
             emit Transferred(_token, _sourceChainId, _receiver, _amount, msg.sender);
         }
+    }
+
+    function setValidatorManager(address _validatorManager) public onlyOwner {
+        validatorManager = ValidatorManager(_validatorManager);
+        emit ValidatorManagerUpdated(_validatorManager);
+    }
+
+    function setTokenManager(address _tokenManager) public onlyOwner {
+        tokenManager = TokenManager(_tokenManager);
+        emit TokenManagerUpdated(_tokenManager);
+    }
+
+    function setLiquidityPools(address payable _liquidityPools) public onlyOwner {
+        liquidityPools = LiquidityPools(_liquidityPools);
+        emit LiquidityPoolsUpdated(_liquidityPools);
+    }
+
+    function setFeeManager(address payable _feeManager) public onlyOwner {
+        feeManager = FeeManager(_feeManager);
+        emit FeeManagerUpdated(_feeManager);
     }
 
     function depositNative(uint256 _chainId, address _receiver) public payable {

@@ -35,6 +35,7 @@ contract ValidatorStaking is Ownable, Initializable {
 
     event MinimalStakeUpdated(uint256 minimalStake);
     event WithdrawalPeriodUpdated(uint256 withdrawalPeriod);
+    event ValidatorStorageUpdated(address validatorStorage);
     event DKGUpdated(address dkg);
 
     modifier onlyValidator() {
@@ -48,28 +49,33 @@ contract ValidatorStaking is Ownable, Initializable {
         address _validatorStorage,
         address _dkg
     ) external initializer {
-        minimalStake = _minimalStake;
-        withdrawalPeriod = _withdrawalPeriod;
-        validatorStorage = AddressStorage(_validatorStorage);
-        dkg = DKG(_dkg);
+        setMinimalStake(_minimalStake);
+        setWithdrawalPeriod(_withdrawalPeriod);
+        setValidatorStorage(_validatorStorage);
+        setDKG(_dkg);
     }
 
-    function setMinimalStake(uint256 _minimalStake) external onlyOwner {
+    function setMinimalStake(uint256 _minimalStake) public onlyOwner {
         minimalStake = _minimalStake;
         emit MinimalStakeUpdated(_minimalStake);
     }
 
-    function setWithdrawalPeriod(uint256 _withdrawalPeriod) external onlyOwner {
+    function setWithdrawalPeriod(uint256 _withdrawalPeriod) public onlyOwner {
         withdrawalPeriod = _withdrawalPeriod;
         emit WithdrawalPeriodUpdated(_withdrawalPeriod);
     }
 
-    function setDKG(address _dkg) external onlyOwner {
+    function setValidatorStorage(address _validatorStorage) public onlyOwner {
+        validatorStorage = AddressStorage(_validatorStorage);
+        emit ValidatorStorageUpdated(_validatorStorage);
+    }
+
+    function setDKG(address _dkg) public onlyOwner {
         dkg = DKG(_dkg);
         emit DKGUpdated(_dkg);
     }
 
-    function slash(address _validator) external onlyValidator {
+    function slash(address _validator) public onlyValidator {
         require(stakes[_validator].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator is already slashed");
         if (slashingVotes[_validator][msg.sender] == false) {
             slashingVotes[_validator][msg.sender] = true;
@@ -82,14 +88,14 @@ contract ValidatorStaking is Ownable, Initializable {
         }
     }
 
-    function announceWithdrawal(uint256 _amount) external onlyValidator {
+    function announceWithdrawal(uint256 _amount) public onlyValidator {
         require(_amount <= stakes[msg.sender].stake, "ValidatorStaking: amount must be <= to stake");
         withdrawalAnnouncements[msg.sender].amount = _amount;
         // solhint-disable-next-line not-rely-on-time
         withdrawalAnnouncements[msg.sender].time = block.timestamp;
     }
 
-    function withdraw() external onlyValidator {
+    function withdraw() public onlyValidator {
         require(withdrawalAnnouncements[msg.sender].amount > 0, "ValidatorStaking: amount must be greater than zero");
         require(
             // solhint-disable-next-line not-rely-on-time

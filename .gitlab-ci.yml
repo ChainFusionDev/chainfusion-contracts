@@ -44,4 +44,20 @@ test:unit:
   script:
     - npm install
     - npm run compile
-    - npx hardhat test
+    - npx hardhat coverage
+  artifacts:
+    paths:
+      - coverage/
+
+pages:
+  stage: test
+  needs:
+    - test:unit
+  script:
+    - mv coverage/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - main
