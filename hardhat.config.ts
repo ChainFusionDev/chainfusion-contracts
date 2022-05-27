@@ -29,6 +29,9 @@ const config: HardhatUserConfig = {
     ganache: {
       url: `http://ganache:8545`,
     },
+    localhost: {
+      accounts,
+    },
     ropsten: {
       url: `https://ropsten.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
       accounts,
