@@ -120,7 +120,7 @@ contract LiquidityPools is Initializable, Ownable {
 
         if (_token == NATIVE_TOKEN) {
             // solhint-disable-next-line avoid-low-level-calls
-            (bool success, ) = msg.sender.call{value: msg.value, gas: 21000}("");
+            (bool success, ) = msg.sender.call{value: _amount, gas: 21000}("");
             require(success, "LiquidityPools: transfer native token failed");
         } else {
             require(IERC20(_token).balanceOf(address(this)) >= _amount, "IERC20: amount more than contract balance");

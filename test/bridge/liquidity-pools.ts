@@ -330,4 +330,35 @@ describe('LiquidityPools', function () {
     await liquidityPools2.claimRewards(mockToken2.address);
     expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(0);
   });
+  it('should remove liquidity using native token', async function () {
+    const [owner] = await ethers.getSigners();
+    const initialRequiredApprovals = 1;
+
+    const amount = '100000';
+
+    const { liquidityPools, tokenManager } = await deployBridge(
+      owner.address,
+      [owner.address],
+      initialRequiredApprovals
+    );
+    const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+    await tokenManager.setEnabled(NATIVE_TOKEN, true);
+    expect(await tokenManager.isTokenEnabled(NATIVE_TOKEN)).to.equal(true);
+
+    await expect(liquidityPools.addNativeLiquidity({ value: amount }))
+      .to.emit(liquidityPools, 'LiquidityAdded')
+      .withArgs(NATIVE_TOKEN, owner.address, amount);
+
+    expect(await liquidityPools.providedLiquidity(NATIVE_TOKEN)).to.equal(amount);
+    expect(await liquidityPools.availableLiquidity(NATIVE_TOKEN)).to.equal(amount);
+    expect((await liquidityPools.liquidityPositions(NATIVE_TOKEN, owner.address)).balance).to.equal(amount);
+
+    await expect(liquidityPools.removeLiquidity(NATIVE_TOKEN, amount, { value: amount }))
+      .to.emit(liquidityPools, 'LiquidityRemoved')
+      .withArgs(NATIVE_TOKEN, owner.address, amount);
+
+    expect(await liquidityPools.providedLiquidity(NATIVE_TOKEN)).to.equal(0);
+    expect(await liquidityPools.availableLiquidity(NATIVE_TOKEN)).to.equal(0);
+    expect((await liquidityPools.liquidityPositions(NATIVE_TOKEN, owner.address)).balance).to.equal(0);
+  });
 });
