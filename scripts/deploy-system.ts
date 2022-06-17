@@ -3,8 +3,9 @@ import { ethers } from 'hardhat';
 async function main() {
   const withdrawalPeriod = 1;
   const minimalStake: number = 1;
+  const dkgParticipants: number = 3;
 
-  const [v1, v2] = await ethers.getSigners();
+  const signers = await ethers.getSigners();
 
   const AddressStorage = await ethers.getContractFactory('AddressStorage');
   const addressStorage = await AddressStorage.deploy();
@@ -30,15 +31,18 @@ async function main() {
 
   console.log('DKG deployed to:', dkg.address);
 
-  console.log('Staking for v1...');
-  const v1Staking = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v1);
-  await (await v1Staking.stake({ value: minimalStake })).wait();
-  console.log('Staked for v1');
+  let signersProcessed: number = 0;
+  for (const singer of signers) {
+    console.log(`Staking for ${singer.address} (${signersProcessed + 1} of ${dkgParticipants})...`);
+    const signerStaking = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, singer);
+    await (await signerStaking.stake({ value: minimalStake })).wait();
+    console.log(`Staked for ${singer.address} (${signersProcessed + 1} of ${dkgParticipants})`);
 
-  console.log('Staking for v2...');
-  const v2Staking = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
-  await (await v2Staking.stake({ value: minimalStake })).wait();
-  console.log('Staked for v2');
+    signersProcessed++;
+    if (signersProcessed >= dkgParticipants) {
+      break;
+    }
+  }
 }
 
 main().catch((error) => {

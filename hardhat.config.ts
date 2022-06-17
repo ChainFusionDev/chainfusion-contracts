@@ -30,7 +30,9 @@ const config: HardhatUserConfig = {
       url: `http://ganache:8545`,
     },
     localhost: {
-      accounts,
+      accounts: {
+        mnemonic: 'test test test test test test test test test test test junk'
+      }
     },
     ropsten: {
       url: `https://ropsten.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
