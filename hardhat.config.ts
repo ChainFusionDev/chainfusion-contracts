@@ -36,6 +36,7 @@ const config: HardhatUserConfig = {
       gasPrice: 10000000000,
     },
     ternopil: {
+      chainId: 953842,
       url: 'http://192.168.10.40:8545',
       accounts: {
         mnemonic: 'test test test test test test test test test test test junk'
@@ -65,6 +66,16 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
+    customChains: [
+      {
+        network: "ternopil",
+        chainId: 953842,
+        urls: {
+          apiURL: "http://192.168.10.44:4000/api",
+          browserURL: "http://192.168.10.44:4000"
+        }
+      }
+    ]
   },
 };
 
