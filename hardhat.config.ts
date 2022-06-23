@@ -35,6 +35,13 @@ const config: HardhatUserConfig = {
       },
       gasPrice: 10000000000,
     },
+    ternopil: {
+      url: 'http://192.168.10.40:8545',
+      accounts: {
+        mnemonic: 'test test test test test test test test test test test junk'
+      },
+      gasPrice: 10000000000,
+    },
     ropsten: {
       url: `https://ropsten.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
       accounts,
