@@ -2,7 +2,7 @@ import { ethers } from 'hardhat';
 
 async function main() {
   const withdrawalPeriod = 1;
-  const minimalStake: number = 1e18;
+  const minimalStake: number = 1;
   const dkgParticipants: number = 3;
 
   const signers = await ethers.getSigners();
