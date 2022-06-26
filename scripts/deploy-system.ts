@@ -1,11 +1,14 @@
 import { ethers } from 'hardhat';
+import hre from 'hardhat';
+
+const withdrawalPeriod = 60;
+const minimalStake = ethers.utils.parseEther('100');
+
+const VERIFY = (process.env.VERIFY || '').trim().toLowerCase();
+const VALIDATOR_KEYS = (process.env.VALIDATOR_KEYS || '').split(',');
 
 async function main() {
-  const withdrawalPeriod = 1;
-  const minimalStake: number = 1;
-  const dkgParticipants: number = 3;
-
-  const signers = await ethers.getSigners();
+  console.log('\nDeploying contracts\n');
 
   const AddressStorage = await ethers.getContractFactory('AddressStorage');
   const addressStorage = await AddressStorage.deploy();
@@ -31,17 +34,23 @@ async function main() {
 
   console.log('DKG deployed to:', dkg.address);
 
-  let signersProcessed: number = 0;
-  for (const singer of signers) {
-    console.log(`Staking for ${singer.address} (${signersProcessed + 1} of ${dkgParticipants})...`);
-    const signerStaking = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, singer);
-    await (await signerStaking.stake({ value: minimalStake })).wait();
-    console.log(`Staked for ${singer.address} (${signersProcessed + 1} of ${dkgParticipants})`);
+  if (VALIDATOR_KEYS.length > 0) {
+    console.log('\nStaking\n');
 
-    signersProcessed++;
-    if (signersProcessed >= dkgParticipants) {
-      break;
+    for (const privateKey of VALIDATOR_KEYS) {
+      const signer = new ethers.Wallet(privateKey, ethers.provider);
+      const staking = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, signer);
+      console.log('Staking', ethers.utils.formatEther(minimalStake), 'CFN for:', signer.address);
+      await (await staking.stake({ value: minimalStake })).wait();
     }
+  }
+
+  if (VERIFY === 'true') {
+    console.log('\nVerifying contracts\n');
+
+    await hre.run('verify:verify', { address: addressStorage.address });
+    await hre.run('verify:verify', { address: validatorStaking.address });
+    await hre.run('verify:verify', { address: dkg.address });
   }
 }
 
