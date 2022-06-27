@@ -24,6 +24,7 @@ const config: HardhatUserConfig = {
   solidity: "0.8.9",
   networks: {
     localhost: {
+      chainId: 1337,
       accounts: {
         mnemonic: 'test test test test test test test test test test test junk'
       },
@@ -60,6 +61,14 @@ const config: HardhatUserConfig = {
     apiKey: process.env.ETHERSCAN_API_KEY,
     customChains: [
       {
+        network: "localhost",
+        chainId: 1337,
+        urls: {
+          apiURL: "http://localhost:4000/api",
+          browserURL: "http://localhost:4000"
+        }
+      },
+      {
         network: "ternopil",
         chainId: 953842,
         urls: {
@@ -67,14 +76,6 @@ const config: HardhatUserConfig = {
           browserURL: "https://explorer.chainfusion.org"
         }
       },
-      {
-        network: "localhost",
-        chainId: 953842,
-        urls: {
-          apiURL: "http://localhost:4000/api",
-          browserURL: "http://localhost:4000"
-        }
-      }
     ]
   },
 };
