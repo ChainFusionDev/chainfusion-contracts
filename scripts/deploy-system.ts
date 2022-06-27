@@ -48,9 +48,18 @@ async function main() {
   if (VERIFY === 'true') {
     console.log('\nVerifying contracts\n');
 
-    await hre.run('verify:verify', { address: addressStorage.address });
-    await hre.run('verify:verify', { address: validatorStaking.address });
-    await hre.run('verify:verify', { address: dkg.address });
+    // Sometimes fails, false positively, likely it's a bug in verify plugin or blockscout
+    await ignoreError(hre.run('verify:verify', { address: addressStorage.address }));
+    await ignoreError(hre.run('verify:verify', { address: validatorStaking.address }));
+    await ignoreError(hre.run('verify:verify', { address: dkg.address }));
+  }
+}
+
+async function ignoreError(callback: Promise<any>): Promise<any> {
+  try {
+    await callback;
+  } catch {
+    return;
   }
 }
 

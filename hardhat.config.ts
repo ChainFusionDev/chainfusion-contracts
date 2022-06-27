@@ -66,6 +66,14 @@ const config: HardhatUserConfig = {
           apiURL: "https://explorer.chainfusion.org/api",
           browserURL: "https://explorer.chainfusion.org"
         }
+      },
+      {
+        network: "localhost",
+        chainId: 953842,
+        urls: {
+          apiURL: "http://localhost:4000/api",
+          browserURL: "http://localhost:4000"
+        }
       }
     ]
   },
