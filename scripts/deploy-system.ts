@@ -5,7 +5,8 @@ const withdrawalPeriod = 60;
 const minimalStake = ethers.utils.parseEther('100');
 
 const VERIFY = (process.env.VERIFY || '').trim().toLowerCase();
-const VALIDATOR_KEYS = (process.env.VALIDATOR_KEYS || '').split(',');
+const VALIDATOR_KEYS =
+  process.env.VALIDATOR_KEYS === undefined ? [] : (process.env.VALIDATOR_KEYS || '').trim().split(',');
 
 async function main() {
   console.log('\nDeploying contracts\n');
