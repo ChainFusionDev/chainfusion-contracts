@@ -18,12 +18,12 @@ contract DKG is Ownable, Initializable {
     mapping(uint256 => mapping(address => bool)) public isGenerationValidator;
 
     // DKG rounds data
-    mapping(uint256 => mapping(uint256 => BroacastData)) private roundBroadcastData;
+    mapping(uint256 => mapping(uint256 => BroacastData)) public roundBroadcastData;
 
     // Signer address voting
     mapping(uint256 => address) public signerAddresses;
-    mapping(uint256 => mapping(address => address)) private signerVotes;
-    mapping(uint256 => mapping(address => uint256)) private signerVoteCounts;
+    mapping(uint256 => mapping(address => address)) public signerVotes;
+    mapping(uint256 => mapping(address => uint256)) public signerVoteCounts;
 
     event RoundDataProvided(uint256 generation, uint256 round, address validator);
     event RoundDataFilled(uint256 generation, uint256 round);
