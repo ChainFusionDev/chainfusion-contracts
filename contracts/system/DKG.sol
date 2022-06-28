@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./ThresholdSigner.sol";
 import "./ValidatorStaking.sol";
 
 struct BroacastData {
@@ -12,7 +11,6 @@ struct BroacastData {
 }
 
 contract DKG is Ownable, Initializable {
-    ThresholdSigner public thresholdSigner;
     ValidatorStaking public validatorStaking;
 
     // Validators storage
@@ -65,11 +63,6 @@ contract DKG is Ownable, Initializable {
 
     function initialize(address _validatorStaking) external initializer {
         setValidatorStaking(_validatorStaking);
-    }
-
-    function setThresholdSigner(address _thresholdSigner) external onlyOwner {
-        thresholdSigner = ThresholdSigner(_thresholdSigner);
-        emit ThresholdSignerUpdated(_thresholdSigner);
     }
 
     function setValidators(address[] memory _validators) external onlyValidatorStaking {
