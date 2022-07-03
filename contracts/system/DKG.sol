@@ -125,6 +125,10 @@ contract DKG is Ownable, Initializable {
         return validators[validators.length - 1];
     }
 
+    function getGenerationsCount() external view returns (uint256) {
+        return validators.length;
+    }
+
     function isValidator(uint256 _generation, address _validator) external view returns (bool) {
         return isGenerationValidator[_generation][_validator];
     }
