@@ -24,11 +24,6 @@ describe('DKG', function () {
     const validatorStaking1 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v1);
     const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
 
-    const ThresholdSigner = await ethers.getContractFactory('ThresholdSigner');
-    const thresholdSigner = await ThresholdSigner.deploy();
-    await thresholdSigner.initialize(dkg.address);
-
-    await dkg.setThresholdSigner(thresholdSigner.address);
     await dkg.setValidatorStaking(validatorStaking.address);
 
     await expect(dkg.roundBroadcast(generation, 1, data1)).to.be.revertedWith('DKG: not a validator');

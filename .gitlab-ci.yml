@@ -31,13 +31,10 @@ test:build:
 
 test:deploy:
   stage: test
-  services:
-    - name: trufflesuite/ganache-cli:latest
-      alias: ganache
   script:
     - npm install
-    - npx hardhat --network ganache run scripts/deploy-bridge.ts
-    - npx hardhat --network ganache run scripts/deploy-system.ts
+    - npx hardhat run scripts/deploy-bridge.ts
+    - npx hardhat run scripts/deploy-system.ts
 
 test:unit:
   stage: test

@@ -4,9 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-import "./ThresholdSigner.sol";
 import "./ValidatorStaking.sol";
-import "hardhat/console.sol";
 
 struct BroacastData {
     uint256 count;
@@ -14,7 +12,6 @@ struct BroacastData {
 }
 
 contract DKG is Ownable, Initializable {
-    ThresholdSigner public thresholdSigner;
     ValidatorStaking public validatorStaking;
 
     // Validators storage
@@ -22,12 +19,12 @@ contract DKG is Ownable, Initializable {
     mapping(uint256 => mapping(address => bool)) public isGenerationValidator;
 
     // DKG rounds data
-    mapping(uint256 => mapping(uint256 => BroacastData)) private roundBroadcastData;
+    mapping(uint256 => mapping(uint256 => BroacastData)) public roundBroadcastData;
 
     // Signer address voting
     mapping(uint256 => address) public signerAddresses;
-    mapping(uint256 => mapping(address => address)) private signerVotes;
-    mapping(uint256 => mapping(address => uint256)) private signerVoteCounts;
+    mapping(uint256 => mapping(address => address)) public signerVotes;
+    mapping(uint256 => mapping(address => uint256)) public signerVoteCounts;
 
     event RoundDataProvided(uint256 generation, uint256 round, address validator);
     event RoundDataFilled(uint256 generation, uint256 round);
@@ -67,11 +64,6 @@ contract DKG is Ownable, Initializable {
 
     function initialize(address _validatorStaking) external initializer {
         setValidatorStaking(_validatorStaking);
-    }
-
-    function setThresholdSigner(address _thresholdSigner) external onlyOwner {
-        thresholdSigner = ThresholdSigner(_thresholdSigner);
-        emit ThresholdSignerUpdated(_thresholdSigner);
     }
 
     function setValidators(address[] memory _validators) external onlyValidatorStaking {
@@ -134,6 +126,10 @@ contract DKG is Ownable, Initializable {
         }
 
         return validators[validators.length - 1];
+    }
+
+    function getGenerationsCount() external view returns (uint256) {
+        return validators.length;
     }
 
     function isValidator(uint256 _generation, address _validator) external view returns (bool) {

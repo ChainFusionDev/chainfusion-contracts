@@ -23,16 +23,18 @@ const accounts = process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KE
 const config: HardhatUserConfig = {
   solidity: "0.8.9",
   networks: {
-    hardhat: {
-      blockGasLimit: 100_000_000,
-    },
-    ganache: {
-      url: `http://ganache:8545`,
-    },
     localhost: {
+      chainId: 1337,
       accounts: {
         mnemonic: 'test test test test test test test test test test test junk'
-      }
+      },
+      gasPrice: 10000000000,
+    },
+    ternopil: {
+      chainId: 953842,
+      url: 'https://rpc.chainfusion.org',
+      gasPrice: 10000000000,
+      accounts,
     },
     ropsten: {
       url: `https://ropsten.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
@@ -57,6 +59,24 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
+    customChains: [
+      {
+        network: "localhost",
+        chainId: 1337,
+        urls: {
+          apiURL: "http://localhost:4000/api",
+          browserURL: "http://localhost:4000"
+        }
+      },
+      {
+        network: "ternopil",
+        chainId: 953842,
+        urls: {
+          apiURL: "https://explorer.chainfusion.org/api",
+          browserURL: "https://explorer.chainfusion.org"
+        }
+      },
+    ]
   },
 };
 
