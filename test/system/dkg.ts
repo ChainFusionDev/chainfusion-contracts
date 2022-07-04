@@ -5,14 +5,20 @@ import { deploySystem } from '../utils/deploy';
 describe('DKG', function () {
   it('should broadcast all rounds', async function () {
     const generation = 0;
-    const signerAddress = '0x0000000000000000000000000000000000000001';
+
     const data1 = ethers.utils.keccak256([1]);
     const data2 = ethers.utils.keccak256([2]);
     const data3 = ethers.utils.keccak256([3]);
 
-    const [, v1, v2] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
+    const [, v1, v2, signer, other] = await ethers.getSigners();
 
+    const signerAddress = signer.address;
+    const message = 'verify';
+
+    const signature = await signer.signMessage(message);
+    const signatureOther = await other.signMessage(message);
+
+    const initialMinimalStake = ethers.utils.parseEther('3');
     const { dkg, validatorStaking } = await deploySystem(initialMinimalStake);
 
     const validatorStaking1 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v1);
@@ -96,7 +102,9 @@ describe('DKG', function () {
 
     // round3 - v1
 
-    await expect(dkgV1.voteSigner(generation, signerAddress)).to.be.revertedWith('DKG: round was not filled');
+    await expect(dkgV1.voteSigner(generation, signerAddress, signature)).to.be.revertedWith(
+      'DKG: round was not filled'
+    );
     await expect(dkgV1.roundBroadcast(generation, 3, data3))
       .to.emit(dkgV1, 'RoundDataProvided')
       .withArgs(generation, 3, v1.address);
@@ -109,7 +117,9 @@ describe('DKG', function () {
 
     // round3 - v2
 
-    await expect(dkgV2.voteSigner(generation, signerAddress)).to.be.revertedWith('DKG: round was not filled');
+    await expect(dkgV2.voteSigner(generation, signerAddress, signature)).to.be.revertedWith(
+      'DKG: round was not filled'
+    );
     await expect(dkgV2.roundBroadcast(generation, 3, data3)).to.emit(dkgV2, 'RoundDataFilled').withArgs(generation, 3);
 
     expect(await dkgV2.getRoundBroadcastData(generation, 3, v1.address)).to.equal(data3);
@@ -118,13 +128,19 @@ describe('DKG', function () {
     expect(await dkgV2.getRoundBroadcastCount(generation, 3)).to.equal(2);
     expect(await dkg.isRoundFilled(generation, 3)).to.equal(true);
 
-    await expect(dkgV1.voteSigner(generation, signerAddress))
+    await expect(dkgV1.voteSigner(generation, signerAddress, signature))
       .to.emit(dkgV1, 'SignerVoted')
       .withArgs(generation, v1.address, signerAddress);
 
-    await expect(dkgV1.voteSigner(generation, signerAddress)).to.be.revertedWith('DKG: already voted');
+    await expect(dkgV1.voteSigner(generation, signerAddress, signatureOther)).to.be.revertedWith(
+      'DKG: signature is invalid'
+    );
+    await expect(dkgV2.voteSigner(generation, signerAddress, signatureOther)).to.be.revertedWith(
+      'DKG: signature is invalid'
+    );
 
-    await expect(dkgV2.voteSigner(generation, signerAddress))
+    await expect(dkgV1.voteSigner(generation, signerAddress, signature)).to.be.revertedWith('DKG: already voted');
+    await expect(dkgV2.voteSigner(generation, signerAddress, signature))
       .to.emit(dkgV2, 'SignerAddressUpdated')
       .withArgs(generation, signerAddress);
   });
