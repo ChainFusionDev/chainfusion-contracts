@@ -21,6 +21,8 @@ describe('DKG', function () {
     const initialMinimalStake = ethers.utils.parseEther('3');
     const { dkg, validatorStaking } = await deploySystem(initialMinimalStake);
 
+    expect(await dkg.getGenerationsCount()).to.equal(0);
+
     const validatorStaking1 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v1);
     const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
 
@@ -35,6 +37,8 @@ describe('DKG', function () {
 
     await validatorStaking1.stake({ value: initialMinimalStake });
     await validatorStaking2.stake({ value: initialMinimalStake });
+
+    expect(await dkg.getGenerationsCount()).to.equal(1);
 
     expect(await dkg.isValidator(generation, v1.address)).to.equal(true);
     expect(await dkg.isValidator(generation, v2.address)).to.equal(true);
