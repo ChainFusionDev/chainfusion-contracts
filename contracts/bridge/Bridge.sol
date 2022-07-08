@@ -5,23 +5,19 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./TokenManager.sol";
-import "./ValidatorManager.sol";
 import "./LiquidityPools.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
 import "../interfaces/IERC20MintableBurnable.sol";
 
 contract Bridge is Initializable, Ownable {
-    mapping(bytes32 => mapping(address => bool)) public approvals;
-    mapping(bytes32 => uint256) public approvalsCount;
     mapping(bytes32 => bool) public executed;
 
-    ValidatorManager public validatorManager;
+    address public validatorAddress;
     TokenManager public tokenManager;
     LiquidityPools public liquidityPools;
     FeeManager public feeManager;
 
-    event Approved(bytes32 id, address validator);
     event Deposited(
         address token,
         address destinationToken,
@@ -39,24 +35,24 @@ contract Bridge is Initializable, Ownable {
     );
     event Transferred(address token, uint256 sourceChainId, address receiver, uint256 amount, address validator);
     event TokenManagerUpdated(address _tokenManager);
-    event ValidatorManagerUpdated(address _validatorManager);
+    event ValidatorAddressUpdated(address _validatorAddress);
     event LiquidityPoolsUpdated(address _liquidityPools);
     event FeeManagerUpdated(address _feeManager);
 
     modifier onlyValidator() {
-        require(validatorManager.isValidator(msg.sender), "Bridge: only validator");
+        require(validatorAddress == msg.sender, "Bridge: only validator");
         _;
     }
 
     function initialize(
         address _owner,
-        address _validatorManager,
+        address _validatorAddress,
         address _tokenManager,
         address payable _liquidityPools,
         address payable _feeManager
     ) external initializer {
         _transferOwnership(_owner);
-        setValidatorManager(_validatorManager);
+        setValidatorAddress(_validatorAddress);
         setTokenManager(_tokenManager);
         setLiquidityPools(_liquidityPools);
         setFeeManager(_feeManager);
@@ -95,7 +91,7 @@ contract Bridge is Initializable, Ownable {
         );
     }
 
-    function approveTransfer(
+    function executeTransfer(
         bytes calldata _txHash,
         address _token,
         uint256 _sourceChainId,
@@ -105,34 +101,26 @@ contract Bridge is Initializable, Ownable {
         require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not enabled");
         bytes32 id = keccak256(abi.encodePacked(_txHash, _token, _receiver, _amount));
 
-        if (!approvals[id][msg.sender]) {
-            approvals[id][msg.sender] = true;
-            approvalsCount[id]++;
-            emit Approved(id, msg.sender);
-        }
-
         if (executed[id]) {
             return;
         }
 
-        if (approvalsCount[id] >= validatorManager.requiredApprovals()) {
-            executed[id] = true;
+        executed[id] = true;
 
-            if (tokenManager.isTokenMintable(_token)) {
-                IERC20MintableBurnable(_token).mint(_receiver, _amount);
-            } else if (_token == NATIVE_TOKEN) {
-                liquidityPools.transferNative(_receiver, _amount);
-            } else {
-                liquidityPools.transfer(_token, _receiver, _amount);
-            }
-
-            emit Transferred(_token, _sourceChainId, _receiver, _amount, msg.sender);
+        if (tokenManager.isTokenMintable(_token)) {
+            IERC20MintableBurnable(_token).mint(_receiver, _amount);
+        } else if (_token == NATIVE_TOKEN) {
+            liquidityPools.transferNative(_receiver, _amount);
+        } else {
+            liquidityPools.transfer(_token, _receiver, _amount);
         }
+
+        emit Transferred(_token, _sourceChainId, _receiver, _amount, msg.sender);
     }
 
-    function setValidatorManager(address _validatorManager) public onlyOwner {
-        validatorManager = ValidatorManager(_validatorManager);
-        emit ValidatorManagerUpdated(_validatorManager);
+    function setValidatorAddress(address _validatorAddress) public onlyOwner {
+        validatorAddress = _validatorAddress;
+        emit ValidatorAddressUpdated(_validatorAddress);
     }
 
     function setTokenManager(address _tokenManager) public onlyOwner {
@@ -170,7 +158,7 @@ contract Bridge is Initializable, Ownable {
         emit DepositedNative(NATIVE_TOKEN, _chainId, _receiver, fee, transferAmount);
     }
 
-    function isApproved(
+    function isExecuted(
         bytes calldata _txHash,
         address _token,
         address _receiver,
