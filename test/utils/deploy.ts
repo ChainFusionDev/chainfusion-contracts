@@ -15,6 +15,7 @@ interface BridgeDeployment {
   bridge: Bridge;
   tokenManager: TokenManager;
   feeManager: FeeManager;
+  validatorAddress: string;
   mockToken: MockToken;
   liquidityPools: LiquidityPools;
   chainId: number;
@@ -77,6 +78,7 @@ export async function deployBridge(
     bridge: bridge,
     tokenManager: tokenManager,
     feeManager: feeManager,
+    validatorAddress: validatorAddress,
     mockToken: mockToken,
     liquidityPools: liquidityPools,
     chainId: chainId,

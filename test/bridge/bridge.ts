@@ -5,9 +5,8 @@ import { deployBridge } from '../utils/deploy';
 describe('Bridge', function () {
   it('should change token manager', async function () {
     const [owner, v1] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
 
-    const { bridge, tokenManager } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { bridge, tokenManager } = await deployBridge(owner.address);
     const newTokenManager = await ethers.getContractAt('TokenManager', tokenManager.address, v1);
 
     await expect(bridge.setTokenManager(newTokenManager.address))
@@ -17,11 +16,25 @@ describe('Bridge', function () {
     expect(await bridge.tokenManager()).to.equal(newTokenManager.address);
   });
 
+  it('should change validator address', async function () {
+    const [owner] = await ethers.getSigners();
+
+    const { bridge } = await deployBridge(owner.address);
+    const newValidatorAddress = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+
+    expect(await bridge.validatorAddress()).to.equal(owner.address);
+
+    await expect(bridge.setValidatorAddress(newValidatorAddress))
+      .to.emit(bridge, 'ValidatorAddressUpdated')
+      .withArgs(newValidatorAddress);
+
+    expect(await bridge.validatorAddress()).to.equal(newValidatorAddress);
+  });
+
   it('should change liquidity pools', async function () {
     const [owner, v1] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
 
-    const { bridge, liquidityPools } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { bridge, liquidityPools } = await deployBridge(owner.address);
     const newLiquidityPools = await ethers.getContractAt('LiquidityPools', liquidityPools.address, v1);
 
     await expect(bridge.setLiquidityPools(newLiquidityPools.address))
@@ -33,11 +46,10 @@ describe('Bridge', function () {
 
   it('should deposit tokens to bridge', async function () {
     const [owner, receiver] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
 
     const depositAmount = '1000000000000000000';
     const transferAmount = '990000000000000000';
-    const { mockToken, bridge, chainId, liquidityPools } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { mockToken, bridge, chainId, liquidityPools } = await deployBridge(owner.address);
 
     await mockToken.approve(bridge.address, depositAmount);
     await mockToken.approve(liquidityPools.address, depositAmount);
@@ -48,13 +60,9 @@ describe('Bridge', function () {
 
   it('should execute transfer', async function () {
     const [owner, user, receiver] = await ethers.getSigners();
-    const initialRequiredApprovals = 2;
     const depositAmount = '10000000000000000000';
 
-    const { mockToken, bridge, chainId, liquidityPools, tokenManager } = await deployBridge(
-      owner.address,
-      initialRequiredApprovals
-    );
+    const { mockToken, bridge, chainId, liquidityPools, tokenManager } = await deployBridge(owner.address);
 
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
 
@@ -79,10 +87,9 @@ describe('Bridge', function () {
 
   it('should deposit supported tokens to bridge', async function () {
     const [owner, receiver] = await ethers.getSigners();
-    const initialRequiredApprovals = 2;
     const depositAmount = '10000000000000000000';
     const mintAmount = '100000000000000000000';
-    const { mockToken, bridge, chainId } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { mockToken, bridge, chainId } = await deployBridge(owner.address);
 
     const MockToken = await ethers.getContractFactory('MockToken');
     const mockToken2 = await MockToken.deploy('Token2', 'TKN2', mintAmount);
@@ -100,13 +107,12 @@ describe('Bridge', function () {
 
   it('should mint and burn tokens', async function () {
     const [owner, receiver] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
     const depositAmount = '10000000000000000000';
     const initialSupply = '100000000000000000000';
     const transferAmount = '9990000000000000000';
     const sourceChainId = 123;
 
-    const { bridge, chainId, tokenManager } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { bridge, chainId, tokenManager } = await deployBridge(owner.address);
 
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
 
@@ -134,15 +140,11 @@ describe('Bridge', function () {
 
   it('should deposit and transfer using native currency', async function () {
     const [owner, receiver] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     const amount = '1000000000000000000';
     const fee = '990000000000000000';
 
-    const { liquidityPools, tokenManager, bridge, chainId } = await deployBridge(
-      owner.address,
-      initialRequiredApprovals
-    );
+    const { liquidityPools, tokenManager, bridge, chainId } = await deployBridge(owner.address);
 
     await tokenManager.setEnabled(NATIVE_TOKEN, true);
 
