@@ -82,6 +82,8 @@ describe('Bridge', function () {
       .emit(bridge, 'Transferred')
       .withArgs(mockToken.address, chainId, receiver.address, depositAmount, owner.address);
 
+    await bridge.executeTransfer(txHash, mockToken.address, chainId, receiver.address, depositAmount);
+
     expect(await bridge.isExecuted(txHash, mockToken.address, receiver.address, depositAmount)).to.equal(true);
   });
 
