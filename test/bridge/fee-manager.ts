@@ -12,7 +12,6 @@ describe('FeeManager', function () {
 
     const { liquidityPools, tokenManager, mockToken, bridge, chainId, feeManager } = await deployBridge(
       owner.address,
-      [owner.address],
       initialRequiredApprovals
     );
 
@@ -28,7 +27,6 @@ describe('FeeManager', function () {
 
   it('should collect fee in native currency', async function () {
     const [owner, validator, foundation, receiver] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
     const amount = '1000000000000000000000';
     const tokenFee = '10000000000000000';
     const validatorReward = '10000000000000000';
@@ -40,8 +38,6 @@ describe('FeeManager', function () {
 
     const { liquidityPools, tokenManager, bridge, feeManager } = await deployBridge(
       owner.address,
-      [owner.address],
-      initialRequiredApprovals,
       chainId,
       validator.address,
       foundation.address

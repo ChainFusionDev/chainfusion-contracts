@@ -5,7 +5,6 @@ import {
   MockToken,
   FeeManager,
   TokenManager,
-  ValidatorManager,
   ValidatorStaking,
   LiquidityPools,
   AddressStorage,
@@ -16,7 +15,7 @@ interface BridgeDeployment {
   bridge: Bridge;
   tokenManager: TokenManager;
   feeManager: FeeManager;
-  validatorManager: ValidatorManager;
+  validatorAddress: string;
   mockToken: MockToken;
   liquidityPools: LiquidityPools;
   chainId: number;
@@ -30,8 +29,6 @@ interface SystemDeployment {
 
 export async function deployBridge(
   owner: string,
-  validators: string[],
-  requiredSignatures: number,
   chainId: number = 123,
   validatorAddress?: string,
   foundationAddress?: string
@@ -64,10 +61,6 @@ export async function deployBridge(
   const liquidityPools = await LiquidityPools.deploy();
   await liquidityPools.deployed();
 
-  const ValidatorManager = await ethers.getContractFactory('ValidatorManager');
-  const validatorManager = await ValidatorManager.deploy();
-  await validatorManager.deployed();
-
   const FeeManager = await ethers.getContractFactory('FeeManager');
   const feeManager = await FeeManager.deploy();
   await feeManager.deployed();
@@ -76,25 +69,16 @@ export async function deployBridge(
   const Bridge = await ethers.getContractFactory('Bridge');
   const bridge = await Bridge.deploy();
   await bridge.deployed();
-  await bridge.initialize(
-    owner,
-    validatorManager.address,
-    tokenManager.address,
-    liquidityPools.address,
-    feeManager.address
-  );
+  await bridge.initialize(owner, validatorAddress, tokenManager.address, liquidityPools.address, feeManager.address);
 
   const feePercentage = '10000000000000000';
   await liquidityPools.initialize(tokenManager.address, bridge.address, feeManager.address, feePercentage);
-
-  await validatorManager.setRequiredApprovals(requiredSignatures);
-  await validatorManager.setValidators(validators);
 
   return {
     bridge: bridge,
     tokenManager: tokenManager,
     feeManager: feeManager,
-    validatorManager: validatorManager,
+    validatorAddress: validatorAddress,
     mockToken: mockToken,
     liquidityPools: liquidityPools,
     chainId: chainId,

@@ -27,7 +27,7 @@ describe('TokenManager', function () {
     const tokenManagerAddress = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     const destinationToken = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
 
-    const { tokenManager, chainId } = await deployBridge(owner.address, [owner.address], initialRequiredApprovals);
+    const { tokenManager, chainId } = await deployBridge(owner.address, initialRequiredApprovals);
 
     await tokenManager.setDestinationToken(chainId, tokenManagerAddress, destinationToken);
     expect(await tokenManager.getDestinationToken(tokenManagerAddress, chainId)).to.equal(destinationToken);
@@ -40,7 +40,7 @@ describe('TokenManager', function () {
     const tokenManagerAddress = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     const destinationToken = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
 
-    const { tokenManager, chainId } = await deployBridge(owner.address, [owner.address], initialRequiredApprovals);
+    const { tokenManager, chainId } = await deployBridge(owner.address, initialRequiredApprovals);
 
     await tokenManager.setDestinationToken(chainId, tokenManagerAddress, destinationToken);
 
