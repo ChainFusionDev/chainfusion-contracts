@@ -295,11 +295,17 @@ describe('LiquidityPools', function () {
     await bridge.executeTransfer(txHash, mockToken.address, sourceChainId, receiver.address, amount);
 
     await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward, foundationReward);
+
+    const before = await liquidityPools.availableLiquidity(mockToken.address);
     await feeManager.distributeRewards(mockToken.address);
+    const after = await liquidityPools.availableLiquidity(mockToken.address);
+
+    expect(after).to.equal(before.add(100));
 
     expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(fee);
 
     await liquidityPools1.claimRewards(mockToken1.address);
+
     expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(Number(fee) / 2);
 
     await liquidityPools2.claimRewards(mockToken2.address);
