@@ -9,6 +9,7 @@ import {
   LiquidityPools,
   AddressStorage,
   DKG,
+  RelayBridge,
 } from '../../typechain';
 
 interface BridgeDeployment {
@@ -19,6 +20,7 @@ interface BridgeDeployment {
   mockToken: MockToken;
   liquidityPools: LiquidityPools;
   chainId: number;
+  relayBridge: RelayBridge;
 }
 
 interface SystemDeployment {
@@ -71,6 +73,11 @@ export async function deployBridge(
   await bridge.deployed();
   await bridge.initialize(owner, validatorAddress, tokenManager.address, liquidityPools.address, feeManager.address);
 
+  const RelayBridge = await ethers.getContractFactory('RelayBridge');
+  const relayBridge = await RelayBridge.deploy();
+  await relayBridge.deployed();
+  await relayBridge.initialize(validatorAddress);
+
   const feePercentage = '10000000000000000';
   await liquidityPools.initialize(tokenManager.address, bridge.address, feeManager.address, feePercentage);
 
@@ -82,6 +89,7 @@ export async function deployBridge(
     mockToken: mockToken,
     liquidityPools: liquidityPools,
     chainId: chainId,
+    relayBridge: relayBridge,
   };
 }
 

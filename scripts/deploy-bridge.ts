@@ -48,6 +48,12 @@ async function main() {
   ).wait();
 
   console.log('Bridge deployed to:', bridge.address);
+
+  const RelayBridge = await ethers.getContractFactory('RelayBridge');
+  const relayBridge = await RelayBridge.deploy();
+  await relayBridge.deployed();
+
+  console.log('RelayBridge deployed to:', relayBridge.address);
 }
 
 main().catch((error) => {
