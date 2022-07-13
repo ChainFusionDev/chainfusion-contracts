@@ -79,6 +79,7 @@ contract LiquidityPools is Initializable, Ownable {
         totalRewardPoints[_token] += (_amount * BASE_DIVISOR) / providedLiquidity[_token];
         providedLiquidity[_token] += _amount;
         collectedFees[_token] += _amount;
+        availableLiquidity[_token] += _amount;
     }
 
     function setTokenManager(address _tokenManager) public onlyOwner {
