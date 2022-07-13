@@ -7,6 +7,7 @@ import "./TokenManager.sol";
 import "./Bridge.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
+import "hardhat/console.sol";
 
 contract RelayBridge is Initializable, Ownable {
     mapping(bytes32 => bytes) public sendData;
@@ -20,6 +21,10 @@ contract RelayBridge is Initializable, Ownable {
     modifier onlyValidator() {
         require(validator == msg.sender, "RelayBridge: only validator");
         _;
+    }
+
+    function initialize(address _validator) external initializer {
+        setValidator(_validator);
     }
 
     function send(uint256 chainId, bytes memory data) external {
@@ -44,7 +49,7 @@ contract RelayBridge is Initializable, Ownable {
         validator = _validator;
     }
 
-    function dataHash(uint256 id, bytes memory data) public pure returns (bytes32) {
-        return keccak256(abi.encodePacked(id, data));
+    function dataHash(uint256 chainId, bytes memory data) public pure returns (bytes32) {
+        return keccak256(abi.encodePacked(chainId, data));
     }
 }
