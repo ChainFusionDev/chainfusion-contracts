@@ -297,9 +297,10 @@ describe('LiquidityPools', function () {
     await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward, foundationReward);
 
     const before = await liquidityPools.availableLiquidity(mockToken.address);
-    expect(await liquidityPools.availableLiquidity(mockToken.address)).to.equal(
-      (await feeManager.distributeRewards(mockToken.address)).value.add(before)
-    );
+    await feeManager.distributeRewards(mockToken.address);
+    const after = await liquidityPools.availableLiquidity(mockToken.address);
+
+    expect(after).to.equal(before.add(100));
 
     expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(fee);
 
