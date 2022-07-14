@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-import "./ValidatorStaking.sol";
+import "./Staking.sol";
 
 struct BroacastData {
     uint256 count;
@@ -12,7 +12,7 @@ struct BroacastData {
 }
 
 contract DKG is Ownable, Initializable {
-    ValidatorStaking public validatorStaking;
+    Staking public staking;
 
     // Validators storage
     address[][] public validators;
@@ -34,7 +34,7 @@ contract DKG is Ownable, Initializable {
     event SignerAddressUpdated(uint256 generation, address signerAddress);
 
     event ThresholdSignerUpdated(address signer);
-    event ValidatorStakingUpdated(address validatorStaking);
+    event StakingUpdated(address validatorStaking);
 
     modifier onlyValidator(uint256 _generation) {
         require(isGenerationValidator[_generation][msg.sender], "DKG: not a validator");
@@ -42,7 +42,7 @@ contract DKG is Ownable, Initializable {
     }
 
     modifier onlyValidatorStaking() {
-        require(msg.sender == address(validatorStaking), "DKG: not a validatorStaking");
+        require(msg.sender == address(staking), "DKG: not a staking");
         _;
     }
 
@@ -62,8 +62,8 @@ contract DKG is Ownable, Initializable {
         _;
     }
 
-    function initialize(address _validatorStaking) external initializer {
-        setValidatorStaking(_validatorStaking);
+    function initialize(address _staking) external initializer {
+        setStaking(_staking);
     }
 
     function setValidators(address[] memory _validators) external onlyValidatorStaking {
@@ -152,9 +152,9 @@ contract DKG is Ownable, Initializable {
         return 0;
     }
 
-    function setValidatorStaking(address _validatorStaking) public onlyOwner {
-        validatorStaking = ValidatorStaking(_validatorStaking);
-        emit ValidatorStakingUpdated(_validatorStaking);
+    function setStaking(address _staking) public onlyOwner {
+        staking = Staking(_staking);
+        emit StakingUpdated(_staking);
     }
 
     function recoverSigner(bytes memory _signature) public pure returns (address) {

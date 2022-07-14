@@ -30,7 +30,7 @@ var (
 
 // BridgeMetaData contains all meta data concerning the Bridge contract.
 var BridgeMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"id\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Approved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"destinationToken\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"transferAmount\",\"type\":\"uint256\"}],\"name\":\"Deposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"transferAmount\",\"type\":\"uint256\"}],\"name\":\"DepositedNative\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_feeManager\",\"type\":\"address\"}],\"name\":\"FeeManagerUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_liquidityPools\",\"type\":\"address\"}],\"name\":\"LiquidityPoolsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"TokenManagerUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Transferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_validatorManager\",\"type\":\"address\"}],\"name\":\"ValidatorManagerUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"approvals\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"approvalsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_txHash\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sourceChainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"approveTransfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"deposit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"}],\"name\":\"depositNative\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"executed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeManager\",\"outputs\":[{\"internalType\":\"contractFeeManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_validatorManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"},{\"internalType\":\"addresspayable\",\"name\":\"_liquidityPools\",\"type\":\"address\"},{\"internalType\":\"addresspayable\",\"name\":\"_feeManager\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_txHash\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"isApproved\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"liquidityPools\",\"outputs\":[{\"internalType\":\"contractLiquidityPools\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_feeManager\",\"type\":\"address\"}],\"name\":\"setFeeManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_liquidityPools\",\"type\":\"address\"}],\"name\":\"setLiquidityPools\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"setTokenManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validatorManager\",\"type\":\"address\"}],\"name\":\"setValidatorManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenManager\",\"outputs\":[{\"internalType\":\"contractTokenManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorManager\",\"outputs\":[{\"internalType\":\"contractValidatorManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"destinationToken\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"transferAmount\",\"type\":\"uint256\"}],\"name\":\"Deposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"transferAmount\",\"type\":\"uint256\"}],\"name\":\"DepositedNative\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_feeManager\",\"type\":\"address\"}],\"name\":\"FeeManagerUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_liquidityPools\",\"type\":\"address\"}],\"name\":\"LiquidityPoolsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"TokenManagerUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"Transferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_validatorAddress\",\"type\":\"address\"}],\"name\":\"ValidatorAddressUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"deposit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"}],\"name\":\"depositNative\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_txHash\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sourceChainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"executeTransfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"executed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeManager\",\"outputs\":[{\"internalType\":\"contractFeeManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_validatorAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"},{\"internalType\":\"addresspayable\",\"name\":\"_liquidityPools\",\"type\":\"address\"},{\"internalType\":\"addresspayable\",\"name\":\"_feeManager\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_txHash\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"isExecuted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"liquidityPools\",\"outputs\":[{\"internalType\":\"contractLiquidityPools\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_feeManager\",\"type\":\"address\"}],\"name\":\"setFeeManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_liquidityPools\",\"type\":\"address\"}],\"name\":\"setLiquidityPools\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"setTokenManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validatorAddress\",\"type\":\"address\"}],\"name\":\"setValidatorAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenManager\",\"outputs\":[{\"internalType\":\"contractTokenManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // BridgeABI is the input ABI used to generate the binding from.
@@ -179,68 +179,6 @@ func (_Bridge *BridgeTransactorRaw) Transact(opts *bind.TransactOpts, method str
 	return _Bridge.Contract.contract.Transact(opts, method, params...)
 }
 
-// Approvals is a free data retrieval call binding the contract method 0x24f6c776.
-//
-// Solidity: function approvals(bytes32 , address ) view returns(bool)
-func (_Bridge *BridgeCaller) Approvals(opts *bind.CallOpts, arg0 [32]byte, arg1 common.Address) (bool, error) {
-	var out []interface{}
-	err := _Bridge.contract.Call(opts, &out, "approvals", arg0, arg1)
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// Approvals is a free data retrieval call binding the contract method 0x24f6c776.
-//
-// Solidity: function approvals(bytes32 , address ) view returns(bool)
-func (_Bridge *BridgeSession) Approvals(arg0 [32]byte, arg1 common.Address) (bool, error) {
-	return _Bridge.Contract.Approvals(&_Bridge.CallOpts, arg0, arg1)
-}
-
-// Approvals is a free data retrieval call binding the contract method 0x24f6c776.
-//
-// Solidity: function approvals(bytes32 , address ) view returns(bool)
-func (_Bridge *BridgeCallerSession) Approvals(arg0 [32]byte, arg1 common.Address) (bool, error) {
-	return _Bridge.Contract.Approvals(&_Bridge.CallOpts, arg0, arg1)
-}
-
-// ApprovalsCount is a free data retrieval call binding the contract method 0xdf52d05d.
-//
-// Solidity: function approvalsCount(bytes32 ) view returns(uint256)
-func (_Bridge *BridgeCaller) ApprovalsCount(opts *bind.CallOpts, arg0 [32]byte) (*big.Int, error) {
-	var out []interface{}
-	err := _Bridge.contract.Call(opts, &out, "approvalsCount", arg0)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// ApprovalsCount is a free data retrieval call binding the contract method 0xdf52d05d.
-//
-// Solidity: function approvalsCount(bytes32 ) view returns(uint256)
-func (_Bridge *BridgeSession) ApprovalsCount(arg0 [32]byte) (*big.Int, error) {
-	return _Bridge.Contract.ApprovalsCount(&_Bridge.CallOpts, arg0)
-}
-
-// ApprovalsCount is a free data retrieval call binding the contract method 0xdf52d05d.
-//
-// Solidity: function approvalsCount(bytes32 ) view returns(uint256)
-func (_Bridge *BridgeCallerSession) ApprovalsCount(arg0 [32]byte) (*big.Int, error) {
-	return _Bridge.Contract.ApprovalsCount(&_Bridge.CallOpts, arg0)
-}
-
 // Executed is a free data retrieval call binding the contract method 0xa9fcfb33.
 //
 // Solidity: function executed(bytes32 ) view returns(bool)
@@ -303,12 +241,12 @@ func (_Bridge *BridgeCallerSession) FeeManager() (common.Address, error) {
 	return _Bridge.Contract.FeeManager(&_Bridge.CallOpts)
 }
 
-// IsApproved is a free data retrieval call binding the contract method 0x32498425.
+// IsExecuted is a free data retrieval call binding the contract method 0x65245e40.
 //
-// Solidity: function isApproved(bytes _txHash, address _token, address _receiver, uint256 _amount) view returns(bool)
-func (_Bridge *BridgeCaller) IsApproved(opts *bind.CallOpts, _txHash []byte, _token common.Address, _receiver common.Address, _amount *big.Int) (bool, error) {
+// Solidity: function isExecuted(bytes _txHash, address _token, address _receiver, uint256 _amount) view returns(bool)
+func (_Bridge *BridgeCaller) IsExecuted(opts *bind.CallOpts, _txHash []byte, _token common.Address, _receiver common.Address, _amount *big.Int) (bool, error) {
 	var out []interface{}
-	err := _Bridge.contract.Call(opts, &out, "isApproved", _txHash, _token, _receiver, _amount)
+	err := _Bridge.contract.Call(opts, &out, "isExecuted", _txHash, _token, _receiver, _amount)
 
 	if err != nil {
 		return *new(bool), err
@@ -320,18 +258,18 @@ func (_Bridge *BridgeCaller) IsApproved(opts *bind.CallOpts, _txHash []byte, _to
 
 }
 
-// IsApproved is a free data retrieval call binding the contract method 0x32498425.
+// IsExecuted is a free data retrieval call binding the contract method 0x65245e40.
 //
-// Solidity: function isApproved(bytes _txHash, address _token, address _receiver, uint256 _amount) view returns(bool)
-func (_Bridge *BridgeSession) IsApproved(_txHash []byte, _token common.Address, _receiver common.Address, _amount *big.Int) (bool, error) {
-	return _Bridge.Contract.IsApproved(&_Bridge.CallOpts, _txHash, _token, _receiver, _amount)
+// Solidity: function isExecuted(bytes _txHash, address _token, address _receiver, uint256 _amount) view returns(bool)
+func (_Bridge *BridgeSession) IsExecuted(_txHash []byte, _token common.Address, _receiver common.Address, _amount *big.Int) (bool, error) {
+	return _Bridge.Contract.IsExecuted(&_Bridge.CallOpts, _txHash, _token, _receiver, _amount)
 }
 
-// IsApproved is a free data retrieval call binding the contract method 0x32498425.
+// IsExecuted is a free data retrieval call binding the contract method 0x65245e40.
 //
-// Solidity: function isApproved(bytes _txHash, address _token, address _receiver, uint256 _amount) view returns(bool)
-func (_Bridge *BridgeCallerSession) IsApproved(_txHash []byte, _token common.Address, _receiver common.Address, _amount *big.Int) (bool, error) {
-	return _Bridge.Contract.IsApproved(&_Bridge.CallOpts, _txHash, _token, _receiver, _amount)
+// Solidity: function isExecuted(bytes _txHash, address _token, address _receiver, uint256 _amount) view returns(bool)
+func (_Bridge *BridgeCallerSession) IsExecuted(_txHash []byte, _token common.Address, _receiver common.Address, _amount *big.Int) (bool, error) {
+	return _Bridge.Contract.IsExecuted(&_Bridge.CallOpts, _txHash, _token, _receiver, _amount)
 }
 
 // LiquidityPools is a free data retrieval call binding the contract method 0xd6efd7c3.
@@ -427,12 +365,12 @@ func (_Bridge *BridgeCallerSession) TokenManager() (common.Address, error) {
 	return _Bridge.Contract.TokenManager(&_Bridge.CallOpts)
 }
 
-// ValidatorManager is a free data retrieval call binding the contract method 0xfe55bde9.
+// ValidatorAddress is a free data retrieval call binding the contract method 0x3fe4676e.
 //
-// Solidity: function validatorManager() view returns(address)
-func (_Bridge *BridgeCaller) ValidatorManager(opts *bind.CallOpts) (common.Address, error) {
+// Solidity: function validatorAddress() view returns(address)
+func (_Bridge *BridgeCaller) ValidatorAddress(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _Bridge.contract.Call(opts, &out, "validatorManager")
+	err := _Bridge.contract.Call(opts, &out, "validatorAddress")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -444,39 +382,18 @@ func (_Bridge *BridgeCaller) ValidatorManager(opts *bind.CallOpts) (common.Addre
 
 }
 
-// ValidatorManager is a free data retrieval call binding the contract method 0xfe55bde9.
+// ValidatorAddress is a free data retrieval call binding the contract method 0x3fe4676e.
 //
-// Solidity: function validatorManager() view returns(address)
-func (_Bridge *BridgeSession) ValidatorManager() (common.Address, error) {
-	return _Bridge.Contract.ValidatorManager(&_Bridge.CallOpts)
+// Solidity: function validatorAddress() view returns(address)
+func (_Bridge *BridgeSession) ValidatorAddress() (common.Address, error) {
+	return _Bridge.Contract.ValidatorAddress(&_Bridge.CallOpts)
 }
 
-// ValidatorManager is a free data retrieval call binding the contract method 0xfe55bde9.
+// ValidatorAddress is a free data retrieval call binding the contract method 0x3fe4676e.
 //
-// Solidity: function validatorManager() view returns(address)
-func (_Bridge *BridgeCallerSession) ValidatorManager() (common.Address, error) {
-	return _Bridge.Contract.ValidatorManager(&_Bridge.CallOpts)
-}
-
-// ApproveTransfer is a paid mutator transaction binding the contract method 0x7871e4e0.
-//
-// Solidity: function approveTransfer(bytes _txHash, address _token, uint256 _sourceChainId, address _receiver, uint256 _amount) returns()
-func (_Bridge *BridgeTransactor) ApproveTransfer(opts *bind.TransactOpts, _txHash []byte, _token common.Address, _sourceChainId *big.Int, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
-	return _Bridge.contract.Transact(opts, "approveTransfer", _txHash, _token, _sourceChainId, _receiver, _amount)
-}
-
-// ApproveTransfer is a paid mutator transaction binding the contract method 0x7871e4e0.
-//
-// Solidity: function approveTransfer(bytes _txHash, address _token, uint256 _sourceChainId, address _receiver, uint256 _amount) returns()
-func (_Bridge *BridgeSession) ApproveTransfer(_txHash []byte, _token common.Address, _sourceChainId *big.Int, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
-	return _Bridge.Contract.ApproveTransfer(&_Bridge.TransactOpts, _txHash, _token, _sourceChainId, _receiver, _amount)
-}
-
-// ApproveTransfer is a paid mutator transaction binding the contract method 0x7871e4e0.
-//
-// Solidity: function approveTransfer(bytes _txHash, address _token, uint256 _sourceChainId, address _receiver, uint256 _amount) returns()
-func (_Bridge *BridgeTransactorSession) ApproveTransfer(_txHash []byte, _token common.Address, _sourceChainId *big.Int, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
-	return _Bridge.Contract.ApproveTransfer(&_Bridge.TransactOpts, _txHash, _token, _sourceChainId, _receiver, _amount)
+// Solidity: function validatorAddress() view returns(address)
+func (_Bridge *BridgeCallerSession) ValidatorAddress() (common.Address, error) {
+	return _Bridge.Contract.ValidatorAddress(&_Bridge.CallOpts)
 }
 
 // Deposit is a paid mutator transaction binding the contract method 0x90d25074.
@@ -521,25 +438,46 @@ func (_Bridge *BridgeTransactorSession) DepositNative(_chainId *big.Int, _receiv
 	return _Bridge.Contract.DepositNative(&_Bridge.TransactOpts, _chainId, _receiver)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0x1459457a.
+// ExecuteTransfer is a paid mutator transaction binding the contract method 0xdf31fb71.
 //
-// Solidity: function initialize(address _owner, address _validatorManager, address _tokenManager, address _liquidityPools, address _feeManager) returns()
-func (_Bridge *BridgeTransactor) Initialize(opts *bind.TransactOpts, _owner common.Address, _validatorManager common.Address, _tokenManager common.Address, _liquidityPools common.Address, _feeManager common.Address) (*types.Transaction, error) {
-	return _Bridge.contract.Transact(opts, "initialize", _owner, _validatorManager, _tokenManager, _liquidityPools, _feeManager)
+// Solidity: function executeTransfer(bytes _txHash, address _token, uint256 _sourceChainId, address _receiver, uint256 _amount) returns()
+func (_Bridge *BridgeTransactor) ExecuteTransfer(opts *bind.TransactOpts, _txHash []byte, _token common.Address, _sourceChainId *big.Int, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _Bridge.contract.Transact(opts, "executeTransfer", _txHash, _token, _sourceChainId, _receiver, _amount)
+}
+
+// ExecuteTransfer is a paid mutator transaction binding the contract method 0xdf31fb71.
+//
+// Solidity: function executeTransfer(bytes _txHash, address _token, uint256 _sourceChainId, address _receiver, uint256 _amount) returns()
+func (_Bridge *BridgeSession) ExecuteTransfer(_txHash []byte, _token common.Address, _sourceChainId *big.Int, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _Bridge.Contract.ExecuteTransfer(&_Bridge.TransactOpts, _txHash, _token, _sourceChainId, _receiver, _amount)
+}
+
+// ExecuteTransfer is a paid mutator transaction binding the contract method 0xdf31fb71.
+//
+// Solidity: function executeTransfer(bytes _txHash, address _token, uint256 _sourceChainId, address _receiver, uint256 _amount) returns()
+func (_Bridge *BridgeTransactorSession) ExecuteTransfer(_txHash []byte, _token common.Address, _sourceChainId *big.Int, _receiver common.Address, _amount *big.Int) (*types.Transaction, error) {
+	return _Bridge.Contract.ExecuteTransfer(&_Bridge.TransactOpts, _txHash, _token, _sourceChainId, _receiver, _amount)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0x1459457a.
 //
-// Solidity: function initialize(address _owner, address _validatorManager, address _tokenManager, address _liquidityPools, address _feeManager) returns()
-func (_Bridge *BridgeSession) Initialize(_owner common.Address, _validatorManager common.Address, _tokenManager common.Address, _liquidityPools common.Address, _feeManager common.Address) (*types.Transaction, error) {
-	return _Bridge.Contract.Initialize(&_Bridge.TransactOpts, _owner, _validatorManager, _tokenManager, _liquidityPools, _feeManager)
+// Solidity: function initialize(address _owner, address _validatorAddress, address _tokenManager, address _liquidityPools, address _feeManager) returns()
+func (_Bridge *BridgeTransactor) Initialize(opts *bind.TransactOpts, _owner common.Address, _validatorAddress common.Address, _tokenManager common.Address, _liquidityPools common.Address, _feeManager common.Address) (*types.Transaction, error) {
+	return _Bridge.contract.Transact(opts, "initialize", _owner, _validatorAddress, _tokenManager, _liquidityPools, _feeManager)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0x1459457a.
 //
-// Solidity: function initialize(address _owner, address _validatorManager, address _tokenManager, address _liquidityPools, address _feeManager) returns()
-func (_Bridge *BridgeTransactorSession) Initialize(_owner common.Address, _validatorManager common.Address, _tokenManager common.Address, _liquidityPools common.Address, _feeManager common.Address) (*types.Transaction, error) {
-	return _Bridge.Contract.Initialize(&_Bridge.TransactOpts, _owner, _validatorManager, _tokenManager, _liquidityPools, _feeManager)
+// Solidity: function initialize(address _owner, address _validatorAddress, address _tokenManager, address _liquidityPools, address _feeManager) returns()
+func (_Bridge *BridgeSession) Initialize(_owner common.Address, _validatorAddress common.Address, _tokenManager common.Address, _liquidityPools common.Address, _feeManager common.Address) (*types.Transaction, error) {
+	return _Bridge.Contract.Initialize(&_Bridge.TransactOpts, _owner, _validatorAddress, _tokenManager, _liquidityPools, _feeManager)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0x1459457a.
+//
+// Solidity: function initialize(address _owner, address _validatorAddress, address _tokenManager, address _liquidityPools, address _feeManager) returns()
+func (_Bridge *BridgeTransactorSession) Initialize(_owner common.Address, _validatorAddress common.Address, _tokenManager common.Address, _liquidityPools common.Address, _feeManager common.Address) (*types.Transaction, error) {
+	return _Bridge.Contract.Initialize(&_Bridge.TransactOpts, _owner, _validatorAddress, _tokenManager, _liquidityPools, _feeManager)
 }
 
 // RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
@@ -626,25 +564,25 @@ func (_Bridge *BridgeTransactorSession) SetTokenManager(_tokenManager common.Add
 	return _Bridge.Contract.SetTokenManager(&_Bridge.TransactOpts, _tokenManager)
 }
 
-// SetValidatorManager is a paid mutator transaction binding the contract method 0x45f34e92.
+// SetValidatorAddress is a paid mutator transaction binding the contract method 0x9f8c2440.
 //
-// Solidity: function setValidatorManager(address _validatorManager) returns()
-func (_Bridge *BridgeTransactor) SetValidatorManager(opts *bind.TransactOpts, _validatorManager common.Address) (*types.Transaction, error) {
-	return _Bridge.contract.Transact(opts, "setValidatorManager", _validatorManager)
+// Solidity: function setValidatorAddress(address _validatorAddress) returns()
+func (_Bridge *BridgeTransactor) SetValidatorAddress(opts *bind.TransactOpts, _validatorAddress common.Address) (*types.Transaction, error) {
+	return _Bridge.contract.Transact(opts, "setValidatorAddress", _validatorAddress)
 }
 
-// SetValidatorManager is a paid mutator transaction binding the contract method 0x45f34e92.
+// SetValidatorAddress is a paid mutator transaction binding the contract method 0x9f8c2440.
 //
-// Solidity: function setValidatorManager(address _validatorManager) returns()
-func (_Bridge *BridgeSession) SetValidatorManager(_validatorManager common.Address) (*types.Transaction, error) {
-	return _Bridge.Contract.SetValidatorManager(&_Bridge.TransactOpts, _validatorManager)
+// Solidity: function setValidatorAddress(address _validatorAddress) returns()
+func (_Bridge *BridgeSession) SetValidatorAddress(_validatorAddress common.Address) (*types.Transaction, error) {
+	return _Bridge.Contract.SetValidatorAddress(&_Bridge.TransactOpts, _validatorAddress)
 }
 
-// SetValidatorManager is a paid mutator transaction binding the contract method 0x45f34e92.
+// SetValidatorAddress is a paid mutator transaction binding the contract method 0x9f8c2440.
 //
-// Solidity: function setValidatorManager(address _validatorManager) returns()
-func (_Bridge *BridgeTransactorSession) SetValidatorManager(_validatorManager common.Address) (*types.Transaction, error) {
-	return _Bridge.Contract.SetValidatorManager(&_Bridge.TransactOpts, _validatorManager)
+// Solidity: function setValidatorAddress(address _validatorAddress) returns()
+func (_Bridge *BridgeTransactorSession) SetValidatorAddress(_validatorAddress common.Address) (*types.Transaction, error) {
+	return _Bridge.Contract.SetValidatorAddress(&_Bridge.TransactOpts, _validatorAddress)
 }
 
 // TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
@@ -666,141 +604,6 @@ func (_Bridge *BridgeSession) TransferOwnership(newOwner common.Address) (*types
 // Solidity: function transferOwnership(address newOwner) returns()
 func (_Bridge *BridgeTransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
 	return _Bridge.Contract.TransferOwnership(&_Bridge.TransactOpts, newOwner)
-}
-
-// BridgeApprovedIterator is returned from FilterApproved and is used to iterate over the raw logs and unpacked data for Approved events raised by the Bridge contract.
-type BridgeApprovedIterator struct {
-	Event *BridgeApproved // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *BridgeApprovedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(BridgeApproved)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(BridgeApproved)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *BridgeApprovedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *BridgeApprovedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// BridgeApproved represents a Approved event raised by the Bridge contract.
-type BridgeApproved struct {
-	Id        [32]byte
-	Validator common.Address
-	Raw       types.Log // Blockchain specific contextual infos
-}
-
-// FilterApproved is a free log retrieval operation binding the contract event 0x90b535106f433f3869de4725076776361dc9946b091db11206fa1b526a85ecd4.
-//
-// Solidity: event Approved(bytes32 id, address validator)
-func (_Bridge *BridgeFilterer) FilterApproved(opts *bind.FilterOpts) (*BridgeApprovedIterator, error) {
-
-	logs, sub, err := _Bridge.contract.FilterLogs(opts, "Approved")
-	if err != nil {
-		return nil, err
-	}
-	return &BridgeApprovedIterator{contract: _Bridge.contract, event: "Approved", logs: logs, sub: sub}, nil
-}
-
-// WatchApproved is a free log subscription operation binding the contract event 0x90b535106f433f3869de4725076776361dc9946b091db11206fa1b526a85ecd4.
-//
-// Solidity: event Approved(bytes32 id, address validator)
-func (_Bridge *BridgeFilterer) WatchApproved(opts *bind.WatchOpts, sink chan<- *BridgeApproved) (event.Subscription, error) {
-
-	logs, sub, err := _Bridge.contract.WatchLogs(opts, "Approved")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(BridgeApproved)
-				if err := _Bridge.contract.UnpackLog(event, "Approved", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseApproved is a log parse operation binding the contract event 0x90b535106f433f3869de4725076776361dc9946b091db11206fa1b526a85ecd4.
-//
-// Solidity: event Approved(bytes32 id, address validator)
-func (_Bridge *BridgeFilterer) ParseApproved(log types.Log) (*BridgeApproved, error) {
-	event := new(BridgeApproved)
-	if err := _Bridge.contract.UnpackLog(event, "Approved", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
 }
 
 // BridgeDepositedIterator is returned from FilterDeposited and is used to iterate over the raw logs and unpacked data for Deposited events raised by the Bridge contract.
@@ -1907,9 +1710,9 @@ func (_Bridge *BridgeFilterer) ParseTransferred(log types.Log) (*BridgeTransferr
 	return event, nil
 }
 
-// BridgeValidatorManagerUpdatedIterator is returned from FilterValidatorManagerUpdated and is used to iterate over the raw logs and unpacked data for ValidatorManagerUpdated events raised by the Bridge contract.
-type BridgeValidatorManagerUpdatedIterator struct {
-	Event *BridgeValidatorManagerUpdated // Event containing the contract specifics and raw log
+// BridgeValidatorAddressUpdatedIterator is returned from FilterValidatorAddressUpdated and is used to iterate over the raw logs and unpacked data for ValidatorAddressUpdated events raised by the Bridge contract.
+type BridgeValidatorAddressUpdatedIterator struct {
+	Event *BridgeValidatorAddressUpdated // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -1923,7 +1726,7 @@ type BridgeValidatorManagerUpdatedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *BridgeValidatorManagerUpdatedIterator) Next() bool {
+func (it *BridgeValidatorAddressUpdatedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -1932,7 +1735,7 @@ func (it *BridgeValidatorManagerUpdatedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(BridgeValidatorManagerUpdated)
+			it.Event = new(BridgeValidatorAddressUpdated)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -1947,7 +1750,7 @@ func (it *BridgeValidatorManagerUpdatedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(BridgeValidatorManagerUpdated)
+		it.Event = new(BridgeValidatorAddressUpdated)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -1963,41 +1766,41 @@ func (it *BridgeValidatorManagerUpdatedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *BridgeValidatorManagerUpdatedIterator) Error() error {
+func (it *BridgeValidatorAddressUpdatedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *BridgeValidatorManagerUpdatedIterator) Close() error {
+func (it *BridgeValidatorAddressUpdatedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// BridgeValidatorManagerUpdated represents a ValidatorManagerUpdated event raised by the Bridge contract.
-type BridgeValidatorManagerUpdated struct {
-	ValidatorManager common.Address
+// BridgeValidatorAddressUpdated represents a ValidatorAddressUpdated event raised by the Bridge contract.
+type BridgeValidatorAddressUpdated struct {
+	ValidatorAddress common.Address
 	Raw              types.Log // Blockchain specific contextual infos
 }
 
-// FilterValidatorManagerUpdated is a free log retrieval operation binding the contract event 0xcc1d286dbc29083de2c32a167d46163f88f978e5b16fea673f47cc4e413c9ef5.
+// FilterValidatorAddressUpdated is a free log retrieval operation binding the contract event 0xdf570ab3f5307e9adf3ff792b3dbfa0cd0d9f82e667552def683ae20be981f72.
 //
-// Solidity: event ValidatorManagerUpdated(address _validatorManager)
-func (_Bridge *BridgeFilterer) FilterValidatorManagerUpdated(opts *bind.FilterOpts) (*BridgeValidatorManagerUpdatedIterator, error) {
+// Solidity: event ValidatorAddressUpdated(address _validatorAddress)
+func (_Bridge *BridgeFilterer) FilterValidatorAddressUpdated(opts *bind.FilterOpts) (*BridgeValidatorAddressUpdatedIterator, error) {
 
-	logs, sub, err := _Bridge.contract.FilterLogs(opts, "ValidatorManagerUpdated")
+	logs, sub, err := _Bridge.contract.FilterLogs(opts, "ValidatorAddressUpdated")
 	if err != nil {
 		return nil, err
 	}
-	return &BridgeValidatorManagerUpdatedIterator{contract: _Bridge.contract, event: "ValidatorManagerUpdated", logs: logs, sub: sub}, nil
+	return &BridgeValidatorAddressUpdatedIterator{contract: _Bridge.contract, event: "ValidatorAddressUpdated", logs: logs, sub: sub}, nil
 }
 
-// WatchValidatorManagerUpdated is a free log subscription operation binding the contract event 0xcc1d286dbc29083de2c32a167d46163f88f978e5b16fea673f47cc4e413c9ef5.
+// WatchValidatorAddressUpdated is a free log subscription operation binding the contract event 0xdf570ab3f5307e9adf3ff792b3dbfa0cd0d9f82e667552def683ae20be981f72.
 //
-// Solidity: event ValidatorManagerUpdated(address _validatorManager)
-func (_Bridge *BridgeFilterer) WatchValidatorManagerUpdated(opts *bind.WatchOpts, sink chan<- *BridgeValidatorManagerUpdated) (event.Subscription, error) {
+// Solidity: event ValidatorAddressUpdated(address _validatorAddress)
+func (_Bridge *BridgeFilterer) WatchValidatorAddressUpdated(opts *bind.WatchOpts, sink chan<- *BridgeValidatorAddressUpdated) (event.Subscription, error) {
 
-	logs, sub, err := _Bridge.contract.WatchLogs(opts, "ValidatorManagerUpdated")
+	logs, sub, err := _Bridge.contract.WatchLogs(opts, "ValidatorAddressUpdated")
 	if err != nil {
 		return nil, err
 	}
@@ -2007,8 +1810,8 @@ func (_Bridge *BridgeFilterer) WatchValidatorManagerUpdated(opts *bind.WatchOpts
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(BridgeValidatorManagerUpdated)
-				if err := _Bridge.contract.UnpackLog(event, "ValidatorManagerUpdated", log); err != nil {
+				event := new(BridgeValidatorAddressUpdated)
+				if err := _Bridge.contract.UnpackLog(event, "ValidatorAddressUpdated", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2029,12 +1832,12 @@ func (_Bridge *BridgeFilterer) WatchValidatorManagerUpdated(opts *bind.WatchOpts
 	}), nil
 }
 
-// ParseValidatorManagerUpdated is a log parse operation binding the contract event 0xcc1d286dbc29083de2c32a167d46163f88f978e5b16fea673f47cc4e413c9ef5.
+// ParseValidatorAddressUpdated is a log parse operation binding the contract event 0xdf570ab3f5307e9adf3ff792b3dbfa0cd0d9f82e667552def683ae20be981f72.
 //
-// Solidity: event ValidatorManagerUpdated(address _validatorManager)
-func (_Bridge *BridgeFilterer) ParseValidatorManagerUpdated(log types.Log) (*BridgeValidatorManagerUpdated, error) {
-	event := new(BridgeValidatorManagerUpdated)
-	if err := _Bridge.contract.UnpackLog(event, "ValidatorManagerUpdated", log); err != nil {
+// Solidity: event ValidatorAddressUpdated(address _validatorAddress)
+func (_Bridge *BridgeFilterer) ParseValidatorAddressUpdated(log types.Log) (*BridgeValidatorAddressUpdated, error) {
+	event := new(BridgeValidatorAddressUpdated)
+	if err := _Bridge.contract.UnpackLog(event, "ValidatorAddressUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

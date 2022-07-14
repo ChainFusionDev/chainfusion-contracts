@@ -18,20 +18,20 @@ async function main() {
 
   console.log('AddressStorage deployed to:', addressStorage.address);
 
-  const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
-  const validatorStaking = await ValidatorStaking.deploy();
-  await validatorStaking.deployed();
+  const Staking = await ethers.getContractFactory('Staking');
+  const staking = await Staking.deploy();
+  await staking.deployed();
 
-  await addressStorage.transferOwnership(validatorStaking.address);
+  await addressStorage.transferOwnership(staking.address);
 
-  console.log('ValidatorStaking deployed to:', validatorStaking.address);
+  console.log('Staking deployed to:', staking.address);
 
   const DKG = await ethers.getContractFactory('DKG');
   const dkg = await DKG.deploy();
   await dkg.deployed();
 
-  await (await validatorStaking.initialize(minimalStake, withdrawalPeriod, addressStorage.address, dkg.address)).wait();
-  await (await dkg.initialize(validatorStaking.address)).wait();
+  await (await staking.initialize(minimalStake, withdrawalPeriod, addressStorage.address, dkg.address)).wait();
+  await (await dkg.initialize(staking.address)).wait();
 
   console.log('DKG deployed to:', dkg.address);
 
@@ -40,9 +40,9 @@ async function main() {
 
     for (const privateKey of VALIDATOR_KEYS) {
       const signer = new ethers.Wallet(privateKey, ethers.provider);
-      const staking = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, signer);
+      const signerStaking = await ethers.getContractAt('Staking', staking.address, signer);
       console.log('Staking', ethers.utils.formatEther(minimalStake), 'CFN for:', signer.address);
-      await (await staking.stake({ value: minimalStake })).wait();
+      await (await signerStaking.stake({ value: minimalStake })).wait();
     }
   }
 
@@ -51,7 +51,7 @@ async function main() {
 
     // Sometimes fails, false positively, likely it's a bug in verify plugin or blockscout
     await ignoreError(hre.run('verify:verify', { address: addressStorage.address }));
-    await ignoreError(hre.run('verify:verify', { address: validatorStaking.address }));
+    await ignoreError(hre.run('verify:verify', { address: staking.address }));
     await ignoreError(hre.run('verify:verify', { address: dkg.address }));
   }
 }

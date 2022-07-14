@@ -19,14 +19,14 @@ describe('DKG', function () {
     const signatureOther = await other.signMessage(message);
 
     const initialMinimalStake = ethers.utils.parseEther('3');
-    const { dkg, validatorStaking } = await deploySystem(initialMinimalStake);
+    const { dkg, staking: staking } = await deploySystem(initialMinimalStake);
 
     expect(await dkg.getGenerationsCount()).to.equal(0);
 
-    const validatorStaking1 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v1);
-    const validatorStaking2 = await ethers.getContractAt('ValidatorStaking', validatorStaking.address, v2);
+    const staking1 = await ethers.getContractAt('Staking', staking.address, v1);
+    const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
 
-    await dkg.setValidatorStaking(validatorStaking.address);
+    await dkg.setStaking(staking.address);
 
     await expect(dkg.roundBroadcast(generation, 1, data1)).to.be.revertedWith('DKG: not a validator');
 
@@ -35,8 +35,8 @@ describe('DKG', function () {
     expect(await dkg.getValidators(generation)).to.deep.equal([]);
     expect(await dkg.getValidatorsCount(generation)).to.equal(0);
 
-    await validatorStaking1.stake({ value: initialMinimalStake });
-    await validatorStaking2.stake({ value: initialMinimalStake });
+    await staking1.stake({ value: initialMinimalStake });
+    await staking2.stake({ value: initialMinimalStake });
 
     expect(await dkg.getGenerationsCount()).to.equal(1);
 
@@ -144,13 +144,13 @@ describe('DKG', function () {
       .withArgs(generation, signerAddress);
   });
 
-  it('should set validators by validatorStaking', async function () {
+  it('should set validators by staking', async function () {
     const [, other] = await ethers.getSigners();
     const initialMinimalStake = ethers.utils.parseEther('3');
 
     const { dkg } = await deploySystem(initialMinimalStake);
 
     const dkgOther = await ethers.getContractAt('DKG', dkg.address, other);
-    await expect(dkgOther.setValidators([other.address])).to.be.revertedWith('DKG: not a validatorStaking');
+    await expect(dkgOther.setValidators([other.address])).to.be.revertedWith('DKG: not a staking');
   });
 });

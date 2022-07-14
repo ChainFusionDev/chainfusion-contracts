@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "../common/AddressStorage.sol";
 import "./DKG.sol";
 
-contract ValidatorStaking is Ownable, Initializable {
+contract Staking is Ownable, Initializable {
     enum ValidatorStatus {
         INACTIVE,
         ACTIVE,

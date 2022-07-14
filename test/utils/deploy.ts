@@ -5,7 +5,7 @@ import {
   MockToken,
   FeeManager,
   TokenManager,
-  ValidatorStaking,
+  Staking,
   LiquidityPools,
   AddressStorage,
   DKG,
@@ -24,7 +24,7 @@ interface BridgeDeployment {
 }
 
 interface SystemDeployment {
-  validatorStaking: ValidatorStaking;
+  staking: Staking;
   addressStorage: AddressStorage;
   dkg: DKG;
 }
@@ -101,23 +101,21 @@ export async function deploySystem(initialMinimalStake: BigNumber): Promise<Syst
   await addressStorage.deployed();
   await (await addressStorage.initialize([])).wait();
 
-  const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
-  const validatorStaking = await ValidatorStaking.deploy();
-  await validatorStaking.deployed();
+  const Staking = await ethers.getContractFactory('Staking');
+  const staking = await Staking.deploy();
+  await staking.deployed();
 
   const DKG = await ethers.getContractFactory('DKG');
   const dkg = await DKG.deploy();
   await dkg.deployed();
 
-  await (
-    await validatorStaking.initialize(initialMinimalStake, withdrawalPeriod, addressStorage.address, dkg.address)
-  ).wait();
-  await (await dkg.initialize(validatorStaking.address)).wait();
+  await (await staking.initialize(initialMinimalStake, withdrawalPeriod, addressStorage.address, dkg.address)).wait();
+  await (await dkg.initialize(staking.address)).wait();
 
-  await addressStorage.transferOwnership(validatorStaking.address);
+  await addressStorage.transferOwnership(staking.address);
 
   return {
-    validatorStaking: validatorStaking,
+    staking: staking,
     addressStorage: addressStorage,
     dkg: dkg,
   };
