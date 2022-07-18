@@ -19,7 +19,7 @@ describe('DKG', function () {
     const signatureOther = await other.signMessage(message);
 
     const initialMinimalStake = ethers.utils.parseEther('3');
-    const { dkg, staking: staking } = await deploySystem(initialMinimalStake);
+    const { dkg, staking: staking } = await deploySystem();
 
     expect(await dkg.getGenerationsCount()).to.equal(0);
 
@@ -146,9 +146,8 @@ describe('DKG', function () {
 
   it('should set validators by staking', async function () {
     const [, other] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
 
-    const { dkg } = await deploySystem(initialMinimalStake);
+    const { dkg } = await deploySystem();
 
     const dkgOther = await ethers.getContractAt('DKG', dkg.address, other);
     await expect(dkgOther.setValidators([other.address])).to.be.revertedWith('DKG: not a staking');

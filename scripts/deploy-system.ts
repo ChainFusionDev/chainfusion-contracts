@@ -35,6 +35,12 @@ async function main() {
 
   console.log('DKG deployed to:', dkg.address);
 
+  const SupportedTokens = await ethers.getContractFactory('SupportedTokens');
+  const supportedTokens = await SupportedTokens.deploy();
+  await supportedTokens.deployed();
+
+  console.log('SupportedTokens deployed to:', supportedTokens.address);
+
   if (VALIDATOR_KEYS.length > 0) {
     console.log('\nStaking\n');
 
