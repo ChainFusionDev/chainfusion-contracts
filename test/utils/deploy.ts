@@ -10,6 +10,7 @@ import {
   AddressStorage,
   DKG,
   RelayBridge,
+  SupportedTokens,
 } from '../../typechain';
 
 interface BridgeDeployment {
@@ -27,6 +28,7 @@ interface SystemDeployment {
   staking: Staking;
   addressStorage: AddressStorage;
   dkg: DKG;
+  supportedTokens: SupportedTokens;
 }
 
 export async function deployBridge(
@@ -93,8 +95,12 @@ export async function deployBridge(
   };
 }
 
-export async function deploySystem(initialMinimalStake: BigNumber): Promise<SystemDeployment> {
+export async function deploySystem(initialMinimalStake?: BigNumber): Promise<SystemDeployment> {
   const withdrawalPeriod = 1;
+
+  if (initialMinimalStake === undefined) {
+    initialMinimalStake = ethers.utils.parseEther('3');
+  }
 
   const AddressStorage = await ethers.getContractFactory('AddressStorage');
   const addressStorage = await AddressStorage.deploy();
@@ -109,6 +115,10 @@ export async function deploySystem(initialMinimalStake: BigNumber): Promise<Syst
   const dkg = await DKG.deploy();
   await dkg.deployed();
 
+  const SupportedTokens = await ethers.getContractFactory('SupportedTokens');
+  const supportedTokens = await SupportedTokens.deploy();
+  await supportedTokens.deployed();
+
   await (await staking.initialize(initialMinimalStake, withdrawalPeriod, addressStorage.address, dkg.address)).wait();
   await (await dkg.initialize(staking.address)).wait();
 
@@ -118,5 +128,6 @@ export async function deploySystem(initialMinimalStake: BigNumber): Promise<Syst
     staking: staking,
     addressStorage: addressStorage,
     dkg: dkg,
+    supportedTokens: supportedTokens,
   };
 }
