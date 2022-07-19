@@ -43,6 +43,7 @@ describe('RelayBridge', function () {
     );
 
     expect(await relayBridge.transmitted(hash)).to.equals(true);
+    expect(await mockRelayBridgeApp.canProcess()).to.equals(true);
     expect(await mockRelayBridgeApp.value()).to.equals('datafortransmit');
   });
 });
