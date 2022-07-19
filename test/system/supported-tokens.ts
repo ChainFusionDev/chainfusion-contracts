@@ -13,7 +13,7 @@ describe('SupportedTokens', function () {
 
     const systemUser = await ethers.getContractAt('SupportedTokens', supportedTokens.address, user);
     await expect(systemUser.addToken(symbol, chainId, token)).to.be.revertedWith('Ownable: caller is not the owner');
-    await expect(systemUser.removeToken(symbol, chainId, token)).to.be.revertedWith('Ownable: caller is not the owner');
+    await expect(systemUser.removeToken(symbol, chainId)).to.be.revertedWith('Ownable: caller is not the owner');
   });
 
   it('should emit the AddedToken event with proper arguments', async function () {
@@ -23,7 +23,7 @@ describe('SupportedTokens', function () {
 
     const { supportedTokens } = await deploySystem();
 
-    await expect(supportedTokens.addToken(symbol, chainId, token))
+    await expect(await supportedTokens.addToken(symbol, chainId, token))
       .to.emit(supportedTokens, 'AddedToken')
       .withArgs('ABC', 1, '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF');
   });
@@ -35,9 +35,9 @@ describe('SupportedTokens', function () {
 
     const { supportedTokens } = await deploySystem();
 
-    expect(supportedTokens.addToken(symbol, chainId, token));
+    expect(await supportedTokens.addToken(symbol, chainId, token));
 
-    await expect(supportedTokens.removeToken(symbol, chainId, token))
+    await expect(await supportedTokens.removeToken(symbol, chainId))
       .to.emit(supportedTokens, 'RemovedToken')
       .withArgs('ABC', 1, '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF');
   });
@@ -49,7 +49,7 @@ describe('SupportedTokens', function () {
 
     const { supportedTokens } = await deploySystem();
 
-    expect(supportedTokens.addToken(symbol, chainId, token));
+    expect(await supportedTokens.addToken(symbol, chainId, token));
     expect(await supportedTokens.tokens('ABC', 1)).to.equals(token);
 
     await expect(supportedTokens.addToken(symbol, chainId, token)).to.be.revertedWith(
@@ -65,11 +65,12 @@ describe('SupportedTokens', function () {
 
     const { supportedTokens } = await deploySystem();
 
-    expect(supportedTokens.addToken(symbol, chainId, token));
-    expect(supportedTokens.removeToken(symbol, chainId, token));
+    expect(await supportedTokens.addToken(symbol, chainId, token));
+
+    expect(await supportedTokens.removeToken(symbol, chainId));
     expect(await supportedTokens.tokens('ABC', 1)).to.equals(tokenZero);
 
-    await expect(supportedTokens.removeToken(symbol, chainId, token)).to.be.revertedWith(
+    await expect(supportedTokens.removeToken(symbol, chainId)).to.be.revertedWith(
       'SupportedTokens: token does not exist'
     );
   });
