@@ -21,7 +21,7 @@ describe('RelayBridge', function () {
   it('should transmit data', async function () {
     const [owner, user] = await ethers.getSigners();
     const fromChainId = 2;
-    var abiCoder = ethers.utils.defaultAbiCoder;
+    const abiCoder = ethers.utils.defaultAbiCoder;
     const data = abiCoder.encode(['string'], ['datafortransmit']);
 
     const { relayBridge, mockRelayBridgeApp } = await deployBridge(owner.address);
