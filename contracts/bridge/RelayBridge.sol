@@ -8,6 +8,7 @@ import "./Bridge.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
 import "hardhat/console.sol";
+import "../interfaces/IRelayBridgeApp.sol";
 
 contract RelayBridge is Initializable, Ownable {
     mapping(bytes32 => bytes) public sendData;
@@ -36,9 +37,15 @@ contract RelayBridge is Initializable, Ownable {
         emit SentData(hash);
     }
 
-    function transmit(uint256 fromChainId, bytes memory data) external onlyValidator {
+    function transmit(
+        address appContract,
+        uint256 fromChainId,
+        bytes memory data
+    ) external onlyValidator {
         bytes32 hash = dataHash(fromChainId, data);
         require(!transmitted[hash], "RelayBridge: data already transmitted");
+
+        IRelayBridgeApp(appContract).process(fromChainId, data);
 
         transmitted[hash] = true;
 
