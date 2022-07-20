@@ -35,7 +35,7 @@ describe('SupportedTokens', function () {
 
     const { supportedTokens } = await deploySystem();
 
-    expect(await supportedTokens.addToken(symbol, chainId, token));
+    await supportedTokens.addToken(symbol, chainId, token);
 
     await expect(await supportedTokens.removeToken(symbol, chainId))
       .to.emit(supportedTokens, 'RemovedToken')
@@ -49,7 +49,7 @@ describe('SupportedTokens', function () {
 
     const { supportedTokens } = await deploySystem();
 
-    expect(await supportedTokens.addToken(symbol, chainId, token));
+    await supportedTokens.addToken(symbol, chainId, token);
     expect(await supportedTokens.tokens('ABC', 1)).to.equals(token);
 
     await expect(supportedTokens.addToken(symbol, chainId, token)).to.be.revertedWith(
@@ -65,9 +65,9 @@ describe('SupportedTokens', function () {
 
     const { supportedTokens } = await deploySystem();
 
-    expect(await supportedTokens.addToken(symbol, chainId, token));
+    await supportedTokens.addToken(symbol, chainId, token);
 
-    expect(await supportedTokens.removeToken(symbol, chainId));
+    await supportedTokens.removeToken(symbol, chainId);
     expect(await supportedTokens.tokens('ABC', 1)).to.equals(tokenZero);
 
     await expect(supportedTokens.removeToken(symbol, chainId)).to.be.revertedWith(
