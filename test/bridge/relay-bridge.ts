@@ -46,4 +46,17 @@ describe('RelayBridge', function () {
     expect(await mockRelayBridgeApp.canProcess()).to.equals(true);
     expect(await mockRelayBridgeApp.value()).to.equals('datafortransmit');
   });
+
+  it('should emit event Reverted in appContract', async function () {
+    const [owner] = await ethers.getSigners();
+    const destinationChainId = 1;
+    const abiCoder = ethers.utils.defaultAbiCoder;
+    const data = abiCoder.encode(['string'], ['dataforrevertsend']);
+    const hash = ethers.utils.keccak256(data);
+    const { relayBridge, mockRelayBridgeApp } = await deployBridge(owner.address);
+
+    await expect(relayBridge.revertSend(mockRelayBridgeApp.address, destinationChainId, data))
+      .to.emit(mockRelayBridgeApp, 'Reverted')
+      .withArgs(hash);
+  });
 });
