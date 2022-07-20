@@ -56,6 +56,14 @@ contract RelayBridge is Initializable, Ownable {
         validator = _validator;
     }
 
+    function revertSend(
+        address appContract,
+        uint256 destinationChainId,
+        bytes memory data
+    ) public {
+        IRelayBridgeApp(appContract).revertSend(destinationChainId, data);
+    }
+
     function dataHash(uint256 chainId, bytes memory data) public pure returns (bytes32) {
         return keccak256(abi.encodePacked(chainId, data));
     }
