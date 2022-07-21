@@ -20,12 +20,9 @@ contract SupportedTokens is Ownable {
         emit AddedToken(symbol, chainId, token);
     }
 
-    function removeToken(
-        string memory symbol,
-        uint256 chainId,
-        address token
-    ) public onlyOwner {
+    function removeToken(string memory symbol, uint256 chainId) public onlyOwner {
         require(tokens[symbol][chainId] != address(0), "SupportedTokens: token does not exist");
+        address token = tokens[symbol][chainId];
         delete tokens[symbol][chainId];
 
         emit RemovedToken(symbol, chainId, token);
