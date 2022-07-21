@@ -55,6 +55,13 @@ contract ValidatorStaking is Ownable, Initializable {
         setDKG(_dkg);
     }
 
+    function validatorOnly(address _sender) external view returns (bool) {
+        if (stakes[_sender].status == ValidatorStatus.ACTIVE) {
+            return true;
+        }
+        return false;
+    }
+
     function setMinimalStake(uint256 _minimalStake) public onlyOwner {
         minimalStake = _minimalStake;
         emit MinimalStakeUpdated(_minimalStake);

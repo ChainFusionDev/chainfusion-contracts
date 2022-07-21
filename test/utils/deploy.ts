@@ -10,6 +10,7 @@ import {
   LiquidityPools,
   AddressStorage,
   DKG,
+  SlashingVoting,
 } from '../../typechain';
 
 interface BridgeDeployment {
@@ -26,6 +27,7 @@ interface SystemDeployment {
   validatorStaking: ValidatorStaking;
   addressStorage: AddressStorage;
   dkg: DKG;
+  slashingVoting: SlashingVoting;
 }
 
 export async function deployBridge(
@@ -117,6 +119,10 @@ export async function deploySystem(initialMinimalStake: BigNumber): Promise<Syst
   const dkg = await DKG.deploy();
   await dkg.deployed();
 
+  const SlashingVoting = await ethers.getContractFactory('SlashingVoting');
+  const slashingVoting = await SlashingVoting.deploy();
+  await slashingVoting.deployed();
+
   await (
     await validatorStaking.initialize(initialMinimalStake, withdrawalPeriod, addressStorage.address, dkg.address)
   ).wait();
@@ -124,9 +130,12 @@ export async function deploySystem(initialMinimalStake: BigNumber): Promise<Syst
 
   await addressStorage.transferOwnership(validatorStaking.address);
 
+  await (await slashingVoting.initialize()).wait();
+
   return {
     validatorStaking: validatorStaking,
     addressStorage: addressStorage,
+    slashingVoting: slashingVoting,
     dkg: dkg,
   };
 }
