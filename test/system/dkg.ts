@@ -26,8 +26,6 @@ describe('DKG', function () {
     const staking1 = await ethers.getContractAt('Staking', staking.address, v1);
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
 
-    await dkg.setStaking(staking.address);
-
     await expect(dkg.roundBroadcast(generation, 1, data1)).to.be.revertedWith('DKG: not a validator');
 
     expect(await dkg.isValidator(generation, v1.address)).to.equal(false);

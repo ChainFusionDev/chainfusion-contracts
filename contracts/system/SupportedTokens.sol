@@ -2,8 +2,9 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./ContractKeys.sol";
 
-contract SupportedTokens is Ownable {
+contract SupportedTokens is ContractKeys, Ownable {
     mapping(string => mapping(uint256 => address)) public tokens;
 
     event AddedToken(string symbol, uint256 chainId, address token);
