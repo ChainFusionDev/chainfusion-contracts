@@ -5,8 +5,10 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../common/AddressStorage.sol";
 import "./DKG.sol";
+import "./ContractKeys.sol";
+import "./ContractRegistry.sol";
 
-contract Staking is Ownable, Initializable {
+contract Staking is ContractKeys, Ownable, Initializable {
     enum ValidatorStatus {
         INACTIVE,
         ACTIVE,
@@ -30,13 +32,12 @@ contract Staking is Ownable, Initializable {
     mapping(address => mapping(address => bool)) public slashingVotes;
     mapping(address => uint256) public slashingCount;
     mapping(address => WithdrawalAnnouncement) public withdrawalAnnouncements;
+    ContractRegistry public contractRegistry;
     AddressStorage public validatorStorage;
-    DKG public dkg;
 
     event MinimalStakeUpdated(uint256 minimalStake);
     event WithdrawalPeriodUpdated(uint256 withdrawalPeriod);
-    event ValidatorStorageUpdated(address validatorStorage);
-    event DKGUpdated(address dkg);
+    event ContractRegistryUpdated(address contractRegistry);
 
     modifier onlyActiveValidator() {
         require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "ValidatorStaking: only active validator");
@@ -51,13 +52,13 @@ contract Staking is Ownable, Initializable {
     function initialize(
         uint256 _minimalStake,
         uint256 _withdrawalPeriod,
-        address _validatorStorage,
-        address _dkg
+        address _contractRegistry,
+        address _validatorStorage
     ) external initializer {
         setMinimalStake(_minimalStake);
         setWithdrawalPeriod(_withdrawalPeriod);
-        setValidatorStorage(_validatorStorage);
-        setDKG(_dkg);
+        contractRegistry = ContractRegistry(_contractRegistry);
+        validatorStorage = AddressStorage(_validatorStorage);
     }
 
     function setMinimalStake(uint256 _minimalStake) public onlyOwner {
@@ -70,18 +71,9 @@ contract Staking is Ownable, Initializable {
         emit WithdrawalPeriodUpdated(_withdrawalPeriod);
     }
 
-    function setValidatorStorage(address _validatorStorage) public onlyOwner {
-        validatorStorage = AddressStorage(_validatorStorage);
-        emit ValidatorStorageUpdated(_validatorStorage);
-    }
-
-    function setDKG(address _dkg) public onlyOwner {
-        dkg = DKG(_dkg);
-        emit DKGUpdated(_dkg);
-    }
-
     function slash(address _validator) public onlyActiveValidator {
         require(stakes[_validator].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator is already slashed");
+
         if (slashingVotes[_validator][msg.sender] == false) {
             slashingVotes[_validator][msg.sender] = true;
             slashingCount[_validator] += 1;
@@ -146,12 +138,20 @@ contract Staking is Ownable, Initializable {
     }
 
     function _addValidator(address validator) private {
+        DKG dkg = _dkgContract();
+
         validatorStorage.mustAdd(validator);
         dkg.setValidators(validatorStorage.getAddresses());
     }
 
     function _removeValidator(address validator) private {
+        DKG dkg = _dkgContract();
+
         validatorStorage.mustRemove(validator);
         dkg.setValidators(validatorStorage.getAddresses());
+    }
+
+    function _dkgContract() private view returns (DKG) {
+        return DKG(contractRegistry.getContract(DKG_KEY));
     }
 }
