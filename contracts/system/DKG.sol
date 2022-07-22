@@ -3,7 +3,8 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./ValidatorStaking.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "./Staking.sol";
 
 struct BroacastData {
     uint256 count;
@@ -11,7 +12,7 @@ struct BroacastData {
 }
 
 contract DKG is Ownable, Initializable {
-    ValidatorStaking public validatorStaking;
+    Staking public staking;
 
     // Validators storage
     address[][] public validators;
@@ -33,7 +34,7 @@ contract DKG is Ownable, Initializable {
     event SignerAddressUpdated(uint256 generation, address signerAddress);
 
     event ThresholdSignerUpdated(address signer);
-    event ValidatorStakingUpdated(address validatorStaking);
+    event StakingUpdated(address validatorStaking);
 
     modifier onlyValidator(uint256 _generation) {
         require(isGenerationValidator[_generation][msg.sender], "DKG: not a validator");
@@ -41,7 +42,7 @@ contract DKG is Ownable, Initializable {
     }
 
     modifier onlyValidatorStaking() {
-        require(msg.sender == address(validatorStaking), "DKG: not a validatorStaking");
+        require(msg.sender == address(staking), "DKG: not a staking");
         _;
     }
 
@@ -61,8 +62,8 @@ contract DKG is Ownable, Initializable {
         _;
     }
 
-    function initialize(address _validatorStaking) external initializer {
-        setValidatorStaking(_validatorStaking);
+    function initialize(address _staking) external initializer {
+        setStaking(_staking);
     }
 
     function setValidators(address[] memory _validators) external onlyValidatorStaking {
@@ -82,12 +83,14 @@ contract DKG is Ownable, Initializable {
         }
     }
 
-    function voteSigner(uint256 _generation, address _signerAddress)
-        external
-        onlyValidator(_generation)
-        roundIsFilled(_generation, 3)
-    {
+    function voteSigner(
+        uint256 _generation,
+        address _signerAddress,
+        bytes memory _signature
+    ) external onlyValidator(_generation) roundIsFilled(_generation, 3) {
+        require(recoverSigner(_signature) == _signerAddress, "DKG: signature is invalid");
         require(signerVotes[_generation][msg.sender] == address(0), "DKG: already voted");
+
         signerVotes[_generation][msg.sender] = _signerAddress;
         signerVoteCounts[_generation][_signerAddress]++;
 
@@ -149,9 +152,45 @@ contract DKG is Ownable, Initializable {
         return 0;
     }
 
-    function setValidatorStaking(address _validatorStaking) public onlyOwner {
-        validatorStaking = ValidatorStaking(_validatorStaking);
-        emit ValidatorStakingUpdated(_validatorStaking);
+    function setStaking(address _staking) public onlyOwner {
+        staking = Staking(_staking);
+        emit StakingUpdated(_staking);
+    }
+
+    function recoverSigner(bytes memory _signature) public pure returns (address) {
+        bytes32 r;
+        bytes32 s;
+        uint8 v;
+
+        if (_signature.length != 65) {
+            return (address(0));
+        }
+
+        // solhint-disable-next-line no-inline-assembly
+        assembly {
+            r := mload(add(_signature, 32))
+            s := mload(add(_signature, 64))
+            v := and(mload(add(_signature, 65)), 255)
+        }
+
+        if (v < 27) {
+            v += 27;
+        }
+
+        if (v != 27 && v != 28) {
+            return (address(0));
+        } else {
+            string memory message = "verify";
+            uint256 messageLen = bytes(message).length;
+
+            string memory str = string(
+                abi.encodePacked("\x19Ethereum Signed Message:\n", Strings.toString(messageLen), message)
+            );
+
+            bytes32 prefixedHashMessage = keccak256(abi.encodePacked(str));
+
+            return ecrecover(prefixedHashMessage, v, r, s);
+        }
     }
 
     function _setValidators(address[] memory _validators) private {

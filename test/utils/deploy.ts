@@ -5,35 +5,38 @@ import {
   MockToken,
   FeeManager,
   TokenManager,
-  ValidatorManager,
-  ValidatorStaking,
+  Staking,
   LiquidityPools,
   AddressStorage,
   DKG,
   SlashingVoting,
+  RelayBridge,
+  SupportedTokens,
+  MockRelayBridgeApp,
 } from '../../typechain';
 
 interface BridgeDeployment {
   bridge: Bridge;
   tokenManager: TokenManager;
   feeManager: FeeManager;
-  validatorManager: ValidatorManager;
+  validatorAddress: string;
   mockToken: MockToken;
   liquidityPools: LiquidityPools;
   chainId: number;
+  relayBridge: RelayBridge;
+  mockRelayBridgeApp: MockRelayBridgeApp;
 }
 
 interface SystemDeployment {
-  validatorStaking: ValidatorStaking;
+  staking: Staking;
   addressStorage: AddressStorage;
   dkg: DKG;
   slashingVoting: SlashingVoting;
+  supportedTokens: SupportedTokens;
 }
 
 export async function deployBridge(
   owner: string,
-  validators: string[],
-  requiredSignatures: number,
   chainId: number = 123,
   validatorAddress?: string,
   foundationAddress?: string
@@ -66,10 +69,6 @@ export async function deployBridge(
   const liquidityPools = await LiquidityPools.deploy();
   await liquidityPools.deployed();
 
-  const ValidatorManager = await ethers.getContractFactory('ValidatorManager');
-  const validatorManager = await ValidatorManager.deploy();
-  await validatorManager.deployed();
-
   const FeeManager = await ethers.getContractFactory('FeeManager');
   const feeManager = await FeeManager.deploy();
   await feeManager.deployed();
@@ -78,42 +77,51 @@ export async function deployBridge(
   const Bridge = await ethers.getContractFactory('Bridge');
   const bridge = await Bridge.deploy();
   await bridge.deployed();
-  await bridge.initialize(
-    owner,
-    validatorManager.address,
-    tokenManager.address,
-    liquidityPools.address,
-    feeManager.address
-  );
+  await bridge.initialize(owner, validatorAddress, tokenManager.address, liquidityPools.address, feeManager.address);
+
+  const RelayBridge = await ethers.getContractFactory('RelayBridge');
+  const relayBridge = await RelayBridge.deploy();
+  await relayBridge.deployed();
+  await relayBridge.initialize(validatorAddress);
+
+  const MockRelayBridgeApp = await ethers.getContractFactory('MockRelayBridgeApp');
+  const mockRelayBridgeApp = await MockRelayBridgeApp.deploy();
+  await mockRelayBridgeApp.deployed();
 
   const feePercentage = '10000000000000000';
   await liquidityPools.initialize(tokenManager.address, bridge.address, feeManager.address, feePercentage);
-
-  await validatorManager.setRequiredApprovals(requiredSignatures);
-  await validatorManager.setValidators(validators);
 
   return {
     bridge: bridge,
     tokenManager: tokenManager,
     feeManager: feeManager,
-    validatorManager: validatorManager,
+    validatorAddress: validatorAddress,
     mockToken: mockToken,
     liquidityPools: liquidityPools,
     chainId: chainId,
+    relayBridge: relayBridge,
+    mockRelayBridgeApp: mockRelayBridgeApp,
   };
 }
 
-export async function deploySystem(initialMinimalStake: BigNumber): Promise<SystemDeployment> {
+export async function deploySystem(initialMinimalStake?: BigNumber): Promise<SystemDeployment> {
   const withdrawalPeriod = 1;
+  const epochPeriod = 10;
+  const slashingThresold = 3;
+  const slashingEpochs = 3;
+
+  if (initialMinimalStake === undefined) {
+    initialMinimalStake = ethers.utils.parseEther('3');
+  }
 
   const AddressStorage = await ethers.getContractFactory('AddressStorage');
   const addressStorage = await AddressStorage.deploy();
   await addressStorage.deployed();
   await (await addressStorage.initialize([])).wait();
 
-  const ValidatorStaking = await ethers.getContractFactory('ValidatorStaking');
-  const validatorStaking = await ValidatorStaking.deploy();
-  await validatorStaking.deployed();
+  const Staking = await ethers.getContractFactory('Staking');
+  const staking = await Staking.deploy();
+  await staking.deployed();
 
   const DKG = await ethers.getContractFactory('DKG');
   const dkg = await DKG.deploy();
@@ -122,20 +130,22 @@ export async function deploySystem(initialMinimalStake: BigNumber): Promise<Syst
   const SlashingVoting = await ethers.getContractFactory('SlashingVoting');
   const slashingVoting = await SlashingVoting.deploy();
   await slashingVoting.deployed();
+  await (await slashingVoting.initialize(staking.address, epochPeriod, slashingThresold, slashingEpochs)).wait();
 
-  await (
-    await validatorStaking.initialize(initialMinimalStake, withdrawalPeriod, addressStorage.address, dkg.address)
-  ).wait();
-  await (await dkg.initialize(validatorStaking.address)).wait();
+  const SupportedTokens = await ethers.getContractFactory('SupportedTokens');
+  const supportedTokens = await SupportedTokens.deploy();
+  await supportedTokens.deployed();
 
-  await addressStorage.transferOwnership(validatorStaking.address);
+  await (await staking.initialize(initialMinimalStake, withdrawalPeriod, addressStorage.address, dkg.address)).wait();
+  await (await dkg.initialize(staking.address)).wait();
 
-  await (await slashingVoting.initialize()).wait();
+  await addressStorage.transferOwnership(staking.address);
 
   return {
-    validatorStaking: validatorStaking,
+    staking: staking,
     addressStorage: addressStorage,
     slashingVoting: slashingVoting,
     dkg: dkg,
+    supportedTokens: supportedTokens,
   };
 }

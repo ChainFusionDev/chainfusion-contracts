@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "hardhat/console.sol";
+import "./Staking.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./ValidatorStaking.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract SlashingVoting is Initializable {
+contract SlashingVoting is Ownable, Initializable {
     enum SlashingReason {
         REASON_NO_RECENT_BLOCKS,
         REASON_DKG_INACTIVITY,
@@ -13,8 +15,7 @@ contract SlashingVoting is Initializable {
         REASON_SIGNING_VIOLATION
     }
 
-    address public owner;
-    ValidatorStaking public staking;
+    Staking public staking;
     uint256 public epochPeriod;
     uint256 public slashingThresold;
     uint256 public slashingEpochs;
@@ -28,37 +29,46 @@ contract SlashingVoting is Initializable {
     event BannedWithReason(address validator, SlashingReason reason);
     event SlashedWithReason(address validator);
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "SlashingVoting: caller is not the owner");
-        _;
-    }
-
     modifier onlyValidator() {
-        require(staking.validatorOnly(msg.sender) == true, "SlashingVoting: only active validator");
+        require(staking.isValidatorActive(msg.sender) == true, "SlashingVoting: only active validator");
         _;
     }
 
-    function initialize() external initializer {
-        owner = msg.sender;
+    function initialize(
+        address _staking,
+        uint256 _epochPeriod,
+        uint256 _slashingThresold,
+        uint256 _lashingEpochs
+    ) external initializer {
+        setStaking(_staking);
+        setEpochPeriod(_epochPeriod);
+        setSlashingThresold(_slashingThresold);
+        setSlashingEpochs(_lashingEpochs);
     }
 
-    function votedWithReason(
+    function voteWithReason(
         address _validator,
         SlashingReason _reason,
         bytes calldata _nonse
     ) external onlyValidator {
         bytes32 voteHash = votingHashWithReason(_validator, _reason, _nonse);
+
+        require(staking.isValidatorActive(_validator) == true, "SlashingVoting: target is not active validator");
         require(ban[voteHash] == false, "SlashingVoting: validator already baned");
         require(slashes[_validator] == false, "SlashingVoting: validator already slashed");
         require(
             votes[voteHash][msg.sender] == false,
             "SlashingVoting: voter is already voted against given validator "
         );
-        address[] memory validatorsAddresses = staking.getValidators();
+
+        votes[voteHash][msg.sender] = true;
+        voteCounts[voteHash]++;
         emit VotedWithReason(msg.sender, _validator, _reason);
 
+        address[] memory validatorsAddresses = staking.getValidators();
         if (voteCounts[voteHash] >= (validatorsAddresses.length / 2 + 1)) {
-            banCounts[currentEpoch()][_validator] = banCounts[currentEpoch()][_validator]++;
+            ban[voteHash] = true;
+            banCounts[currentEpoch()][_validator]++;
             emit BannedWithReason(_validator, _reason);
         }
 
@@ -68,10 +78,30 @@ contract SlashingVoting is Initializable {
         }
     }
 
+    function setStaking(address _staking) public onlyOwner {
+        staking = Staking(_staking);
+    }
+
+    function setEpochPeriod(uint256 _epochPeriod) public onlyOwner {
+        epochPeriod = _epochPeriod;
+    }
+
+    function setSlashingThresold(uint256 _slashingThresold) public onlyOwner {
+        slashingThresold = _slashingThresold;
+    }
+
+    function setSlashingEpochs(uint256 _slashingEpochs) public onlyOwner {
+        slashingEpochs = _slashingEpochs;
+    }
+
     function bansTotal(uint256 _epoch, address _validator) public view returns (uint256) {
         uint256 bansNubmer;
-        for (uint256 i = _epoch; i > _epoch - slashingEpochs; i--) {
-            bansNubmer = bansByEpoch(i, _validator);
+        for (int256 i = int256(_epoch); i > int256(_epoch) - int256((slashingEpochs)); i--) {
+            if (i < 0) {
+                break;
+            }
+
+            bansNubmer += bansByEpoch(uint256(i), _validator);
         }
 
         return bansNubmer;
@@ -95,21 +125,5 @@ contract SlashingVoting is Initializable {
         bytes calldata _nonse
     ) public pure returns (bytes32) {
         return keccak256(abi.encodePacked(_validator, _reason, _nonse));
-    }
-
-    function setStaking(ValidatorStaking _staking) internal onlyOwner {
-        staking = _staking;
-    }
-
-    function setEpochPeriod(uint256 _epochPeriod) internal onlyOwner {
-        epochPeriod = _epochPeriod;
-    }
-
-    function setSlashingThresold(uint256 _slashingThresold) internal onlyOwner {
-        slashingThresold = _slashingThresold;
-    }
-
-    function setSlashingEpochs(uint256 _slashingEpochs) internal onlyOwner {
-        slashingEpochs = _slashingEpochs;
     }
 }
