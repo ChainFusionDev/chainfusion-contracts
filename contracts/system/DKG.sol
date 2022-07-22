@@ -5,14 +5,16 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./Staking.sol";
+import "./ContractKeys.sol";
+import "./ContractRegistry.sol";
 
 struct BroacastData {
     uint256 count;
     mapping(address => bytes) data;
 }
 
-contract DKG is Ownable, Initializable {
-    Staking public staking;
+contract DKG is ContractKeys, Ownable, Initializable {
+    ContractRegistry public contractRegistry;
 
     // Validators storage
     address[][] public validators;
@@ -34,7 +36,6 @@ contract DKG is Ownable, Initializable {
     event SignerAddressUpdated(uint256 generation, address signerAddress);
 
     event ThresholdSignerUpdated(address signer);
-    event StakingUpdated(address validatorStaking);
 
     modifier onlyValidator(uint256 _generation) {
         require(isGenerationValidator[_generation][msg.sender], "DKG: not a validator");
@@ -42,7 +43,7 @@ contract DKG is Ownable, Initializable {
     }
 
     modifier onlyValidatorStaking() {
-        require(msg.sender == address(staking), "DKG: not a staking");
+        require(msg.sender == address(_stakingContract()), "DKG: not a staking");
         _;
     }
 
@@ -62,8 +63,8 @@ contract DKG is Ownable, Initializable {
         _;
     }
 
-    function initialize(address _staking) external initializer {
-        setStaking(_staking);
+    function initialize(address _contractRegistry) external initializer {
+        contractRegistry = ContractRegistry(_contractRegistry);
     }
 
     function setValidators(address[] memory _validators) external onlyValidatorStaking {
@@ -152,11 +153,6 @@ contract DKG is Ownable, Initializable {
         return 0;
     }
 
-    function setStaking(address _staking) public onlyOwner {
-        staking = Staking(_staking);
-        emit StakingUpdated(_staking);
-    }
-
     function recoverSigner(bytes memory _signature) public pure returns (address) {
         bytes32 r;
         bytes32 s;
@@ -211,5 +207,9 @@ contract DKG is Ownable, Initializable {
 
     function _enoughVotes(uint256 _generation, uint256 votes) private view returns (bool) {
         return votes > (validators[_generation].length / 2);
+    }
+
+    function _stakingContract() private view returns (Staking) {
+        return Staking(contractRegistry.getContract(STAKING_KEY));
     }
 }

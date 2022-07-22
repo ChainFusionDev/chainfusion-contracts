@@ -13,6 +13,7 @@ import {
   RelayBridge,
   SupportedTokens,
   MockRelayBridgeApp,
+  ContractRegistry,
 } from '../../typechain';
 
 interface BridgeDeployment {
@@ -33,6 +34,7 @@ interface SystemDeployment {
   dkg: DKG;
   slashingVoting: SlashingVoting;
   supportedTokens: SupportedTokens;
+  contractRegistry: ContractRegistry;
 }
 
 export async function deployBridge(
@@ -114,30 +116,49 @@ export async function deploySystem(initialMinimalStake?: BigNumber): Promise<Sys
     initialMinimalStake = ethers.utils.parseEther('3');
   }
 
+  const ContractRegistry = await ethers.getContractFactory('ContractRegistry');
+  const contractRegistry = await ContractRegistry.deploy();
+  await contractRegistry.deployed();
+
   const AddressStorage = await ethers.getContractFactory('AddressStorage');
   const addressStorage = await AddressStorage.deploy();
   await addressStorage.deployed();
+
   await (await addressStorage.initialize([])).wait();
 
   const Staking = await ethers.getContractFactory('Staking');
   const staking = await Staking.deploy();
   await staking.deployed();
 
+  await contractRegistry.setContract(await staking.STAKING_KEY(), staking.address);
+
   const DKG = await ethers.getContractFactory('DKG');
   const dkg = await DKG.deploy();
   await dkg.deployed();
 
+  await contractRegistry.setContract(await dkg.DKG_KEY(), dkg.address);
+
   const SlashingVoting = await ethers.getContractFactory('SlashingVoting');
   const slashingVoting = await SlashingVoting.deploy();
   await slashingVoting.deployed();
-  await (await slashingVoting.initialize(staking.address, epochPeriod, slashingThresold, slashingEpochs)).wait();
+  await (
+    await slashingVoting.initialize(epochPeriod, slashingThresold, slashingEpochs, contractRegistry.address)
+  ).wait();
+
+  await contractRegistry.setContract(await slashingVoting.SLASHING_VOTING_KEY(), slashingVoting.address);
+
+  await contractRegistry.setContract(await dkg.DKG_KEY(), dkg.address);
 
   const SupportedTokens = await ethers.getContractFactory('SupportedTokens');
   const supportedTokens = await SupportedTokens.deploy();
   await supportedTokens.deployed();
 
-  await (await staking.initialize(initialMinimalStake, withdrawalPeriod, addressStorage.address, dkg.address)).wait();
-  await (await dkg.initialize(staking.address)).wait();
+  await contractRegistry.setContract(await supportedTokens.SUPPORTED_TOKENS_KEY(), supportedTokens.address);
+
+  await (
+    await staking.initialize(initialMinimalStake, withdrawalPeriod, contractRegistry.address, addressStorage.address)
+  ).wait();
+  await (await dkg.initialize(contractRegistry.address)).wait();
 
   await addressStorage.transferOwnership(staking.address);
 
@@ -147,5 +168,6 @@ export async function deploySystem(initialMinimalStake?: BigNumber): Promise<Sys
     slashingVoting: slashingVoting,
     dkg: dkg,
     supportedTokens: supportedTokens,
+    contractRegistry: contractRegistry,
   };
 }

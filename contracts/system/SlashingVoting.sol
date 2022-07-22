@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "hardhat/console.sol";
-import "./Staking.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "./ContractKeys.sol";
+import "./ContractRegistry.sol";
+import "./Staking.sol";
 
-contract SlashingVoting is Ownable, Initializable {
+contract SlashingVoting is ContractKeys, Ownable, Initializable {
     enum SlashingReason {
         REASON_NO_RECENT_BLOCKS,
         REASON_DKG_INACTIVITY,
@@ -15,7 +16,7 @@ contract SlashingVoting is Ownable, Initializable {
         REASON_SIGNING_VIOLATION
     }
 
-    Staking public staking;
+    ContractRegistry public contractRegistry;
     uint256 public epochPeriod;
     uint256 public slashingThresold;
     uint256 public slashingEpochs;
@@ -30,20 +31,20 @@ contract SlashingVoting is Ownable, Initializable {
     event SlashedWithReason(address validator);
 
     modifier onlyValidator() {
-        require(staking.isValidatorActive(msg.sender) == true, "SlashingVoting: only active validator");
+        require(_stakingContract().isValidatorActive(msg.sender) == true, "SlashingVoting: only active validator");
         _;
     }
 
     function initialize(
-        address _staking,
         uint256 _epochPeriod,
         uint256 _slashingThresold,
-        uint256 _lashingEpochs
+        uint256 _lashingEpochs,
+        address _contractRegistry
     ) external initializer {
-        setStaking(_staking);
         setEpochPeriod(_epochPeriod);
         setSlashingThresold(_slashingThresold);
         setSlashingEpochs(_lashingEpochs);
+        contractRegistry = ContractRegistry(_contractRegistry);
     }
 
     function voteWithReason(
@@ -51,6 +52,7 @@ contract SlashingVoting is Ownable, Initializable {
         SlashingReason _reason,
         bytes calldata _nonse
     ) external onlyValidator {
+        Staking staking = _stakingContract();
         bytes32 voteHash = votingHashWithReason(_validator, _reason, _nonse);
 
         require(staking.isValidatorActive(_validator) == true, "SlashingVoting: target is not active validator");
@@ -76,10 +78,6 @@ contract SlashingVoting is Ownable, Initializable {
             slashes[_validator] = true;
             emit SlashedWithReason(_validator);
         }
-    }
-
-    function setStaking(address _staking) public onlyOwner {
-        staking = Staking(_staking);
     }
 
     function setEpochPeriod(uint256 _epochPeriod) public onlyOwner {
@@ -125,5 +123,9 @@ contract SlashingVoting is Ownable, Initializable {
         bytes calldata _nonse
     ) public pure returns (bytes32) {
         return keccak256(abi.encodePacked(_validator, _reason, _nonse));
+    }
+
+    function _stakingContract() private view returns (Staking) {
+        return Staking(contractRegistry.getContract(STAKING_KEY));
     }
 }

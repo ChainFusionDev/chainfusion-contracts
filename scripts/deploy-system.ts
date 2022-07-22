@@ -14,9 +14,16 @@ const VALIDATOR_KEYS =
 async function main() {
   console.log('\nDeploying contracts\n');
 
+  const ContractRegistry = await ethers.getContractFactory('ContractRegistry');
+  const contractRegistry = await ContractRegistry.deploy();
+  await contractRegistry.deployed();
+
+  console.log('ContractRegistry deployed to:', contractRegistry.address);
+
   const AddressStorage = await ethers.getContractFactory('AddressStorage');
   const addressStorage = await AddressStorage.deploy();
   await addressStorage.deployed();
+
   await (await addressStorage.initialize([])).wait();
 
   console.log('AddressStorage deployed to:', addressStorage.address);
@@ -25,6 +32,7 @@ async function main() {
   const staking = await Staking.deploy();
   await staking.deployed();
 
+  await contractRegistry.setContract(await staking.STAKING_KEY(), staking.address);
   await addressStorage.transferOwnership(staking.address);
 
   console.log('Staking deployed to:', staking.address);
@@ -33,8 +41,12 @@ async function main() {
   const dkg = await DKG.deploy();
   await dkg.deployed();
 
-  await (await staking.initialize(minimalStake, withdrawalPeriod, addressStorage.address, dkg.address)).wait();
-  await (await dkg.initialize(staking.address)).wait();
+  await contractRegistry.setContract(await dkg.DKG_KEY(), dkg.address);
+
+  await (
+    await staking.initialize(minimalStake, withdrawalPeriod, contractRegistry.address, addressStorage.address)
+  ).wait();
+  await (await dkg.initialize(contractRegistry.address)).wait();
 
   console.log('DKG deployed to:', dkg.address);
 
@@ -42,12 +54,18 @@ async function main() {
   const supportedTokens = await SupportedTokens.deploy();
   await supportedTokens.deployed();
 
+  await contractRegistry.setContract(await supportedTokens.SUPPORTED_TOKENS_KEY(), supportedTokens.address);
+
   console.log('SupportedTokens deployed to:', supportedTokens.address);
 
   const SlashingVoting = await ethers.getContractFactory('SlashingVoting');
   const slashingVoting = await SlashingVoting.deploy();
   await slashingVoting.deployed();
-  await (await slashingVoting.initialize(staking.address, epochPeriod, slashingThresold, slashingEpochs)).wait();
+  await (
+    await slashingVoting.initialize(epochPeriod, slashingThresold, slashingEpochs, contractRegistry.address)
+  ).wait();
+
+  await contractRegistry.setContract(await slashingVoting.SLASHING_VOTING_KEY(), slashingVoting.address);
 
   console.log('SlashingVoting deployed to:', slashingVoting.address);
 
