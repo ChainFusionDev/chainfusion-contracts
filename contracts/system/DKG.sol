@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./Staking.sol";
@@ -14,6 +15,7 @@ struct BroacastData {
 }
 
 contract DKG is ContractKeys, Ownable, Initializable {
+    using ECDSA for bytes32;
     ContractRegistry public contractRegistry;
 
     // Validators storage
@@ -154,39 +156,14 @@ contract DKG is ContractKeys, Ownable, Initializable {
     }
 
     function recoverSigner(bytes memory _signature) public pure returns (address) {
-        bytes32 r;
-        bytes32 s;
-        uint8 v;
+        string memory message = "verify";
+        uint256 messageLen = bytes(message).length;
 
-        if (_signature.length != 65) {
-            return (address(0));
-        }
+        string memory str = string(
+            abi.encodePacked("\x19Ethereum Signed Message:\n", Strings.toString(messageLen), message)
+        );
 
-        // solhint-disable-next-line no-inline-assembly
-        assembly {
-            r := mload(add(_signature, 32))
-            s := mload(add(_signature, 64))
-            v := and(mload(add(_signature, 65)), 255)
-        }
-
-        if (v < 27) {
-            v += 27;
-        }
-
-        if (v != 27 && v != 28) {
-            return (address(0));
-        } else {
-            string memory message = "verify";
-            uint256 messageLen = bytes(message).length;
-
-            string memory str = string(
-                abi.encodePacked("\x19Ethereum Signed Message:\n", Strings.toString(messageLen), message)
-            );
-
-            bytes32 prefixedHashMessage = keccak256(abi.encodePacked(str));
-
-            return ecrecover(prefixedHashMessage, v, r, s);
-        }
+        return keccak256(abi.encodePacked(str)).recover(_signature);
     }
 
     function _setValidators(address[] memory _validators) private {
