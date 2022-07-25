@@ -3,6 +3,9 @@ import hre from 'hardhat';
 
 const withdrawalPeriod = 60;
 const minimalStake = ethers.utils.parseEther('100');
+const epochPeriod = 1000;
+const slashingThresold = 10;
+const slashingEpochs = 3;
 
 const VERIFY = (process.env.VERIFY || '').trim().toLowerCase();
 const VALIDATOR_KEYS =
@@ -55,6 +58,17 @@ async function main() {
 
   console.log('SupportedTokens deployed to:', supportedTokens.address);
 
+  const SlashingVoting = await ethers.getContractFactory('SlashingVoting');
+  const slashingVoting = await SlashingVoting.deploy();
+  await slashingVoting.deployed();
+  await (
+    await slashingVoting.initialize(epochPeriod, slashingThresold, slashingEpochs, contractRegistry.address)
+  ).wait();
+
+  await contractRegistry.setContract(await slashingVoting.SLASHING_VOTING_KEY(), slashingVoting.address);
+
+  console.log('SlashingVoting deployed to:', slashingVoting.address);
+
   if (VALIDATOR_KEYS.length > 0) {
     console.log('\nStaking\n');
 
@@ -73,6 +87,7 @@ async function main() {
     await ignoreError(hre.run('verify:verify', { address: addressStorage.address }));
     await ignoreError(hre.run('verify:verify', { address: staking.address }));
     await ignoreError(hre.run('verify:verify', { address: dkg.address }));
+    await ignoreError(hre.run('verify:verify', { address: slashingVoting.address }));
   }
 }
 

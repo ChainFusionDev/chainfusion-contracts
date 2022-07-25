@@ -5,4 +5,5 @@ abstract contract ContractKeys {
     string public constant STAKING_KEY = "staking";
     string public constant DKG_KEY = "dkg";
     string public constant SUPPORTED_TOKENS_KEY = "supported-tokens";
+    string public constant SLASHING_VOTING_KEY = "slashing-voting";
 }
