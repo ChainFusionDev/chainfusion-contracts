@@ -4,11 +4,11 @@ import { deployBridge } from '../utils/deploy';
 
 describe('RelayBridge', function () {
   it('should send data', async function () {
-    const [owner] = await ethers.getSigners();
+    const [validator] = await ethers.getSigners();
     const chainId = 2;
     const data = ethers.utils.keccak256('0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF');
 
-    const { relayBridge } = await deployBridge(owner.address);
+    const { relayBridge } = await deployBridge(validator.address);
 
     const hash = await relayBridge.dataHash(chainId, data);
 
@@ -19,16 +19,14 @@ describe('RelayBridge', function () {
   });
 
   it('should transmit data', async function () {
-    const [owner, user] = await ethers.getSigners();
+    const [validator] = await ethers.getSigners();
     const fromChainId = 2;
     const abiCoder = ethers.utils.defaultAbiCoder;
     const data = abiCoder.encode(['string'], ['datafortransmit']);
 
-    const { relayBridge, mockRelayBridgeApp } = await deployBridge(owner.address);
+    const { relayBridge, mockRelayBridgeApp } = await deployBridge(validator.address);
 
     const hash = await relayBridge.dataHash(fromChainId, data);
-
-    expect(await relayBridge.validator()).to.equal(owner.address);
 
     await expect(relayBridge.transmit(mockRelayBridgeApp.address, fromChainId, data))
       .to.emit(relayBridge, 'TransmittedData')
@@ -37,23 +35,18 @@ describe('RelayBridge', function () {
       'RelayBridge: data already transmitted'
     );
 
-    const bridgeUser = await ethers.getContractAt('RelayBridge', relayBridge.address, user);
-    await expect(bridgeUser.transmit(mockRelayBridgeApp.address, fromChainId, data)).to.be.revertedWith(
-      'RelayBridge: only validator'
-    );
-
     expect(await relayBridge.transmitted(hash)).to.equals(true);
     expect(await mockRelayBridgeApp.canProcess()).to.equals(true);
     expect(await mockRelayBridgeApp.value()).to.equals('datafortransmit');
   });
 
   it('should emit event Reverted in appContract', async function () {
-    const [owner] = await ethers.getSigners();
+    const [validator] = await ethers.getSigners();
     const destinationChainId = 1;
     const abiCoder = ethers.utils.defaultAbiCoder;
     const data = abiCoder.encode(['string'], ['dataforrevertsend']);
     const hash = ethers.utils.keccak256(data);
-    const { relayBridge, mockRelayBridgeApp } = await deployBridge(owner.address);
+    const { relayBridge, mockRelayBridgeApp } = await deployBridge(validator.address);
 
     await expect(relayBridge.revertSend(mockRelayBridgeApp.address, destinationChainId, data))
       .to.emit(mockRelayBridgeApp, 'Reverted')

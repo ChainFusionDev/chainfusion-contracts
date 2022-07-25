@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./ValidatorOwnable.sol";
 import "./TokenManager.sol";
 import "./Bridge.sol";
 import "./FeeManager.sol";
@@ -10,7 +10,7 @@ import "./Globals.sol";
 import "hardhat/console.sol";
 import "../interfaces/IRelayBridgeApp.sol";
 
-contract RelayBridge is Initializable, Ownable {
+contract RelayBridge is Initializable, ValidatorOwnable {
     mapping(bytes32 => bytes) public sendData;
     mapping(bytes32 => bool) public transmitted;
 
@@ -19,13 +19,8 @@ contract RelayBridge is Initializable, Ownable {
     event SentData(bytes32 hash);
     event TransmittedData(bytes32 hash);
 
-    modifier onlyValidator() {
-        require(validator == msg.sender, "RelayBridge: only validator");
-        _;
-    }
-
-    function initialize(address _validator) external initializer {
-        setValidator(_validator);
+    function initialize(address _validatorStorage) external initializer {
+        _setValidatorStorage(_validatorStorage);
     }
 
     function send(uint256 chainId, bytes memory data) external {
@@ -50,10 +45,6 @@ contract RelayBridge is Initializable, Ownable {
         transmitted[hash] = true;
 
         emit TransmittedData(hash);
-    }
-
-    function setValidator(address _validator) public onlyOwner {
-        validator = _validator;
     }
 
     function revertSend(

@@ -2,14 +2,13 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./ValidatorOwnable.sol";
 import "./LiquidityPools.sol";
 import "./Globals.sol";
 
-contract FeeManager is Initializable, Ownable {
+contract FeeManager is Initializable, ValidatorOwnable {
     LiquidityPools public liquidityPools;
-    address public validatorAddress;
     address public foundationAddress;
 
     uint256 public validatorRefundFee;
@@ -19,7 +18,6 @@ contract FeeManager is Initializable, Ownable {
     mapping(address => uint256) public foundationRewardPercentage;
 
     event LiquidityPoolsUpdated(address _liquidityPools);
-    event ValidatorAddressUpdated(address _validatorAddress);
     event FoundationAddressUpdated(address _foundationAddress);
     event ValidatorRefundFeeUpdated(uint256 _validatorRefundFee);
 
@@ -27,33 +25,28 @@ contract FeeManager is Initializable, Ownable {
     receive() external payable {}
 
     function initialize(
+        address _validatorStorage,
         address payable _liquidityPools,
-        address _validatorAddress,
         address _foundationAddress,
         uint256 _validatorRefundFee
     ) external initializer {
+        _setValidatorStorage(_validatorStorage);
         setLiquidityPools(_liquidityPools);
-        setValidatorAddress(_validatorAddress);
         setFoundationAddress(_foundationAddress);
         setValidatorRefundFee(_validatorRefundFee);
     }
 
-    function setLiquidityPools(address payable _liquidityPools) public onlyOwner {
+    function setLiquidityPools(address payable _liquidityPools) public onlyValidator {
         liquidityPools = LiquidityPools(_liquidityPools);
         emit LiquidityPoolsUpdated(_liquidityPools);
     }
 
-    function setValidatorAddress(address _validatorAddress) public onlyOwner {
-        validatorAddress = _validatorAddress;
-        emit ValidatorAddressUpdated(_validatorAddress);
-    }
-
-    function setFoundationAddress(address _foundationAddress) public onlyOwner {
+    function setFoundationAddress(address _foundationAddress) public onlyValidator {
         foundationAddress = _foundationAddress;
         emit FoundationAddressUpdated(_foundationAddress);
     }
 
-    function setValidatorRefundFee(uint256 _validatorRefundFee) public onlyOwner {
+    function setValidatorRefundFee(uint256 _validatorRefundFee) public onlyValidator {
         validatorRefundFee = _validatorRefundFee;
         emit ValidatorRefundFeeUpdated(_validatorRefundFee);
     }
@@ -76,6 +69,8 @@ contract FeeManager is Initializable, Ownable {
         uint256 validatorRewards;
         uint256 liquidityRewards;
         uint256 foundationRewards;
+
+        address validatorAddress = validatorStorage.getAddress();
 
         if (token == NATIVE_TOKEN) {
             totalRewards = address(this).balance;
