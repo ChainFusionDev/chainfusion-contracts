@@ -15,7 +15,9 @@ struct BroacastData {
 }
 
 contract DKG is ContractKeys, Ownable, Initializable {
+    using ECDSA for bytes;
     using ECDSA for bytes32;
+
     ContractRegistry public contractRegistry;
 
     // Validators storage
@@ -91,7 +93,8 @@ contract DKG is ContractKeys, Ownable, Initializable {
         address _signerAddress,
         bytes memory _signature
     ) external onlyValidator(_generation) roundIsFilled(_generation, 3) {
-        require(recoverSigner(_signature) == _signerAddress, "DKG: signature is invalid");
+        address recoveredSigner = bytes("verify").toEthSignedMessageHash().recover(_signature);
+        require(recoveredSigner == _signerAddress, "DKG: signature is invalid");
         require(signerVotes[_generation][msg.sender] == address(0), "DKG: already voted");
 
         signerVotes[_generation][msg.sender] = _signerAddress;
@@ -153,17 +156,6 @@ contract DKG is ContractKeys, Ownable, Initializable {
         }
 
         return 0;
-    }
-
-    function recoverSigner(bytes memory _signature) public pure returns (address) {
-        string memory message = "verify";
-        uint256 messageLen = bytes(message).length;
-
-        string memory str = string(
-            abi.encodePacked("\x19Ethereum Signed Message:\n", Strings.toString(messageLen), message)
-        );
-
-        return keccak256(abi.encodePacked(str)).recover(_signature);
     }
 
     function _setValidators(address[] memory _validators) private {
