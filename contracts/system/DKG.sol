@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./Staking.sol";
@@ -14,6 +15,9 @@ struct BroacastData {
 }
 
 contract DKG is ContractKeys, Ownable, Initializable {
+    using ECDSA for bytes;
+    using ECDSA for bytes32;
+
     ContractRegistry public contractRegistry;
 
     // Validators storage
@@ -89,7 +93,8 @@ contract DKG is ContractKeys, Ownable, Initializable {
         address _signerAddress,
         bytes memory _signature
     ) external onlyValidator(_generation) roundIsFilled(_generation, 3) {
-        require(recoverSigner(_signature) == _signerAddress, "DKG: signature is invalid");
+        address recoveredSigner = bytes("verify").toEthSignedMessageHash().recover(_signature);
+        require(recoveredSigner == _signerAddress, "DKG: signature is invalid");
         require(signerVotes[_generation][msg.sender] == address(0), "DKG: already voted");
 
         signerVotes[_generation][msg.sender] = _signerAddress;
@@ -151,42 +156,6 @@ contract DKG is ContractKeys, Ownable, Initializable {
         }
 
         return 0;
-    }
-
-    function recoverSigner(bytes memory _signature) public pure returns (address) {
-        bytes32 r;
-        bytes32 s;
-        uint8 v;
-
-        if (_signature.length != 65) {
-            return (address(0));
-        }
-
-        // solhint-disable-next-line no-inline-assembly
-        assembly {
-            r := mload(add(_signature, 32))
-            s := mload(add(_signature, 64))
-            v := and(mload(add(_signature, 65)), 255)
-        }
-
-        if (v < 27) {
-            v += 27;
-        }
-
-        if (v != 27 && v != 28) {
-            return (address(0));
-        } else {
-            string memory message = "verify";
-            uint256 messageLen = bytes(message).length;
-
-            string memory str = string(
-                abi.encodePacked("\x19Ethereum Signed Message:\n", Strings.toString(messageLen), message)
-            );
-
-            bytes32 prefixedHashMessage = keccak256(abi.encodePacked(str));
-
-            return ecrecover(prefixedHashMessage, v, r, s);
-        }
     }
 
     function _setValidators(address[] memory _validators) private {
