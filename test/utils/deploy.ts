@@ -9,6 +9,7 @@ import {
   LiquidityPools,
   AddressStorage,
   DKG,
+  SlashingVoting,
   RelayBridge,
   SupportedTokens,
   MockRelayBridgeApp,
@@ -31,6 +32,7 @@ interface SystemDeployment {
   staking: Staking;
   addressStorage: AddressStorage;
   dkg: DKG;
+  slashingVoting: SlashingVoting;
   supportedTokens: SupportedTokens;
   contractRegistry: ContractRegistry;
 }
@@ -106,6 +108,9 @@ export async function deployBridge(
 
 export async function deploySystem(initialMinimalStake?: BigNumber): Promise<SystemDeployment> {
   const withdrawalPeriod = 1;
+  const epochPeriod = 10;
+  const slashingThresold = 3;
+  const slashingEpochs = 3;
 
   if (initialMinimalStake === undefined) {
     initialMinimalStake = ethers.utils.parseEther('3');
@@ -133,6 +138,17 @@ export async function deploySystem(initialMinimalStake?: BigNumber): Promise<Sys
 
   await contractRegistry.setContract(await dkg.DKG_KEY(), dkg.address);
 
+  const SlashingVoting = await ethers.getContractFactory('SlashingVoting');
+  const slashingVoting = await SlashingVoting.deploy();
+  await slashingVoting.deployed();
+  await (
+    await slashingVoting.initialize(epochPeriod, slashingThresold, slashingEpochs, contractRegistry.address)
+  ).wait();
+
+  await contractRegistry.setContract(await slashingVoting.SLASHING_VOTING_KEY(), slashingVoting.address);
+
+  await contractRegistry.setContract(await dkg.DKG_KEY(), dkg.address);
+
   const SupportedTokens = await ethers.getContractFactory('SupportedTokens');
   const supportedTokens = await SupportedTokens.deploy();
   await supportedTokens.deployed();
@@ -149,6 +165,7 @@ export async function deploySystem(initialMinimalStake?: BigNumber): Promise<Sys
   return {
     staking: staking,
     addressStorage: addressStorage,
+    slashingVoting: slashingVoting,
     dkg: dkg,
     supportedTokens: supportedTokens,
     contractRegistry: contractRegistry,

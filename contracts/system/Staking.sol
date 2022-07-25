@@ -61,6 +61,10 @@ contract Staking is ContractKeys, Ownable, Initializable {
         validatorStorage = AddressStorage(_validatorStorage);
     }
 
+    function isValidatorActive(address _sender) external view returns (bool) {
+        return (stakes[_sender].status == ValidatorStatus.ACTIVE);
+    }
+
     function setMinimalStake(uint256 _minimalStake) public onlyOwner {
         minimalStake = _minimalStake;
         emit MinimalStakeUpdated(_minimalStake);
