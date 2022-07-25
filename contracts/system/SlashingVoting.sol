@@ -17,14 +17,21 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
     }
 
     ContractRegistry public contractRegistry;
+
     uint256 public epochPeriod;
     uint256 public slashingThresold;
     uint256 public slashingEpochs;
+
+    // Votes
     mapping(bytes32 => mapping(address => bool)) public votes;
     mapping(bytes32 => uint256) public voteCounts;
+
+    // Bans
     mapping(bytes32 => bool) public ban;
     mapping(uint256 => mapping(address => uint256)) public banCounts;
-    mapping(address => bool) public slashes;
+
+    // Slashings
+    mapping(address => bool) public slashings;
 
     event VotedWithReason(address voter, address validator, SlashingReason reason);
     event BannedWithReason(address validator, SlashingReason reason);
@@ -57,7 +64,7 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
 
         require(staking.isValidatorActive(_validator) == true, "SlashingVoting: target is not active validator");
         require(ban[voteHash] == false, "SlashingVoting: validator is already banned");
-        require(slashes[_validator] == false, "SlashingVoting: validator is already slashed");
+        require(slashings[_validator] == false, "SlashingVoting: validator is already slashed");
         require(
             votes[voteHash][msg.sender] == false,
             "SlashingVoting: voter is already voted against given validator "
@@ -75,7 +82,7 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
         }
 
         if (bansTotal(currentEpoch(), _validator) >= slashingThresold) {
-            slashes[_validator] = true;
+            slashings[_validator] = true;
             emit SlashedWithReason(_validator);
         }
     }
