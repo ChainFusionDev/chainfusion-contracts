@@ -4,10 +4,10 @@ import { deployBridge } from '../utils/deploy';
 
 describe('LiquidityPools', function () {
   it('should change token manager', async function () {
-    const [owner, v1] = await ethers.getSigners();
+    const [validator, v1] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
-    const { tokenManager, liquidityPools } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { tokenManager, liquidityPools } = await deployBridge(validator.address, initialRequiredApprovals);
     const newTokenManager = await ethers.getContractAt('TokenManager', tokenManager.address, v1);
 
     await expect(liquidityPools.setTokenManager(newTokenManager.address))
@@ -18,11 +18,11 @@ describe('LiquidityPools', function () {
   });
 
   it('should change fee percentage', async function () {
-    const [owner] = await ethers.getSigners();
+    const [validator] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
     const newFeePercentage = '10000';
 
-    const { liquidityPools } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { liquidityPools } = await deployBridge(validator.address, initialRequiredApprovals);
 
     await expect(liquidityPools.setFeePercentage(newFeePercentage))
       .to.emit(liquidityPools, 'FeePercentageUpdated')
@@ -32,33 +32,33 @@ describe('LiquidityPools', function () {
   });
 
   it('should add liquidity for supported token', async function () {
-    const [owner] = await ethers.getSigners();
+    const [validator] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
     const amount = '100000';
 
-    const { liquidityPools, tokenManager, mockToken } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { liquidityPools, tokenManager, mockToken } = await deployBridge(validator.address, initialRequiredApprovals);
 
     expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
     await mockToken.approve(liquidityPools.address, amount);
     await expect(liquidityPools.addLiquidity(mockToken.address, amount))
       .to.emit(liquidityPools, 'LiquidityAdded')
-      .withArgs(mockToken.address, owner.address, amount);
+      .withArgs(mockToken.address, validator.address, amount);
 
     expect(await liquidityPools.providedLiquidity(mockToken.address)).to.equal(amount);
     expect(await liquidityPools.availableLiquidity(mockToken.address)).to.equal(amount);
-    expect((await liquidityPools.liquidityPositions(mockToken.address, owner.address)).balance).to.equal(amount);
+    expect((await liquidityPools.liquidityPositions(mockToken.address, validator.address)).balance).to.equal(amount);
   });
 
   it('should not add liquidity for unsupported token', async function () {
-    const [owner] = await ethers.getSigners();
+    const [validator] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
     const amount = '100000';
     const mintAmount = '100000000000000000000';
 
-    const { liquidityPools, mockToken } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { liquidityPools, mockToken } = await deployBridge(validator.address, initialRequiredApprovals);
 
     const MockToken = await ethers.getContractFactory('MockToken');
     const mockToken2 = await MockToken.deploy('Token2', 'TKN2', mintAmount);
@@ -73,44 +73,44 @@ describe('LiquidityPools', function () {
   });
 
   it('should remove liquidity', async function () {
-    const [owner] = await ethers.getSigners();
+    const [validator] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
     const amount = '100000';
 
-    const { liquidityPools, tokenManager, mockToken } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { liquidityPools, tokenManager, mockToken } = await deployBridge(validator.address, initialRequiredApprovals);
 
     expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
     await mockToken.approve(liquidityPools.address, amount);
     await expect(liquidityPools.addLiquidity(mockToken.address, amount))
       .to.emit(liquidityPools, 'LiquidityAdded')
-      .withArgs(mockToken.address, owner.address, amount);
+      .withArgs(mockToken.address, validator.address, amount);
 
     await expect(liquidityPools.removeLiquidity(mockToken.address, amount))
       .to.emit(liquidityPools, 'LiquidityRemoved')
-      .withArgs(mockToken.address, owner.address, amount);
+      .withArgs(mockToken.address, validator.address, amount);
 
     expect(await liquidityPools.providedLiquidity(mockToken.address)).to.equal(0);
     expect(await liquidityPools.availableLiquidity(mockToken.address)).to.equal(0);
-    expect((await liquidityPools.liquidityPositions(mockToken.address, owner.address)).balance).to.equal(0);
+    expect((await liquidityPools.liquidityPositions(mockToken.address, validator.address)).balance).to.equal(0);
   });
 
   it('should not remove liquidity more than provided', async function () {
-    const [owner] = await ethers.getSigners();
+    const [validator] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
     const amount = '100000';
     const amountRemove = '1000000';
 
-    const { liquidityPools, tokenManager, mockToken } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { liquidityPools, tokenManager, mockToken } = await deployBridge(validator.address, initialRequiredApprovals);
 
     expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
     await mockToken.approve(liquidityPools.address, amount);
     await expect(liquidityPools.addLiquidity(mockToken.address, amount))
       .to.emit(liquidityPools, 'LiquidityAdded')
-      .withArgs(mockToken.address, owner.address, amount);
+      .withArgs(mockToken.address, validator.address, amount);
 
     await expect(liquidityPools.removeLiquidity(mockToken.address, amountRemove)).to.be.revertedWith(
       'LiquidityPools: too much amount'
@@ -118,12 +118,12 @@ describe('LiquidityPools', function () {
   });
 
   it('should transfer token', async function () {
-    const [owner, receiver] = await ethers.getSigners();
+    const [validator, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
     const amount = '10000000000000000000';
 
     const { liquidityPools, tokenManager, mockToken, bridge, chainId } = await deployBridge(
-      owner.address,
+      validator.address,
       initialRequiredApprovals
     );
 
@@ -137,7 +137,7 @@ describe('LiquidityPools', function () {
   });
 
   it('should collect fees', async function () {
-    const [owner, receiver] = await ethers.getSigners();
+    const [validator, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
     const amount = '10000000000000000000';
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
@@ -150,7 +150,7 @@ describe('LiquidityPools', function () {
     const sourceChainId = 5;
 
     const { liquidityPools, tokenManager, mockToken, bridge, chainId, feeManager } = await deployBridge(
-      owner.address,
+      validator.address,
       initialRequiredApprovals
     );
 
@@ -170,7 +170,7 @@ describe('LiquidityPools', function () {
   });
 
   it('should claim rewards', async function () {
-    const [owner, receiver] = await ethers.getSigners();
+    const [validator, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
     const amount = '10000000000000000000';
     const tokenFee = '10000';
@@ -182,7 +182,7 @@ describe('LiquidityPools', function () {
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
 
     const { liquidityPools, mockToken, bridge, feeManager } = await deployBridge(
-      owner.address,
+      validator.address,
       initialRequiredApprovals
     );
 
@@ -202,12 +202,12 @@ describe('LiquidityPools', function () {
   });
 
   it('should add and remove liquidity several times', async function () {
-    const [owner] = await ethers.getSigners();
+    const [validator] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
     const amount = '1000000';
     const amountLiquidity = '100';
 
-    const { liquidityPools, mockToken, bridge } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { liquidityPools, mockToken, bridge } = await deployBridge(validator.address, initialRequiredApprovals);
 
     await mockToken.approve(bridge.address, amount);
     await mockToken.approve(liquidityPools.address, amount);
@@ -224,35 +224,35 @@ describe('LiquidityPools', function () {
   });
 
   it('should add and remove liquidity using native currency', async function () {
-    const [owner] = await ethers.getSigners();
+    const [validator] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
     const amount = '100000';
 
-    const { liquidityPools, tokenManager } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { liquidityPools, tokenManager } = await deployBridge(validator.address, initialRequiredApprovals);
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     await tokenManager.setEnabled(NATIVE_TOKEN, true);
     expect(await tokenManager.isTokenEnabled(NATIVE_TOKEN)).to.equal(true);
 
     await expect(liquidityPools.addNativeLiquidity({ value: amount }))
       .to.emit(liquidityPools, 'LiquidityAdded')
-      .withArgs(NATIVE_TOKEN, owner.address, amount);
+      .withArgs(NATIVE_TOKEN, validator.address, amount);
 
     expect(await liquidityPools.providedLiquidity(NATIVE_TOKEN)).to.equal(amount);
     expect(await liquidityPools.availableLiquidity(NATIVE_TOKEN)).to.equal(amount);
-    expect((await liquidityPools.liquidityPositions(NATIVE_TOKEN, owner.address)).balance).to.equal(amount);
+    expect((await liquidityPools.liquidityPositions(NATIVE_TOKEN, validator.address)).balance).to.equal(amount);
 
     await expect(liquidityPools.removeLiquidity(NATIVE_TOKEN, amount, { value: amount }))
       .to.emit(liquidityPools, 'LiquidityRemoved')
-      .withArgs(NATIVE_TOKEN, owner.address, amount);
+      .withArgs(NATIVE_TOKEN, validator.address, amount);
 
     expect(await liquidityPools.providedLiquidity(NATIVE_TOKEN)).to.equal(0);
     expect(await liquidityPools.availableLiquidity(NATIVE_TOKEN)).to.equal(0);
-    expect((await liquidityPools.liquidityPositions(NATIVE_TOKEN, owner.address)).balance).to.equal(0);
+    expect((await liquidityPools.liquidityPositions(NATIVE_TOKEN, validator.address)).balance).to.equal(0);
   });
 
   it('should distribute the reward equally', async function () {
-    const [owner, v1, v2, receiver] = await ethers.getSigners();
+    const [validator, v1, v2, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 2;
     const amountTransfer = '1000000000000000000';
     const amount = '100000000000000000';
@@ -265,7 +265,7 @@ describe('LiquidityPools', function () {
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
 
     const { liquidityPools, mockToken, bridge, feeManager } = await deployBridge(
-      owner.address,
+      validator.address,
       initialRequiredApprovals
     );
 
@@ -312,30 +312,30 @@ describe('LiquidityPools', function () {
     expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(0);
   });
   it('should remove liquidity using native token', async function () {
-    const [owner] = await ethers.getSigners();
+    const [validator] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
 
     const amount = '100000';
 
-    const { liquidityPools, tokenManager } = await deployBridge(owner.address, initialRequiredApprovals);
+    const { liquidityPools, tokenManager } = await deployBridge(validator.address, initialRequiredApprovals);
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     await tokenManager.setEnabled(NATIVE_TOKEN, true);
     expect(await tokenManager.isTokenEnabled(NATIVE_TOKEN)).to.equal(true);
 
     await expect(liquidityPools.addNativeLiquidity({ value: amount }))
       .to.emit(liquidityPools, 'LiquidityAdded')
-      .withArgs(NATIVE_TOKEN, owner.address, amount);
+      .withArgs(NATIVE_TOKEN, validator.address, amount);
 
     expect(await liquidityPools.providedLiquidity(NATIVE_TOKEN)).to.equal(amount);
     expect(await liquidityPools.availableLiquidity(NATIVE_TOKEN)).to.equal(amount);
-    expect((await liquidityPools.liquidityPositions(NATIVE_TOKEN, owner.address)).balance).to.equal(amount);
+    expect((await liquidityPools.liquidityPositions(NATIVE_TOKEN, validator.address)).balance).to.equal(amount);
 
     await expect(liquidityPools.removeLiquidity(NATIVE_TOKEN, amount, { value: amount }))
       .to.emit(liquidityPools, 'LiquidityRemoved')
-      .withArgs(NATIVE_TOKEN, owner.address, amount);
+      .withArgs(NATIVE_TOKEN, validator.address, amount);
 
     expect(await liquidityPools.providedLiquidity(NATIVE_TOKEN)).to.equal(0);
     expect(await liquidityPools.availableLiquidity(NATIVE_TOKEN)).to.equal(0);
-    expect((await liquidityPools.liquidityPositions(NATIVE_TOKEN, owner.address)).balance).to.equal(0);
+    expect((await liquidityPools.liquidityPositions(NATIVE_TOKEN, validator.address)).balance).to.equal(0);
   });
 });

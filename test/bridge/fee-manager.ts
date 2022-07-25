@@ -5,13 +5,13 @@ import { deployBridge } from '../utils/deploy';
 
 describe('FeeManager', function () {
   it('should check if fee is transferred to FeeManager contract', async function () {
-    const [owner, receiver] = await ethers.getSigners();
+    const [validator, receiver] = await ethers.getSigners();
     const initialRequiredApprovals = 1;
     const amount = '10000000000000000000';
     const fee = '10000000000000000';
 
     const { liquidityPools, tokenManager, mockToken, bridge, chainId, feeManager } = await deployBridge(
-      owner.address,
+      validator.address,
       initialRequiredApprovals
     );
 
@@ -26,7 +26,7 @@ describe('FeeManager', function () {
   });
 
   it('should collect fee in native currency', async function () {
-    const [owner, validator, foundation, receiver] = await ethers.getSigners();
+    const [validator, foundation, receiver, user] = await ethers.getSigners();
     const amount = '1000000000000000000000';
     const tokenFee = '10000000000000000';
     const validatorReward = '10000000000000000';
@@ -37,9 +37,8 @@ describe('FeeManager', function () {
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
 
     const { liquidityPools, tokenManager, bridge, feeManager } = await deployBridge(
-      owner.address,
-      chainId,
       validator.address,
+      chainId,
       foundation.address
     );
     await tokenManager.setEnabled(NATIVE_TOKEN, true);
@@ -48,31 +47,29 @@ describe('FeeManager', function () {
 
     await liquidityPools.addNativeLiquidity({ value: amount });
     await bridge.depositNative(chainId, receiver.address, { value: amount });
+    await feeManager.setTokenFee(NATIVE_TOKEN, tokenFee, validatorReward, liquidityReward, foundationReward);
 
-    const balanceValidatorAddressTo = await owner.provider!.getBalance(validator.address);
-    const balanceFoundationAddressTo = await owner.provider!.getBalance(foundation.address);
-    const balanceLiquidityPoolsTo = await owner.provider!.getBalance(feeManager.liquidityPools());
+    const balanceValidatorAddressBefore = await ethers.provider.getBalance(validator.address);
+    const balanceFoundationAddressBefore = await ethers.provider.getBalance(foundation.address);
+    const balanceLiquidityPoolsBefore = await ethers.provider.getBalance(feeManager.liquidityPools());
 
-    const balance = await owner.provider!.getBalance(feeManager.address);
+    const balance = await ethers.provider.getBalance(feeManager.address);
     expect(balance).to.equal(fee);
 
-    await feeManager.setTokenFee(NATIVE_TOKEN, tokenFee, validatorReward, liquidityReward, foundationReward);
-    await feeManager.distributeRewards(NATIVE_TOKEN);
+    const userFeeManager = await ethers.getContractAt('FeeManager', feeManager.address, user);
+    await userFeeManager.distributeRewards(NATIVE_TOKEN);
 
-    const balanceValidatorAddressAfter = await owner.provider!.getBalance(validator.address);
-    const balanceFoundationAddressAfter = await owner.provider!.getBalance(foundation.address);
-    const balanceLiquidityPoolsAfter = await owner.provider!.getBalance(feeManager.liquidityPools());
+    const balanceValidatorAddressAfter = await ethers.provider.getBalance(validator.address);
+    const balanceFoundationAddressAfter = await ethers.provider.getBalance(foundation.address);
+    const balanceLiquidityPoolsAfter = await ethers.provider.getBalance(feeManager.liquidityPools());
 
     let validatorRewards = BigNumber.from('100000000000000');
     let liquidityRewards = BigNumber.from('100000000000000');
     let foundationRewards = BigNumber.from('9800000000000000');
 
-    expect(Number(balanceValidatorAddressAfter)).to.equal(Number(balanceValidatorAddressTo) + Number(validatorRewards));
-    expect(Number(balanceFoundationAddressAfter)).to.equal(
-      Number(balanceFoundationAddressTo) + Number(foundationRewards)
-    );
-
-    expect(balanceLiquidityPoolsAfter).to.equal(balanceLiquidityPoolsTo.add(liquidityRewards));
+    expect(balanceValidatorAddressAfter).to.equal(balanceValidatorAddressBefore.add(validatorRewards));
+    expect(balanceFoundationAddressAfter).to.equal(balanceFoundationAddressBefore.add(foundationRewards));
+    expect(balanceLiquidityPoolsAfter).to.equal(balanceLiquidityPoolsBefore.add(liquidityRewards));
 
     const collectedFee = '100000000000000';
     expect(await liquidityPools.collectedFees(NATIVE_TOKEN)).to.equal(collectedFee);

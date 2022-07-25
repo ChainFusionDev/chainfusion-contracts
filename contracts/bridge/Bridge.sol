@@ -3,17 +3,16 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./ValidatorOwnable.sol";
 import "./TokenManager.sol";
 import "./LiquidityPools.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
 import "../interfaces/IERC20MintableBurnable.sol";
 
-contract Bridge is Initializable, Ownable {
+contract Bridge is Initializable, ValidatorOwnable {
     mapping(bytes32 => bool) public executed;
 
-    address public validatorAddress;
     TokenManager public tokenManager;
     LiquidityPools public liquidityPools;
     FeeManager public feeManager;
@@ -39,20 +38,13 @@ contract Bridge is Initializable, Ownable {
     event LiquidityPoolsUpdated(address _liquidityPools);
     event FeeManagerUpdated(address _feeManager);
 
-    modifier onlyValidator() {
-        require(validatorAddress == msg.sender, "Bridge: only validator");
-        _;
-    }
-
     function initialize(
-        address _owner,
-        address _validatorAddress,
+        address _validatorStorage,
         address _tokenManager,
         address payable _liquidityPools,
         address payable _feeManager
     ) external initializer {
-        _transferOwnership(_owner);
-        setValidatorAddress(_validatorAddress);
+        _setValidatorStorage(_validatorStorage);
         setTokenManager(_tokenManager);
         setLiquidityPools(_liquidityPools);
         setFeeManager(_feeManager);
@@ -118,22 +110,17 @@ contract Bridge is Initializable, Ownable {
         emit Transferred(_token, _sourceChainId, _receiver, _amount, msg.sender);
     }
 
-    function setValidatorAddress(address _validatorAddress) public onlyOwner {
-        validatorAddress = _validatorAddress;
-        emit ValidatorAddressUpdated(_validatorAddress);
-    }
-
-    function setTokenManager(address _tokenManager) public onlyOwner {
+    function setTokenManager(address _tokenManager) public onlyValidator {
         tokenManager = TokenManager(_tokenManager);
         emit TokenManagerUpdated(_tokenManager);
     }
 
-    function setLiquidityPools(address payable _liquidityPools) public onlyOwner {
+    function setLiquidityPools(address payable _liquidityPools) public onlyValidator {
         liquidityPools = LiquidityPools(_liquidityPools);
         emit LiquidityPoolsUpdated(_liquidityPools);
     }
 
-    function setFeeManager(address payable _feeManager) public onlyOwner {
+    function setFeeManager(address payable _feeManager) public onlyValidator {
         feeManager = FeeManager(_feeManager);
         emit FeeManagerUpdated(_feeManager);
     }
