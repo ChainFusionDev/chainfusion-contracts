@@ -206,13 +206,15 @@ describe('DKG', function () {
 
     const cycleNumbers = 50;
     var curentCycle = 0;
-    for (var i = 8900000000000000; curentCycle < cycleNumbers; i = i + 10) {
+    const latestBlock = await ethers.provider.getBlock('latest');
+
+    for (var i = latestBlock.timestamp + 1; curentCycle < cycleNumbers; i = i + 10) {
       curentCycle++;
       await ethers.provider.send('evm_setNextBlockTimestamp', [i]);
       await ethers.provider.send('evm_mine', [i]);
     }
 
-    //if sagner is expired
+    // if signer is expired
     expect(await dkg.getStatus(generation)).to.equal(1);
   });
 
