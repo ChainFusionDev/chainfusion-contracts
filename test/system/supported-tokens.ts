@@ -81,4 +81,18 @@ describe('SupportedTokens', function () {
       'SupportedTokens: token does not exist'
     );
   });
+
+  it('should add address and type of token in mapping', async function () {
+    const symbol = 'ABC';
+    const chainId = 1;
+    const token = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+    const tokenType = 0;
+
+    const { supportedTokens } = await deploySystem();
+
+    await supportedTokens.addToken(symbol, chainId, token, tokenType);
+
+    expect((await supportedTokens.tokens('ABC', 1)).token).to.equals(token);
+    expect((await supportedTokens.tokens('ABC', 1)).tokenType).to.equals(tokenType);
+  });
 });

@@ -28,6 +28,7 @@ contract SupportedTokens is ContractKeys, Ownable {
     ) public onlyOwner {
         require(tokens[symbol][chainId].token == address(0), "SupportedTokens: token already added");
         tokens[symbol][chainId].token = token;
+        tokens[symbol][chainId].tokenType = tokenType;
 
         emit AddedToken(symbol, chainId, token, tokenType);
     }
