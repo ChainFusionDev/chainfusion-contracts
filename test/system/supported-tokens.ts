@@ -56,7 +56,7 @@ describe('SupportedTokens', function () {
     const { supportedTokens } = await deploySystem();
 
     await supportedTokens.addToken(symbol, chainId, token, tokenType);
-    expect((await supportedTokens.tokens('ABC', 1)).addressToken).to.equals(token);
+    expect((await supportedTokens.tokens('ABC', 1)).token).to.equals(token);
 
     await expect(supportedTokens.addToken(symbol, chainId, token, tokenType)).to.be.revertedWith(
       'SupportedTokens: token already added'
@@ -75,7 +75,7 @@ describe('SupportedTokens', function () {
     await supportedTokens.addToken(symbol, chainId, token, tokenType);
 
     await supportedTokens.removeToken(symbol, chainId);
-    expect((await supportedTokens.tokens('ABC', 1)).addressToken).to.equals(tokenZero);
+    expect((await supportedTokens.tokens('ABC', 1)).token).to.equals(tokenZero);
 
     await expect(supportedTokens.removeToken(symbol, chainId)).to.be.revertedWith(
       'SupportedTokens: token does not exist'

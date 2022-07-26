@@ -11,7 +11,7 @@ contract SupportedTokens is ContractKeys, Ownable {
     }
 
     struct TokenInfo {
-        address addressToken;
+        address token;
         TokenType tokenType;
     }
 
@@ -26,15 +26,15 @@ contract SupportedTokens is ContractKeys, Ownable {
         address token,
         TokenType tokenType
     ) public onlyOwner {
-        require(tokens[symbol][chainId].addressToken == address(0), "SupportedTokens: token already added");
-        tokens[symbol][chainId].addressToken = token;
+        require(tokens[symbol][chainId].token == address(0), "SupportedTokens: token already added");
+        tokens[symbol][chainId].token = token;
 
         emit AddedToken(symbol, chainId, token, tokenType);
     }
 
     function removeToken(string memory symbol, uint256 chainId) public onlyOwner {
-        require(tokens[symbol][chainId].addressToken != address(0), "SupportedTokens: token does not exist");
-        address token = tokens[symbol][chainId].addressToken;
+        require(tokens[symbol][chainId].token != address(0), "SupportedTokens: token does not exist");
+        address token = tokens[symbol][chainId].token;
         delete tokens[symbol][chainId];
 
         emit RemovedToken(symbol, chainId, token);
