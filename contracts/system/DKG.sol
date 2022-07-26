@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./Staking.sol";
@@ -24,6 +25,9 @@ struct BroadcastData {
 }
 
 contract DKG is ContractKeys, Ownable, Initializable {
+    using ECDSA for bytes;
+    using ECDSA for bytes32;
+
     enum GenerationStatus {
         PENDING,
         EXPIRED,
@@ -118,7 +122,8 @@ contract DKG is ContractKeys, Ownable, Initializable {
         address _signerAddress,
         bytes memory _signature
     ) external onlyValidator(_generation) roundIsFilled(_generation, 3) deadLineViolated(_generation) {
-        require(recoverSigner(_signature) == _signerAddress, "DKG: signature is invalid");
+        address recoveredSigner = bytes("verify").toEthSignedMessageHash().recover(_signature);
+        require(recoveredSigner == _signerAddress, "DKG: signature is invalid");
         require(generations[_generation].signerVotes[msg.sender] == address(0), "DKG: already voted");
 
         generations[_generation].signerVotes[msg.sender] = _signerAddress;

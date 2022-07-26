@@ -2,15 +2,15 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "./ValidatorOwnable.sol";
 import "./TokenManager.sol";
 import "./Bridge.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
 
-contract LiquidityPools is Initializable, Ownable {
+contract LiquidityPools is Initializable, ValidatorOwnable {
     struct LiquidityPosition {
         uint256 balance;
         uint256 lastRewardPoints;
@@ -50,11 +50,13 @@ contract LiquidityPools is Initializable, Ownable {
     receive() external payable {}
 
     function initialize(
+        address _validatorStorage,
         address _tokenManager,
         address _bridge,
         address payable _feeManager,
         uint256 _feePercentage
     ) external initializer {
+        _setValidatorStorage(_validatorStorage);
         setTokenManager(_tokenManager);
         setBridge(_bridge);
         setFeeManager(_feeManager);
@@ -82,22 +84,22 @@ contract LiquidityPools is Initializable, Ownable {
         availableLiquidity[_token] += _amount;
     }
 
-    function setTokenManager(address _tokenManager) public onlyOwner {
+    function setTokenManager(address _tokenManager) public onlyValidator {
         tokenManager = TokenManager(_tokenManager);
         emit TokenManagerUpdated(_tokenManager);
     }
 
-    function setBridge(address _bridge) public onlyOwner {
+    function setBridge(address _bridge) public onlyValidator {
         bridge = Bridge(_bridge);
         emit BridgeUpdated(_bridge);
     }
 
-    function setFeeManager(address payable _feeManager) public onlyOwner {
+    function setFeeManager(address payable _feeManager) public onlyValidator {
         feeManager = FeeManager(_feeManager);
         emit FeeManagerUpdated(_feeManager);
     }
 
-    function setFeePercentage(uint256 _feePercentage) public onlyOwner {
+    function setFeePercentage(uint256 _feePercentage) public onlyValidator {
         feePercentage = _feePercentage;
         emit FeePercentageUpdated(_feePercentage);
     }
