@@ -5,25 +5,36 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ContractKeys.sol";
 
 contract SupportedTokens is ContractKeys, Ownable {
-    mapping(string => mapping(uint256 => address)) public tokens;
+    enum TokenType {
+        PROVIDED,
+        MINTED
+    }
 
-    event AddedToken(string symbol, uint256 chainId, address token);
+    struct TokenInfo {
+        address addressToken;
+        TokenType tokenType;
+    }
+
+    mapping(string => mapping(uint256 => TokenInfo)) public tokens;
+
+    event AddedToken(string symbol, uint256 chainId, address token, TokenType tokenType);
     event RemovedToken(string symbol, uint256 chainId, address token);
 
     function addToken(
         string memory symbol,
         uint256 chainId,
-        address token
+        address token,
+        TokenType tokenType
     ) public onlyOwner {
-        require(tokens[symbol][chainId] == address(0), "SupportedTokens: token already added");
-        tokens[symbol][chainId] = token;
+        require(tokens[symbol][chainId].addressToken == address(0), "SupportedTokens: token already added");
+        tokens[symbol][chainId].addressToken = token;
 
-        emit AddedToken(symbol, chainId, token);
+        emit AddedToken(symbol, chainId, token, tokenType);
     }
 
     function removeToken(string memory symbol, uint256 chainId) public onlyOwner {
-        require(tokens[symbol][chainId] != address(0), "SupportedTokens: token does not exist");
-        address token = tokens[symbol][chainId];
+        require(tokens[symbol][chainId].addressToken != address(0), "SupportedTokens: token does not exist");
+        address token = tokens[symbol][chainId].addressToken;
         delete tokens[symbol][chainId];
 
         emit RemovedToken(symbol, chainId, token);
