@@ -8,11 +8,14 @@ describe('SupportedTokens', function () {
     const symbol = 'ABC';
     const chainId = 1;
     const token = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+    const tokenType = 0;
 
     const { supportedTokens } = await deploySystem();
 
     const systemUser = await ethers.getContractAt('SupportedTokens', supportedTokens.address, user);
-    await expect(systemUser.addToken(symbol, chainId, token)).to.be.revertedWith('Ownable: caller is not the owner');
+    await expect(systemUser.addToken(symbol, chainId, token, tokenType)).to.be.revertedWith(
+      'Ownable: caller is not the owner'
+    );
     await expect(systemUser.removeToken(symbol, chainId)).to.be.revertedWith('Ownable: caller is not the owner');
   });
 
@@ -20,24 +23,26 @@ describe('SupportedTokens', function () {
     const symbol = 'ABC';
     const chainId = 1;
     const token = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+    const tokenType = 0;
 
     const { supportedTokens } = await deploySystem();
 
-    await expect(await supportedTokens.addToken(symbol, chainId, token))
+    await expect(supportedTokens.addToken(symbol, chainId, token, tokenType))
       .to.emit(supportedTokens, 'AddedToken')
-      .withArgs('ABC', 1, '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF');
+      .withArgs('ABC', 1, '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF', 0);
   });
 
   it('should emit the RemovedToken event with proper arguments', async function () {
     const symbol = 'ABC';
     const chainId = 1;
     const token = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+    const tokenType = 0;
 
     const { supportedTokens } = await deploySystem();
 
-    await supportedTokens.addToken(symbol, chainId, token);
+    await supportedTokens.addToken(symbol, chainId, token, tokenType);
 
-    await expect(await supportedTokens.removeToken(symbol, chainId))
+    await expect(supportedTokens.removeToken(symbol, chainId))
       .to.emit(supportedTokens, 'RemovedToken')
       .withArgs('ABC', 1, '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF');
   });
@@ -46,13 +51,14 @@ describe('SupportedTokens', function () {
     const symbol = 'ABC';
     const chainId = 1;
     const token = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+    const tokenType = 0;
 
     const { supportedTokens } = await deploySystem();
 
-    await supportedTokens.addToken(symbol, chainId, token);
-    expect(await supportedTokens.tokens('ABC', 1)).to.equals(token);
+    await supportedTokens.addToken(symbol, chainId, token, tokenType);
+    expect((await supportedTokens.tokens('ABC', 1)).token).to.equals(token);
 
-    await expect(supportedTokens.addToken(symbol, chainId, token)).to.be.revertedWith(
+    await expect(supportedTokens.addToken(symbol, chainId, token, tokenType)).to.be.revertedWith(
       'SupportedTokens: token already added'
     );
   });
@@ -62,16 +68,31 @@ describe('SupportedTokens', function () {
     const chainId = 1;
     const token = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     const tokenZero = '0x0000000000000000000000000000000000000000';
+    const tokenType = 0;
 
     const { supportedTokens } = await deploySystem();
 
-    await supportedTokens.addToken(symbol, chainId, token);
+    await supportedTokens.addToken(symbol, chainId, token, tokenType);
 
     await supportedTokens.removeToken(symbol, chainId);
-    expect(await supportedTokens.tokens('ABC', 1)).to.equals(tokenZero);
+    expect((await supportedTokens.tokens('ABC', 1)).token).to.equals(tokenZero);
 
     await expect(supportedTokens.removeToken(symbol, chainId)).to.be.revertedWith(
       'SupportedTokens: token does not exist'
     );
+  });
+
+  it('should add address and type of token in mapping', async function () {
+    const symbol = 'ABC';
+    const chainId = 1;
+    const token = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+    const tokenType = 0;
+
+    const { supportedTokens } = await deploySystem();
+
+    await supportedTokens.addToken(symbol, chainId, token, tokenType);
+
+    expect((await supportedTokens.tokens('ABC', 1)).token).to.equals(token);
+    expect((await supportedTokens.tokens('ABC', 1)).tokenType).to.equals(tokenType);
   });
 });
