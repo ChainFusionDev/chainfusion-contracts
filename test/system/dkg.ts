@@ -151,13 +151,16 @@ describe('DKG', function () {
     await expect(dkgOther.setValidators([other.address])).to.be.revertedWith('DKG: not a staking');
   });
 
-  it('should check if we will get active and pending status ', async function () {
+  it('should get active and pending status ', async function () {
     const initialMinimalStake = ethers.utils.parseEther('3');
 
     const [, signer] = await ethers.getSigners();
     const { dkg, staking } = await deploySystem(initialMinimalStake);
 
-    const generation = ethers.utils.parseEther('0');
+    const PENDING: number = 0;
+    const ACTIVE: number = 2;
+
+    const generation = 0;
     const message = 'verify';
     const signature = await signer.signMessage(message);
     const data1 = ethers.utils.keccak256([1]);
@@ -170,8 +173,7 @@ describe('DKG', function () {
     await staking.stake({ value: initialMinimalStake });
     await stakingSigner.stake({ value: initialMinimalStake });
 
-    // if signer is pending
-    expect(await dkgSigner.getStatus(generation)).to.equal(0);
+    expect(await dkgSigner.getStatus(generation)).to.equal(PENDING);
 
     await dkg.roundBroadcast(generation, 1, data1);
     await dkgSigner.roundBroadcast(generation, 1, data1);
@@ -187,35 +189,27 @@ describe('DKG', function () {
     await dkg.voteSigner(generation, signer.address, signature);
     await dkgSigner.voteSigner(generation, signer.address, signature);
 
-    // if signer is active
-    expect(await dkgSigner.getStatus(generation)).to.equal(2);
+    expect(await dkgSigner.getStatus(generation)).to.equal(ACTIVE);
   });
 
-  it('should check if we will get expired status', async function () {
+  it('should get expired statuss', async function () {
     const initialMinimalStake = ethers.utils.parseEther('3');
 
     const [, signer] = await ethers.getSigners();
     const { dkg, staking } = await deploySystem(initialMinimalStake);
 
-    const generation = ethers.utils.parseEther('0');
+    const EXPIRED: number = 1;
+    const generation = 0;
 
     const stakingSigner = await ethers.getContractAt('Staking', staking.address, signer);
 
     await staking.stake({ value: initialMinimalStake });
     await stakingSigner.stake({ value: initialMinimalStake });
 
-    const cycleNumbers = 50;
-    var curentCycle = 0;
-    const latestBlock = await ethers.provider.getBlock('latest');
+    const hre = require('hardhat');
+    await hre.network.provider.send('hardhat_mine', ['0x64']);
 
-    for (var i = latestBlock.timestamp + 1; curentCycle < cycleNumbers; i = i + 10) {
-      curentCycle++;
-      await ethers.provider.send('evm_setNextBlockTimestamp', [i]);
-      await ethers.provider.send('evm_mine', [i]);
-    }
-
-    // if signer is expired
-    expect(await dkg.getStatus(generation)).to.equal(1);
+    expect(await dkg.getStatus(generation)).to.equal(EXPIRED);
   });
 
   it('should check if we can set deadline period ', async function () {
@@ -224,7 +218,7 @@ describe('DKG', function () {
     const [, signer] = await ethers.getSigners();
     const { dkg, staking } = await deploySystem(initialMinimalStake);
 
-    const generation = ethers.utils.parseEther('0');
+    const generation = 0;
     const message = 'verify';
     const signature = await signer.signMessage(message);
     const data1 = ethers.utils.keccak256([1]);
@@ -245,6 +239,8 @@ describe('DKG', function () {
 
     await dkg.roundBroadcast(generation, 3, data3);
     await dkgSigner.roundBroadcast(generation, 3, data3);
+
+    await expect(dkgSigner.setDeadlinePeriod(100)).to.be.revertedWith('DKG: not a active signer');
 
     await dkg.voteSigner(generation, signer.address, signature);
     await dkgSigner.voteSigner(generation, signer.address, signature);

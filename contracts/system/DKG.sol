@@ -84,7 +84,7 @@ contract DKG is ContractKeys, Ownable, Initializable {
         _;
     }
 
-    modifier deadLineViolated(uint256 _generation) {
+    modifier deadlineViolated(uint256 _generation) {
         require(generations[_generation].deadline >= block.number, "DKG: deadline is violated");
         _;
     }
@@ -107,7 +107,7 @@ contract DKG is ContractKeys, Ownable, Initializable {
         onlyValidator(_generation)
         roundIsFilled(_generation, _round - 1)
         roundNotProvided(_generation, _round)
-        deadLineViolated(_generation)
+        deadlineViolated(_generation)
     {
         generations[_generation].roundBroadcastData[_round].count++;
         generations[_generation].roundBroadcastData[_round].data[msg.sender] = _rawData;
@@ -121,7 +121,7 @@ contract DKG is ContractKeys, Ownable, Initializable {
         uint256 _generation,
         address _signerAddress,
         bytes memory _signature
-    ) external onlyValidator(_generation) roundIsFilled(_generation, 3) deadLineViolated(_generation) {
+    ) external onlyValidator(_generation) roundIsFilled(_generation, 3) deadlineViolated(_generation) {
         address recoveredSigner = bytes("verify").toEthSignedMessageHash().recover(_signature);
         require(recoveredSigner == _signerAddress, "DKG: signature is invalid");
         require(generations[_generation].signerVotes[msg.sender] == address(0), "DKG: already voted");
@@ -183,6 +183,7 @@ contract DKG is ContractKeys, Ownable, Initializable {
         if (generations.length > _generation) {
             return generations[_generation].isGenerationValidator[_validator];
         }
+
         return false;
     }
 
