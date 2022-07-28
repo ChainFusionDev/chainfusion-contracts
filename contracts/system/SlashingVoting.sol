@@ -6,6 +6,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./ContractKeys.sol";
 import "./ContractRegistry.sol";
 import "./Staking.sol";
+import "hardhat/console.sol";
 
 contract SlashingVoting is ContractKeys, Ownable, Initializable {
     enum SlashingReason {
@@ -15,6 +16,9 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
         REASON_SIGNING_INACTIVITY,
         REASON_SIGNING_VIOLATION
     }
+
+    // enum: SlashingReasonGroup REASON_GROUP_BLOCKS REASON_GROUP_DKG REASON_GROUP_SIGNING
+    // bansByGroup mapping(epoch -> validator -> SlashingReasonGroup)
 
     ContractRegistry public contractRegistry;
 
@@ -29,9 +33,6 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
     // Bans
     mapping(bytes32 => bool) public ban;
     mapping(uint256 => mapping(address => uint256)) public banCounts;
-
-    // Slashings
-    mapping(address => bool) public slashings;
 
     event VotedWithReason(address voter, address validator, SlashingReason reason);
     event BannedWithReason(address validator, SlashingReason reason);
@@ -64,7 +65,9 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
 
         require(staking.isValidatorActive(_validator) == true, "SlashingVoting: target is not active validator");
         require(ban[voteHash] == false, "SlashingVoting: validator is already banned");
-        require(slashings[_validator] == false, "SlashingVoting: validator is already slashed");
+        require(_stakingContract().isValidatorSlashing(_validator) == false, 
+        "SlashingVoting: validator is already slashed"
+        );
         require(
             votes[voteHash][msg.sender] == false,
             "SlashingVoting: voter is already voted against given validator "
@@ -79,10 +82,13 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
             ban[voteHash] = true;
             banCounts[currentEpoch()][_validator]++;
             emit BannedWithReason(_validator, _reason);
+            /////////////////////////////////////////
         }
 
-        if (bansTotal(currentEpoch(), _validator) >= slashingThresold) {
-            slashings[_validator] = true;
+        (uint256 numberOfBans,bool isBansSeriies) =bansTotal(currentEpoch(), _validator);
+
+        if (numberOfBans >= slashingThresold && isBansSeriies) {
+            _stakingContract().slash(_validator);
             emit SlashedWithReason(_validator);
         }
     }
@@ -99,17 +105,27 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
         slashingEpochs = _slashingEpochs;
     }
 
-    function bansTotal(uint256 _epoch, address _validator) public view returns (uint256) {
+    function bansTotal(uint256 _epoch, address _validator) public view returns (uint256,bool) {
         uint256 bansNubmer;
+        uint256 bansSeries;
         for (int256 i = int256(_epoch); i > int256(_epoch) - int256((slashingEpochs)); i--) {
             if (i < 0) {
                 break;
             }
 
-            bansNubmer += bansByEpoch(uint256(i), _validator);
+            uint256 bansInEpoch = bansByEpoch(uint256(i), _validator);
+
+            if (bansInEpoch !=0) {
+            bansNubmer += bansInEpoch;
+            bansSeries++;
+            }
         }
 
-        return bansNubmer;
+        if (bansSeries < slashingEpochs){
+            return (bansNubmer,false);
+        }
+
+        return (bansNubmer,true);
     }
 
     function bansByEpoch(uint256 _epoch, address _validator) public view returns (uint256) {

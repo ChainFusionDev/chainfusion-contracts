@@ -85,23 +85,6 @@ describe('Staking', function () {
     await expect(staking2.slash(v1.address)).to.be.revertedWith('only active validator');
   });
 
-  it('should check if slashingCount is not incremented if slash() is called several times', async function () {
-    const [, v2] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-
-    const { staking } = await deploySystem(initialMinimalStake);
-
-    const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
-
-    await staking.stake({ value: value });
-    await staking2.stake({ value: value });
-
-    await staking.slash(v2.address);
-    await staking.slash(v2.address);
-    expect(await staking.slashingCount(v2.address)).to.be.equal(1);
-  });
-
   it('should check if slash() already slashed validator', async function () {
     const [, v2, v3] = await ethers.getSigners();
     const initialMinimalStake = ethers.utils.parseEther('3');
@@ -120,25 +103,6 @@ describe('Staking', function () {
     await staking3.slash(v2.address);
 
     await expect(staking3.slash(v2.address)).to.be.revertedWith('Staking: validator is already slashed');
-  });
-
-  it('should check if slashingCount is incremented if called by different validators', async function () {
-    const [, v2, v3] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-
-    const { staking } = await deploySystem(initialMinimalStake);
-
-    const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
-    const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
-
-    await staking.stake({ value: value });
-    await staking2.stake({ value: value });
-    await staking3.stake({ value: value });
-
-    await staking.slash(v3.address);
-    await staking2.slash(v3.address);
-    expect(await staking.slashingCount(v3.address)).to.be.equal(2);
   });
 
   it('should check if validatorCount is decremented after slashing', async function () {

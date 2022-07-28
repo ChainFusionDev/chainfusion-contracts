@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "./Staking.sol";
 import "./ContractKeys.sol";
 import "./ContractRegistry.sol";
+import "./SlashingVoting.sol";
+import "hardhat/console.sol";
 
 struct GenerationInfo {
     address[] validators;
@@ -57,8 +59,9 @@ contract DKG is ContractKeys, Ownable, Initializable {
         _;
     }
 
-    modifier onlyValidatorStaking() {
-        require(msg.sender == address(_stakingContract()), "DKG: not a staking");
+    modifier onlyContract() {
+        require(msg.sender == address(_stakingContract()) || msg.sender == address(_slashingVotingContract()),
+         "DKG: not contract");
         _;
     }
 
@@ -93,9 +96,42 @@ contract DKG is ContractKeys, Ownable, Initializable {
         contractRegistry = ContractRegistry(_contractRegistry);
         deadlinePeriod = _deadlinePeriod;
     }
+    
+    function updateGeneration(address _validator) external onlyContract {
+        uint256 newGeneration = generations.length;
 
-    function setValidators(address[] memory _validators) external onlyValidatorStaking {
-        _setValidators(_validators);
+        if (newGeneration > lastActiveGeneration) {
+            lastActiveGeneration = newGeneration;
+        }
+
+        generations.push();
+
+        //use get validators and create new array
+        address[] storage newValidators = generations[newGeneration-1].validators;
+        
+
+        if (_stakingContract().isValidatorActive(_validator) == true){
+            newValidators.push(_validator);
+        }
+
+        if (_stakingContract().isValidatorActive(_validator) != true){
+            for (uint256 i =0; i < newValidators.length;i++){
+                if (newValidators[i] == _validator){
+                    newValidators[i] = newValidators[newValidators.length-1];
+                    newValidators.pop();
+                    break;
+                }
+            }
+        }
+
+        for (uint256 i = 0; i < newValidators.length; i++) {
+            generations[newGeneration].isGenerationValidator[newValidators[i]] = true;
+        }
+
+        generations[newGeneration].validators = newValidators;
+        generations[newGeneration].deadline = block.number + deadlinePeriod;
+        emit ValidatorsUpdated(newGeneration, newValidators);
+        emit RoundDataFilled(newGeneration, 0);
     }
 
     function roundBroadcast(
@@ -207,28 +243,30 @@ contract DKG is ContractKeys, Ownable, Initializable {
         deadlinePeriod = _deadlinePeriod;
     }
 
-    function _setValidators(address[] memory _validators) private {
-        if (_validators.length < 2) {
-            // dkg requires at least 2 validators
-            return;
-        }
+    function _removeValidators(address _validator) private {
+        console.log("_setValidators start");
 
         uint256 newGeneration = generations.length;
 
         if (newGeneration > lastActiveGeneration) {
             lastActiveGeneration = newGeneration;
         }
+        console.log("_setValidators 0");
 
         generations.push();
-        for (uint256 i = 0; i < _validators.length; i++) {
-            generations[newGeneration].isGenerationValidator[_validators[i]] = true;
+        address[] storage newValidators = generations[newGeneration-1].validators;
+        newValidators.push(_validator);
+        generations[newGeneration].validators = newValidators;
+        for (uint256 i = 0; i < generations[newGeneration].validators.length; i++) {
+            generations[newGeneration].isGenerationValidator[generations[newGeneration].validators[i]] = true;
         }
+        console.log("_setValidators 1");
 
-        generations[newGeneration].validators = _validators;
         generations[newGeneration].deadline = block.number + deadlinePeriod;
-
-        emit ValidatorsUpdated(newGeneration, _validators);
+        console.log("_setValidators 2");
+        emit ValidatorsUpdated(newGeneration, generations[newGeneration].validators);
         emit RoundDataFilled(newGeneration, 0);
+        console.log("_setValidators finish");
     }
 
     function _enoughVotes(uint256 _generation, uint256 votes) private view returns (bool) {
@@ -237,5 +275,9 @@ contract DKG is ContractKeys, Ownable, Initializable {
 
     function _stakingContract() private view returns (Staking) {
         return Staking(contractRegistry.getContract(STAKING_KEY));
+    }
+
+    function _slashingVotingContract() private view returns (SlashingVoting) {
+        return SlashingVoting(contractRegistry.getContract(SLASHING_VOTING_KEY));
     }
 }

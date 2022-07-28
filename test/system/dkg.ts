@@ -22,33 +22,33 @@ describe('DKG', function () {
     const { dkg, staking } = await deploySystem();
 
     expect(await dkg.getGenerationsCount()).to.equal(0);
-
+  
     const staking1 = await ethers.getContractAt('Staking', staking.address, v1);
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
-
+    console.log("Start");
     await expect(dkg.roundBroadcast(generation, 1, data1)).to.be.revertedWith('DKG: not a validator');
 
     expect(await dkg.isValidator(generation, v1.address)).to.equal(false);
     expect(await dkg.isValidator(generation, v2.address)).to.equal(false);
     expect(await dkg.getValidators(generation)).to.deep.equal([]);
     expect(await dkg.getValidatorsCount(generation)).to.equal(0);
-
+    console.log("00");
     await staking1.stake({ value: initialMinimalStake });
     await staking2.stake({ value: initialMinimalStake });
 
     expect(await dkg.getGenerationsCount()).to.equal(1);
-
+    console.log("01");
     expect(await dkg.isValidator(generation, v1.address)).to.equal(true);
     expect(await dkg.isValidator(generation, v2.address)).to.equal(true);
     expect(await dkg.getValidators(generation)).to.deep.equal([v1.address, v2.address]);
     expect(await dkg.getValidatorsCount(generation)).to.equal(2);
-
+    console.log("02");
     const dkgV1 = await ethers.getContractAt('DKG', dkg.address, v1);
     const dkgV2 = await ethers.getContractAt('DKG', dkg.address, v2);
 
     await expect(dkgV1.roundBroadcast(generation, 2, data2)).to.be.revertedWith('DKG: round was not filled');
     await expect(dkgV2.roundBroadcast(generation, 2, data2)).to.be.revertedWith('DKG: round was not filled');
-
+    console.log("03");
     // round1 - v1
 
     await expect(dkgV1.roundBroadcast(generation, 1, data1))
@@ -148,7 +148,7 @@ describe('DKG', function () {
     const { dkg } = await deploySystem();
 
     const dkgOther = await ethers.getContractAt('DKG', dkg.address, other);
-    await expect(dkgOther.setValidators([other.address])).to.be.revertedWith('DKG: not a staking');
+    await expect(dkgOther.updateGeneration(other.address)).to.be.revertedWith('DKG: not a staking');
   });
 
   it('should get active and pending status ', async function () {
@@ -192,7 +192,7 @@ describe('DKG', function () {
     expect(await dkgSigner.getStatus(generation)).to.equal(ACTIVE);
   });
 
-  it('should get expired statuss', async function () {
+  it('should get expired status', async function () {
     const initialMinimalStake = ethers.utils.parseEther('3');
 
     const [, signer] = await ethers.getSigners();

@@ -7,6 +7,8 @@ import "../common/AddressStorage.sol";
 import "./DKG.sol";
 import "./ContractKeys.sol";
 import "./ContractRegistry.sol";
+import "./SlashingVoting.sol";
+import "hardhat/console.sol";
 
 contract Staking is ContractKeys, Ownable, Initializable {
     enum ValidatorStatus {
@@ -29,8 +31,6 @@ contract Staking is ContractKeys, Ownable, Initializable {
     uint256 public minimalStake;
     uint256 public withdrawalPeriod;
     mapping(address => ValidatorInfo) public stakes;
-    mapping(address => mapping(address => bool)) public slashingVotes;
-    mapping(address => uint256) public slashingCount;
     mapping(address => WithdrawalAnnouncement) public withdrawalAnnouncements;
     ContractRegistry public contractRegistry;
     AddressStorage public validatorStorage;
@@ -49,6 +49,11 @@ contract Staking is ContractKeys, Ownable, Initializable {
         _;
     }
 
+    modifier onlySlashingVoting() {
+        require(msg.sender == address(_slashingVotingContract()), "ValidatorStaking: not a slashing voting");
+        _;
+    }
+
     function initialize(
         uint256 _minimalStake,
         uint256 _withdrawalPeriod,
@@ -61,8 +66,15 @@ contract Staking is ContractKeys, Ownable, Initializable {
         validatorStorage = AddressStorage(_validatorStorage);
     }
 
-    function isValidatorActive(address _sender) external view returns (bool) {
-        return (stakes[_sender].status == ValidatorStatus.ACTIVE);
+    function isValidatorActive(address _validator) external view returns (bool) {
+        return (stakes[_validator].status == ValidatorStatus.ACTIVE);
+    }
+
+    function isValidatorSlashing(address _validator) external view returns (bool) {
+        if (stakes[_validator].status == ValidatorStatus.SLASHED){
+            return true;
+        }
+        return false;
     }
 
     function setMinimalStake(uint256 _minimalStake) public onlyOwner {
@@ -75,18 +87,9 @@ contract Staking is ContractKeys, Ownable, Initializable {
         emit WithdrawalPeriodUpdated(_withdrawalPeriod);
     }
 
-    function slash(address _validator) public onlyActiveValidator {
-        require(stakes[_validator].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator is already slashed");
-
-        if (slashingVotes[_validator][msg.sender] == false) {
-            slashingVotes[_validator][msg.sender] = true;
-            slashingCount[_validator] += 1;
-        }
-
-        if (slashingCount[_validator] >= ((validatorStorage.size() / 2) + 1)) {
-            stakes[_validator].status = ValidatorStatus.SLASHED;
-            _removeValidator(_validator);
-        }
+    function slash(address _validator) public onlySlashingVoting {
+        stakes[_validator].status = ValidatorStatus.SLASHED;
+        _removeValidator(_validator);
     }
 
     function announceWithdrawal(uint256 _amount) public onlyNotSlashed {
@@ -125,16 +128,19 @@ contract Staking is ContractKeys, Ownable, Initializable {
     }
 
     function stake() public payable {
+        console.log("stake start");
         require(msg.value + stakes[msg.sender].stake >= minimalStake, "ValidatorStaking: insufficient stake provided");
         require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator is slashed");
-
+        console.log("stake 0");
         if (stakes[msg.sender].status == ValidatorStatus.INACTIVE) {
             stakes[msg.sender].validator = msg.sender;
             stakes[msg.sender].status = ValidatorStatus.ACTIVE;
             _addValidator(msg.sender);
         }
-
+        console.log("stake 1");
         stakes[msg.sender].stake += msg.value;
+        console.log("stake 2");
+        _dkgContract().updateGeneration(msg.sender);
     }
 
     function getValidators() public view returns (address[] memory) {
@@ -144,18 +150,22 @@ contract Staking is ContractKeys, Ownable, Initializable {
     function _addValidator(address validator) private {
         DKG dkg = _dkgContract();
 
-        validatorStorage.mustAdd(validator);
-        dkg.setValidators(validatorStorage.getAddresses());
+        validatorStorage.mustAdd(validator);//?
+        dkg.updateGeneration(validator);
     }
 
     function _removeValidator(address validator) private {
         DKG dkg = _dkgContract();
 
-        validatorStorage.mustRemove(validator);
-        dkg.setValidators(validatorStorage.getAddresses());
+        validatorStorage.mustRemove(validator);//?
+        dkg.updateGeneration(validator);
     }
 
     function _dkgContract() private view returns (DKG) {
         return DKG(contractRegistry.getContract(DKG_KEY));
+    }
+
+    function _slashingVotingContract() private view returns (SlashingVoting) {
+        return SlashingVoting(contractRegistry.getContract(SLASHING_VOTING_KEY));
     }
 }
