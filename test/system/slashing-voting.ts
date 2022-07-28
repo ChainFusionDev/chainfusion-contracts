@@ -63,10 +63,10 @@ describe('SlashingVoting', function () {
     const nonse = ethers.utils.arrayify(0);
     const reason: number = 0;
     const secondReason: number = 1;
+    const thirsdReason: number = 2;
+    const hre = require('hardhat');
 
     const { slashingVoting, staking } = await deploySystem(initialMinimalStake);
-
-    slashingVoting.setSlashingThresold(1);
 
     const slashingVoting2 = await ethers.getContractAt('SlashingVoting', slashingVoting.address, v2);
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
@@ -78,8 +78,15 @@ describe('SlashingVoting', function () {
 
     await slashingVoting.voteWithReason(v3.address, reason, nonse);
     await slashingVoting2.voteWithReason(v3.address, reason, nonse);
-    await expect(slashingVoting.voteWithReason(v3.address, secondReason, nonse)).to.be.revertedWith(
-      'SlashingVoting: validator is already slashed'
+    await hre.network.provider.send('hardhat_mine', ['0x64']);
+
+    await slashingVoting.voteWithReason(v3.address, secondReason, nonse);
+    await slashingVoting2.voteWithReason(v3.address, secondReason, nonse);
+    await hre.network.provider.send('hardhat_mine', ['0x64']);
+
+    expect(await staking.isValidatorSlashing(v3.address)).to.equal(true);
+    await expect(slashingVoting.voteWithReason(v3.address, thirsdReason, nonse)).to.be.revertedWith(
+      'SlashingVoting: target is not active validator'
     );
   });
 

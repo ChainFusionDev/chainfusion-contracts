@@ -117,9 +117,9 @@ export async function deployBridge(
 
 export async function deploySystem(initialMinimalStake?: BigNumber): Promise<SystemDeployment> {
   const withdrawalPeriod = 1;
-  const epochPeriod = 10;
-  const slashingThresold = 3;
-  const slashingEpochs = 3;
+  const epochPeriod = 100;
+  const slashingThresold = 2;
+  const slashingEpochs = 2;
   const deadlinePeriod = 20;
 
   if (initialMinimalStake === undefined) {

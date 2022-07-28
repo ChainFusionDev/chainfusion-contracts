@@ -8,7 +8,6 @@ import "./DKG.sol";
 import "./ContractKeys.sol";
 import "./ContractRegistry.sol";
 import "./SlashingVoting.sol";
-import "hardhat/console.sol";
 
 contract Staking is ContractKeys, Ownable, Initializable {
     enum ValidatorStatus {
@@ -40,17 +39,17 @@ contract Staking is ContractKeys, Ownable, Initializable {
     event ContractRegistryUpdated(address contractRegistry);
 
     modifier onlyActiveValidator() {
-        require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "ValidatorStaking: only active validator");
+        require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "Staking: only active validator");
         _;
     }
 
     modifier onlyNotSlashed() {
-        require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator is slashed");
+        require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "Staking: validator is slashed");
         _;
     }
 
     modifier onlySlashingVoting() {
-        require(msg.sender == address(_slashingVotingContract()), "ValidatorStaking: not a slashing voting");
+        require(msg.sender == address(_slashingVotingContract()), "Staking: not a slashing voting");
         _;
     }
 
@@ -71,7 +70,7 @@ contract Staking is ContractKeys, Ownable, Initializable {
     }
 
     function isValidatorSlashing(address _validator) external view returns (bool) {
-        if (stakes[_validator].status == ValidatorStatus.SLASHED){
+        if (stakes[_validator].status == ValidatorStatus.SLASHED) {
             return true;
         }
         return false;
@@ -93,30 +92,29 @@ contract Staking is ContractKeys, Ownable, Initializable {
     }
 
     function announceWithdrawal(uint256 _amount) public onlyNotSlashed {
-        require(_amount <= stakes[msg.sender].stake, "ValidatorStaking: amount must be <= to stake");
+        require(_amount <= stakes[msg.sender].stake, "Staking: amount must be <= to stake");
         withdrawalAnnouncements[msg.sender].amount = _amount;
         // solhint-disable-next-line not-rely-on-time
         withdrawalAnnouncements[msg.sender].time = block.timestamp;
     }
 
     function withdraw() public onlyNotSlashed {
-        require(withdrawalAnnouncements[msg.sender].amount > 0, "ValidatorStaking: amount must be greater than zero");
+        require(withdrawalAnnouncements[msg.sender].amount > 0, "Staking: amount must be greater than zero");
         require(
             // solhint-disable-next-line not-rely-on-time
             withdrawalAnnouncements[msg.sender].time + withdrawalPeriod <= block.timestamp,
-            "ValidatorStaking: withdrawal period not passed"
+            "Staking: withdrawal period not passed"
         );
 
         uint256 withdrawalAmount = withdrawalAnnouncements[msg.sender].amount;
 
-        require(withdrawalAmount <= stakes[msg.sender].stake, "ValidatorStaking: amount must be <= to validator stake");
+        require(withdrawalAmount <= stakes[msg.sender].stake, "Staking: amount must be <= to validator stake");
 
         stakes[msg.sender].stake -= withdrawalAmount;
 
         withdrawalAnnouncements[msg.sender].amount = 0;
         withdrawalAnnouncements[msg.sender].time = 0;
 
-        // remove validator from storage is stake is too low
         if (stakes[msg.sender].stake < minimalStake && validatorStorage.contains(msg.sender)) {
             stakes[msg.sender].status = ValidatorStatus.INACTIVE;
             _removeValidator(msg.sender);
@@ -124,23 +122,20 @@ contract Staking is ContractKeys, Ownable, Initializable {
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = msg.sender.call{value: withdrawalAmount, gas: 21000}("");
-        require(success, "ValidatorStaking: transfer failed");
+        require(success, "Staking: transfer failed");
     }
 
     function stake() public payable {
-        console.log("stake start");
-        require(msg.value + stakes[msg.sender].stake >= minimalStake, "ValidatorStaking: insufficient stake provided");
-        require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator is slashed");
-        console.log("stake 0");
+        require(msg.value + stakes[msg.sender].stake >= minimalStake, "Staking: insufficient stake provided");
+        require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "Staking: validator is slashed");
+
         if (stakes[msg.sender].status == ValidatorStatus.INACTIVE) {
             stakes[msg.sender].validator = msg.sender;
             stakes[msg.sender].status = ValidatorStatus.ACTIVE;
             _addValidator(msg.sender);
         }
-        console.log("stake 1");
+
         stakes[msg.sender].stake += msg.value;
-        console.log("stake 2");
-        _dkgContract().updateGeneration(msg.sender);
     }
 
     function getValidators() public view returns (address[] memory) {
@@ -150,14 +145,14 @@ contract Staking is ContractKeys, Ownable, Initializable {
     function _addValidator(address validator) private {
         DKG dkg = _dkgContract();
 
-        validatorStorage.mustAdd(validator);//?
+        validatorStorage.mustAdd(validator);
         dkg.updateGeneration(validator);
     }
 
     function _removeValidator(address validator) private {
         DKG dkg = _dkgContract();
 
-        validatorStorage.mustRemove(validator);//?
+        validatorStorage.mustRemove(validator);
         dkg.updateGeneration(validator);
     }
 

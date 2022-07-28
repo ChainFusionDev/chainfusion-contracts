@@ -69,7 +69,7 @@ describe('Staking', function () {
     expect(status).to.equal(ValidatorStatusActive);
   });
 
-  it('should check if only validator can slash', async function () {
+  it('should check if only slashing voting can slash', async function () {
     const [v1, v2] = await ethers.getSigners();
     const initialMinimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
@@ -82,52 +82,38 @@ describe('Staking', function () {
 
     expect(await staking.getValidators()).to.deep.equal([v1.address]);
 
-    await expect(staking2.slash(v1.address)).to.be.revertedWith('only active validator');
-  });
-
-  it('should check if slash() already slashed validator', async function () {
-    const [, v2, v3] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-
-    const { staking } = await deploySystem(initialMinimalStake);
-
-    const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
-    const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
-
-    await staking.stake({ value: value });
-    await staking2.stake({ value: value });
-    await staking3.stake({ value: value });
-
-    await staking.slash(v2.address);
-    await staking3.slash(v2.address);
-
-    await expect(staking3.slash(v2.address)).to.be.revertedWith('Staking: validator is already slashed');
+    await expect(staking2.slash(v1.address)).to.be.revertedWith('Staking: not a slashing voting');
   });
 
   it('should check if validatorCount is decremented after slashing', async function () {
-    const [, v2, v3, v4, v5] = await ethers.getSigners();
+    const [, v2, v3] = await ethers.getSigners();
     const initialMinimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
+    const nonse = ethers.utils.arrayify(0);
+    const reason: number = 0;
+    const secondReason: number = 1;
+    const hre = require('hardhat');
 
-    const { staking, addressStorage } = await deploySystem(initialMinimalStake);
+    const { staking, addressStorage, slashingVoting } = await deploySystem(initialMinimalStake);
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
+    const slashingVoting2 = await ethers.getContractAt('SlashingVoting', slashingVoting.address, v2);
     const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
-    const staking4 = await ethers.getContractAt('Staking', staking.address, v4);
-    const staking5 = await ethers.getContractAt('Staking', staking.address, v5);
 
     await staking.stake({ value: value });
     await staking2.stake({ value: value });
     await staking3.stake({ value: value });
-    await staking4.stake({ value: value });
-    await staking5.stake({ value: value });
 
-    await staking.slash(v5.address);
-    await staking2.slash(v5.address);
-    await staking3.slash(v5.address);
+    await slashingVoting.voteWithReason(v3.address, reason, nonse);
+    await slashingVoting2.voteWithReason(v3.address, reason, nonse);
+    await hre.network.provider.send('hardhat_mine', ['0x64']);
 
-    expect(await addressStorage.size()).to.be.equal(4);
+    await slashingVoting.voteWithReason(v3.address, secondReason, nonse);
+    await slashingVoting2.voteWithReason(v3.address, secondReason, nonse);
+    await hre.network.provider.send('hardhat_mine', ['0x64']);
+
+    expect(await staking.isValidatorSlashing(v3.address)).to.equal(true);
+    expect(await addressStorage.size()).to.be.equal(2);
   });
 
   it('should check if only validator with stake can announceWithdrawal', async function () {
@@ -190,40 +176,62 @@ describe('Staking', function () {
     const [, v2, v3] = await ethers.getSigners();
     const initialMinimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
+    const nonse = ethers.utils.arrayify(0);
+    const reason: number = 0;
+    const secondReason: number = 1;
+    const hre = require('hardhat');
 
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking, slashingVoting } = await deploySystem(initialMinimalStake);
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
+    const slashingVoting2 = await ethers.getContractAt('SlashingVoting', slashingVoting.address, v2);
     const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
 
     await staking.stake({ value: value });
     await staking2.stake({ value: value });
     await staking3.stake({ value: value });
 
-    await staking.slash(v2.address);
-    await staking3.slash(v2.address);
+    await slashingVoting.voteWithReason(v3.address, reason, nonse);
+    await slashingVoting2.voteWithReason(v3.address, reason, nonse);
+    await hre.network.provider.send('hardhat_mine', ['0x64']);
 
-    await expect(staking2.announceWithdrawal(value)).to.be.revertedWith('Staking: validator is slashed');
+    await slashingVoting.voteWithReason(v3.address, secondReason, nonse);
+    await slashingVoting2.voteWithReason(v3.address, secondReason, nonse);
+    await hre.network.provider.send('hardhat_mine', ['0x64']);
+
+    expect(await staking.isValidatorSlashing(v3.address)).to.equal(true);
+    await expect(staking3.announceWithdrawal(value)).to.be.revertedWith('Staking: validator is slashed');
   });
 
   it('should check if slashed validator can not withdraw', async function () {
     const [, v2, v3] = await ethers.getSigners();
     const initialMinimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
+    const nonse = ethers.utils.arrayify(0);
+    const reason: number = 0;
+    const secondReason: number = 1;
+    const hre = require('hardhat');
 
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking, slashingVoting } = await deploySystem(initialMinimalStake);
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
+    const slashingVoting2 = await ethers.getContractAt('SlashingVoting', slashingVoting.address, v2);
     const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
 
     await staking.stake({ value: value });
     await staking2.stake({ value: value });
     await staking3.stake({ value: value });
 
-    await staking.slash(v2.address);
-    await staking3.slash(v2.address);
+    await slashingVoting.voteWithReason(v3.address, reason, nonse);
+    await slashingVoting2.voteWithReason(v3.address, reason, nonse);
+    await hre.network.provider.send('hardhat_mine', ['0x64']);
 
-    await expect(staking2.withdraw()).to.be.revertedWith('Staking: validator is slashed');
+    await slashingVoting.voteWithReason(v3.address, secondReason, nonse);
+    await slashingVoting2.voteWithReason(v3.address, secondReason, nonse);
+    await hre.network.provider.send('hardhat_mine', ['0x64']);
+
+    expect(await staking.isValidatorSlashing(v3.address)).to.equal(true);
+    await expect(staking3.withdraw()).to.be.revertedWith('Staking: validator is slashed');
   });
 
   it('should user be able to withdraw his stake even if he is no longer a validator', async function () {
