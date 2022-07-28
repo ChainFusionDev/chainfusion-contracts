@@ -6,6 +6,7 @@ const minimalStake = ethers.utils.parseEther('100');
 const epochPeriod = 1000;
 const slashingThresold = 10;
 const slashingEpochs = 3;
+const deadlinePeriod = 20;
 
 const VERIFY = (process.env.VERIFY || '').trim().toLowerCase();
 const VALIDATOR_KEYS =
@@ -46,7 +47,7 @@ async function main() {
   await (
     await staking.initialize(minimalStake, withdrawalPeriod, contractRegistry.address, addressStorage.address)
   ).wait();
-  await (await dkg.initialize(contractRegistry.address)).wait();
+  await (await dkg.initialize(contractRegistry.address, deadlinePeriod)).wait();
 
   console.log('DKG deployed to:', dkg.address);
 
