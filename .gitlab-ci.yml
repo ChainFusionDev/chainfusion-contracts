@@ -3,58 +3,37 @@ image: node:16
 stages:
   - test
 
-lint:solhint:
-  stage: test
-  script:
-    - npm install
-    - npm run solhint
-
-lint:eslint:
+lint:
   stage: test
   script:
     - npm install
     - npm run compile
+    - npm run solhint
     - npm run eslint
-
-lint:prettier:
-  stage: test
-  script:
-    - npm install
     - npm run prettier
 
-test:build:
+test:
   stage: test
+  artifacts:
+    paths:
+      - coverage/
   script:
     - npm install
     - npx hardhat compile
     - npx hardhat typechain
-
-test:deploy:
-  stage: test
-  script:
-    - npm install
+    - npx hardhat coverage
     - npx hardhat run scripts/deploy-bridge.ts
     - npx hardhat run scripts/deploy-system.ts
-
-test:unit:
-  stage: test
-  script:
-    - npm install
-    - npm run compile
-    - npx hardhat coverage
-  artifacts:
-    paths:
-      - coverage/
 
 pages:
   stage: test
   needs:
-    - test:unit
+    - test
   script:
     - mv coverage/ public/
   artifacts:
     paths:
       - public
-    expire_in: 30 days
+    expire_in: 7 days
   only:
     - main
