@@ -3,27 +3,25 @@ image: node:16
 stages:
   - test
 
-lint:
-  stage: test
-  script:
-    - npm install
-    - npm run compile
-    - npm run solhint
-    - npm run eslint
-    - npm run prettier
-
 test:
   stage: test
   artifacts:
     paths:
       - coverage/
   script:
+    # Build
     - npm install
     - npx hardhat compile
     - npx hardhat typechain
+    # Test
     - npx hardhat coverage
+    # Deploy
     - npx hardhat run scripts/deploy-bridge.ts
     - npx hardhat run scripts/deploy-system.ts
+    # Lint
+    - npm run solhint
+    - npm run eslint
+    - npm run prettier
 
 pages:
   stage: test
