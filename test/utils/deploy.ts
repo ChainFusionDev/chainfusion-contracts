@@ -120,6 +120,7 @@ export async function deploySystem(initialMinimalStake?: BigNumber): Promise<Sys
   const epochPeriod = 10;
   const slashingThresold = 3;
   const slashingEpochs = 3;
+  const deadlinePeriod = 20;
 
   if (initialMinimalStake === undefined) {
     initialMinimalStake = ethers.utils.parseEther('3');
@@ -167,7 +168,7 @@ export async function deploySystem(initialMinimalStake?: BigNumber): Promise<Sys
   await (
     await staking.initialize(initialMinimalStake, withdrawalPeriod, contractRegistry.address, addressStorage.address)
   ).wait();
-  await (await dkg.initialize(contractRegistry.address)).wait();
+  await (await dkg.initialize(contractRegistry.address, deadlinePeriod)).wait();
 
   await addressStorage.transferOwnership(staking.address);
 
