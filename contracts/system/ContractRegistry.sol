@@ -1,12 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "./ValidatorOwnable.sol";
 
-contract ContractRegistry is Ownable {
+contract ContractRegistry is ValidatorOwnable, Initializable {
     mapping(string => address) public contracts;
 
-    function setContract(string memory _key, address _value) public onlyOwner {
+    function initialize(address _signerGetterAddress) external initializer {
+        _setSignerGetter(_signerGetterAddress);
+    }
+
+    function setContract(string memory _key, address _value) public onlyValidator {
         contracts[_key] = _value;
     }
 

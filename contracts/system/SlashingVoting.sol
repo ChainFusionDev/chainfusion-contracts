@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "./ValidatorOwnable.sol";
 import "./ContractKeys.sol";
 import "./ContractRegistry.sol";
 import "./Staking.sol";
 
-contract SlashingVoting is ContractKeys, Ownable, Initializable {
+contract SlashingVoting is ContractKeys, ValidatorOwnable, Initializable {
     enum SlashingReason {
         REASON_NO_RECENT_BLOCKS,
         REASON_DKG_INACTIVITY,
@@ -37,17 +37,19 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
     event BannedWithReason(address validator, SlashingReason reason);
     event SlashedWithReason(address validator);
 
-    modifier onlyValidator() {
+    modifier onlyActiveValidator() {
         require(_stakingContract().isValidatorActive(msg.sender) == true, "SlashingVoting: only active validator");
         _;
     }
 
     function initialize(
+        address _signerGetterAddress,
         uint256 _epochPeriod,
         uint256 _slashingThresold,
         uint256 _lashingEpochs,
         address _contractRegistry
     ) external initializer {
+        _setSignerGetter(_signerGetterAddress);
         setEpochPeriod(_epochPeriod);
         setSlashingThresold(_slashingThresold);
         setSlashingEpochs(_lashingEpochs);
@@ -58,7 +60,7 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
         address _validator,
         SlashingReason _reason,
         bytes calldata _nonse
-    ) external onlyValidator {
+    ) external onlyActiveValidator {
         Staking staking = _stakingContract();
         bytes32 voteHash = votingHashWithReason(_validator, _reason, _nonse);
 
@@ -87,15 +89,15 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
         }
     }
 
-    function setEpochPeriod(uint256 _epochPeriod) public onlyOwner {
+    function setEpochPeriod(uint256 _epochPeriod) public onlyValidator {
         epochPeriod = _epochPeriod;
     }
 
-    function setSlashingThresold(uint256 _slashingThresold) public onlyOwner {
+    function setSlashingThresold(uint256 _slashingThresold) public onlyValidator {
         slashingThresold = _slashingThresold;
     }
 
-    function setSlashingEpochs(uint256 _slashingEpochs) public onlyOwner {
+    function setSlashingEpochs(uint256 _slashingEpochs) public onlyValidator {
         slashingEpochs = _slashingEpochs;
     }
 

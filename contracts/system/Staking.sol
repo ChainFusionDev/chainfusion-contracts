@@ -2,13 +2,13 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "../common/AddressStorage.sol";
 import "./DKG.sol";
+import "./ValidatorOwnable.sol";
 import "./ContractKeys.sol";
 import "./ContractRegistry.sol";
 
-contract Staking is ContractKeys, Ownable, Initializable {
+contract Staking is ContractKeys, ValidatorOwnable, Initializable {
     enum ValidatorStatus {
         INACTIVE,
         ACTIVE,
@@ -50,11 +50,13 @@ contract Staking is ContractKeys, Ownable, Initializable {
     }
 
     function initialize(
+        address _signerGetterAddress,
         uint256 _minimalStake,
         uint256 _withdrawalPeriod,
         address _contractRegistry,
         address _validatorStorage
     ) external initializer {
+        _setSignerGetter(_signerGetterAddress);
         setMinimalStake(_minimalStake);
         setWithdrawalPeriod(_withdrawalPeriod);
         contractRegistry = ContractRegistry(_contractRegistry);
@@ -65,12 +67,12 @@ contract Staking is ContractKeys, Ownable, Initializable {
         return (stakes[_sender].status == ValidatorStatus.ACTIVE);
     }
 
-    function setMinimalStake(uint256 _minimalStake) public onlyOwner {
+    function setMinimalStake(uint256 _minimalStake) public onlyValidator {
         minimalStake = _minimalStake;
         emit MinimalStakeUpdated(_minimalStake);
     }
 
-    function setWithdrawalPeriod(uint256 _withdrawalPeriod) public onlyOwner {
+    function setWithdrawalPeriod(uint256 _withdrawalPeriod) public onlyValidator {
         withdrawalPeriod = _withdrawalPeriod;
         emit WithdrawalPeriodUpdated(_withdrawalPeriod);
     }

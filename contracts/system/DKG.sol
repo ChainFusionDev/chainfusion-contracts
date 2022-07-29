@@ -24,7 +24,7 @@ struct BroadcastData {
     mapping(address => bytes) data;
 }
 
-contract DKG is ContractKeys, Ownable, Initializable {
+contract DKG is ContractKeys, Initializable {
     using ECDSA for bytes;
     using ECDSA for bytes32;
 
@@ -49,7 +49,7 @@ contract DKG is ContractKeys, Ownable, Initializable {
 
     event ThresholdSignerUpdated(address signer);
 
-    modifier onlyValidator(uint256 _generation) {
+    modifier onlyDKGValidator(uint256 _generation) {
         require(
             generations.length > _generation && generations[_generation].isGenerationValidator[msg.sender],
             "DKG: not a validator"
@@ -92,6 +92,9 @@ contract DKG is ContractKeys, Ownable, Initializable {
     function initialize(address _contractRegistry, uint256 _deadlinePeriod) external initializer {
         contractRegistry = ContractRegistry(_contractRegistry);
         deadlinePeriod = _deadlinePeriod;
+
+        generations.push();
+        generations[0].signer = msg.sender;
     }
 
     function setValidators(address[] memory _validators) external onlyValidatorStaking {
@@ -104,7 +107,7 @@ contract DKG is ContractKeys, Ownable, Initializable {
         bytes memory _rawData
     )
         external
-        onlyValidator(_generation)
+        onlyDKGValidator(_generation)
         roundIsFilled(_generation, _round - 1)
         roundNotProvided(_generation, _round)
         onlyPending(_generation)
@@ -121,7 +124,7 @@ contract DKG is ContractKeys, Ownable, Initializable {
         uint256 _generation,
         address _signerAddress,
         bytes memory _signature
-    ) external onlyValidator(_generation) roundIsFilled(_generation, 3) onlyPending(_generation) {
+    ) external onlyDKGValidator(_generation) roundIsFilled(_generation, 3) onlyPending(_generation) {
         address recoveredSigner = bytes("verify").toEthSignedMessageHash().recover(_signature);
         require(recoveredSigner == _signerAddress, "DKG: signature is invalid");
         require(generations[_generation].signerVotes[msg.sender] == address(0), "DKG: already voted");
@@ -155,11 +158,11 @@ contract DKG is ContractKeys, Ownable, Initializable {
     }
 
     function getCurrentValidators() external view returns (address[] memory) {
-        if (generations.length == 0) {
-            return new address[](0);
-        }
-
         return generations[generations.length - 1].validators;
+    }
+
+    function getSignerAddresses() external view returns (address) {
+        return generations[lastActiveGeneration].signer;
     }
 
     function getGenerationsCount() external view returns (uint256) {
