@@ -257,4 +257,61 @@ describe('DKG', function () {
 
     expect(await dkgSigner.deadlinePeriod()).to.equals(100);
   });
+
+  it('should get expired status', async function () {
+    const initialMinimalStake = ethers.utils.parseEther('3');
+
+    const [, signer] = await ethers.getSigners();
+    const { dkg, staking } = await deploySystem(initialMinimalStake);
+
+    const EXPIRED: number = 1;
+    const generation = 1;
+
+    const stakingSigner = await ethers.getContractAt('Staking', staking.address, signer);
+
+    await staking.stake({ value: initialMinimalStake });
+    await stakingSigner.stake({ value: initialMinimalStake });
+
+    const hre = require('hardhat');
+    await hre.network.provider.send('hardhat_mine', ['0x64']);
+
+    expect(await dkg.getStatus(generation)).to.equal(EXPIRED);
+  });
+
+  it('should check if we can set deadline period ', async function () {
+    const initialMinimalStake = ethers.utils.parseEther('3');
+
+    const [, signer] = await ethers.getSigners();
+    const { dkg, staking } = await deploySystem(initialMinimalStake);
+    const generation = 1;
+    const message = 'verify';
+    const signature = await signer.signMessage(message);
+    const data1 = ethers.utils.keccak256([1]);
+    const data2 = ethers.utils.keccak256([2]);
+    const data3 = ethers.utils.keccak256([3]);
+
+    const dkgSigner = await ethers.getContractAt('DKG', dkg.address, signer);
+    const stakingSigner = await ethers.getContractAt('Staking', staking.address, signer);
+
+    await staking.stake({ value: initialMinimalStake });
+    await stakingSigner.stake({ value: initialMinimalStake });
+
+    await dkg.roundBroadcast(generation, 1, data1);
+    await dkgSigner.roundBroadcast(generation, 1, data1);
+
+    await dkg.roundBroadcast(generation, 2, data2);
+    await dkgSigner.roundBroadcast(generation, 2, data2);
+
+    await dkg.roundBroadcast(generation, 3, data3);
+    await dkgSigner.roundBroadcast(generation, 3, data3);
+
+    await expect(dkgSigner.setDeadlinePeriod(100)).to.be.revertedWith('DKG: not a active signer');
+
+    await dkg.voteSigner(generation, signer.address, signature);
+    await dkgSigner.voteSigner(generation, signer.address, signature);
+
+    await dkgSigner.setDeadlinePeriod(100);
+
+    expect(await dkgSigner.deadlinePeriod()).to.equals(100);
+  });
 });

@@ -88,8 +88,8 @@ contract DKG is ContractKeys, Ownable, Initializable {
         _;
     }
 
-    modifier deadlineViolated(uint256 _generation) {
-        require(generations[_generation].deadline >= block.number, "DKG: deadline is violated");
+    modifier onlyPending(uint256 _generation) {
+        require(getStatus(_generation) == GenerationStatus.PENDING, "DKG: not a pending generation");
         _;
     }
 
@@ -157,7 +157,7 @@ contract DKG is ContractKeys, Ownable, Initializable {
         onlyValidator(_generation)
         roundIsFilled(_generation, _round - 1)
         roundNotProvided(_generation, _round)
-        deadlineViolated(_generation)
+        onlyPending(_generation)
     {
         generations[_generation].roundBroadcastData[_round].count++;
         generations[_generation].roundBroadcastData[_round].data[msg.sender] = _rawData;
@@ -171,7 +171,7 @@ contract DKG is ContractKeys, Ownable, Initializable {
         uint256 _generation,
         address _signerAddress,
         bytes memory _signature
-    ) external onlyValidator(_generation) roundIsFilled(_generation, 3) deadlineViolated(_generation) {
+    ) external onlyValidator(_generation) roundIsFilled(_generation, 3) onlyPending(_generation) {
         address recoveredSigner = bytes("verify").toEthSignedMessageHash().recover(_signature);
         require(recoveredSigner == _signerAddress, "DKG: signature is invalid");
         require(generations[_generation].signerVotes[msg.sender] == address(0), "DKG: already voted");
@@ -182,23 +182,10 @@ contract DKG is ContractKeys, Ownable, Initializable {
         emit SignerVoted(_generation, msg.sender, _signerAddress);
 
         bool enoughVotes = _enoughVotes(_generation, generations[_generation].signerVoteCounts[_signerAddress]);
-        bool signerChanged = generations[_generation].signer != _signerAddress;
-        if (enoughVotes && signerChanged) {
+        if (enoughVotes) {
             generations[_generation].signer = _signerAddress;
             emit SignerAddressUpdated(_generation, _signerAddress);
         }
-    }
-
-    function getStatus(uint256 _generation) external view returns (GenerationStatus) {
-        if (generations[_generation].signer != address(0)) {
-            return GenerationStatus.ACTIVE;
-        }
-
-        if (generations[_generation].deadline >= block.number) {
-            return GenerationStatus.PENDING;
-        }
-
-        return GenerationStatus.EXPIRED;
     }
 
     function isRoundFilled(uint256 _generation, uint256 _round) external view returns (bool) {
@@ -249,32 +236,24 @@ contract DKG is ContractKeys, Ownable, Initializable {
         deadlinePeriod = _deadlinePeriod;
     }
 
+    function getStatus(uint256 _generation) public view returns (GenerationStatus) {
+        if (generations[_generation].signer != address(0)) {
+            return GenerationStatus.ACTIVE;
+        }
+
+        if (generations[_generation].deadline >= block.number) {
+            return GenerationStatus.PENDING;
+        }
+
+        return GenerationStatus.EXPIRED;
+    }
+
     function getValidators(uint256 _generation) public view returns (address[] memory) {
         if (generations.length > _generation) {
             return generations[_generation].validators;
         }
 
         return new address[](0);
-    }
-
-    function _removeValidators(address _validator) private {
-        uint256 newGeneration = generations.length;
-
-        if (newGeneration > lastActiveGeneration) {
-            lastActiveGeneration = newGeneration;
-        }
-
-        generations.push();
-        address[] storage newValidators = generations[newGeneration - 1].validators;
-        newValidators.push(_validator);
-        generations[newGeneration].validators = newValidators;
-        for (uint256 i = 0; i < generations[newGeneration].validators.length; i++) {
-            generations[newGeneration].isGenerationValidator[generations[newGeneration].validators[i]] = true;
-        }
-
-        generations[newGeneration].deadline = block.number + deadlinePeriod;
-        emit ValidatorsUpdated(newGeneration, generations[newGeneration].validators);
-        emit RoundDataFilled(newGeneration, 0);
     }
 
     function _enoughVotes(uint256 _generation, uint256 votes) private view returns (bool) {

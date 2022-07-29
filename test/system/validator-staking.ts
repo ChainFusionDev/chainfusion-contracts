@@ -193,11 +193,10 @@ describe('Staking', function () {
 
     await slashingVoting.voteWithReason(v3.address, reason, nonse);
     await slashingVoting2.voteWithReason(v3.address, reason, nonse);
-    await hre.network.provider.send('hardhat_mine', ['0x64']);
+    await hre.network.provider.send('hardhat_mine', ['0x60']);
 
     await slashingVoting.voteWithReason(v3.address, secondReason, nonse);
     await slashingVoting2.voteWithReason(v3.address, secondReason, nonse);
-    await hre.network.provider.send('hardhat_mine', ['0x64']);
 
     expect(await staking.isValidatorSlashing(v3.address)).to.equal(true);
     await expect(staking3.announceWithdrawal(value)).to.be.revertedWith('Staking: validator is slashed');
@@ -208,7 +207,7 @@ describe('Staking', function () {
     const initialMinimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
     const nonse = ethers.utils.arrayify(0);
-    const reason: number = 0;
+    const firstreason: number = 0;
     const secondReason: number = 1;
     const hre = require('hardhat');
 
@@ -222,13 +221,12 @@ describe('Staking', function () {
     await staking2.stake({ value: value });
     await staking3.stake({ value: value });
 
-    await slashingVoting.voteWithReason(v3.address, reason, nonse);
-    await slashingVoting2.voteWithReason(v3.address, reason, nonse);
-    await hre.network.provider.send('hardhat_mine', ['0x64']);
+    await slashingVoting.voteWithReason(v3.address, firstreason, nonse);
+    await slashingVoting2.voteWithReason(v3.address, firstreason, nonse);
+    await hre.network.provider.send('hardhat_mine', ['0x60']);
 
     await slashingVoting.voteWithReason(v3.address, secondReason, nonse);
     await slashingVoting2.voteWithReason(v3.address, secondReason, nonse);
-    await hre.network.provider.send('hardhat_mine', ['0x64']);
 
     expect(await staking.isValidatorSlashing(v3.address)).to.equal(true);
     await expect(staking3.withdraw()).to.be.revertedWith('Staking: validator is slashed');
@@ -290,6 +288,7 @@ describe('Staking', function () {
     const valueStake = ethers.utils.parseEther('10');
 
     const { staking, dkg } = await deploySystem(initialMinimalStake);
+
     const staking1 = await ethers.getContractAt('Staking', staking.address, v1);
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
     const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
