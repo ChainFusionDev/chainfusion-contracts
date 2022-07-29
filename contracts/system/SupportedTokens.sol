@@ -21,8 +21,8 @@ contract SupportedTokens is ContractKeys, ValidatorOwnable, Initializable {
     event AddedToken(string symbol, uint256 chainId, address token, TokenType tokenType);
     event RemovedToken(string symbol, uint256 chainId, address token);
 
-    function initialize(address _dkgAddress) external initializer {
-        _setDKG(_dkgAddress);
+    function initialize(address _signerGetterAddress) external initializer {
+        _setSignerGetter(_signerGetterAddress);
     }
 
     function addToken(

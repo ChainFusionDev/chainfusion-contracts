@@ -16,7 +16,7 @@ describe('ContractRegistry', function () {
 
     await contractRegistry.setContract(key, address);
     await expect(contractRegistryOther.setContract(key, address)).to.be.revertedWith(
-      'Ownable: caller is not the owner'
+      'ValidatorOwnable: only validator'
     );
 
     expect(await contractRegistry.getContract(key)).to.equal(address);

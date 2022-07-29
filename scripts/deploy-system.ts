@@ -25,16 +25,11 @@ async function main() {
   const addressStorage = await AddressStorage.deploy();
   await addressStorage.deployed();
 
-  await (await addressStorage.initialize([])).wait();
-
   console.log('AddressStorage deployed to:', addressStorage.address);
 
   const Staking = await ethers.getContractFactory('Staking');
   const staking = await Staking.deploy();
   await staking.deployed();
-
-  await contractRegistry.setContract(await staking.STAKING_KEY(), staking.address);
-  await addressStorage.transferOwnership(staking.address);
 
   console.log('Staking deployed to:', staking.address);
 
@@ -42,9 +37,27 @@ async function main() {
   const dkg = await DKG.deploy();
   await dkg.deployed();
 
-  await (await dkg.initialize(contractRegistry.address, deadlinePeriod)).wait();
+  console.log('DKG deployed to:', dkg.address);
 
-  await contractRegistry.setContract(await dkg.DKG_KEY(), dkg.address);
+  const SupportedTokens = await ethers.getContractFactory('SupportedTokens');
+  const supportedTokens = await SupportedTokens.deploy();
+  await supportedTokens.deployed();
+
+  console.log('SupportedTokens deployed to:', supportedTokens.address);
+
+  const SlashingVoting = await ethers.getContractFactory('SlashingVoting');
+  const slashingVoting = await SlashingVoting.deploy();
+  await slashingVoting.deployed();
+
+  console.log('SlashingVoting deployed to:', slashingVoting.address);
+
+  console.log('Initializing contracts...');
+
+  await (await addressStorage.initialize([])).wait();
+  await addressStorage.transferOwnership(staking.address);
+  await (await dkg.initialize(contractRegistry.address, deadlinePeriod)).wait();
+  await (await contractRegistry.initialize(dkg.address)).wait();
+  await (await supportedTokens.initialize(dkg.address)).wait();
 
   await (
     await staking.initialize(
@@ -56,19 +69,6 @@ async function main() {
     )
   ).wait();
 
-  console.log('DKG deployed to:', dkg.address);
-
-  const SupportedTokens = await ethers.getContractFactory('SupportedTokens');
-  const supportedTokens = await SupportedTokens.deploy();
-  await supportedTokens.deployed();
-
-  await contractRegistry.setContract(await supportedTokens.SUPPORTED_TOKENS_KEY(), supportedTokens.address);
-
-  console.log('SupportedTokens deployed to:', supportedTokens.address);
-
-  const SlashingVoting = await ethers.getContractFactory('SlashingVoting');
-  const slashingVoting = await SlashingVoting.deploy();
-  await slashingVoting.deployed();
   await (
     await slashingVoting.initialize(
       dkg.address,
@@ -80,8 +80,11 @@ async function main() {
   ).wait();
 
   await contractRegistry.setContract(await slashingVoting.SLASHING_VOTING_KEY(), slashingVoting.address);
+  await contractRegistry.setContract(await staking.STAKING_KEY(), staking.address);
+  await contractRegistry.setContract(await dkg.DKG_KEY(), dkg.address);
+  await contractRegistry.setContract(await supportedTokens.SUPPORTED_TOKENS_KEY(), supportedTokens.address);
 
-  console.log('SlashingVoting deployed to:', slashingVoting.address);
+  console.log('Initialized contracts');
 
   if (VALIDATOR_KEYS.length > 0) {
     console.log('\nStaking\n');

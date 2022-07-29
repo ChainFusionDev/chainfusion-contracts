@@ -43,13 +43,13 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, Initializable {
     }
 
     function initialize(
-        address _dkgAddress,
+        address _signerGetterAddress,
         uint256 _epochPeriod,
         uint256 _slashingThresold,
         uint256 _lashingEpochs,
         address _contractRegistry
     ) external initializer {
-        _setDKG(_dkgAddress);
+        _setSignerGetter(_signerGetterAddress);
         setEpochPeriod(_epochPeriod);
         setSlashingThresold(_slashingThresold);
         setSlashingEpochs(_lashingEpochs);

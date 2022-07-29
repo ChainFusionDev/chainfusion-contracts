@@ -1,17 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./DKG.sol";
+interface SignerGetter {
+    function getSignerAddresses() external view returns (address);
+}
 
 abstract contract ValidatorOwnable {
-    DKG public dkgAddress;
+    SignerGetter public signerGetter;
 
     modifier onlyValidator() {
-        require(dkgAddress.getSignerAddresses() == msg.sender, "ValidatorOwnable: only validator");
+        require(signerGetter.getSignerAddresses() == msg.sender, "ValidatorOwnable: only validator");
         _;
     }
 
-    function _setDKG(address _signerAddress) internal virtual {
-        dkgAddress = DKG(_signerAddress);
+    function _setSignerGetter(address _signerGetterAddress) internal virtual {
+        signerGetter = SignerGetter(_signerGetterAddress);
     }
 }

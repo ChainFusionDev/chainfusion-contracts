@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "./ValidatorOwnable.sol";
 import "../common/AddressStorage.sol";
 import "./DKG.sol";
+import "./ValidatorOwnable.sol";
 import "./ContractKeys.sol";
 import "./ContractRegistry.sol";
 
@@ -50,13 +50,13 @@ contract Staking is ContractKeys, ValidatorOwnable, Initializable {
     }
 
     function initialize(
-        address _dkgAddress,
+        address _signerGetterAddress,
         uint256 _minimalStake,
         uint256 _withdrawalPeriod,
         address _contractRegistry,
         address _validatorStorage
     ) external initializer {
-        _setDKG(_dkgAddress);
+        _setSignerGetter(_signerGetterAddress);
         setMinimalStake(_minimalStake);
         setWithdrawalPeriod(_withdrawalPeriod);
         contractRegistry = ContractRegistry(_contractRegistry);
