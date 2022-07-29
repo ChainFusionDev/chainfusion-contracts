@@ -15,6 +15,7 @@ import {
   MockRelayBridgeApp,
   ValidatorStorage,
   ContractRegistry,
+  EventRegistry,
 } from '../../typechain';
 
 interface BridgeDeployment {
@@ -31,12 +32,15 @@ interface BridgeDeployment {
 }
 
 interface SystemDeployment {
+  minimalStake: BigNumber;
+
   staking: Staking;
   addressStorage: AddressStorage;
   dkg: DKG;
   slashingVoting: SlashingVoting;
   supportedTokens: SupportedTokens;
   contractRegistry: ContractRegistry;
+  eventRegistry: EventRegistry;
 }
 
 export async function deployBridge(
@@ -130,6 +134,10 @@ export async function deploySystem(minimalStake?: BigNumber): Promise<SystemDepl
   const contractRegistry = await ContractRegistry.deploy();
   await contractRegistry.deployed();
 
+  const EventRegistry = await ethers.getContractFactory('EventRegistry');
+  const eventRegistry = await EventRegistry.deploy();
+  await eventRegistry.deployed();
+
   const AddressStorage = await ethers.getContractFactory('AddressStorage');
   const addressStorage = await AddressStorage.deploy();
   await addressStorage.deployed();
@@ -154,6 +162,7 @@ export async function deploySystem(minimalStake?: BigNumber): Promise<SystemDepl
   await addressStorage.transferOwnership(staking.address);
   await (await dkg.initialize(contractRegistry.address, deadlinePeriod)).wait();
   await (await contractRegistry.initialize(dkg.address)).wait();
+  await (await eventRegistry.initialize(dkg.address)).wait();
   await (await supportedTokens.initialize(dkg.address)).wait();
 
   await (
@@ -182,11 +191,14 @@ export async function deploySystem(minimalStake?: BigNumber): Promise<SystemDepl
   await contractRegistry.setContract(await supportedTokens.SUPPORTED_TOKENS_KEY(), supportedTokens.address);
 
   return {
+    minimalStake: minimalStake,
+
     staking: staking,
     addressStorage: addressStorage,
     slashingVoting: slashingVoting,
     dkg: dkg,
     supportedTokens: supportedTokens,
     contractRegistry: contractRegistry,
+    eventRegistry: eventRegistry,
   };
 }

@@ -161,12 +161,16 @@ contract DKG is ContractKeys, Initializable {
         return generations[generations.length - 1].validators;
     }
 
-    function getSignerAddresses() external view returns (address) {
+    function getSignerAddress() external view returns (address) {
         return generations[lastActiveGeneration].signer;
     }
 
     function getGenerationsCount() external view returns (uint256) {
         return generations.length;
+    }
+
+    function isCurrentValidator(address _validator) external view returns (bool) {
+        return this.isValidator(lastActiveGeneration, _validator);
     }
 
     function isValidator(uint256 _generation, address _validator) external view returns (bool) {
