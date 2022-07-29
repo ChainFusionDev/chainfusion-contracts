@@ -21,6 +21,12 @@ async function main() {
 
   console.log('ContractRegistry deployed to:', contractRegistry.address);
 
+  const EventRegistry = await ethers.getContractFactory('EventRegistry');
+  const eventRegistry = await EventRegistry.deploy();
+  await eventRegistry.deployed();
+
+  console.log('EventRegistry deployed to:', eventRegistry.address);
+
   const AddressStorage = await ethers.getContractFactory('AddressStorage');
   const addressStorage = await AddressStorage.deploy();
   await addressStorage.deployed();
@@ -57,6 +63,7 @@ async function main() {
   await addressStorage.transferOwnership(staking.address);
   await (await dkg.initialize(contractRegistry.address, deadlinePeriod)).wait();
   await (await contractRegistry.initialize(dkg.address)).wait();
+  await (await eventRegistry.initialize(dkg.address)).wait();
   await (await supportedTokens.initialize(dkg.address)).wait();
 
   await (
