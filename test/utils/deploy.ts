@@ -146,13 +146,21 @@ export async function deploySystem(initialMinimalStake?: BigNumber): Promise<Sys
   const dkg = await DKG.deploy();
   await dkg.deployed();
 
+  await (await dkg.initialize(contractRegistry.address, deadlinePeriod)).wait();
+
   await contractRegistry.setContract(await dkg.DKG_KEY(), dkg.address);
 
   const SlashingVoting = await ethers.getContractFactory('SlashingVoting');
   const slashingVoting = await SlashingVoting.deploy();
   await slashingVoting.deployed();
   await (
-    await slashingVoting.initialize(epochPeriod, slashingThresold, slashingEpochs, contractRegistry.address)
+    await slashingVoting.initialize(
+      dkg.address,
+      epochPeriod,
+      slashingThresold,
+      slashingEpochs,
+      contractRegistry.address
+    )
   ).wait();
 
   await contractRegistry.setContract(await slashingVoting.SLASHING_VOTING_KEY(), slashingVoting.address);
@@ -163,12 +171,19 @@ export async function deploySystem(initialMinimalStake?: BigNumber): Promise<Sys
   const supportedTokens = await SupportedTokens.deploy();
   await supportedTokens.deployed();
 
+  await (await supportedTokens.initialize(dkg.address)).wait();
+
   await contractRegistry.setContract(await supportedTokens.SUPPORTED_TOKENS_KEY(), supportedTokens.address);
 
   await (
-    await staking.initialize(initialMinimalStake, withdrawalPeriod, contractRegistry.address, addressStorage.address)
+    await staking.initialize(
+      dkg.address,
+      initialMinimalStake,
+      withdrawalPeriod,
+      contractRegistry.address,
+      addressStorage.address
+    )
   ).wait();
-  await (await dkg.initialize(contractRegistry.address, deadlinePeriod)).wait();
 
   await addressStorage.transferOwnership(staking.address);
 

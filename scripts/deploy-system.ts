@@ -42,12 +42,19 @@ async function main() {
   const dkg = await DKG.deploy();
   await dkg.deployed();
 
+  await (await dkg.initialize(contractRegistry.address, deadlinePeriod)).wait();
+
   await contractRegistry.setContract(await dkg.DKG_KEY(), dkg.address);
 
   await (
-    await staking.initialize(minimalStake, withdrawalPeriod, contractRegistry.address, addressStorage.address)
+    await staking.initialize(
+      dkg.address,
+      minimalStake,
+      withdrawalPeriod,
+      contractRegistry.address,
+      addressStorage.address
+    )
   ).wait();
-  await (await dkg.initialize(contractRegistry.address, deadlinePeriod)).wait();
 
   console.log('DKG deployed to:', dkg.address);
 
@@ -63,7 +70,13 @@ async function main() {
   const slashingVoting = await SlashingVoting.deploy();
   await slashingVoting.deployed();
   await (
-    await slashingVoting.initialize(epochPeriod, slashingThresold, slashingEpochs, contractRegistry.address)
+    await slashingVoting.initialize(
+      dkg.address,
+      epochPeriod,
+      slashingThresold,
+      slashingEpochs,
+      contractRegistry.address
+    )
   ).wait();
 
   await contractRegistry.setContract(await slashingVoting.SLASHING_VOTING_KEY(), slashingVoting.address);

@@ -4,7 +4,7 @@ import { deploySystem } from '../utils/deploy';
 
 describe('DKG', function () {
   it('should broadcast all rounds', async function () {
-    const generation = 0;
+    const generation = 1;
 
     const data1 = ethers.utils.keccak256([1]);
     const data2 = ethers.utils.keccak256([2]);
@@ -21,7 +21,7 @@ describe('DKG', function () {
     const initialMinimalStake = ethers.utils.parseEther('3');
     const { dkg, staking } = await deploySystem();
 
-    expect(await dkg.getGenerationsCount()).to.equal(0);
+    expect(await dkg.getGenerationsCount()).to.equal(1);
 
     const staking1 = await ethers.getContractAt('Staking', staking.address, v1);
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
@@ -36,7 +36,7 @@ describe('DKG', function () {
     await staking1.stake({ value: initialMinimalStake });
     await staking2.stake({ value: initialMinimalStake });
 
-    expect(await dkg.getGenerationsCount()).to.equal(1);
+    expect(await dkg.getGenerationsCount()).to.equal(2);
 
     expect(await dkg.isValidator(generation, v1.address)).to.equal(true);
     expect(await dkg.isValidator(generation, v2.address)).to.equal(true);
@@ -160,7 +160,7 @@ describe('DKG', function () {
     const PENDING: number = 0;
     const ACTIVE: number = 2;
 
-    const generation = 0;
+    const generation = 1;
     const message = 'verify';
     const signature = await signer.signMessage(message);
     const data1 = ethers.utils.keccak256([1]);
@@ -199,7 +199,7 @@ describe('DKG', function () {
     const { dkg, staking } = await deploySystem(initialMinimalStake);
 
     const EXPIRED: number = 1;
-    const generation = 0;
+    const generation = 1;
 
     const stakingSigner = await ethers.getContractAt('Staking', staking.address, signer);
 
@@ -218,7 +218,7 @@ describe('DKG', function () {
     const [, signer] = await ethers.getSigners();
     const { dkg, staking } = await deploySystem(initialMinimalStake);
 
-    const generation = 0;
+    const generation = 1;
     const message = 'verify';
     const signature = await signer.signMessage(message);
     const data1 = ethers.utils.keccak256([1]);
