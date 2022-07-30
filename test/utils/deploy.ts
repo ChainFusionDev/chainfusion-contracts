@@ -1,22 +1,17 @@
 import { ethers } from 'hardhat';
-import { BigNumber } from 'ethers';
 import {
   Bridge,
   MockToken,
   FeeManager,
   TokenManager,
-  Staking,
   LiquidityPools,
-  AddressStorage,
-  DKG,
-  SlashingVoting,
   RelayBridge,
-  SupportedTokens,
   MockRelayBridgeApp,
   ValidatorStorage,
-  ContractRegistry,
-  EventRegistry,
 } from '../../typechain';
+
+import { deploySystemContracts } from '../../scripts/deploy/system';
+import { SystemDeploymentOptions, SystemDeploymentResult } from '../../scripts/deploy/types';
 
 interface BridgeDeployment {
   bridge: Bridge;
@@ -29,18 +24,6 @@ interface BridgeDeployment {
   relayBridge: RelayBridge;
   mockRelayBridgeApp: MockRelayBridgeApp;
   validatorStorage: ValidatorStorage;
-}
-
-interface SystemDeployment {
-  minimalStake: BigNumber;
-
-  staking: Staking;
-  addressStorage: AddressStorage;
-  dkg: DKG;
-  slashingVoting: SlashingVoting;
-  supportedTokens: SupportedTokens;
-  contractRegistry: ContractRegistry;
-  eventRegistry: EventRegistry;
 }
 
 export async function deployBridge(
@@ -119,86 +102,6 @@ export async function deployBridge(
   };
 }
 
-export async function deploySystem(minimalStake?: BigNumber): Promise<SystemDeployment> {
-  const withdrawalPeriod = 1;
-  const epochPeriod = 10;
-  const slashingThresold = 3;
-  const slashingEpochs = 3;
-  const deadlinePeriod = 20;
-
-  if (minimalStake === undefined) {
-    minimalStake = ethers.utils.parseEther('3');
-  }
-
-  const ContractRegistry = await ethers.getContractFactory('ContractRegistry');
-  const contractRegistry = await ContractRegistry.deploy();
-  await contractRegistry.deployed();
-
-  const EventRegistry = await ethers.getContractFactory('EventRegistry');
-  const eventRegistry = await EventRegistry.deploy();
-  await eventRegistry.deployed();
-
-  const AddressStorage = await ethers.getContractFactory('AddressStorage');
-  const addressStorage = await AddressStorage.deploy();
-  await addressStorage.deployed();
-
-  const Staking = await ethers.getContractFactory('Staking');
-  const staking = await Staking.deploy();
-  await staking.deployed();
-
-  const DKG = await ethers.getContractFactory('DKG');
-  const dkg = await DKG.deploy();
-  await dkg.deployed();
-
-  const SupportedTokens = await ethers.getContractFactory('SupportedTokens');
-  const supportedTokens = await SupportedTokens.deploy();
-  await supportedTokens.deployed();
-
-  const SlashingVoting = await ethers.getContractFactory('SlashingVoting');
-  const slashingVoting = await SlashingVoting.deploy();
-  await slashingVoting.deployed();
-
-  await (await addressStorage.initialize([])).wait();
-  await addressStorage.transferOwnership(staking.address);
-  await (await dkg.initialize(contractRegistry.address, deadlinePeriod)).wait();
-  await (await contractRegistry.initialize(dkg.address)).wait();
-  await (await eventRegistry.initialize(dkg.address)).wait();
-  await (await supportedTokens.initialize(dkg.address)).wait();
-
-  await (
-    await staking.initialize(
-      dkg.address,
-      minimalStake,
-      withdrawalPeriod,
-      contractRegistry.address,
-      addressStorage.address
-    )
-  ).wait();
-
-  await (
-    await slashingVoting.initialize(
-      dkg.address,
-      epochPeriod,
-      slashingThresold,
-      slashingEpochs,
-      contractRegistry.address
-    )
-  ).wait();
-
-  await contractRegistry.setContract(await slashingVoting.SLASHING_VOTING_KEY(), slashingVoting.address);
-  await contractRegistry.setContract(await staking.STAKING_KEY(), staking.address);
-  await contractRegistry.setContract(await dkg.DKG_KEY(), dkg.address);
-  await contractRegistry.setContract(await supportedTokens.SUPPORTED_TOKENS_KEY(), supportedTokens.address);
-
-  return {
-    minimalStake: minimalStake,
-
-    staking: staking,
-    addressStorage: addressStorage,
-    slashingVoting: slashingVoting,
-    dkg: dkg,
-    supportedTokens: supportedTokens,
-    contractRegistry: contractRegistry,
-    eventRegistry: eventRegistry,
-  };
+export async function deploySystem(options?: SystemDeploymentOptions): Promise<SystemDeploymentResult> {
+  return await deploySystemContracts(options, false);
 }

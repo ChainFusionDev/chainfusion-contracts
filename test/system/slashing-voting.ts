@@ -5,11 +5,10 @@ import { deploySystem } from '../utils/deploy';
 describe('SlashingVoting', function () {
   it('should vote only by validator', async function () {
     const [, v2] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
     const nonse = ethers.utils.arrayify(0);
     const reason = 0;
 
-    const { slashingVoting } = await deploySystem(initialMinimalStake);
+    const { slashingVoting } = await deploySystem();
 
     await expect(slashingVoting.voteWithReason(v2.address, reason, nonse)).to.be.revertedWith(
       'SlashingVoting: only active validator'
@@ -18,13 +17,11 @@ describe('SlashingVoting', function () {
 
   it('should check if we can vote agains non active validator', async function () {
     const [, v2] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
     const nonse = ethers.utils.arrayify(0);
     const reason = 0;
 
-    const { slashingVoting, staking } = await deploySystem(initialMinimalStake);
-    await staking.stake({ value: value });
+    const { slashingVoting, staking, minimalStake } = await deploySystem();
+    await staking.stake({ value: minimalStake });
 
     await expect(slashingVoting.voteWithReason(v2.address, reason, nonse)).to.be.revertedWith(
       'SlashingVoting: target is not active validator'
@@ -33,21 +30,19 @@ describe('SlashingVoting', function () {
 
   it('should check if we can ban already baned validator', async function () {
     const [, v2, v3] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
     const nonse = ethers.utils.arrayify(0);
     const reason: number = 0;
 
-    const { slashingVoting, staking } = await deploySystem(initialMinimalStake);
+    const { slashingVoting, staking, minimalStake } = await deploySystem();
 
     const slashingVoting2 = await ethers.getContractAt('SlashingVoting', slashingVoting.address, v2);
     const slashingVoting3 = await ethers.getContractAt('SlashingVoting', slashingVoting.address, v3);
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
     const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
 
-    await staking.stake({ value: value });
-    await staking2.stake({ value: value });
-    await staking3.stake({ value: value });
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
+    await staking3.stake({ value: minimalStake });
 
     await slashingVoting.voteWithReason(v3.address, reason, nonse);
     await slashingVoting2.voteWithReason(v3.address, reason, nonse);
@@ -58,13 +53,11 @@ describe('SlashingVoting', function () {
 
   it('should check if we can ban slashed validator', async function () {
     const [, v2, v3] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
     const nonse = ethers.utils.arrayify(0);
     const reason: number = 0;
     const secondReason: number = 1;
 
-    const { slashingVoting, staking } = await deploySystem(initialMinimalStake);
+    const { slashingVoting, staking, minimalStake } = await deploySystem();
 
     slashingVoting.setSlashingThresold(1);
 
@@ -72,9 +65,9 @@ describe('SlashingVoting', function () {
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
     const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
 
-    await staking.stake({ value: value });
-    await staking2.stake({ value: value });
-    await staking3.stake({ value: value });
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
+    await staking3.stake({ value: minimalStake });
 
     await slashingVoting.voteWithReason(v3.address, reason, nonse);
     await slashingVoting2.voteWithReason(v3.address, reason, nonse);
@@ -85,16 +78,14 @@ describe('SlashingVoting', function () {
 
   it('should check if we can ban twice of the same validator', async function () {
     const [, v2] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
     const nonse = ethers.utils.arrayify(0);
     const reason: number = 0;
 
-    const { slashingVoting, staking } = await deploySystem(initialMinimalStake);
+    const { slashingVoting, staking, minimalStake } = await deploySystem();
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
 
-    await staking.stake({ value: value });
-    await staking2.stake({ value: value });
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
 
     await slashingVoting.voteWithReason(v2.address, reason, nonse);
     await expect(slashingVoting.voteWithReason(v2.address, reason, nonse)).to.be.revertedWith(
