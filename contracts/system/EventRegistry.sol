@@ -7,7 +7,7 @@ import "./ValidatorOwnable.sol";
 contract EventRegistry is ValidatorOwnable, Initializable {
     mapping(bytes32 => bool) public registeredEvents;
 
-    event EventRegistered(bytes32 _hash, uint256 _sourceChain, uint256 _destinationChain);
+    event EventRegistered(bytes32 _hash, uint256 _generation, uint256 _sourceChain, uint256 _destinationChain);
 
     function initialize(address _signerGetterAddress) external initializer {
         _setSignerGetter(_signerGetterAddress);
@@ -15,21 +15,23 @@ contract EventRegistry is ValidatorOwnable, Initializable {
 
     function registerEvent(
         bytes32 _hash,
+        uint256 _generation,
         uint256 _sourceChain,
         uint256 _destinationChain
     ) external onlyCurrentValidator {
-        bytes32 key = this.eventKey(_hash, _sourceChain, _destinationChain);
+        bytes32 key = this.eventKey(_hash, _generation, _sourceChain, _destinationChain);
         require(registeredEvents[key] == false, "EventRegistry: event is already registered");
 
         registeredEvents[key] = true;
-        emit EventRegistered(_hash, _sourceChain, _destinationChain);
+        emit EventRegistered(_hash, _generation, _sourceChain, _destinationChain);
     }
 
     function eventKey(
         bytes32 _hash,
+        uint256 _generation,
         uint256 _sourceChain,
         uint256 _destinationChain
     ) external pure returns (bytes32) {
-        return keccak256(abi.encodePacked(_hash, _sourceChain, _destinationChain));
+        return keccak256(abi.encodePacked(_hash, _generation, _sourceChain, _destinationChain));
     }
 }

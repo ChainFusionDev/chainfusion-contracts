@@ -22,22 +22,22 @@ describe('EventRegistry', function () {
     await staking1.stake({ value: minimalStake });
     await staking2.stake({ value: minimalStake });
 
-    await eventRegistry1.registerEvent(eventHash1, 1, 2);
-    await expect(eventRegistry1.registerEvent(eventHash1, 1, 2)).to.be.revertedWith(
+    await eventRegistry1.registerEvent(eventHash1, 1, 1, 2);
+    await expect(eventRegistry1.registerEvent(eventHash1, 1, 1, 2)).to.be.revertedWith(
       'EventRegistry: event is already registered'
     );
-    expect(await eventRegistry1.registeredEvents(await eventRegistry1.eventKey(eventHash1, 1, 2))).to.equal(true);
+    expect(await eventRegistry1.registeredEvents(await eventRegistry1.eventKey(eventHash1, 1, 1, 2))).to.equal(true);
 
-    await eventRegistry1.registerEvent(eventHash1, 3, 4);
+    await eventRegistry1.registerEvent(eventHash1, 1, 3, 4);
 
-    await eventRegistry2.registerEvent(eventHash2, 3, 4);
-    await expect(eventRegistry2.registerEvent(eventHash2, 3, 4)).to.be.revertedWith(
+    await eventRegistry2.registerEvent(eventHash2, 1, 3, 4);
+    await expect(eventRegistry2.registerEvent(eventHash2, 1, 3, 4)).to.be.revertedWith(
       'EventRegistry: event is already registered'
     );
 
-    await expect(eventRegistryOther.registerEvent(eventHash3, 5, 6)).to.be.revertedWith(
+    await expect(eventRegistryOther.registerEvent(eventHash3, 1, 5, 6)).to.be.revertedWith(
       'ValidatorOwnable: only current validator'
     );
-    expect(await eventRegistry1.registeredEvents(await eventRegistry1.eventKey(eventHash3, 5, 6))).to.equal(false);
+    expect(await eventRegistry1.registeredEvents(await eventRegistry1.eventKey(eventHash3, 1, 5, 6))).to.equal(false);
   });
 });
