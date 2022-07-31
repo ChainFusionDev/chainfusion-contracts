@@ -1,19 +1,15 @@
 import { expect } from 'chai';
 import { BigNumber } from 'ethers';
 import { ethers } from 'hardhat';
-import { deployBridge } from '../utils/deploy';
+import { deployBridgeWithMocks } from '../utils/deploy';
 
 describe('FeeManager', function () {
   it('should check if fee is transferred to FeeManager contract', async function () {
-    const [validator, receiver] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
+    const [, receiver] = await ethers.getSigners();
     const amount = '10000000000000000000';
     const fee = '10000000000000000';
 
-    const { liquidityPools, tokenManager, mockToken, bridge, chainId, feeManager } = await deployBridge(
-      validator.address,
-      initialRequiredApprovals
-    );
+    const { mockToken, mockChainId, liquidityPools, tokenManager, bridge, feeManager } = await deployBridgeWithMocks();
 
     expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
@@ -21,7 +17,7 @@ describe('FeeManager', function () {
     await mockToken.approve(liquidityPools.address, amount);
     await liquidityPools.addLiquidity(mockToken.address, amount);
 
-    await bridge.deposit(mockToken.address, chainId, receiver.address, amount);
+    await bridge.deposit(mockToken.address, mockChainId, receiver.address, amount);
     expect(await mockToken.balanceOf(feeManager.address)).to.equal(fee);
   });
 
@@ -29,29 +25,26 @@ describe('FeeManager', function () {
     const [validator, foundation, receiver, user] = await ethers.getSigners();
     const amount = '1000000000000000000000';
     const tokenFee = '10000000000000000';
-    const validatorReward = '10000000000000000';
-    const liquidityReward = '10000000000000000';
-    const foundationReward = '10000000000000000';
+    const validatorReward = '300000000000000000';
+    const liquidityReward = '300000000000000000';
     const fee = '10000000000000000';
-    const chainId = 2;
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
 
-    const { liquidityPools, tokenManager, bridge, feeManager } = await deployBridge(
-      validator.address,
-      chainId,
-      foundation.address
-    );
+    const { mockChainId, liquidityPools, tokenManager, bridge, feeManager } = await deployBridgeWithMocks({
+      foundationAddress: foundation.address,
+    });
+
     await tokenManager.setEnabled(NATIVE_TOKEN, true);
 
     expect(await tokenManager.isTokenEnabled(NATIVE_TOKEN)).to.equal(true);
 
     await liquidityPools.addNativeLiquidity({ value: amount });
-    await bridge.depositNative(chainId, receiver.address, { value: amount });
-    await feeManager.setTokenFee(NATIVE_TOKEN, tokenFee, validatorReward, liquidityReward, foundationReward);
+    await bridge.depositNative(mockChainId, receiver.address, { value: amount });
+    await feeManager.setTokenFee(NATIVE_TOKEN, tokenFee, validatorReward, liquidityReward);
 
     const balanceValidatorAddressBefore = await ethers.provider.getBalance(validator.address);
-    const balanceFoundationAddressBefore = await ethers.provider.getBalance(foundation.address);
     const balanceLiquidityPoolsBefore = await ethers.provider.getBalance(feeManager.liquidityPools());
+    const balanceFoundationAddressBefore = await ethers.provider.getBalance(foundation.address);
 
     const balance = await ethers.provider.getBalance(feeManager.address);
     expect(balance).to.equal(fee);
@@ -60,19 +53,18 @@ describe('FeeManager', function () {
     await userFeeManager.distributeRewards(NATIVE_TOKEN);
 
     const balanceValidatorAddressAfter = await ethers.provider.getBalance(validator.address);
-    const balanceFoundationAddressAfter = await ethers.provider.getBalance(foundation.address);
     const balanceLiquidityPoolsAfter = await ethers.provider.getBalance(feeManager.liquidityPools());
+    const balanceFoundationAddressAfter = await ethers.provider.getBalance(foundation.address);
 
-    let validatorRewards = BigNumber.from('100000000000000');
-    let liquidityRewards = BigNumber.from('100000000000000');
-    let foundationRewards = BigNumber.from('9800000000000000');
+    let validatorRewards = BigNumber.from('3000000000000000');
+    let liquidityRewards = BigNumber.from('3000000000000000');
+    let foundationRewards = BigNumber.from('4000000000000000');
 
     expect(balanceValidatorAddressAfter).to.equal(balanceValidatorAddressBefore.add(validatorRewards));
-    expect(balanceFoundationAddressAfter).to.equal(balanceFoundationAddressBefore.add(foundationRewards));
     expect(balanceLiquidityPoolsAfter).to.equal(balanceLiquidityPoolsBefore.add(liquidityRewards));
+    expect(balanceFoundationAddressAfter).to.equal(balanceFoundationAddressBefore.add(foundationRewards));
 
-    const collectedFee = '100000000000000';
-    expect(await liquidityPools.collectedFees(NATIVE_TOKEN)).to.equal(collectedFee);
+    expect(await liquidityPools.collectedFees(NATIVE_TOKEN)).to.equal(liquidityRewards);
     await liquidityPools.claimRewards(NATIVE_TOKEN);
     expect(await liquidityPools.collectedFees(NATIVE_TOKEN)).to.equal(0);
   });

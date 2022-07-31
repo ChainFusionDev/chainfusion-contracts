@@ -1,13 +1,12 @@
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { deployBridge } from '../utils/deploy';
+import { deployBridge, deployBridgeWithMocks } from '../utils/deploy';
 
 describe('LiquidityPools', function () {
   it('should change token manager', async function () {
-    const [validator, v1] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
+    const [, v1] = await ethers.getSigners();
 
-    const { tokenManager, liquidityPools } = await deployBridge(validator.address, initialRequiredApprovals);
+    const { tokenManager, liquidityPools } = await deployBridge();
     const newTokenManager = await ethers.getContractAt('TokenManager', tokenManager.address, v1);
 
     await expect(liquidityPools.setTokenManager(newTokenManager.address))
@@ -18,11 +17,9 @@ describe('LiquidityPools', function () {
   });
 
   it('should change fee percentage', async function () {
-    const [validator] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
     const newFeePercentage = '10000';
 
-    const { liquidityPools } = await deployBridge(validator.address, initialRequiredApprovals);
+    const { liquidityPools } = await deployBridge();
 
     await expect(liquidityPools.setFeePercentage(newFeePercentage))
       .to.emit(liquidityPools, 'FeePercentageUpdated')
@@ -33,11 +30,9 @@ describe('LiquidityPools', function () {
 
   it('should add liquidity for supported token', async function () {
     const [validator] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
-
     const amount = '100000';
 
-    const { liquidityPools, tokenManager, mockToken } = await deployBridge(validator.address, initialRequiredApprovals);
+    const { mockToken, liquidityPools, tokenManager } = await deployBridgeWithMocks();
 
     expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
@@ -52,13 +47,10 @@ describe('LiquidityPools', function () {
   });
 
   it('should not add liquidity for unsupported token', async function () {
-    const [validator] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
-
     const amount = '100000';
     const mintAmount = '100000000000000000000';
 
-    const { liquidityPools, mockToken } = await deployBridge(validator.address, initialRequiredApprovals);
+    const { mockToken, liquidityPools } = await deployBridgeWithMocks();
 
     const MockToken = await ethers.getContractFactory('MockToken');
     const mockToken2 = await MockToken.deploy('Token2', 'TKN2', mintAmount);
@@ -74,11 +66,9 @@ describe('LiquidityPools', function () {
 
   it('should remove liquidity', async function () {
     const [validator] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
-
     const amount = '100000';
 
-    const { liquidityPools, tokenManager, mockToken } = await deployBridge(validator.address, initialRequiredApprovals);
+    const { mockToken, liquidityPools, tokenManager } = await deployBridgeWithMocks();
 
     expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
@@ -98,12 +88,11 @@ describe('LiquidityPools', function () {
 
   it('should not remove liquidity more than provided', async function () {
     const [validator] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
 
     const amount = '100000';
     const amountRemove = '1000000';
 
-    const { liquidityPools, tokenManager, mockToken } = await deployBridge(validator.address, initialRequiredApprovals);
+    const { mockToken, liquidityPools, tokenManager } = await deployBridgeWithMocks();
 
     expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
@@ -118,14 +107,10 @@ describe('LiquidityPools', function () {
   });
 
   it('should transfer token', async function () {
-    const [validator, receiver] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
+    const [, receiver] = await ethers.getSigners();
     const amount = '10000000000000000000';
 
-    const { liquidityPools, tokenManager, mockToken, bridge, chainId } = await deployBridge(
-      validator.address,
-      initialRequiredApprovals
-    );
+    const { mockChainId, mockToken, liquidityPools, tokenManager, bridge } = await deployBridgeWithMocks();
 
     expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
@@ -133,81 +118,72 @@ describe('LiquidityPools', function () {
     await mockToken.approve(liquidityPools.address, amount);
     await liquidityPools.addLiquidity(mockToken.address, amount);
 
-    await bridge.deposit(mockToken.address, chainId, receiver.address, amount);
+    await bridge.deposit(mockToken.address, mockChainId, receiver.address, amount);
   });
 
   it('should collect fees', async function () {
-    const [validator, receiver] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
-    const amount = '10000000000000000000';
-    const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
+    const [, liquidityProvider, receiver] = await ethers.getSigners();
+    const depositAmount = '10000000000000000000';
     const tokenFee = '10000';
-    const validatorReward = '10000';
-    const liquidityReward = '10000';
-    const foundationReward = '10000';
-    const fee = '100';
-    const transferAmount = '10000000000000000000';
-    const sourceChainId = 5;
+    const validatorReward = '300000000000000000';
+    const liquidityReward = '300000000000000000';
 
-    const { liquidityPools, tokenManager, mockToken, bridge, chainId, feeManager } = await deployBridge(
-      validator.address,
-      initialRequiredApprovals
+    const { mockChainId, mockToken, liquidityPools, tokenManager, bridge, feeManager } = await deployBridgeWithMocks();
+
+    const liquidityPoolsProvider = await ethers.getContractAt(
+      'LiquidityPools',
+      liquidityPools.address,
+      liquidityProvider
     );
+    const mockTokenProvider = await ethers.getContractAt('MockToken', mockToken.address, liquidityProvider);
 
     expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
-    await mockToken.approve(bridge.address, amount);
-    await mockToken.approve(liquidityPools.address, amount);
-    await liquidityPools.addLiquidity(mockToken.address, amount);
+    await mockToken.approve(bridge.address, depositAmount);
+    await mockToken.transfer(liquidityProvider.address, depositAmount);
 
-    await bridge.deposit(mockToken.address, chainId, receiver.address, amount);
+    await mockTokenProvider.approve(liquidityPools.address, depositAmount);
+    await liquidityPoolsProvider.addLiquidity(mockToken.address, depositAmount);
 
-    await bridge.executeTransfer(txHash, mockToken.address, sourceChainId, receiver.address, amount);
-    await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward, foundationReward);
+    await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward);
+
+    await bridge.deposit(mockToken.address, mockChainId, receiver.address, depositAmount);
     await feeManager.distributeRewards(mockToken.address);
-    expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(fee);
-    expect(await mockToken.balanceOf(receiver.address)).to.equal(transferAmount);
+    expect(await liquidityPoolsProvider.collectedFees(mockToken.address)).to.equal('3000000000030000');
   });
 
   it('should claim rewards', async function () {
-    const [validator, receiver] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
-    const amount = '10000000000000000000';
+    const [, receiver] = await ethers.getSigners();
+    const depositAmount = '10000000000000000000';
     const tokenFee = '10000';
-    const validatorReward = '10000';
-    const liquidityReward = '10000';
-    const foundationReward = '10000';
-    const fee = '100';
+    const validatorReward = '300000000000000000';
+    const liquidityReward = '300000000000000000';
     const sourceChainId = 5;
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
 
-    const { liquidityPools, mockToken, bridge, feeManager } = await deployBridge(
-      validator.address,
-      initialRequiredApprovals
-    );
+    const { mockToken, liquidityPools, bridge, feeManager } = await deployBridgeWithMocks();
 
-    await mockToken.approve(bridge.address, amount);
-    await mockToken.approve(liquidityPools.address, amount);
-    await liquidityPools.addLiquidity(mockToken.address, amount);
+    await mockToken.approve(bridge.address, depositAmount);
+    await mockToken.approve(liquidityPools.address, depositAmount);
+    await liquidityPools.addLiquidity(mockToken.address, depositAmount);
 
-    await bridge.deposit(mockToken.address, sourceChainId, receiver.address, amount);
+    await bridge.deposit(mockToken.address, sourceChainId, receiver.address, depositAmount);
+    await bridge.executeTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount);
 
-    await bridge.executeTransfer(txHash, mockToken.address, sourceChainId, receiver.address, amount);
-    await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward, foundationReward);
+    await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward);
     await feeManager.distributeRewards(mockToken.address);
-    expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(fee);
-    expect(await liquidityPools.rewardsOwing(mockToken.address)).to.equal(fee);
+
+    expect(await liquidityPools.collectedFees(mockToken.address)).to.equal('3000000000000000');
+    expect(await liquidityPools.rewardsOwing(mockToken.address)).to.equal('3000000000000000');
     await liquidityPools.claimRewards(mockToken.address);
     expect(await liquidityPools.rewardsOwing(mockToken.address)).to.equal(0);
   });
 
   it('should add and remove liquidity several times', async function () {
-    const [validator] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
     const amount = '1000000';
     const amountLiquidity = '100';
 
-    const { liquidityPools, mockToken, bridge } = await deployBridge(validator.address, initialRequiredApprovals);
+    const { mockToken, liquidityPools, bridge } = await deployBridgeWithMocks();
 
     await mockToken.approve(bridge.address, amount);
     await mockToken.approve(liquidityPools.address, amount);
@@ -225,11 +201,10 @@ describe('LiquidityPools', function () {
 
   it('should add and remove liquidity using native currency', async function () {
     const [validator] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
 
     const amount = '100000';
 
-    const { liquidityPools, tokenManager } = await deployBridge(validator.address, initialRequiredApprovals);
+    const { liquidityPools, tokenManager } = await deployBridge();
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     await tokenManager.setEnabled(NATIVE_TOKEN, true);
     expect(await tokenManager.isTokenEnabled(NATIVE_TOKEN)).to.equal(true);
@@ -252,22 +227,17 @@ describe('LiquidityPools', function () {
   });
 
   it('should distribute the reward equally', async function () {
-    const [validator, v1, v2, receiver] = await ethers.getSigners();
-    const initialRequiredApprovals = 2;
+    const [, v1, v2, receiver] = await ethers.getSigners();
     const amountTransfer = '1000000000000000000';
     const amount = '100000000000000000';
     const tokenFee = '10000';
     const validatorReward = '10000';
     const liquidityReward = '10000';
-    const foundationReward = '10000';
     const fee = '100';
     const sourceChainId = 5;
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
 
-    const { liquidityPools, mockToken, bridge, feeManager } = await deployBridge(
-      validator.address,
-      initialRequiredApprovals
-    );
+    const { mockToken, liquidityPools, bridge, feeManager } = await deployBridgeWithMocks();
 
     await mockToken.transfer(v1.address, amountTransfer);
     await mockToken.transfer(v2.address, amountTransfer);
@@ -294,7 +264,7 @@ describe('LiquidityPools', function () {
 
     await bridge.executeTransfer(txHash, mockToken.address, sourceChainId, receiver.address, amount);
 
-    await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward, foundationReward);
+    await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward);
 
     const before = await liquidityPools.availableLiquidity(mockToken.address);
     await feeManager.distributeRewards(mockToken.address);
@@ -311,13 +281,13 @@ describe('LiquidityPools', function () {
     await liquidityPools2.claimRewards(mockToken2.address);
     expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(0);
   });
+
   it('should remove liquidity using native token', async function () {
     const [validator] = await ethers.getSigners();
-    const initialRequiredApprovals = 1;
 
     const amount = '100000';
 
-    const { liquidityPools, tokenManager } = await deployBridge(validator.address, initialRequiredApprovals);
+    const { liquidityPools, tokenManager } = await deployBridge();
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     await tokenManager.setEnabled(NATIVE_TOKEN, true);
     expect(await tokenManager.isTokenEnabled(NATIVE_TOKEN)).to.equal(true);

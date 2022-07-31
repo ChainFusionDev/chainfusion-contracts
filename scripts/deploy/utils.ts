@@ -6,31 +6,31 @@ export interface ContractDeployer<C extends Contract> {
 
 export async function deployContract<C extends Contract>(
   deployerPromise: Promise<ContractDeployer<C>>,
-  showLogs?: Boolean,
+  displayLogs?: Boolean,
   name?: String
 ): Promise<C> {
-  if (showLogs == undefined) {
-    showLogs = false;
+  if (displayLogs == undefined) {
+    displayLogs = false;
   }
 
   if (name === undefined) {
     name = 'Contract';
   }
 
-  if (showLogs) {
+  if (displayLogs) {
     console.log(`Deploying ${name}`);
   }
 
   const deployer = await deployerPromise;
   const contract = await deployer.deploy();
 
-  if (showLogs) {
+  if (displayLogs) {
     console.log(`Deploying ${name} with address ${contract.address}`);
   }
 
   await contract.deployed();
 
-  if (showLogs) {
+  if (displayLogs) {
     console.log(`Deployed contract\n`);
   }
 
@@ -39,26 +39,26 @@ export async function deployContract<C extends Contract>(
 
 export async function waitTransaction(
   txPromise: Promise<ContractTransaction>,
-  showLogs?: Boolean,
+  displayLogs?: Boolean,
   message?: String
 ): Promise<void> {
-  if (showLogs == undefined || message === undefined) {
-    showLogs = false;
+  if (displayLogs == undefined || message === undefined) {
+    displayLogs = false;
   }
 
-  if (showLogs) {
+  if (displayLogs) {
     console.log(message);
   }
 
   const tx = await txPromise;
 
-  if (showLogs) {
+  if (displayLogs) {
     console.log(`Sending transaction ${tx.hash}`);
   }
 
   await tx.wait();
 
-  if (showLogs) {
+  if (displayLogs) {
     console.log(`Confirmed transaction\n`);
   }
 

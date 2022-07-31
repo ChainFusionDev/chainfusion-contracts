@@ -12,81 +12,108 @@ const defaultSystemDeploymentParameters: SystemDeploymentParameters = {
   slashingBansThresold: BigNumber.from(10),
 
   dkgDeadlinePeriod: BigNumber.from(20),
+
+  displayLogs: false,
 };
 
-export async function deploySystemContracts(
-  options?: SystemDeploymentOptions,
-  showLogs?: Boolean
-): Promise<SystemDeploymentResult> {
-  const parameters = resolveParameters(options);
+export async function deploySystemContracts(options?: SystemDeploymentOptions): Promise<SystemDeploymentResult> {
+  const params = resolveParameters(options);
 
-  if (showLogs === undefined) {
-    showLogs = false;
-  }
-
-  if (showLogs) {
+  if (params.displayLogs) {
     console.log('Deploying contracts\n');
   }
 
   const res: SystemDeployment = {
-    contractRegistry: await deployContract(ethers.getContractFactory('ContractRegistry'), showLogs, 'ContractRegistry'),
-    eventRegistry: await deployContract(ethers.getContractFactory('EventRegistry'), showLogs, 'EventRegistry'),
-    addressStorage: await deployContract(ethers.getContractFactory('AddressStorage'), showLogs, 'AddressStorage'),
-    staking: await deployContract(ethers.getContractFactory('Staking'), showLogs, 'Staking'),
-    dkg: await deployContract(ethers.getContractFactory('DKG'), showLogs, 'DKG'),
-    supportedTokens: await deployContract(ethers.getContractFactory('SupportedTokens'), showLogs, 'SupportedTokens'),
-    slashingVoting: await deployContract(ethers.getContractFactory('SlashingVoting'), showLogs, 'SlashingVoting'),
+    contractRegistry: await deployContract(
+      ethers.getContractFactory('ContractRegistry'),
+      params.displayLogs,
+      'ContractRegistry'
+    ),
+    eventRegistry: await deployContract(
+      ethers.getContractFactory('EventRegistry'),
+      params.displayLogs,
+      'EventRegistry'
+    ),
+    addressStorage: await deployContract(
+      ethers.getContractFactory('AddressStorage'),
+      params.displayLogs,
+      'AddressStorage'
+    ),
+    staking: await deployContract(ethers.getContractFactory('Staking'), params.displayLogs, 'Staking'),
+    dkg: await deployContract(ethers.getContractFactory('DKG'), params.displayLogs, 'DKG'),
+    supportedTokens: await deployContract(
+      ethers.getContractFactory('SupportedTokens'),
+      params.displayLogs,
+      'SupportedTokens'
+    ),
+    slashingVoting: await deployContract(
+      ethers.getContractFactory('SlashingVoting'),
+      params.displayLogs,
+      'SlashingVoting'
+    ),
   };
 
-  if (showLogs) {
+  if (params.displayLogs) {
     console.log('Successfully deployed contracts\n');
   }
 
-  if (showLogs) {
+  if (params.displayLogs) {
     console.log('Initializing contracts\n');
   }
 
-  await waitTransaction(res.addressStorage.initialize([]), showLogs, 'Initializing AddressStorage');
+  await waitTransaction(res.addressStorage.initialize([]), params.displayLogs, 'Initializing AddressStorage');
 
   await waitTransaction(
     res.addressStorage.transferOwnership(res.staking.address),
-    showLogs,
+    params.displayLogs,
     'Transferring ownership of AddressStorage'
   );
 
   await waitTransaction(
-    res.dkg.initialize(res.contractRegistry.address, parameters.dkgDeadlinePeriod),
-    showLogs,
+    res.dkg.initialize(res.contractRegistry.address, params.dkgDeadlinePeriod),
+    params.displayLogs,
     'Initializing DKG'
   );
 
-  await waitTransaction(res.contractRegistry.initialize(res.dkg.address), showLogs, 'Initializing ContractRegistry');
+  await waitTransaction(
+    res.contractRegistry.initialize(res.dkg.address),
+    params.displayLogs,
+    'Initializing ContractRegistry'
+  );
 
-  await waitTransaction(res.eventRegistry.initialize(res.dkg.address), showLogs, 'Initializing EventRegistry');
+  await waitTransaction(
+    res.eventRegistry.initialize(res.dkg.address),
+    params.displayLogs,
+    'Initializing EventRegistry'
+  );
 
-  await waitTransaction(res.supportedTokens.initialize(res.dkg.address), showLogs, 'Initializing SupportedTokens');
+  await waitTransaction(
+    res.supportedTokens.initialize(res.dkg.address),
+    params.displayLogs,
+    'Initializing SupportedTokens'
+  );
 
   await waitTransaction(
     res.staking.initialize(
       res.dkg.address,
-      parameters.minimalStake,
-      parameters.stakeWithdrawalPeriod,
+      params.minimalStake,
+      params.stakeWithdrawalPeriod,
       res.contractRegistry.address,
       res.addressStorage.address
     ),
-    showLogs,
+    params.displayLogs,
     'Initializing Staking'
   );
 
   await waitTransaction(
     res.slashingVoting.initialize(
       res.dkg.address,
-      parameters.slashingEpochPeriod,
-      parameters.slashingBansThresold,
-      parameters.slashingEpochs,
+      params.slashingEpochPeriod,
+      params.slashingBansThresold,
+      params.slashingEpochs,
       res.contractRegistry.address
     ),
-    showLogs,
+    params.displayLogs,
     'Initializing SlashingVoting'
   );
 
@@ -95,13 +122,13 @@ export async function deploySystemContracts(
   await res.contractRegistry.setContract(await res.dkg.DKG_KEY(), res.dkg.address);
   await res.contractRegistry.setContract(await res.supportedTokens.SUPPORTED_TOKENS_KEY(), res.supportedTokens.address);
 
-  if (showLogs) {
+  if (params.displayLogs) {
     console.log('Successfully initialized contracts\n');
   }
 
   return {
     ...res,
-    ...parameters,
+    ...params,
   };
 }
 

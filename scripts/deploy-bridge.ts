@@ -1,64 +1,7 @@
-import { ethers } from 'hardhat';
+import { deployBridgeContracts } from './deploy/bridge';
 
 async function main() {
-  const [validator] = await ethers.getSigners();
-  const feePercentage = '10000000000000000';
-  const foundationAddress = '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc';
-  const validatorRefundFee = '10000000000000000';
-
-  const ValidatorStorage = await ethers.getContractFactory('ValidatorStorage');
-  const validatorStorage = await ValidatorStorage.deploy();
-  await validatorStorage.deployed();
-  await validatorStorage.initialize(validator.address);
-
-  console.log('ValidatorStorage deployed to:', validatorStorage.address);
-
-  const TokenManager = await ethers.getContractFactory('TokenManager');
-  const tokenManager = await TokenManager.deploy();
-  await tokenManager.deployed();
-  await (await tokenManager.initialize(validatorStorage.address)).wait();
-
-  console.log('TokenManager deployed to:', tokenManager.address);
-
-  const LiquidityPools = await ethers.getContractFactory('LiquidityPools');
-  const liquidityPools = await LiquidityPools.deploy();
-  await liquidityPools.deployed();
-
-  console.log('LiquidityPools deployed to:', liquidityPools.address);
-
-  const FeeManager = await ethers.getContractFactory('FeeManager');
-  const feeManager = await FeeManager.deploy();
-  await feeManager.deployed();
-  await (
-    await feeManager.initialize(validatorStorage.address, liquidityPools.address, foundationAddress, validatorRefundFee)
-  ).wait();
-
-  console.log('FeeManager deployed to:', feeManager.address);
-
-  const Bridge = await ethers.getContractFactory('Bridge');
-  const bridge = await Bridge.deploy();
-  await bridge.deployed();
-  await (
-    await bridge.initialize(validatorStorage.address, tokenManager.address, liquidityPools.address, feeManager.address)
-  ).wait();
-
-  console.log('Bridge deployed to:', bridge.address);
-
-  const RelayBridge = await ethers.getContractFactory('RelayBridge');
-  const relayBridge = await RelayBridge.deploy();
-  await relayBridge.deployed();
-
-  console.log('RelayBridge deployed to:', relayBridge.address);
-
-  await (
-    await liquidityPools.initialize(
-      validatorStorage.address,
-      tokenManager.address,
-      bridge.address,
-      feeManager.address,
-      feePercentage
-    )
-  ).wait();
+  await deployBridgeContracts({displayLogs: true});
 }
 
 main().catch((error) => {

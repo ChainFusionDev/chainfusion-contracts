@@ -7,7 +7,7 @@ const VALIDATOR_KEYS =
   process.env.VALIDATOR_KEYS === undefined ? [] : (process.env.VALIDATOR_KEYS || '').trim().split(',');
 
 async function main() {
-  const deployment = await deploySystemContracts({}, true);
+  const deployment = await deploySystemContracts({displayLogs: true});
 
   if (VALIDATOR_KEYS.length > 0) {
     console.log('\nStaking\n');
