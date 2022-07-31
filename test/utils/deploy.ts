@@ -1,14 +1,8 @@
-import { deploySystemContracts } from '../../scripts/deploy/system';
-import { deployBridgeContracts } from '../../scripts/deploy/bridge';
-import {
-  BridgeDeploymentOptions,
-  BridgeDeploymentResult,
-  SystemDeploymentOptions,
-  SystemDeploymentResult,
-} from '../../scripts/deploy/types';
-import { BigNumber } from 'ethers';
-import { MockMintableBurnableToken, MockRelayBridgeApp, MockToken } from '../../typechain';
 import { ethers } from 'hardhat';
+import { BigNumber } from 'ethers';
+import { deploySystemContracts, SystemDeploymentOptions, SystemDeploymentResult } from '../../scripts/deploy/system';
+import { BridgeDeploymentOptions, BridgeDeploymentResult, deployBridgeContracts } from '../../scripts/deploy/bridge';
+import { MockMintableBurnableToken, MockRelayBridgeApp, MockToken } from '../../typechain';
 
 export async function deploySystem(options?: SystemDeploymentOptions): Promise<SystemDeploymentResult> {
   return await deploySystemContracts(options);

@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 import { ethers } from 'hardhat';
-import { BridgeDeployment, BridgeDeploymentOptions, BridgeDeploymentParameters, BridgeDeploymentResult } from './types';
-import { deployContract, waitTransaction } from './utils';
+import { Bridge, FeeManager, LiquidityPools, RelayBridge, TokenManager, ValidatorStorage } from '../../typechain';
+import { Deployer } from './deployer';
 
 const defaultBridgeDeploymentParameters: BridgeDeploymentParameters = {
   feePercentage: BigNumber.from('10000000000000000'),
@@ -9,65 +9,47 @@ const defaultBridgeDeploymentParameters: BridgeDeploymentParameters = {
   foundationAddress: '0xd13F66863ED91704e386C57501F00b5307CAbA18',
 
   displayLogs: false,
+  verify: false,
 };
 
 export async function deployBridgeContracts(options?: BridgeDeploymentOptions): Promise<BridgeDeploymentResult> {
   const params = resolveParameters(options);
+  const deployer = new Deployer(params.displayLogs);
 
   const [validator] = await ethers.getSigners();
 
-  if (params.displayLogs) {
-    console.log('Deploying contracts\n');
-  }
+  deployer.log('Deploying contracts\n');
 
   const res: BridgeDeployment = {
-    validatorStorage: await deployContract(
-      ethers.getContractFactory('ValidatorStorage'),
-      params.displayLogs,
-      'ValidatorStorage'
-    ),
-    tokenManager: await deployContract(ethers.getContractFactory('TokenManager'), params.displayLogs, 'TokenManager'),
-    feeManager: await deployContract(ethers.getContractFactory('FeeManager'), params.displayLogs, 'FeeManager'),
-    liquidityPools: await deployContract(
-      ethers.getContractFactory('LiquidityPools'),
-      params.displayLogs,
-      'LiquidityPools'
-    ),
-    bridge: await deployContract(ethers.getContractFactory('Bridge'), params.displayLogs, 'Bridge'),
-    relayBridge: await deployContract(ethers.getContractFactory('RelayBridge'), params.displayLogs, 'RelayBridge'),
+    validatorStorage: await deployer.deploy(ethers.getContractFactory('ValidatorStorage'), 'ValidatorStorage'),
+    tokenManager: await deployer.deploy(ethers.getContractFactory('TokenManager'), 'TokenManager'),
+    feeManager: await deployer.deploy(ethers.getContractFactory('FeeManager'), 'FeeManager'),
+    liquidityPools: await deployer.deploy(ethers.getContractFactory('LiquidityPools'), 'LiquidityPools'),
+    bridge: await deployer.deploy(ethers.getContractFactory('Bridge'), 'Bridge'),
+    relayBridge: await deployer.deploy(ethers.getContractFactory('RelayBridge'), 'RelayBridge'),
   };
 
-  if (params.displayLogs) {
-    console.log('Successfully deployed contracts\n');
-  }
+  deployer.log('Successfully deployed contracts\n');
 
-  if (params.displayLogs) {
-    console.log('Initializing contracts\n');
-  }
+  deployer.log('Initializing contracts\n');
 
-  await waitTransaction(
-    res.validatorStorage.initialize(validator.address),
-    params.displayLogs,
-    'Initializing ValidatorStorage'
-  );
-  await waitTransaction(
+  await deployer.sendTransaction(res.validatorStorage.initialize(validator.address), 'Initializing ValidatorStorage');
+  await deployer.sendTransaction(
     res.tokenManager.initialize(res.validatorStorage.address),
-    params.displayLogs,
     'Initializing TokenManager'
   );
 
-  await waitTransaction(
+  await deployer.sendTransaction(
     res.feeManager.initialize(
       res.validatorStorage.address,
       res.liquidityPools.address,
       params.foundationAddress,
       params.validatorRefundFee
     ),
-    params.displayLogs,
     'Initializing FeeManager'
   );
 
-  await waitTransaction(
+  await deployer.sendTransaction(
     res.liquidityPools.initialize(
       res.validatorStorage.address,
       res.tokenManager.address,
@@ -75,29 +57,25 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
       res.feeManager.address,
       params.feePercentage
     ),
-    params.displayLogs,
     'Initializing LiquidityPools'
   );
 
-  await waitTransaction(
+  await deployer.sendTransaction(
     res.bridge.initialize(
       res.validatorStorage.address,
       res.tokenManager.address,
       res.liquidityPools.address,
       res.feeManager.address
     ),
-    params.displayLogs,
     'Initializing Bridge'
   );
 
-  await waitTransaction(
-    res.relayBridge.initialize(res.validatorStorage.address),
-    params.displayLogs,
-    'Initializing RelayBridge'
-  );
+  await deployer.sendTransaction(res.relayBridge.initialize(res.validatorStorage.address), 'Initializing RelayBridge');
 
-  if (params.displayLogs) {
-    console.log('Successfully initialized contracts\n');
+  deployer.log('Successfully initialized contracts\n');
+
+  if (params.verify) {
+    await deployer.verifyObjectValues(res);
   }
 
   return {
@@ -129,5 +107,39 @@ function resolveParameters(options?: BridgeDeploymentOptions): BridgeDeploymentP
     parameters.displayLogs = options.displayLogs;
   }
 
+  if (options.verify !== undefined) {
+    parameters.verify = options.verify;
+  }
+
   return parameters;
+}
+
+export interface BridgeDeploymentResult extends BridgeDeployment, BridgeDeploymentParameters {}
+
+export interface BridgeDeployment {
+  validatorStorage: ValidatorStorage;
+  tokenManager: TokenManager;
+  feeManager: FeeManager;
+  liquidityPools: LiquidityPools;
+  bridge: Bridge;
+  relayBridge: RelayBridge;
+}
+
+export interface BridgeDeploymentParameters {
+  feePercentage: BigNumber;
+  validatorRefundFee: BigNumber;
+  foundationAddress: string;
+
+  displayLogs: boolean;
+  verify: boolean;
+}
+
+export interface BridgeDeploymentOptions {
+  feePercentage?: BigNumber;
+  validatorRefundFee?: BigNumber;
+  foundationAddress?: string;
+
+  displayLogs?: boolean;
+  verify?: boolean;
+  deployMocks?: boolean;
 }

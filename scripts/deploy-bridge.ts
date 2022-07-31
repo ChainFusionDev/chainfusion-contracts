@@ -1,7 +1,8 @@
 import { deployBridgeContracts } from './deploy/bridge';
 
 async function main() {
-  await deployBridgeContracts({displayLogs: true});
+  const verify = (process.env.VERIFY || '').trim().toLowerCase() === 'true';
+  await deployBridgeContracts({displayLogs: true, verify: verify});
 }
 
 main().catch((error) => {
