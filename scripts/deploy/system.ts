@@ -163,5 +163,9 @@ function resolveParameters(options?: SystemDeploymentOptions): SystemDeploymentP
     parameters.dkgDeadlinePeriod = options.dkgDeadlinePeriod;
   }
 
+  if (options.displayLogs !== undefined) {
+    parameters.displayLogs = options.displayLogs;
+  }
+
   return parameters;
 }
