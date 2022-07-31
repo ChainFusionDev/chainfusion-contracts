@@ -1,14 +1,13 @@
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { deployBridge } from '../utils/deploy';
+import { deployBridge, deployBridgeWithMocks } from '../utils/deploy';
 
 describe('RelayBridge', function () {
   it('should send data', async function () {
-    const [validator] = await ethers.getSigners();
     const chainId = 2;
     const data = ethers.utils.keccak256('0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF');
 
-    const { relayBridge } = await deployBridge(validator.address);
+    const { relayBridge } = await deployBridge();
 
     const hash = await relayBridge.dataHash(chainId, data);
 
@@ -19,12 +18,11 @@ describe('RelayBridge', function () {
   });
 
   it('should transmit data', async function () {
-    const [validator] = await ethers.getSigners();
     const fromChainId = 2;
     const abiCoder = ethers.utils.defaultAbiCoder;
     const data = abiCoder.encode(['string'], ['datafortransmit']);
 
-    const { relayBridge, mockRelayBridgeApp } = await deployBridge(validator.address);
+    const { relayBridge, mockRelayBridgeApp } = await deployBridgeWithMocks();
 
     const hash = await relayBridge.dataHash(fromChainId, data);
 
@@ -41,12 +39,11 @@ describe('RelayBridge', function () {
   });
 
   it('should emit event Reverted in appContract', async function () {
-    const [validator] = await ethers.getSigners();
     const destinationChainId = 1;
     const abiCoder = ethers.utils.defaultAbiCoder;
     const data = abiCoder.encode(['string'], ['dataforrevertsend']);
     const hash = ethers.utils.keccak256(data);
-    const { relayBridge, mockRelayBridgeApp } = await deployBridge(validator.address);
+    const { relayBridge, mockRelayBridgeApp } = await deployBridgeWithMocks();
 
     await expect(relayBridge.revertSend(mockRelayBridgeApp.address, destinationChainId, data))
       .to.emit(mockRelayBridgeApp, 'Reverted')

@@ -15,7 +15,6 @@ contract FeeManager is Initializable, ValidatorOwnable {
     mapping(address => uint256) public tokenFeePercentage;
     mapping(address => uint256) public validatorRewardPercentage;
     mapping(address => uint256) public liquidityRewardPercentage;
-    mapping(address => uint256) public foundationRewardPercentage;
 
     event LiquidityPoolsUpdated(address _liquidityPools);
     event FoundationAddressUpdated(address _foundationAddress);
@@ -55,13 +54,11 @@ contract FeeManager is Initializable, ValidatorOwnable {
         address token,
         uint256 tokenFee,
         uint256 validatorReward,
-        uint256 liquidityReward,
-        uint256 foundationReward
+        uint256 liquidityReward
     ) public {
         tokenFeePercentage[token] = tokenFee;
         validatorRewardPercentage[token] = validatorReward;
         liquidityRewardPercentage[token] = liquidityReward;
-        foundationRewardPercentage[token] = foundationReward;
     }
 
     function distributeRewards(address token) public {

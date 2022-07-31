@@ -1,3 +1,4 @@
+import hre from 'hardhat';
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
 import { ValidatorStatusActive } from '../utils/helpers';
@@ -5,10 +6,8 @@ import { deploySystem } from '../utils/deploy';
 
 describe('Staking', function () {
   it('should change minimal stake', async function () {
-    const initialMinimalStake = ethers.utils.parseEther('1');
     const newMinimalStake = ethers.utils.parseEther('2');
-
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking } = await deploySystem();
 
     await expect(staking.setMinimalStake(newMinimalStake))
       .to.emit(staking, 'MinimalStakeUpdated')
@@ -17,11 +16,9 @@ describe('Staking', function () {
     expect(await staking.minimalStake()).to.equal(newMinimalStake);
   });
 
-  it('should change setwithdrawal period', async function () {
-    const initialMinimalStake = ethers.utils.parseEther('1');
+  it('should set withdrawal period', async function () {
     const newWithdrawalPeriod = 2;
-
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking } = await deploySystem();
 
     await expect(staking.setWithdrawalPeriod(newWithdrawalPeriod))
       .to.emit(staking, 'WithdrawalPeriodUpdated')
@@ -31,54 +28,43 @@ describe('Staking', function () {
   });
 
   it('should verify error on staking less than minimal stake', async function () {
-    const initialMinimalStake = ethers.utils.parseEther('3');
+    const { staking, minimalStake } = await deploySystem();
 
-    const { staking } = await deploySystem(initialMinimalStake);
-
-    await expect(staking.stake({ value: ethers.utils.parseEther('1') })).to.be.revertedWith(
-      'insufficient stake provided'
-    );
+    await expect(staking.stake({ value: minimalStake.sub(1) })).to.be.revertedWith('insufficient stake provided');
   });
 
   it('should verify staking more than minimal stake', async function () {
     const [owner] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-    const { staking } = await deploySystem(initialMinimalStake);
-    await staking.stake({ value: value });
+    const additionalStake = ethers.utils.parseEther('5');
+    const { staking, minimalStake } = await deploySystem();
+    await staking.stake({ value: minimalStake.add(additionalStake) });
 
     const { validator, stake, status } = await staking.stakes(owner.address);
     expect(validator).to.equal(owner.address);
-    expect(stake).to.equal(value);
+    expect(stake).to.equal(minimalStake.add(additionalStake));
     expect(status).to.equal(ValidatorStatusActive);
   });
 
   it('should check if it is possible to stake several times', async function () {
     const [owner] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
+    const { staking, minimalStake } = await deploySystem();
 
-    const { staking } = await deploySystem(initialMinimalStake);
-
-    await staking.stake({ value: value });
-    await staking.stake({ value: value });
+    await staking.stake({ value: minimalStake });
+    await staking.stake({ value: minimalStake });
 
     const { validator, stake, status } = await staking.stakes(owner.address);
     expect(validator).to.equal(owner.address);
-    expect(stake).to.equal(ethers.utils.parseEther('10'));
+    expect(stake).to.equal(minimalStake.mul(2));
     expect(status).to.equal(ValidatorStatusActive);
   });
 
   it('should check if only validator can slash', async function () {
     const [v1, v2] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking, minimalStake } = await deploySystem();
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
 
-    await staking.stake({ value: value });
+    await staking.stake({ value: minimalStake });
 
     expect(await staking.getValidators()).to.deep.equal([v1.address]);
 
@@ -87,15 +73,12 @@ describe('Staking', function () {
 
   it('should check if slashingCount is not incremented if slash() is called several times', async function () {
     const [, v2] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking, minimalStake } = await deploySystem();
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
 
-    await staking.stake({ value: value });
-    await staking2.stake({ value: value });
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
 
     await staking.slash(v2.address);
     await staking.slash(v2.address);
@@ -104,17 +87,14 @@ describe('Staking', function () {
 
   it('should check if slash() already slashed validator', async function () {
     const [, v2, v3] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking, minimalStake } = await deploySystem();
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
     const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
 
-    await staking.stake({ value: value });
-    await staking2.stake({ value: value });
-    await staking3.stake({ value: value });
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
+    await staking3.stake({ value: minimalStake });
 
     await staking.slash(v2.address);
     await staking3.slash(v2.address);
@@ -124,17 +104,14 @@ describe('Staking', function () {
 
   it('should check if slashingCount is incremented if called by different validators', async function () {
     const [, v2, v3] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking, minimalStake } = await deploySystem();
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
     const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
 
-    await staking.stake({ value: value });
-    await staking2.stake({ value: value });
-    await staking3.stake({ value: value });
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
+    await staking3.stake({ value: minimalStake });
 
     await staking.slash(v3.address);
     await staking2.slash(v3.address);
@@ -143,21 +120,18 @@ describe('Staking', function () {
 
   it('should check if validatorCount is decremented after slashing', async function () {
     const [, v2, v3, v4, v5] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-
-    const { staking, addressStorage } = await deploySystem(initialMinimalStake);
+    const { staking, addressStorage, minimalStake } = await deploySystem();
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
     const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
     const staking4 = await ethers.getContractAt('Staking', staking.address, v4);
     const staking5 = await ethers.getContractAt('Staking', staking.address, v5);
 
-    await staking.stake({ value: value });
-    await staking2.stake({ value: value });
-    await staking3.stake({ value: value });
-    await staking4.stake({ value: value });
-    await staking5.stake({ value: value });
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
+    await staking3.stake({ value: minimalStake });
+    await staking4.stake({ value: minimalStake });
+    await staking5.stake({ value: minimalStake });
 
     await staking.slash(v5.address);
     await staking2.slash(v5.address);
@@ -168,113 +142,85 @@ describe('Staking', function () {
 
   it('should check if only validator with stake can announceWithdrawal', async function () {
     const [, v2] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking, minimalStake } = await deploySystem();
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
 
-    await staking.stake({ value: value });
+    await staking.stake({ value: minimalStake });
 
-    await expect(staking2.announceWithdrawal(value)).to.be.revertedWith('Staking: amount must be <= to stake');
+    await expect(staking2.announceWithdrawal(minimalStake)).to.be.revertedWith('Staking: amount must be <= to stake');
   });
 
   it('should check if amount more than stake', async function () {
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
+    const { staking, minimalStake } = await deploySystem();
 
-    const { staking } = await deploySystem(initialMinimalStake);
-
-    await staking.stake({ value: value });
-    await expect(staking.announceWithdrawal(ethers.utils.parseEther('10'))).to.be.revertedWith(
-      'amount must be <= to stake'
+    await staking.stake({ value: minimalStake });
+    await expect(staking.announceWithdrawal(minimalStake.add(ethers.utils.parseEther('1')))).to.be.revertedWith(
+      'Staking: amount must be <= to stake'
     );
   });
 
   it('should check if amount must be less or equal to stake', async function () {
     const [owner] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
+    const { staking, minimalStake } = await deploySystem();
 
-    const { staking } = await deploySystem(initialMinimalStake);
-
-    await staking.stake({ value: value });
-    await staking.announceWithdrawal(value);
+    await staking.stake({ value: minimalStake });
+    await staking.announceWithdrawal(minimalStake);
 
     const { amount } = await staking.withdrawalAnnouncements(owner.address);
 
-    expect(amount).to.equal(value);
+    expect(amount).to.equal(minimalStake);
   });
 
   it('should check if only validator with stake can withdraw', async function () {
     const [, v2] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking, minimalStake, stakeWithdrawalPeriod } = await deploySystem();
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
 
-    await staking.stake({ value: value });
-    await staking.announceWithdrawal(value);
+    await staking.stake({ value: minimalStake });
+    await staking.announceWithdrawal(minimalStake);
+    await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
 
     await expect(staking2.withdraw()).to.be.revertedWith('Staking: amount must be greater than zero');
   });
 
-  it('should check if slashed validator can not announce withdraw', async function () {
-    const [, v2, v3] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-
-    const { staking } = await deploySystem(initialMinimalStake);
-
-    const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
-    const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
-
-    await staking.stake({ value: value });
-    await staking2.stake({ value: value });
-    await staking3.stake({ value: value });
-
-    await staking.slash(v2.address);
-    await staking3.slash(v2.address);
-
-    await expect(staking2.announceWithdrawal(value)).to.be.revertedWith('Staking: validator is slashed');
-  });
-
   it('should check if slashed validator can not withdraw', async function () {
     const [, v2, v3] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
 
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking, minimalStake } = await deploySystem();
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
     const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
 
-    await staking.stake({ value: value });
-    await staking2.stake({ value: value });
-    await staking3.stake({ value: value });
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
+    await staking3.stake({ value: minimalStake });
 
     await staking.slash(v2.address);
     await staking3.slash(v2.address);
 
+    await expect(staking2.announceWithdrawal(minimalStake)).to.be.revertedWith('Staking: validator is slashed');
     await expect(staking2.withdraw()).to.be.revertedWith('Staking: validator is slashed');
   });
 
-  it('should user be able to withdraw his stake even if he is no longer a validator', async function () {
+  it('should be able to withdraw even if no longer a validator', async function () {
     const [owner] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
+    const minimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
     const firstWithdrawal = ethers.utils.parseEther('3');
     const secondWithdrawal = ethers.utils.parseEther('2');
 
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking, stakeWithdrawalPeriod } = await deploySystem({ minimalStake });
 
     await staking.stake({ value: value });
+
     await staking.announceWithdrawal(firstWithdrawal);
+    await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
     await staking.withdraw();
+
     await staking.announceWithdrawal(secondWithdrawal);
+    await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
     await staking.withdraw();
 
     const { stake } = await staking.stakes(owner.address);
@@ -283,26 +229,21 @@ describe('Staking', function () {
   });
 
   it('should check if withdrawalPeriod not passed', async function () {
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking, minimalStake } = await deploySystem();
     await staking.setWithdrawalPeriod(1000000);
-    await staking.stake({ value: value });
-    await staking.announceWithdrawal(value);
+    await staking.stake({ value: minimalStake });
+    await staking.announceWithdrawal(minimalStake);
 
     await expect(staking.withdraw()).to.be.revertedWith('Staking: withdrawal period not passed');
   });
 
-  it('should validator can withdraw', async function () {
+  it('should withdraw', async function () {
     const [owner] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
+    const { staking, minimalStake, stakeWithdrawalPeriod } = await deploySystem();
 
-    const { staking } = await deploySystem(initialMinimalStake);
-
-    await staking.stake({ value: value });
-    await staking.announceWithdrawal(value);
+    await staking.stake({ value: minimalStake });
+    await staking.announceWithdrawal(minimalStake);
+    await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
     await staking.withdraw();
 
     const { amount, time } = await staking.withdrawalAnnouncements(owner.address);
@@ -313,24 +254,25 @@ describe('Staking', function () {
 
   it('should check if DKG validators are being updated after staking and slashing', async function () {
     const [owner, v1, v2, v3] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const value = ethers.utils.parseEther('5');
-    const valueStake = ethers.utils.parseEther('10');
+    const minimalStake = ethers.utils.parseEther('3');
+    const stake = ethers.utils.parseEther('5');
+    const withdrawStake = ethers.utils.parseEther('10');
 
-    const { staking, dkg } = await deploySystem(initialMinimalStake);
+    const { staking, dkg, stakeWithdrawalPeriod } = await deploySystem({ minimalStake });
     const staking1 = await ethers.getContractAt('Staking', staking.address, v1);
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
     const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
 
     expect((await dkg.getCurrentValidators()).length).to.equal(0);
 
-    await staking1.stake({ value: value });
-    await staking1.stake({ value: value });
-    await staking2.stake({ value: value });
-    await staking3.stake({ value: value });
+    await staking1.stake({ value: stake });
+    await staking1.stake({ value: stake });
+    await staking2.stake({ value: stake });
+    await staking3.stake({ value: stake });
 
     expect((await dkg.getCurrentValidators()).length).to.equal(3);
-    await staking1.announceWithdrawal(valueStake);
+    await staking1.announceWithdrawal(withdrawStake);
+    await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
     await staking1.withdraw();
     expect((await dkg.getCurrentValidators()).length).to.equal(2);
 
@@ -342,15 +284,16 @@ describe('Staking', function () {
 
   it('should user can able to stake with the difference of the current stake and minimal stake', async function () {
     const [owner] = await ethers.getSigners();
-    const initialMinimalStake = ethers.utils.parseEther('3');
+    const minimalStake = ethers.utils.parseEther('3');
     const value = ethers.utils.parseEther('5');
     const withdrawal = ethers.utils.parseEther('3');
     const secondStake = ethers.utils.parseEther('2');
 
-    const { staking } = await deploySystem(initialMinimalStake);
+    const { staking, stakeWithdrawalPeriod } = await deploySystem({ minimalStake });
 
     await staking.stake({ value: value });
     await staking.announceWithdrawal(withdrawal);
+    await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
     await staking.withdraw();
     await staking.stake({ value: secondStake });
 

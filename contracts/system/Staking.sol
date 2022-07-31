@@ -40,12 +40,12 @@ contract Staking is ContractKeys, ValidatorOwnable, Initializable {
     event ContractRegistryUpdated(address contractRegistry);
 
     modifier onlyActiveValidator() {
-        require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "ValidatorStaking: only active validator");
+        require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "Staking: only active validator");
         _;
     }
 
     modifier onlyNotSlashed() {
-        require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator is slashed");
+        require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "Staking: validator is slashed");
         _;
     }
 
@@ -78,7 +78,7 @@ contract Staking is ContractKeys, ValidatorOwnable, Initializable {
     }
 
     function slash(address _validator) public onlyActiveValidator {
-        require(stakes[_validator].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator is already slashed");
+        require(stakes[_validator].status != ValidatorStatus.SLASHED, "Staking: validator is already slashed");
 
         if (slashingVotes[_validator][msg.sender] == false) {
             slashingVotes[_validator][msg.sender] = true;
@@ -92,23 +92,23 @@ contract Staking is ContractKeys, ValidatorOwnable, Initializable {
     }
 
     function announceWithdrawal(uint256 _amount) public onlyNotSlashed {
-        require(_amount <= stakes[msg.sender].stake, "ValidatorStaking: amount must be <= to stake");
+        require(_amount <= stakes[msg.sender].stake, "Staking: amount must be <= to stake");
         withdrawalAnnouncements[msg.sender].amount = _amount;
         // solhint-disable-next-line not-rely-on-time
         withdrawalAnnouncements[msg.sender].time = block.timestamp;
     }
 
     function withdraw() public onlyNotSlashed {
-        require(withdrawalAnnouncements[msg.sender].amount > 0, "ValidatorStaking: amount must be greater than zero");
+        require(withdrawalAnnouncements[msg.sender].amount > 0, "Staking: amount must be greater than zero");
         require(
             // solhint-disable-next-line not-rely-on-time
             withdrawalAnnouncements[msg.sender].time + withdrawalPeriod <= block.timestamp,
-            "ValidatorStaking: withdrawal period not passed"
+            "Staking: withdrawal period not passed"
         );
 
         uint256 withdrawalAmount = withdrawalAnnouncements[msg.sender].amount;
 
-        require(withdrawalAmount <= stakes[msg.sender].stake, "ValidatorStaking: amount must be <= to validator stake");
+        require(withdrawalAmount <= stakes[msg.sender].stake, "Staking: amount must be <= to validator stake");
 
         stakes[msg.sender].stake -= withdrawalAmount;
 
@@ -123,12 +123,12 @@ contract Staking is ContractKeys, ValidatorOwnable, Initializable {
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = msg.sender.call{value: withdrawalAmount, gas: 21000}("");
-        require(success, "ValidatorStaking: transfer failed");
+        require(success, "Staking: transfer failed");
     }
 
     function stake() public payable {
-        require(msg.value + stakes[msg.sender].stake >= minimalStake, "ValidatorStaking: insufficient stake provided");
-        require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "ValidatorStaking: validator is slashed");
+        require(msg.value + stakes[msg.sender].stake >= minimalStake, "Staking: insufficient stake provided");
+        require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "Staking: validator is slashed");
 
         if (stakes[msg.sender].status == ValidatorStatus.INACTIVE) {
             stakes[msg.sender].validator = msg.sender;

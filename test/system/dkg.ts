@@ -18,8 +18,7 @@ describe('DKG', function () {
     const signature = await signer.signMessage(message);
     const signatureOther = await other.signMessage(message);
 
-    const initialMinimalStake = ethers.utils.parseEther('3');
-    const { dkg, staking } = await deploySystem();
+    const { dkg, staking, minimalStake } = await deploySystem();
 
     expect(await dkg.getGenerationsCount()).to.equal(1);
 
@@ -33,8 +32,8 @@ describe('DKG', function () {
     expect(await dkg.getValidators(generation)).to.deep.equal([]);
     expect(await dkg.getValidatorsCount(generation)).to.equal(0);
 
-    await staking1.stake({ value: initialMinimalStake });
-    await staking2.stake({ value: initialMinimalStake });
+    await staking1.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
 
     expect(await dkg.getGenerationsCount()).to.equal(2);
 
@@ -144,7 +143,6 @@ describe('DKG', function () {
 
   it('should set validators by staking', async function () {
     const [, other] = await ethers.getSigners();
-
     const { dkg } = await deploySystem();
 
     const dkgOther = await ethers.getContractAt('DKG', dkg.address, other);
@@ -152,10 +150,8 @@ describe('DKG', function () {
   });
 
   it('should get active and pending status ', async function () {
-    const initialMinimalStake = ethers.utils.parseEther('3');
-
     const [, signer] = await ethers.getSigners();
-    const { dkg, staking } = await deploySystem(initialMinimalStake);
+    const { dkg, staking, minimalStake } = await deploySystem();
 
     const PENDING: number = 0;
     const ACTIVE: number = 2;
@@ -170,8 +166,8 @@ describe('DKG', function () {
     const dkgSigner = await ethers.getContractAt('DKG', dkg.address, signer);
     const stakingSigner = await ethers.getContractAt('Staking', staking.address, signer);
 
-    await staking.stake({ value: initialMinimalStake });
-    await stakingSigner.stake({ value: initialMinimalStake });
+    await staking.stake({ value: minimalStake });
+    await stakingSigner.stake({ value: minimalStake });
 
     expect(await dkgSigner.getStatus(generation)).to.equal(PENDING);
 
@@ -193,18 +189,16 @@ describe('DKG', function () {
   });
 
   it('should get expired status', async function () {
-    const initialMinimalStake = ethers.utils.parseEther('3');
-
     const [, signer] = await ethers.getSigners();
-    const { dkg, staking } = await deploySystem(initialMinimalStake);
+    const { dkg, staking, minimalStake } = await deploySystem();
 
     const EXPIRED: number = 1;
     const generation = 1;
 
     const stakingSigner = await ethers.getContractAt('Staking', staking.address, signer);
 
-    await staking.stake({ value: initialMinimalStake });
-    await stakingSigner.stake({ value: initialMinimalStake });
+    await staking.stake({ value: minimalStake });
+    await stakingSigner.stake({ value: minimalStake });
 
     const hre = require('hardhat');
     await hre.network.provider.send('hardhat_mine', ['0x64']);
@@ -213,10 +207,8 @@ describe('DKG', function () {
   });
 
   it('should check if we can set deadline period ', async function () {
-    const initialMinimalStake = ethers.utils.parseEther('3');
-
     const [, signer] = await ethers.getSigners();
-    const { dkg, staking } = await deploySystem(initialMinimalStake);
+    const { dkg, staking, minimalStake } = await deploySystem();
 
     const generation = 1;
     const message = 'verify';
@@ -228,8 +220,8 @@ describe('DKG', function () {
     const dkgSigner = await ethers.getContractAt('DKG', dkg.address, signer);
     const stakingSigner = await ethers.getContractAt('Staking', staking.address, signer);
 
-    await staking.stake({ value: initialMinimalStake });
-    await stakingSigner.stake({ value: initialMinimalStake });
+    await staking.stake({ value: minimalStake });
+    await stakingSigner.stake({ value: minimalStake });
 
     await dkg.roundBroadcast(generation, 1, data1);
     await dkgSigner.roundBroadcast(generation, 1, data1);
