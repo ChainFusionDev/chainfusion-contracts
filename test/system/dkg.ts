@@ -201,7 +201,7 @@ describe('DKG', function () {
     await stakingSigner.stake({ value: minimalStake });
 
     const hre = require('hardhat');
-    await hre.network.provider.send('hardhat_mine', ['0x64']);
+    await hre.network.provider.send('hardhat_mine', ['0x78']);
 
     expect(await dkg.getStatus(generation)).to.equal(EXPIRED);
   });
