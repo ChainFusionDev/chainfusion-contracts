@@ -8,18 +8,19 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "./Staking.sol";
 import "./ContractKeys.sol";
 import "./ContractRegistry.sol";
+import "./SlashingVoting.sol";
 
 struct GenerationInfo {
-    address[] validators;
-    mapping(address => bool) isGenerationValidator;
     address signer;
+    address[] validators;
+    uint256 deadline;
+    mapping(address => bool) isValidator;
     mapping(address => address) signerVotes;
     mapping(address => uint256) signerVoteCounts;
-    mapping(uint256 => BroadcastData) roundBroadcastData;
-    uint256 deadline;
+    mapping(uint256 => RoundData) roundData;
 }
 
-struct BroadcastData {
+struct RoundData {
     uint256 count;
     mapping(address => bytes) data;
 }
@@ -51,21 +52,16 @@ contract DKG is ContractKeys, Initializable {
 
     modifier onlyDKGValidator(uint256 _generation) {
         require(
-            generations.length > _generation && generations[_generation].isGenerationValidator[msg.sender],
+            generations.length > _generation && generations[_generation].isValidator[msg.sender],
             "DKG: not a validator"
         );
-        _;
-    }
-
-    modifier onlyValidatorStaking() {
-        require(msg.sender == address(_stakingContract()), "DKG: not a staking");
         _;
     }
 
     modifier roundIsFilled(uint256 _generation, uint256 _round) {
         require(
             _round == 0 ||
-                generations[_generation].roundBroadcastData[_round].count == generations[_generation].validators.length,
+                generations[_generation].roundData[_round].count == generations[_generation].validators.length,
             "DKG: round was not filled"
         );
         _;
@@ -73,7 +69,7 @@ contract DKG is ContractKeys, Initializable {
 
     modifier roundNotProvided(uint256 _generation, uint256 _round) {
         require(
-            generations[_generation].roundBroadcastData[_round].data[msg.sender].length == 0,
+            generations[_generation].roundData[_round].data[msg.sender].length == 0,
             "DKG: round data already provided"
         );
         _;
@@ -90,15 +86,62 @@ contract DKG is ContractKeys, Initializable {
     }
 
     function initialize(address _contractRegistry, uint256 _deadlinePeriod) external initializer {
-        contractRegistry = ContractRegistry(_contractRegistry);
-        deadlinePeriod = _deadlinePeriod;
-
         generations.push();
         generations[0].signer = msg.sender;
+        contractRegistry = ContractRegistry(_contractRegistry);
+        deadlinePeriod = _deadlinePeriod;
     }
 
-    function setValidators(address[] memory _validators) external onlyValidatorStaking {
-        _setValidators(_validators);
+    function updateGeneration() external {
+        uint256 newGeneration = generations.length;
+        GenerationInfo storage oldGenerationInfo = generations[newGeneration - 1];
+
+        uint256 validatorsCount = 0;
+        bool newValidatorsAdded = false;
+        address[] memory stakingValidators = _stakingContract().getValidators();
+        address[] memory newValidators = new address[](stakingValidators.length);
+        for (uint256 i = 0; i < stakingValidators.length; i++) {
+            address validator = stakingValidators[i];
+
+            // Validators banned by DKG reasons do not participate
+            // in key generation for some time
+            if (
+                _isBannedByReason(validator, SlashingReason.REASON_DKG_INACTIVITY) ||
+                _isBannedByReason(validator, SlashingReason.REASON_DKG_VIOLATION)
+            ) {
+                continue;
+            }
+
+            if (!oldGenerationInfo.isValidator[validator]) {
+                newValidatorsAdded = true;
+            }
+
+            newValidators[validatorsCount] = validator;
+            validatorsCount++;
+        }
+
+        uint256 oldValidatorsCount = oldGenerationInfo.validators.length;
+        if (
+            // Distributed key generation algorithm requires at least 2 participants
+            validatorsCount < 2 ||
+            // Validator count same as previous and there is no new validators,
+            // meaning both arrays the same, no need to create new DKG generation
+            (validatorsCount == oldValidatorsCount && !newValidatorsAdded)
+        ) {
+            return;
+        }
+
+        generations.push();
+        for (uint256 i = 0; i < validatorsCount; i++) {
+            generations[newGeneration].validators.push(newValidators[i]);
+            generations[newGeneration].isValidator[newValidators[i]] = true;
+        }
+
+        generations[newGeneration].deadline = block.number + deadlinePeriod;
+        lastActiveGeneration = newGeneration;
+
+        emit ValidatorsUpdated(newGeneration, newValidators);
+        emit RoundDataFilled(newGeneration, 0);
     }
 
     function roundBroadcast(
@@ -112,10 +155,10 @@ contract DKG is ContractKeys, Initializable {
         roundNotProvided(_generation, _round)
         onlyPending(_generation)
     {
-        generations[_generation].roundBroadcastData[_round].count++;
-        generations[_generation].roundBroadcastData[_round].data[msg.sender] = _rawData;
+        generations[_generation].roundData[_round].count++;
+        generations[_generation].roundData[_round].data[msg.sender] = _rawData;
         emit RoundDataProvided(_generation, _round, msg.sender);
-        if (generations[_generation].roundBroadcastData[_round].count == generations[_generation].validators.length) {
+        if (generations[_generation].roundData[_round].count == generations[_generation].validators.length) {
             emit RoundDataFilled(_generation, _round);
         }
     }
@@ -142,11 +185,11 @@ contract DKG is ContractKeys, Initializable {
     }
 
     function isRoundFilled(uint256 _generation, uint256 _round) external view returns (bool) {
-        return generations[_generation].roundBroadcastData[_round].count == generations[_generation].validators.length;
+        return generations[_generation].roundData[_round].count == generations[_generation].validators.length;
     }
 
     function getRoundBroadcastCount(uint256 _generation, uint256 _round) external view returns (uint256) {
-        return generations[_generation].roundBroadcastData[_round].count;
+        return generations[_generation].roundData[_round].count;
     }
 
     function getRoundBroadcastData(
@@ -154,7 +197,7 @@ contract DKG is ContractKeys, Initializable {
         uint256 _round,
         address _validator
     ) external view returns (bytes memory) {
-        return generations[_generation].roundBroadcastData[_round].data[_validator];
+        return generations[_generation].roundData[_round].data[_validator];
     }
 
     function getCurrentValidators() external view returns (address[] memory) {
@@ -175,26 +218,14 @@ contract DKG is ContractKeys, Initializable {
 
     function isValidator(uint256 _generation, address _validator) external view returns (bool) {
         if (generations.length > _generation) {
-            return generations[_generation].isGenerationValidator[_validator];
+            return generations[_generation].isValidator[_validator];
         }
 
         return false;
     }
 
-    function getValidators(uint256 _generation) external view returns (address[] memory) {
-        if (generations.length > _generation) {
-            return generations[_generation].validators;
-        }
-
-        return new address[](0);
-    }
-
     function getValidatorsCount(uint256 _generation) external view returns (uint256) {
-        if (generations.length > _generation) {
-            return generations[_generation].validators.length;
-        }
-
-        return 0;
+        return generations[_generation].validators.length;
     }
 
     function setDeadlinePeriod(uint256 _deadlinePeriod) public onlyActiveSigner {
@@ -213,28 +244,8 @@ contract DKG is ContractKeys, Initializable {
         return GenerationStatus.EXPIRED;
     }
 
-    function _setValidators(address[] memory _validators) private {
-        if (_validators.length < 2) {
-            // dkg requires at least 2 validators
-            return;
-        }
-
-        uint256 newGeneration = generations.length;
-
-        if (newGeneration > lastActiveGeneration) {
-            lastActiveGeneration = newGeneration;
-        }
-
-        generations.push();
-        for (uint256 i = 0; i < _validators.length; i++) {
-            generations[newGeneration].isGenerationValidator[_validators[i]] = true;
-        }
-
-        generations[newGeneration].validators = _validators;
-        generations[newGeneration].deadline = block.number + deadlinePeriod;
-
-        emit ValidatorsUpdated(newGeneration, _validators);
-        emit RoundDataFilled(newGeneration, 0);
+    function getValidators(uint256 _generation) public view returns (address[] memory) {
+        return generations[_generation].validators;
     }
 
     function _enoughVotes(uint256 _generation, uint256 votes) private view returns (bool) {
@@ -243,5 +254,13 @@ contract DKG is ContractKeys, Initializable {
 
     function _stakingContract() private view returns (Staking) {
         return Staking(contractRegistry.getContract(STAKING_KEY));
+    }
+
+    function _slashingVotingContract() private view returns (SlashingVoting) {
+        return SlashingVoting(contractRegistry.getContract(SLASHING_VOTING_KEY));
+    }
+
+    function _isBannedByReason(address _validator, SlashingReason _reason) private view returns (bool) {
+        return _slashingVotingContract().isBannedByReason(_validator, _reason);
     }
 }
