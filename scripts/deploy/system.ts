@@ -20,7 +20,7 @@ const defaultSystemDeploymentParameters: SystemDeploymentParameters = {
   slashingEpochPeriod: BigNumber.from(1000),
   slashingBansThresold: BigNumber.from(10),
 
-  dkgDeadlinePeriod: BigNumber.from(20),
+  dkgDeadlinePeriod: BigNumber.from(100),
 
   displayLogs: false,
   verify: false,
