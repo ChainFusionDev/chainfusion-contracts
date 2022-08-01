@@ -32,16 +32,11 @@ contract Staking is ContractKeys, Ownable, Initializable {
     mapping(address => ValidatorInfo) public stakes;
     mapping(address => WithdrawalAnnouncement) public withdrawalAnnouncements;
     ContractRegistry public contractRegistry;
-    AddressStorage public validatorStorage;
+    AddressStorage public addressStorage;
 
     event MinimalStakeUpdated(uint256 minimalStake);
     event WithdrawalPeriodUpdated(uint256 withdrawalPeriod);
     event ContractRegistryUpdated(address contractRegistry);
-
-    modifier onlyActiveValidator() {
-        require(stakes[msg.sender].status == ValidatorStatus.ACTIVE, "Staking: only active validator");
-        _;
-    }
 
     modifier onlyNotSlashed() {
         require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "Staking: validator is slashed");
@@ -62,7 +57,7 @@ contract Staking is ContractKeys, Ownable, Initializable {
         setMinimalStake(_minimalStake);
         setWithdrawalPeriod(_withdrawalPeriod);
         contractRegistry = ContractRegistry(_contractRegistry);
-        validatorStorage = AddressStorage(_validatorStorage);
+        addressStorage = AddressStorage(_validatorStorage);
     }
 
     function isValidatorActive(address _validator) external view returns (bool) {
@@ -108,14 +103,12 @@ contract Staking is ContractKeys, Ownable, Initializable {
 
         uint256 withdrawalAmount = withdrawalAnnouncements[msg.sender].amount;
 
-        require(withdrawalAmount <= stakes[msg.sender].stake, "Staking: amount must be <= to validator stake");
-
         stakes[msg.sender].stake -= withdrawalAmount;
 
         withdrawalAnnouncements[msg.sender].amount = 0;
         withdrawalAnnouncements[msg.sender].time = 0;
 
-        if (stakes[msg.sender].stake < minimalStake && validatorStorage.contains(msg.sender)) {
+        if (stakes[msg.sender].stake < minimalStake && addressStorage.contains(msg.sender)) {
             stakes[msg.sender].status = ValidatorStatus.INACTIVE;
             _removeValidator(msg.sender);
         }
@@ -125,9 +118,8 @@ contract Staking is ContractKeys, Ownable, Initializable {
         require(success, "Staking: transfer failed");
     }
 
-    function stake() public payable {
+    function stake() public payable onlyNotSlashed {
         require(msg.value + stakes[msg.sender].stake >= minimalStake, "Staking: insufficient stake provided");
-        require(stakes[msg.sender].status != ValidatorStatus.SLASHED, "Staking: validator is slashed");
 
         if (stakes[msg.sender].status == ValidatorStatus.INACTIVE) {
             stakes[msg.sender].validator = msg.sender;
@@ -139,21 +131,21 @@ contract Staking is ContractKeys, Ownable, Initializable {
     }
 
     function getValidators() public view returns (address[] memory) {
-        return validatorStorage.getAddresses();
+        return addressStorage.getAddresses();
     }
 
     function _addValidator(address validator) private {
         DKG dkg = _dkgContract();
 
-        validatorStorage.mustAdd(validator);
-        dkg.updateGeneration(validator);
+        addressStorage.mustAdd(validator);
+        dkg.updateGeneration();
     }
 
     function _removeValidator(address validator) private {
         DKG dkg = _dkgContract();
 
-        validatorStorage.mustRemove(validator);
-        dkg.updateGeneration(validator);
+        addressStorage.mustRemove(validator);
+        dkg.updateGeneration();
     }
 
     function _dkgContract() private view returns (DKG) {

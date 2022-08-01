@@ -2,6 +2,7 @@ import { ethers } from 'hardhat';
 import { expect } from 'chai';
 import { ValidatorStatusActive } from '../utils/helpers';
 import { deploySystem } from '../utils/deploy';
+import { hexValue } from 'ethers/lib/utils';
 
 describe('Staking', function () {
   it('should change minimal stake', async function () {
@@ -106,11 +107,21 @@ describe('Staking', function () {
 
     await slashingVoting.voteWithReason(v3.address, reason, nonse);
     await slashingVoting2.voteWithReason(v3.address, reason, nonse);
-    await hre.network.provider.send('hardhat_mine', ['0x64']);
+
+    var blocksStep = (await slashingVoting.currentEpoch())
+      .add(1)
+      .mul(100)
+      .sub(await ethers.provider.getBlockNumber());
+    await hre.network.provider.send('hardhat_mine', [hexValue(blocksStep)]);
 
     await slashingVoting.voteWithReason(v3.address, secondReason, nonse);
     await slashingVoting2.voteWithReason(v3.address, secondReason, nonse);
-    await hre.network.provider.send('hardhat_mine', ['0x64']);
+
+    blocksStep = (await slashingVoting.currentEpoch())
+      .add(1)
+      .mul(100)
+      .sub(await ethers.provider.getBlockNumber());
+    await hre.network.provider.send('hardhat_mine', [hexValue(blocksStep)]);
 
     expect(await staking.isValidatorSlashing(v3.address)).to.equal(true);
     expect(await addressStorage.size()).to.be.equal(2);
@@ -180,7 +191,6 @@ describe('Staking', function () {
     const reason: number = 0;
     const secondReason: number = 1;
     const hre = require('hardhat');
-
     const { staking, slashingVoting } = await deploySystem(initialMinimalStake);
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
@@ -193,12 +203,18 @@ describe('Staking', function () {
 
     await slashingVoting.voteWithReason(v3.address, reason, nonse);
     await slashingVoting2.voteWithReason(v3.address, reason, nonse);
-    await hre.network.provider.send('hardhat_mine', ['0x60']);
+
+    var blocksStep = (await slashingVoting.currentEpoch())
+      .add(1)
+      .mul(100)
+      .sub(await ethers.provider.getBlockNumber());
+    await hre.network.provider.send('hardhat_mine', [hexValue(blocksStep)]);
 
     await slashingVoting.voteWithReason(v3.address, secondReason, nonse);
     await slashingVoting2.voteWithReason(v3.address, secondReason, nonse);
 
     expect(await staking.isValidatorSlashing(v3.address)).to.equal(true);
+
     await expect(staking3.announceWithdrawal(value)).to.be.revertedWith('Staking: validator is slashed');
   });
 
@@ -223,7 +239,12 @@ describe('Staking', function () {
 
     await slashingVoting.voteWithReason(v3.address, firstreason, nonse);
     await slashingVoting2.voteWithReason(v3.address, firstreason, nonse);
-    await hre.network.provider.send('hardhat_mine', ['0x60']);
+
+    var blocksStep = (await slashingVoting.currentEpoch())
+      .add(1)
+      .mul(100)
+      .sub(await ethers.provider.getBlockNumber());
+    await hre.network.provider.send('hardhat_mine', [hexValue(blocksStep)]);
 
     await slashingVoting.voteWithReason(v3.address, secondReason, nonse);
     await slashingVoting2.voteWithReason(v3.address, secondReason, nonse);
@@ -327,5 +348,39 @@ describe('Staking', function () {
 
     const { status } = await staking.stakes(owner.address);
     expect(status).to.equal(1);
+  });
+
+  it('should check if slashed validator can stake', async function () {
+    const [, v2, v3] = await ethers.getSigners();
+    const initialMinimalStake = ethers.utils.parseEther('3');
+    const value = ethers.utils.parseEther('5');
+    const nonse = ethers.utils.arrayify(0);
+    const reason: number = 0;
+    const secondReason: number = 1;
+    const hre = require('hardhat');
+    const { staking, slashingVoting } = await deploySystem(initialMinimalStake);
+
+    const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
+    const slashingVoting2 = await ethers.getContractAt('SlashingVoting', slashingVoting.address, v2);
+    const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
+
+    await staking.stake({ value: value });
+    await staking2.stake({ value: value });
+    await staking3.stake({ value: value });
+
+    await slashingVoting.voteWithReason(v3.address, reason, nonse);
+    await slashingVoting2.voteWithReason(v3.address, reason, nonse);
+
+    var blocksStep = (await slashingVoting.currentEpoch())
+      .add(1)
+      .mul(100)
+      .sub(await ethers.provider.getBlockNumber());
+    await hre.network.provider.send('hardhat_mine', [hexValue(blocksStep)]);
+
+    await slashingVoting.voteWithReason(v3.address, secondReason, nonse);
+    await slashingVoting2.voteWithReason(v3.address, secondReason, nonse);
+
+    expect(await staking.isValidatorSlashing(v3.address)).to.equal(true);
+    await expect(staking3.stake({ value })).to.be.revertedWith('Staking: validator is slashed');
   });
 });

@@ -1,11 +1,12 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
 import { deploySystem } from '../utils/deploy';
+import { hexValue } from 'ethers/lib/utils';
 
 describe('DKG', function () {
   it('should broadcast all rounds', async function () {
-    const zeroGeneration = 0;
-    const firstGeneration = 1;
+    const furstGeneration = 1;
+    const secondGeneration = 2;
 
     const data1 = ethers.utils.keccak256([1]);
     const data2 = ethers.utils.keccak256([2]);
@@ -22,14 +23,13 @@ describe('DKG', function () {
     const initialMinimalStake = ethers.utils.parseEther('3');
     const { dkg, staking } = await deploySystem();
 
-    expect(await dkg.getGenerationsCount()).to.equal(0);
+    expect(await dkg.getGenerationsCount()).to.equal(1);
 
     const staking1 = await ethers.getContractAt('Staking', staking.address, v1);
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
 
-    await expect(dkg.roundBroadcast(zeroGeneration, 1, data1)).to.be.revertedWith('DKG: not a validator');
-
-    expect(await dkg.isValidator(zeroGeneration, v1.address)).to.equal(false);
+    await expect(dkg.roundBroadcast(furstGeneration, 1, data1)).to.be.revertedWith('DKG: not a validator');
+    expect(await dkg.isValidator(furstGeneration, v1.address)).to.equal(false);
     expect(await dkg.isValidator(0, v2.address)).to.equal(false);
     expect(await dkg.getValidators(0)).to.deep.equal([]);
     expect(await dkg.getValidatorsCount(0)).to.equal(0);
@@ -37,126 +37,117 @@ describe('DKG', function () {
     await staking1.stake({ value: initialMinimalStake });
     await staking2.stake({ value: initialMinimalStake });
 
-    expect(await dkg.getGenerationsCount()).to.equal(2);
-    expect(await dkg.isValidator(firstGeneration, v1.address)).to.equal(true);
-    expect(await dkg.isValidator(firstGeneration, v2.address)).to.equal(true);
-    expect(await dkg.getValidators(firstGeneration)).to.deep.equal([v1.address, v2.address]);
-    expect(await dkg.getValidatorsCount(firstGeneration)).to.equal(2);
+    expect(await dkg.getGenerationsCount()).to.equal(3);
+    expect(await dkg.isValidator(secondGeneration, v1.address)).to.equal(true);
+    expect(await dkg.isValidator(secondGeneration, v2.address)).to.equal(true);
+    expect(await dkg.getValidators(secondGeneration)).to.deep.equal([v1.address, v2.address]);
+    expect(await dkg.getValidatorsCount(secondGeneration)).to.equal(2);
 
     const dkgV1 = await ethers.getContractAt('DKG', dkg.address, v1);
     const dkgV2 = await ethers.getContractAt('DKG', dkg.address, v2);
 
-    await expect(dkgV1.roundBroadcast(firstGeneration, 2, data2)).to.be.revertedWith('DKG: round was not filled');
-    await expect(dkgV2.roundBroadcast(firstGeneration, 2, data2)).to.be.revertedWith('DKG: round was not filled');
+    await expect(dkgV1.roundBroadcast(secondGeneration, 2, data2)).to.be.revertedWith('DKG: round was not filled');
+    await expect(dkgV2.roundBroadcast(secondGeneration, 2, data2)).to.be.revertedWith('DKG: round was not filled');
 
     // round1 - v1
 
-    await expect(dkgV1.roundBroadcast(firstGeneration, 1, data1))
+    await expect(dkgV1.roundBroadcast(secondGeneration, 1, data1))
       .to.emit(dkgV1, 'RoundDataProvided')
-      .withArgs(firstGeneration, 1, v1.address);
+      .withArgs(secondGeneration, 1, v1.address);
 
-    await expect(dkgV1.roundBroadcast(firstGeneration, 1, data1)).to.be.revertedWith(
+    await expect(dkgV1.roundBroadcast(secondGeneration, 1, data1)).to.be.revertedWith(
       'DKG: round data already provided'
     );
 
-    expect(await dkg.getRoundBroadcastData(firstGeneration, 1, v1.address)).to.equal(data1);
-    expect(await dkg.getRoundBroadcastCount(firstGeneration, 1)).to.equal(1);
-    expect(await dkg.getRoundBroadcastCount(firstGeneration, 2)).to.equal(0);
-    expect(await dkg.getRoundBroadcastCount(firstGeneration, 3)).to.equal(0);
-    expect(await dkg.isRoundFilled(firstGeneration, 1)).to.equal(false);
+    expect(await dkg.getRoundBroadcastData(secondGeneration, 1, v1.address)).to.equal(data1);
+    expect(await dkg.getRoundBroadcastCount(secondGeneration, 1)).to.equal(1);
+    expect(await dkg.getRoundBroadcastCount(secondGeneration, 2)).to.equal(0);
+    expect(await dkg.getRoundBroadcastCount(secondGeneration, 3)).to.equal(0);
+    expect(await dkg.isRoundFilled(secondGeneration, 1)).to.equal(false);
 
     // round1 - v2
 
-    await expect(dkgV2.roundBroadcast(firstGeneration, 1, data1))
+    await expect(dkgV2.roundBroadcast(secondGeneration, 1, data1))
       .to.emit(dkgV2, 'RoundDataFilled')
-      .withArgs(firstGeneration, 1);
+      .withArgs(secondGeneration, 1);
 
-    expect(await dkg.getRoundBroadcastData(firstGeneration, 1, v2.address)).to.equal(data1);
-    expect(await dkg.getRoundBroadcastCount(firstGeneration, 1)).to.equal(2);
-    expect(await dkg.getRoundBroadcastCount(firstGeneration, 2)).to.equal(0);
-    expect(await dkg.getRoundBroadcastCount(firstGeneration, 3)).to.equal(0);
-    expect(await dkg.isRoundFilled(firstGeneration, 1)).to.equal(true);
+    expect(await dkg.getRoundBroadcastData(secondGeneration, 1, v2.address)).to.equal(data1);
+    expect(await dkg.getRoundBroadcastCount(secondGeneration, 1)).to.equal(2);
+    expect(await dkg.getRoundBroadcastCount(secondGeneration, 2)).to.equal(0);
+    expect(await dkg.getRoundBroadcastCount(secondGeneration, 3)).to.equal(0);
+    expect(await dkg.isRoundFilled(secondGeneration, 1)).to.equal(true);
 
     // round2 - v1
 
-    await expect(dkgV1.roundBroadcast(firstGeneration, 3, data2)).to.be.revertedWith('DKG: round was not filled');
-    await expect(dkgV1.roundBroadcast(firstGeneration, 2, data2))
+    await expect(dkgV1.roundBroadcast(secondGeneration, 3, data2)).to.be.revertedWith('DKG: round was not filled');
+    await expect(dkgV1.roundBroadcast(secondGeneration, 2, data2))
       .to.emit(dkgV1, 'RoundDataProvided')
-      .withArgs(firstGeneration, 2, v1.address);
+      .withArgs(secondGeneration, 2, v1.address);
 
-    expect(await dkg.getRoundBroadcastData(firstGeneration, 2, v1.address)).to.equal(data2);
-    expect(await dkg.getRoundBroadcastCount(firstGeneration, 1)).to.equal(2);
-    expect(await dkg.getRoundBroadcastCount(firstGeneration, 2)).to.equal(1);
-    expect(await dkg.getRoundBroadcastCount(firstGeneration, 3)).to.equal(0);
-    expect(await dkg.isRoundFilled(firstGeneration, 2)).to.equal(false);
+    expect(await dkg.getRoundBroadcastData(secondGeneration, 2, v1.address)).to.equal(data2);
+    expect(await dkg.getRoundBroadcastCount(secondGeneration, 1)).to.equal(2);
+    expect(await dkg.getRoundBroadcastCount(secondGeneration, 2)).to.equal(1);
+    expect(await dkg.getRoundBroadcastCount(secondGeneration, 3)).to.equal(0);
+    expect(await dkg.isRoundFilled(secondGeneration, 2)).to.equal(false);
 
     // round2 - v2
 
-    await expect(dkgV2.roundBroadcast(firstGeneration, 3, data2)).to.be.revertedWith('DKG: round was not filled');
-    await expect(dkgV2.roundBroadcast(firstGeneration, 2, data2))
+    await expect(dkgV2.roundBroadcast(secondGeneration, 3, data2)).to.be.revertedWith('DKG: round was not filled');
+    await expect(dkgV2.roundBroadcast(secondGeneration, 2, data2))
       .to.emit(dkgV2, 'RoundDataFilled')
-      .withArgs(firstGeneration, 2);
+      .withArgs(secondGeneration, 2);
 
-    expect(await dkg.getRoundBroadcastData(firstGeneration, 2, v2.address)).to.equal(data2);
-    expect(await dkg.getRoundBroadcastCount(firstGeneration, 1)).to.equal(2);
-    expect(await dkg.getRoundBroadcastCount(firstGeneration, 2)).to.equal(2);
-    expect(await dkg.getRoundBroadcastCount(firstGeneration, 3)).to.equal(0);
-    expect(await dkg.isRoundFilled(firstGeneration, 2)).to.equal(true);
+    expect(await dkg.getRoundBroadcastData(secondGeneration, 2, v2.address)).to.equal(data2);
+    expect(await dkg.getRoundBroadcastCount(secondGeneration, 1)).to.equal(2);
+    expect(await dkg.getRoundBroadcastCount(secondGeneration, 2)).to.equal(2);
+    expect(await dkg.getRoundBroadcastCount(secondGeneration, 3)).to.equal(0);
+    expect(await dkg.isRoundFilled(secondGeneration, 2)).to.equal(true);
 
     // round3 - v1
 
-    await expect(dkgV1.voteSigner(firstGeneration, signerAddress, signature)).to.be.revertedWith(
+    await expect(dkgV1.voteSigner(secondGeneration, signerAddress, signature)).to.be.revertedWith(
       'DKG: round was not filled'
     );
-    await expect(dkgV1.roundBroadcast(firstGeneration, 3, data3))
+    await expect(dkgV1.roundBroadcast(secondGeneration, 3, data3))
       .to.emit(dkgV1, 'RoundDataProvided')
-      .withArgs(firstGeneration, 3, v1.address);
+      .withArgs(secondGeneration, 3, v1.address);
 
-    expect(await dkgV1.getRoundBroadcastData(firstGeneration, 3, v1.address)).to.equal(data3);
-    expect(await dkgV1.getRoundBroadcastCount(firstGeneration, 1)).to.equal(2);
-    expect(await dkgV1.getRoundBroadcastCount(firstGeneration, 2)).to.equal(2);
-    expect(await dkgV1.getRoundBroadcastCount(firstGeneration, 3)).to.equal(1);
-    expect(await dkg.isRoundFilled(firstGeneration, 3)).to.equal(false);
+    expect(await dkgV1.getRoundBroadcastData(secondGeneration, 3, v1.address)).to.equal(data3);
+    expect(await dkgV1.getRoundBroadcastCount(secondGeneration, 1)).to.equal(2);
+    expect(await dkgV1.getRoundBroadcastCount(secondGeneration, 2)).to.equal(2);
+    expect(await dkgV1.getRoundBroadcastCount(secondGeneration, 3)).to.equal(1);
+    expect(await dkg.isRoundFilled(secondGeneration, 3)).to.equal(false);
 
     // round3 - v2
 
-    await expect(dkgV2.voteSigner(firstGeneration, signerAddress, signature)).to.be.revertedWith(
+    await expect(dkgV2.voteSigner(secondGeneration, signerAddress, signature)).to.be.revertedWith(
       'DKG: round was not filled'
     );
-    await expect(dkgV2.roundBroadcast(firstGeneration, 3, data3))
+    await expect(dkgV2.roundBroadcast(secondGeneration, 3, data3))
       .to.emit(dkgV2, 'RoundDataFilled')
-      .withArgs(firstGeneration, 3);
+      .withArgs(secondGeneration, 3);
 
-    expect(await dkgV2.getRoundBroadcastData(firstGeneration, 3, v1.address)).to.equal(data3);
-    expect(await dkgV2.getRoundBroadcastCount(firstGeneration, 1)).to.equal(2);
-    expect(await dkgV2.getRoundBroadcastCount(firstGeneration, 2)).to.equal(2);
-    expect(await dkgV2.getRoundBroadcastCount(firstGeneration, 3)).to.equal(2);
-    expect(await dkg.isRoundFilled(firstGeneration, 3)).to.equal(true);
+    expect(await dkgV2.getRoundBroadcastData(secondGeneration, 3, v1.address)).to.equal(data3);
+    expect(await dkgV2.getRoundBroadcastCount(secondGeneration, 1)).to.equal(2);
+    expect(await dkgV2.getRoundBroadcastCount(secondGeneration, 2)).to.equal(2);
+    expect(await dkgV2.getRoundBroadcastCount(secondGeneration, 3)).to.equal(2);
+    expect(await dkg.isRoundFilled(secondGeneration, 3)).to.equal(true);
 
-    await expect(dkgV1.voteSigner(firstGeneration, signerAddress, signature))
+    await expect(dkgV1.voteSigner(secondGeneration, signerAddress, signature))
       .to.emit(dkgV1, 'SignerVoted')
-      .withArgs(firstGeneration, v1.address, signerAddress);
+      .withArgs(secondGeneration, v1.address, signerAddress);
 
-    await expect(dkgV1.voteSigner(firstGeneration, signerAddress, signatureOther)).to.be.revertedWith(
+    await expect(dkgV1.voteSigner(secondGeneration, signerAddress, signatureOther)).to.be.revertedWith(
       'DKG: signature is invalid'
     );
-    await expect(dkgV2.voteSigner(firstGeneration, signerAddress, signatureOther)).to.be.revertedWith(
+    await expect(dkgV2.voteSigner(secondGeneration, signerAddress, signatureOther)).to.be.revertedWith(
       'DKG: signature is invalid'
     );
 
-    await expect(dkgV1.voteSigner(firstGeneration, signerAddress, signature)).to.be.revertedWith('DKG: already voted');
-    await expect(dkgV2.voteSigner(firstGeneration, signerAddress, signature))
+    await expect(dkgV1.voteSigner(secondGeneration, signerAddress, signature)).to.be.revertedWith('DKG: already voted');
+    await expect(dkgV2.voteSigner(secondGeneration, signerAddress, signature))
       .to.emit(dkgV2, 'SignerAddressUpdated')
-      .withArgs(firstGeneration, signerAddress);
-  });
-
-  it('should set validators by staking or slashing voting', async function () {
-    const [, other] = await ethers.getSigners();
-
-    const { dkg } = await deploySystem();
-
-    const dkgOther = await ethers.getContractAt('DKG', dkg.address, other);
-    await expect(dkgOther.updateGeneration(other.address)).to.be.revertedWith('DKG: not contract');
+      .withArgs(secondGeneration, signerAddress);
   });
 
   it('should get active and pending status ', async function () {
@@ -168,7 +159,7 @@ describe('DKG', function () {
     const PENDING: number = 0;
     const ACTIVE: number = 2;
 
-    const generation = 1;
+    const generation = 2;
     const message = 'verify';
     const signature = await signer.signMessage(message);
     const data1 = ethers.utils.keccak256([1]);
@@ -204,10 +195,11 @@ describe('DKG', function () {
     const initialMinimalStake = ethers.utils.parseEther('3');
 
     const [, signer] = await ethers.getSigners();
-    const { dkg, staking } = await deploySystem(initialMinimalStake);
+    const { dkg, staking, slashingVoting } = await deploySystem(initialMinimalStake);
+    const data = ethers.utils.keccak256([1]);
 
     const EXPIRED: number = 1;
-    const generation = 0;
+    const generation = 2;
 
     const stakingSigner = await ethers.getContractAt('Staking', staking.address, signer);
 
@@ -215,9 +207,14 @@ describe('DKG', function () {
     await stakingSigner.stake({ value: initialMinimalStake });
 
     const hre = require('hardhat');
-    await hre.network.provider.send('hardhat_mine', ['0x64']);
+    var blocksStep = (await slashingVoting.currentEpoch())
+      .add(1)
+      .mul(100)
+      .sub(await ethers.provider.getBlockNumber());
+    await hre.network.provider.send('hardhat_mine', [hexValue(blocksStep)]);
 
     expect(await dkg.getStatus(generation)).to.equal(EXPIRED);
+    await expect(dkg.roundBroadcast(generation, 1, data)).to.be.revertedWith('DKG: not a pending generation');
   });
 
   it('should check if we can set deadline period ', async function () {
@@ -225,8 +222,7 @@ describe('DKG', function () {
 
     const [, signer] = await ethers.getSigners();
     const { dkg, staking } = await deploySystem(initialMinimalStake);
-
-    const generation = 1;
+    const generation = 2;
     const message = 'verify';
     const signature = await signer.signMessage(message);
     const data1 = ethers.utils.keccak256([1]);
@@ -258,60 +254,15 @@ describe('DKG', function () {
     expect(await dkgSigner.deadlinePeriod()).to.equals(100);
   });
 
-  it('should get expired status', async function () {
+  it('should do not create new generartion if it not diferent from past ', async function () {
     const initialMinimalStake = ethers.utils.parseEther('3');
-
-    const [, signer] = await ethers.getSigners();
+    const [,] = await ethers.getSigners();
     const { dkg, staking } = await deploySystem(initialMinimalStake);
 
-    const EXPIRED: number = 1;
-    const generation = 1;
-
-    const stakingSigner = await ethers.getContractAt('Staking', staking.address, signer);
-
     await staking.stake({ value: initialMinimalStake });
-    await stakingSigner.stake({ value: initialMinimalStake });
+    expect(await dkg.getGenerationsCount()).to.equal(2);
 
-    const hre = require('hardhat');
-    await hre.network.provider.send('hardhat_mine', ['0x64']);
-
-    expect(await dkg.getStatus(generation)).to.equal(EXPIRED);
-  });
-
-  it('should check if we can set deadline period ', async function () {
-    const initialMinimalStake = ethers.utils.parseEther('3');
-
-    const [, signer] = await ethers.getSigners();
-    const { dkg, staking } = await deploySystem(initialMinimalStake);
-    const generation = 1;
-    const message = 'verify';
-    const signature = await signer.signMessage(message);
-    const data1 = ethers.utils.keccak256([1]);
-    const data2 = ethers.utils.keccak256([2]);
-    const data3 = ethers.utils.keccak256([3]);
-
-    const dkgSigner = await ethers.getContractAt('DKG', dkg.address, signer);
-    const stakingSigner = await ethers.getContractAt('Staking', staking.address, signer);
-
-    await staking.stake({ value: initialMinimalStake });
-    await stakingSigner.stake({ value: initialMinimalStake });
-
-    await dkg.roundBroadcast(generation, 1, data1);
-    await dkgSigner.roundBroadcast(generation, 1, data1);
-
-    await dkg.roundBroadcast(generation, 2, data2);
-    await dkgSigner.roundBroadcast(generation, 2, data2);
-
-    await dkg.roundBroadcast(generation, 3, data3);
-    await dkgSigner.roundBroadcast(generation, 3, data3);
-
-    await expect(dkgSigner.setDeadlinePeriod(100)).to.be.revertedWith('DKG: not a active signer');
-
-    await dkg.voteSigner(generation, signer.address, signature);
-    await dkgSigner.voteSigner(generation, signer.address, signature);
-
-    await dkgSigner.setDeadlinePeriod(100);
-
-    expect(await dkgSigner.deadlinePeriod()).to.equals(100);
+    await dkg.updateGeneration();
+    expect(await dkg.getGenerationsCount()).to.equal(2);
   });
 });

@@ -157,8 +157,6 @@ export async function deploySystem(initialMinimalStake?: BigNumber): Promise<Sys
 
   await contractRegistry.setContract(await slashingVoting.SLASHING_VOTING_KEY(), slashingVoting.address);
 
-  await contractRegistry.setContract(await dkg.DKG_KEY(), dkg.address);
-
   const SupportedTokens = await ethers.getContractFactory('SupportedTokens');
   const supportedTokens = await SupportedTokens.deploy();
   await supportedTokens.deployed();

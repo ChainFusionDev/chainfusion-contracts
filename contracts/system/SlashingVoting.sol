@@ -36,7 +36,8 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
     // Bans
     mapping(bytes32 => bool) public ban;
     mapping(uint256 => mapping(address => uint256)) public banCounts;
-    mapping(uint256 => mapping(address => SlashingReasonGroup)) public bansByGroup;
+    mapping(uint256 => mapping(address => mapping(SlashingReasonGroup => bool))) public bansByGroup;
+    mapping(uint256 => mapping(SlashingReason => SlashingReasonGroup)) public banGroupByReasons;
 
     event VotedWithReason(address voter, address validator, SlashingReason reason);
     event BannedWithReason(address validator, SlashingReason reason);
@@ -57,6 +58,7 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
         setSlashingThresold(_slashingThresold);
         setSlashingEpochs(_lashingEpochs);
         contractRegistry = ContractRegistry(_contractRegistry);
+        _setBanGroupByReasons();
     }
 
     function voteWithReason(
@@ -104,12 +106,8 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
         slashingEpochs = _slashingEpochs;
     }
 
-    function isBanStatusNone(address _validator) public view returns (bool) {
-        if (bansByGroup[currentEpoch()][_validator] == SlashingReasonGroup.NONE) {
-            return true;
-        }
-
-        return false;
+    function isBanByDKGGroup(address _validator) public view returns (bool) {
+        return bansByGroup[currentEpoch()][_validator][SlashingReasonGroup.REASON_GROUP_DKG];
     }
 
     function isBanNeed(uint256 _epoch, address _validator) public view returns (bool) {
@@ -155,17 +153,19 @@ contract SlashingVoting is ContractKeys, Ownable, Initializable {
     }
 
     function _setBanStatus(SlashingReason _reason, address _validator) private {
-        if (_reason == SlashingReason.REASON_NO_RECENT_BLOCKS) {
-            bansByGroup[currentEpoch()][_validator] == SlashingReasonGroup.REASON_GROUP_BLOCKS;
-        }
+        SlashingReasonGroup bansGroup = banGroupByReasons[currentEpoch()][_reason];
+        bansByGroup[currentEpoch()][_validator][bansGroup] = true;
+    }
 
-        if (_reason == SlashingReason.REASON_DKG_INACTIVITY || _reason == SlashingReason.REASON_DKG_VIOLATION) {
-            bansByGroup[currentEpoch()][_validator] = SlashingReasonGroup.REASON_GROUP_DKG;
-        }
-
-        if (_reason == SlashingReason.REASON_SIGNING_INACTIVITY || _reason == SlashingReason.REASON_SIGNING_VIOLATION) {
-            bansByGroup[currentEpoch()][_validator] = SlashingReasonGroup.REASON_GROUP_SIGNING;
-        }
+    function _setBanGroupByReasons() private {
+        banGroupByReasons[currentEpoch()][SlashingReason.REASON_NO_RECENT_BLOCKS] = SlashingReasonGroup
+            .REASON_GROUP_BLOCKS;
+        banGroupByReasons[currentEpoch()][SlashingReason.REASON_DKG_INACTIVITY] = SlashingReasonGroup.REASON_GROUP_DKG;
+        banGroupByReasons[currentEpoch()][SlashingReason.REASON_DKG_VIOLATION] = SlashingReasonGroup.REASON_GROUP_DKG;
+        banGroupByReasons[currentEpoch()][SlashingReason.REASON_SIGNING_INACTIVITY] = SlashingReasonGroup
+            .REASON_GROUP_SIGNING;
+        banGroupByReasons[currentEpoch()][SlashingReason.REASON_SIGNING_VIOLATION] = SlashingReasonGroup
+            .REASON_GROUP_SIGNING;
     }
 
     function _stakingContract() private view returns (Staking) {
