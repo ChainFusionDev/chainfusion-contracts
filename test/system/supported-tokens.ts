@@ -14,9 +14,9 @@ describe('SupportedTokens', function () {
 
     const systemUser = await ethers.getContractAt('SupportedTokens', supportedTokens.address, user);
     await expect(systemUser.addToken(symbol, chainId, token, tokenType)).to.be.revertedWith(
-      'ValidatorOwnable: only validator'
+      'SignerOwnable: only signer'
     );
-    await expect(systemUser.removeToken(symbol, chainId)).to.be.revertedWith('ValidatorOwnable: only validator');
+    await expect(systemUser.removeToken(symbol, chainId)).to.be.revertedWith('SignerOwnable: only signer');
   });
 
   it('should emit the AddedToken event with proper arguments', async function () {

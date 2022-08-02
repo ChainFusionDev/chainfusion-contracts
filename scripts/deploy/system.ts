@@ -61,8 +61,6 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
 
   await deployer.sendTransaction(res.contractRegistry.initialize(res.dkg.address), 'Initializing ContractRegistry');
 
-  await deployer.sendTransaction(res.eventRegistry.initialize(res.dkg.address), 'Initializing EventRegistry');
-
   await deployer.sendTransaction(res.supportedTokens.initialize(res.dkg.address), 'Initializing SupportedTokens');
 
   await deployer.sendTransaction(
@@ -79,6 +77,7 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
   await deployer.sendTransaction(
     res.slashingVoting.initialize(
       res.dkg.address,
+      res.staking.address,
       params.slashingEpochPeriod,
       params.slashingBansThresold,
       params.slashingEpochs,
@@ -86,6 +85,8 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
     ),
     'Initializing SlashingVoting'
   );
+
+  await deployer.sendTransaction(res.eventRegistry.initialize(res.staking.address), 'Initializing EventRegistry');
 
   await res.contractRegistry.setContract(await res.slashingVoting.SLASHING_VOTING_KEY(), res.slashingVoting.address);
   await res.contractRegistry.setContract(await res.staking.STAKING_KEY(), res.staking.address);

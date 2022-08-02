@@ -2,10 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "./ValidatorOwnable.sol";
+import "./SignerOwnable.sol";
 import "./ContractKeys.sol";
 
-contract SupportedTokens is ContractKeys, ValidatorOwnable, Initializable {
+contract SupportedTokens is ContractKeys, SignerOwnable, Initializable {
     enum TokenType {
         PROVIDED,
         MINTED
@@ -30,7 +30,7 @@ contract SupportedTokens is ContractKeys, ValidatorOwnable, Initializable {
         uint256 chainId,
         address token,
         TokenType tokenType
-    ) public onlyValidator {
+    ) public onlySigner {
         require(tokens[symbol][chainId].token == address(0), "SupportedTokens: token already added");
         tokens[symbol][chainId].token = token;
         tokens[symbol][chainId].tokenType = tokenType;
@@ -38,7 +38,7 @@ contract SupportedTokens is ContractKeys, ValidatorOwnable, Initializable {
         emit AddedToken(symbol, chainId, token, tokenType);
     }
 
-    function removeToken(string memory symbol, uint256 chainId) public onlyValidator {
+    function removeToken(string memory symbol, uint256 chainId) public onlySigner {
         require(tokens[symbol][chainId].token != address(0), "SupportedTokens: token does not exist");
         address token = tokens[symbol][chainId].token;
         delete tokens[symbol][chainId];

@@ -36,7 +36,7 @@ describe('EventRegistry', function () {
     );
 
     await expect(eventRegistryOther.registerEvent(eventHash3, 1, 5, 6)).to.be.revertedWith(
-      'ValidatorOwnable: only current validator'
+      'ValidatorOwnable: only validator'
     );
     expect(await eventRegistry1.registeredEvents(await eventRegistry1.eventKey(eventHash3, 1, 5, 6))).to.equal(false);
   });

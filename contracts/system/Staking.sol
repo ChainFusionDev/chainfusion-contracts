@@ -4,12 +4,12 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "../common/AddressStorage.sol";
 import "./DKG.sol";
-import "./ValidatorOwnable.sol";
+import "./SignerOwnable.sol";
 import "./ContractKeys.sol";
 import "./ContractRegistry.sol";
 import "./SlashingVoting.sol";
 
-contract Staking is ContractKeys, ValidatorOwnable, Initializable {
+contract Staking is ContractKeys, SignerOwnable, Initializable {
     enum ValidatorStatus {
         INACTIVE,
         ACTIVE,
@@ -70,12 +70,12 @@ contract Staking is ContractKeys, ValidatorOwnable, Initializable {
         return stakes[_validator].status == ValidatorStatus.SLASHED;
     }
 
-    function setMinimalStake(uint256 _minimalStake) public onlyValidator {
+    function setMinimalStake(uint256 _minimalStake) public onlySigner {
         minimalStake = _minimalStake;
         emit MinimalStakeUpdated(_minimalStake);
     }
 
-    function setWithdrawalPeriod(uint256 _withdrawalPeriod) public onlyValidator {
+    function setWithdrawalPeriod(uint256 _withdrawalPeriod) public onlySigner {
         withdrawalPeriod = _withdrawalPeriod;
         emit WithdrawalPeriodUpdated(_withdrawalPeriod);
     }
