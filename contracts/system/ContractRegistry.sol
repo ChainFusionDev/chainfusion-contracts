@@ -2,16 +2,16 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "./ValidatorOwnable.sol";
+import "./SignerOwnable.sol";
 
-contract ContractRegistry is ValidatorOwnable, Initializable {
+contract ContractRegistry is SignerOwnable, Initializable {
     mapping(string => address) public contracts;
 
     function initialize(address _signerGetterAddress) external initializer {
         _setSignerGetter(_signerGetterAddress);
     }
 
-    function setContract(string memory _key, address _value) public onlyValidator {
+    function setContract(string memory _key, address _value) public onlySigner {
         contracts[_key] = _value;
     }
 

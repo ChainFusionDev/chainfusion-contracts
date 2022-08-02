@@ -15,9 +15,7 @@ describe('ContractRegistry', function () {
     const contractRegistryOther = await ethers.getContractAt('ContractRegistry', contractRegistry.address, other);
 
     await contractRegistry.setContract(key, address);
-    await expect(contractRegistryOther.setContract(key, address)).to.be.revertedWith(
-      'ValidatorOwnable: only validator'
-    );
+    await expect(contractRegistryOther.setContract(key, address)).to.be.revertedWith('SignerOwnable: only signer');
 
     expect(await contractRegistry.getContract(key)).to.equal(address);
     await expect(contractRegistry.getContract(otherKey)).to.be.revertedWith(

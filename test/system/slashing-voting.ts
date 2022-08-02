@@ -12,7 +12,7 @@ describe('SlashingVoting', function () {
     const { slashingVoting } = await deploySystem();
 
     await expect(slashingVoting.voteWithReason(v2.address, reason, nonce)).to.be.revertedWith(
-      'SlashingVoting: only active validator'
+      'ValidatorOwnable: only validator'
     );
   });
 
@@ -110,7 +110,7 @@ describe('SlashingVoting', function () {
     expect(await staking.isValidatorSlashed(v3.address)).to.equal(true);
 
     await expect(slashingVoting.voteWithReason(v3.address, reason, '0x00')).to.be.revertedWith(
-      'SlashingVoting: only active validator'
+      'ValidatorOwnable: only validator'
     );
   });
 

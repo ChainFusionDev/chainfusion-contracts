@@ -9,8 +9,8 @@ contract EventRegistry is ValidatorOwnable, Initializable {
 
     event EventRegistered(bytes32 _hash, uint256 _generation, uint256 _sourceChain, uint256 _destinationChain);
 
-    function initialize(address _signerGetterAddress) external initializer {
-        _setSignerGetter(_signerGetterAddress);
+    function initialize(address _validatorGetterAddress) external initializer {
+        _setValidatorGetter(_validatorGetterAddress);
     }
 
     function registerEvent(
@@ -18,7 +18,7 @@ contract EventRegistry is ValidatorOwnable, Initializable {
         uint256 _generation,
         uint256 _sourceChain,
         uint256 _destinationChain
-    ) external onlyCurrentValidator {
+    ) external onlyValidator {
         bytes32 key = this.eventKey(_hash, _generation, _sourceChain, _destinationChain);
         require(registeredEvents[key] == false, "EventRegistry: event is already registered");
 

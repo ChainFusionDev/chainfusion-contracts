@@ -36,6 +36,9 @@ describe('DKG', function () {
     await staking1.stake({ value: minimalStake });
     await staking2.stake({ value: minimalStake });
 
+    expect(await dkg.isCurrentValidator(v1.address)).to.equal(true);
+    expect(await dkg.isCurrentValidator(v2.address)).to.equal(true);
+
     expect(await dkg.getGenerationsCount()).to.equal(2);
     expect(await dkg.isValidator(newGeneration, v1.address)).to.equal(true);
     expect(await dkg.isValidator(newGeneration, v2.address)).to.equal(true);

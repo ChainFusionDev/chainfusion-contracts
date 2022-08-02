@@ -2,9 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "./ValidatorOwnable.sol";
+import "./SignerOwnable.sol";
 import "./ContractKeys.sol";
 import "./ContractRegistry.sol";
+import "./ValidatorOwnable.sol";
 import "./Staking.sol";
 
 enum SlashingReason {
@@ -22,7 +23,7 @@ enum SlashingReasonGroup {
     REASON_GROUP_SIGNING
 }
 
-contract SlashingVoting is ContractKeys, ValidatorOwnable, Initializable {
+contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initializable {
     ContractRegistry public contractRegistry;
 
     uint256 public epochPeriod;
@@ -42,19 +43,16 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, Initializable {
     event BannedWithReason(address validator, SlashingReason reason);
     event SlashedWithReason(address validator);
 
-    modifier onlyActiveValidator() {
-        require(_stakingContract().isValidatorActive(msg.sender) == true, "SlashingVoting: only active validator");
-        _;
-    }
-
     function initialize(
         address _signerGetterAddress,
+        address _validatorGetterAddress,
         uint256 _epochPeriod,
         uint256 _slashingThresold,
         uint256 _lashingEpochs,
         address _contractRegistry
     ) external initializer {
         _setSignerGetter(_signerGetterAddress);
+        _setValidatorGetter(_validatorGetterAddress);
         setEpochPeriod(_epochPeriod);
         setSlashingThresold(_slashingThresold);
         setSlashingEpochs(_lashingEpochs);
@@ -65,7 +63,7 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, Initializable {
         address _validator,
         SlashingReason _reason,
         bytes calldata _nonce
-    ) external onlyActiveValidator {
+    ) external onlyValidator {
         Staking staking = _stakingContract();
         bytes32 voteHash = votingHashWithReason(_validator, _reason, _nonce);
 
@@ -92,15 +90,15 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, Initializable {
         }
     }
 
-    function setEpochPeriod(uint256 _epochPeriod) public onlyValidator {
+    function setEpochPeriod(uint256 _epochPeriod) public onlySigner {
         epochPeriod = _epochPeriod;
     }
 
-    function setSlashingThresold(uint256 _slashingThresold) public onlyValidator {
+    function setSlashingThresold(uint256 _slashingThresold) public onlySigner {
         slashingThresold = _slashingThresold;
     }
 
-    function setSlashingEpochs(uint256 _slashingEpochs) public onlyValidator {
+    function setSlashingEpochs(uint256 _slashingEpochs) public onlySigner {
         slashingEpochs = _slashingEpochs;
     }
 

@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./Staking.sol";
 import "./ContractKeys.sol";
@@ -75,7 +74,7 @@ contract DKG is ContractKeys, Initializable {
         _;
     }
 
-    modifier onlyActiveSigner() {
+    modifier onlySigner() {
         require(msg.sender == generations[lastActiveGeneration].signer, "DKG: not a active signer");
         _;
     }
@@ -228,7 +227,7 @@ contract DKG is ContractKeys, Initializable {
         return generations[_generation].validators.length;
     }
 
-    function setDeadlinePeriod(uint256 _deadlinePeriod) public onlyActiveSigner {
+    function setDeadlinePeriod(uint256 _deadlinePeriod) public onlySigner {
         deadlinePeriod = _deadlinePeriod;
     }
 
