@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "./ValidatorOwnable.sol";
+import "./SignerOwnable.sol";
 
-contract TokenManager is Initializable, ValidatorOwnable {
+contract TokenManager is Initializable, SignerOwnable {
     struct TokenInfo {
         mapping(uint256 => address) chainToToken;
         bool isEnabled;
@@ -13,15 +13,15 @@ contract TokenManager is Initializable, ValidatorOwnable {
 
     mapping(address => TokenInfo) public supportedTokens;
 
-    function initialize(address _validatorStorage) external initializer {
-        _setValidatorStorage(_validatorStorage);
+    function initialize(address _signerStorage) external initializer {
+        _setSignerStorage(_signerStorage);
     }
 
     function setDestinationToken(
         uint256 _chainId,
         address _token,
         address _destinationToken
-    ) external onlyValidator {
+    ) external onlySigner {
         supportedTokens[_token].chainToToken[_chainId] = _destinationToken;
     }
 

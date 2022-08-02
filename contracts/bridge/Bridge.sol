@@ -3,14 +3,14 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./ValidatorOwnable.sol";
+import "./SignerOwnable.sol";
 import "./TokenManager.sol";
 import "./LiquidityPools.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
 import "../interfaces/IERC20MintableBurnable.sol";
 
-contract Bridge is Initializable, ValidatorOwnable {
+contract Bridge is Initializable, SignerOwnable {
     mapping(bytes32 => bool) public executed;
 
     TokenManager public tokenManager;
@@ -39,12 +39,12 @@ contract Bridge is Initializable, ValidatorOwnable {
     event FeeManagerUpdated(address _feeManager);
 
     function initialize(
-        address _validatorStorage,
+        address _signerStorage,
         address _tokenManager,
         address payable _liquidityPools,
         address payable _feeManager
     ) external initializer {
-        _setValidatorStorage(_validatorStorage);
+        _setSignerStorage(_signerStorage);
         setTokenManager(_tokenManager);
         setLiquidityPools(_liquidityPools);
         setFeeManager(_feeManager);
@@ -89,7 +89,7 @@ contract Bridge is Initializable, ValidatorOwnable {
         uint256 _sourceChainId,
         address _receiver,
         uint256 _amount
-    ) external onlyValidator {
+    ) external onlySigner {
         require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not enabled");
         bytes32 id = keccak256(abi.encodePacked(_txHash, _token, _receiver, _amount));
 
@@ -110,17 +110,17 @@ contract Bridge is Initializable, ValidatorOwnable {
         emit Transferred(_token, _sourceChainId, _receiver, _amount, msg.sender);
     }
 
-    function setTokenManager(address _tokenManager) public onlyValidator {
+    function setTokenManager(address _tokenManager) public onlySigner {
         tokenManager = TokenManager(_tokenManager);
         emit TokenManagerUpdated(_tokenManager);
     }
 
-    function setLiquidityPools(address payable _liquidityPools) public onlyValidator {
+    function setLiquidityPools(address payable _liquidityPools) public onlySigner {
         liquidityPools = LiquidityPools(_liquidityPools);
         emit LiquidityPoolsUpdated(_liquidityPools);
     }
 
-    function setFeeManager(address payable _feeManager) public onlyValidator {
+    function setFeeManager(address payable _feeManager) public onlySigner {
         feeManager = FeeManager(_feeManager);
         emit FeeManagerUpdated(_feeManager);
     }

@@ -3,11 +3,11 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./ValidatorOwnable.sol";
+import "./SignerOwnable.sol";
 import "./LiquidityPools.sol";
 import "./Globals.sol";
 
-contract FeeManager is Initializable, ValidatorOwnable {
+contract FeeManager is Initializable, SignerOwnable {
     LiquidityPools public liquidityPools;
     address public foundationAddress;
 
@@ -24,28 +24,28 @@ contract FeeManager is Initializable, ValidatorOwnable {
     receive() external payable {}
 
     function initialize(
-        address _validatorStorage,
+        address _signerStorage,
         address payable _liquidityPools,
         address _foundationAddress,
         uint256 _validatorRefundFee
     ) external initializer {
-        _setValidatorStorage(_validatorStorage);
+        _setSignerStorage(_signerStorage);
         setLiquidityPools(_liquidityPools);
         setFoundationAddress(_foundationAddress);
         setValidatorRefundFee(_validatorRefundFee);
     }
 
-    function setLiquidityPools(address payable _liquidityPools) public onlyValidator {
+    function setLiquidityPools(address payable _liquidityPools) public onlySigner {
         liquidityPools = LiquidityPools(_liquidityPools);
         emit LiquidityPoolsUpdated(_liquidityPools);
     }
 
-    function setFoundationAddress(address _foundationAddress) public onlyValidator {
+    function setFoundationAddress(address _foundationAddress) public onlySigner {
         foundationAddress = _foundationAddress;
         emit FoundationAddressUpdated(_foundationAddress);
     }
 
-    function setValidatorRefundFee(uint256 _validatorRefundFee) public onlyValidator {
+    function setValidatorRefundFee(uint256 _validatorRefundFee) public onlySigner {
         validatorRefundFee = _validatorRefundFee;
         emit ValidatorRefundFeeUpdated(_validatorRefundFee);
     }
@@ -67,7 +67,7 @@ contract FeeManager is Initializable, ValidatorOwnable {
         uint256 liquidityRewards;
         uint256 foundationRewards;
 
-        address validatorAddress = validatorStorage.getAddress();
+        address signerAddress = signerStorage.getAddress();
 
         if (token == NATIVE_TOKEN) {
             totalRewards = address(this).balance;
@@ -75,7 +75,7 @@ contract FeeManager is Initializable, ValidatorOwnable {
             (validatorRewards, liquidityRewards, foundationRewards) = _calculateRewards(token, totalRewards);
 
             // solhint-disable-next-line avoid-low-level-calls
-            (bool success, ) = validatorAddress.call{value: validatorRewards, gas: 21000}("");
+            (bool success, ) = signerAddress.call{value: validatorRewards, gas: 21000}("");
             require(success, "FeeManager: transfer native token failed");
 
             // solhint-disable-next-line avoid-low-level-calls
@@ -89,7 +89,7 @@ contract FeeManager is Initializable, ValidatorOwnable {
             totalRewards = IERC20(token).balanceOf(address(this));
             (validatorRewards, liquidityRewards, foundationRewards) = _calculateRewards(token, totalRewards);
 
-            require(IERC20(token).transfer(validatorAddress, validatorRewards), "IERC20: transfer failed");
+            require(IERC20(token).transfer(signerAddress, validatorRewards), "IERC20: transfer failed");
             require(IERC20(token).transfer(address(liquidityPools), liquidityRewards), "IERC20: transfer failed");
             require(IERC20(token).transfer(foundationAddress, foundationRewards), "IERC20: transfer failed");
         }
