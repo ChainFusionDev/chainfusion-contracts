@@ -38,7 +38,7 @@ describe('BridgeAppFactory', function () {
       .to.emit(BridgeAppOwner, 'ContractAddressUpdated')
       .withArgs(chainId, contractAddress);
 
-    expect(await BridgeAppOwner.contractAddresses(123)).to.equal(contractAddress);
+    expect(await BridgeAppOwner.contractAddresses(chainId)).to.equal(contractAddress);
 
     const BridgeAppUser = await ethers.getContractAt('BridgeApp', appAddress, user);
     await expect(BridgeAppUser.setContractAddress(chainId, contractAddress)).to.be.revertedWith(
