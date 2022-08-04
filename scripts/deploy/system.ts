@@ -10,6 +10,7 @@ import {
   SupportedTokens,
   ContractRegistry,
   EventRegistry,
+  BridgeAppFactory,
 } from '../../typechain';
 
 const defaultSystemDeploymentParameters: SystemDeploymentParameters = {
@@ -41,6 +42,7 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
     dkg: await deployer.deploy(ethers.getContractFactory('DKG'), 'DKG'),
     supportedTokens: await deployer.deploy(ethers.getContractFactory('SupportedTokens'), 'SupportedTokens'),
     slashingVoting: await deployer.deploy(ethers.getContractFactory('SlashingVoting'), 'SlashingVoting'),
+    bridgeAppFactory: await deployer.deploy(ethers.getContractFactory('BridgeAppFactory'), 'BridgeAppFactory'),
   };
 
   deployer.log('Successfully deployed contracts\n');
@@ -174,6 +176,7 @@ export interface SystemDeployment {
   supportedTokens: SupportedTokens;
   contractRegistry: ContractRegistry;
   eventRegistry: EventRegistry;
+  bridgeAppFactory: BridgeAppFactory;
 }
 
 export interface SystemDeploymentParameters {
