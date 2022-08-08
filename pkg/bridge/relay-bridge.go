@@ -30,7 +30,7 @@ var (
 
 // RelayBridgeMetaData contains all meta data concerning the RelayBridge contract.
 var RelayBridgeMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"name\":\"SentData\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"name\":\"TransmittedData\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"dataHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"send\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sendData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"setValidator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"fromChainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"transmit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"transmitted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"name\":\"SentData\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"name\":\"TransmittedData\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"dataHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"destinationChainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"revertSend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"send\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sendData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"fromChainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"transmit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"transmitted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // RelayBridgeABI is the input ABI used to generate the binding from.
@@ -210,37 +210,6 @@ func (_RelayBridge *RelayBridgeCallerSession) DataHash(chainId *big.Int, data []
 	return _RelayBridge.Contract.DataHash(&_RelayBridge.CallOpts, chainId, data)
 }
 
-// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
-//
-// Solidity: function owner() view returns(address)
-func (_RelayBridge *RelayBridgeCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _RelayBridge.contract.Call(opts, &out, "owner")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
-//
-// Solidity: function owner() view returns(address)
-func (_RelayBridge *RelayBridgeSession) Owner() (common.Address, error) {
-	return _RelayBridge.Contract.Owner(&_RelayBridge.CallOpts)
-}
-
-// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
-//
-// Solidity: function owner() view returns(address)
-func (_RelayBridge *RelayBridgeCallerSession) Owner() (common.Address, error) {
-	return _RelayBridge.Contract.Owner(&_RelayBridge.CallOpts)
-}
-
 // SendData is a free data retrieval call binding the contract method 0xbb7a7425.
 //
 // Solidity: function sendData(bytes32 ) view returns(bytes)
@@ -270,6 +239,37 @@ func (_RelayBridge *RelayBridgeSession) SendData(arg0 [32]byte) ([]byte, error) 
 // Solidity: function sendData(bytes32 ) view returns(bytes)
 func (_RelayBridge *RelayBridgeCallerSession) SendData(arg0 [32]byte) ([]byte, error) {
 	return _RelayBridge.Contract.SendData(&_RelayBridge.CallOpts, arg0)
+}
+
+// SignerStorage is a free data retrieval call binding the contract method 0x449a23c7.
+//
+// Solidity: function signerStorage() view returns(address)
+func (_RelayBridge *RelayBridgeCaller) SignerStorage(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _RelayBridge.contract.Call(opts, &out, "signerStorage")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// SignerStorage is a free data retrieval call binding the contract method 0x449a23c7.
+//
+// Solidity: function signerStorage() view returns(address)
+func (_RelayBridge *RelayBridgeSession) SignerStorage() (common.Address, error) {
+	return _RelayBridge.Contract.SignerStorage(&_RelayBridge.CallOpts)
+}
+
+// SignerStorage is a free data retrieval call binding the contract method 0x449a23c7.
+//
+// Solidity: function signerStorage() view returns(address)
+func (_RelayBridge *RelayBridgeCallerSession) SignerStorage() (common.Address, error) {
+	return _RelayBridge.Contract.SignerStorage(&_RelayBridge.CallOpts)
 }
 
 // Transmitted is a free data retrieval call binding the contract method 0xc84b3b2f.
@@ -303,77 +303,46 @@ func (_RelayBridge *RelayBridgeCallerSession) Transmitted(arg0 [32]byte) (bool, 
 	return _RelayBridge.Contract.Transmitted(&_RelayBridge.CallOpts, arg0)
 }
 
-// Validator is a free data retrieval call binding the contract method 0x3a5381b5.
+// Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
 //
-// Solidity: function validator() view returns(address)
-func (_RelayBridge *RelayBridgeCaller) Validator(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _RelayBridge.contract.Call(opts, &out, "validator")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// Validator is a free data retrieval call binding the contract method 0x3a5381b5.
-//
-// Solidity: function validator() view returns(address)
-func (_RelayBridge *RelayBridgeSession) Validator() (common.Address, error) {
-	return _RelayBridge.Contract.Validator(&_RelayBridge.CallOpts)
-}
-
-// Validator is a free data retrieval call binding the contract method 0x3a5381b5.
-//
-// Solidity: function validator() view returns(address)
-func (_RelayBridge *RelayBridgeCallerSession) Validator() (common.Address, error) {
-	return _RelayBridge.Contract.Validator(&_RelayBridge.CallOpts)
+// Solidity: function initialize(address _signerStorage) returns()
+func (_RelayBridge *RelayBridgeTransactor) Initialize(opts *bind.TransactOpts, _signerStorage common.Address) (*types.Transaction, error) {
+	return _RelayBridge.contract.Transact(opts, "initialize", _signerStorage)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
 //
-// Solidity: function initialize(address _validator) returns()
-func (_RelayBridge *RelayBridgeTransactor) Initialize(opts *bind.TransactOpts, _validator common.Address) (*types.Transaction, error) {
-	return _RelayBridge.contract.Transact(opts, "initialize", _validator)
+// Solidity: function initialize(address _signerStorage) returns()
+func (_RelayBridge *RelayBridgeSession) Initialize(_signerStorage common.Address) (*types.Transaction, error) {
+	return _RelayBridge.Contract.Initialize(&_RelayBridge.TransactOpts, _signerStorage)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
 //
-// Solidity: function initialize(address _validator) returns()
-func (_RelayBridge *RelayBridgeSession) Initialize(_validator common.Address) (*types.Transaction, error) {
-	return _RelayBridge.Contract.Initialize(&_RelayBridge.TransactOpts, _validator)
+// Solidity: function initialize(address _signerStorage) returns()
+func (_RelayBridge *RelayBridgeTransactorSession) Initialize(_signerStorage common.Address) (*types.Transaction, error) {
+	return _RelayBridge.Contract.Initialize(&_RelayBridge.TransactOpts, _signerStorage)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
+// RevertSend is a paid mutator transaction binding the contract method 0x03c8c385.
 //
-// Solidity: function initialize(address _validator) returns()
-func (_RelayBridge *RelayBridgeTransactorSession) Initialize(_validator common.Address) (*types.Transaction, error) {
-	return _RelayBridge.Contract.Initialize(&_RelayBridge.TransactOpts, _validator)
+// Solidity: function revertSend(address appContract, uint256 destinationChainId, bytes data) returns()
+func (_RelayBridge *RelayBridgeTransactor) RevertSend(opts *bind.TransactOpts, appContract common.Address, destinationChainId *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.contract.Transact(opts, "revertSend", appContract, destinationChainId, data)
 }
 
-// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
+// RevertSend is a paid mutator transaction binding the contract method 0x03c8c385.
 //
-// Solidity: function renounceOwnership() returns()
-func (_RelayBridge *RelayBridgeTransactor) RenounceOwnership(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _RelayBridge.contract.Transact(opts, "renounceOwnership")
+// Solidity: function revertSend(address appContract, uint256 destinationChainId, bytes data) returns()
+func (_RelayBridge *RelayBridgeSession) RevertSend(appContract common.Address, destinationChainId *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.Contract.RevertSend(&_RelayBridge.TransactOpts, appContract, destinationChainId, data)
 }
 
-// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
+// RevertSend is a paid mutator transaction binding the contract method 0x03c8c385.
 //
-// Solidity: function renounceOwnership() returns()
-func (_RelayBridge *RelayBridgeSession) RenounceOwnership() (*types.Transaction, error) {
-	return _RelayBridge.Contract.RenounceOwnership(&_RelayBridge.TransactOpts)
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
-//
-// Solidity: function renounceOwnership() returns()
-func (_RelayBridge *RelayBridgeTransactorSession) RenounceOwnership() (*types.Transaction, error) {
-	return _RelayBridge.Contract.RenounceOwnership(&_RelayBridge.TransactOpts)
+// Solidity: function revertSend(address appContract, uint256 destinationChainId, bytes data) returns()
+func (_RelayBridge *RelayBridgeTransactorSession) RevertSend(appContract common.Address, destinationChainId *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.Contract.RevertSend(&_RelayBridge.TransactOpts, appContract, destinationChainId, data)
 }
 
 // Send is a paid mutator transaction binding the contract method 0x69bf1944.
@@ -397,67 +366,25 @@ func (_RelayBridge *RelayBridgeTransactorSession) Send(chainId *big.Int, data []
 	return _RelayBridge.Contract.Send(&_RelayBridge.TransactOpts, chainId, data)
 }
 
-// SetValidator is a paid mutator transaction binding the contract method 0x1327d3d8.
+// Transmit is a paid mutator transaction binding the contract method 0x7f28d90b.
 //
-// Solidity: function setValidator(address _validator) returns()
-func (_RelayBridge *RelayBridgeTransactor) SetValidator(opts *bind.TransactOpts, _validator common.Address) (*types.Transaction, error) {
-	return _RelayBridge.contract.Transact(opts, "setValidator", _validator)
+// Solidity: function transmit(address appContract, uint256 fromChainId, bytes data) returns()
+func (_RelayBridge *RelayBridgeTransactor) Transmit(opts *bind.TransactOpts, appContract common.Address, fromChainId *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.contract.Transact(opts, "transmit", appContract, fromChainId, data)
 }
 
-// SetValidator is a paid mutator transaction binding the contract method 0x1327d3d8.
+// Transmit is a paid mutator transaction binding the contract method 0x7f28d90b.
 //
-// Solidity: function setValidator(address _validator) returns()
-func (_RelayBridge *RelayBridgeSession) SetValidator(_validator common.Address) (*types.Transaction, error) {
-	return _RelayBridge.Contract.SetValidator(&_RelayBridge.TransactOpts, _validator)
+// Solidity: function transmit(address appContract, uint256 fromChainId, bytes data) returns()
+func (_RelayBridge *RelayBridgeSession) Transmit(appContract common.Address, fromChainId *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.Contract.Transmit(&_RelayBridge.TransactOpts, appContract, fromChainId, data)
 }
 
-// SetValidator is a paid mutator transaction binding the contract method 0x1327d3d8.
+// Transmit is a paid mutator transaction binding the contract method 0x7f28d90b.
 //
-// Solidity: function setValidator(address _validator) returns()
-func (_RelayBridge *RelayBridgeTransactorSession) SetValidator(_validator common.Address) (*types.Transaction, error) {
-	return _RelayBridge.Contract.SetValidator(&_RelayBridge.TransactOpts, _validator)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_RelayBridge *RelayBridgeTransactor) TransferOwnership(opts *bind.TransactOpts, newOwner common.Address) (*types.Transaction, error) {
-	return _RelayBridge.contract.Transact(opts, "transferOwnership", newOwner)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_RelayBridge *RelayBridgeSession) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
-	return _RelayBridge.Contract.TransferOwnership(&_RelayBridge.TransactOpts, newOwner)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_RelayBridge *RelayBridgeTransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
-	return _RelayBridge.Contract.TransferOwnership(&_RelayBridge.TransactOpts, newOwner)
-}
-
-// Transmit is a paid mutator transaction binding the contract method 0x816f3430.
-//
-// Solidity: function transmit(uint256 fromChainId, bytes data) returns()
-func (_RelayBridge *RelayBridgeTransactor) Transmit(opts *bind.TransactOpts, fromChainId *big.Int, data []byte) (*types.Transaction, error) {
-	return _RelayBridge.contract.Transact(opts, "transmit", fromChainId, data)
-}
-
-// Transmit is a paid mutator transaction binding the contract method 0x816f3430.
-//
-// Solidity: function transmit(uint256 fromChainId, bytes data) returns()
-func (_RelayBridge *RelayBridgeSession) Transmit(fromChainId *big.Int, data []byte) (*types.Transaction, error) {
-	return _RelayBridge.Contract.Transmit(&_RelayBridge.TransactOpts, fromChainId, data)
-}
-
-// Transmit is a paid mutator transaction binding the contract method 0x816f3430.
-//
-// Solidity: function transmit(uint256 fromChainId, bytes data) returns()
-func (_RelayBridge *RelayBridgeTransactorSession) Transmit(fromChainId *big.Int, data []byte) (*types.Transaction, error) {
-	return _RelayBridge.Contract.Transmit(&_RelayBridge.TransactOpts, fromChainId, data)
+// Solidity: function transmit(address appContract, uint256 fromChainId, bytes data) returns()
+func (_RelayBridge *RelayBridgeTransactorSession) Transmit(appContract common.Address, fromChainId *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.Contract.Transmit(&_RelayBridge.TransactOpts, appContract, fromChainId, data)
 }
 
 // RelayBridgeInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the RelayBridge contract.
@@ -588,159 +515,6 @@ func (_RelayBridge *RelayBridgeFilterer) WatchInitialized(opts *bind.WatchOpts, 
 func (_RelayBridge *RelayBridgeFilterer) ParseInitialized(log types.Log) (*RelayBridgeInitialized, error) {
 	event := new(RelayBridgeInitialized)
 	if err := _RelayBridge.contract.UnpackLog(event, "Initialized", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// RelayBridgeOwnershipTransferredIterator is returned from FilterOwnershipTransferred and is used to iterate over the raw logs and unpacked data for OwnershipTransferred events raised by the RelayBridge contract.
-type RelayBridgeOwnershipTransferredIterator struct {
-	Event *RelayBridgeOwnershipTransferred // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *RelayBridgeOwnershipTransferredIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(RelayBridgeOwnershipTransferred)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(RelayBridgeOwnershipTransferred)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *RelayBridgeOwnershipTransferredIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *RelayBridgeOwnershipTransferredIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// RelayBridgeOwnershipTransferred represents a OwnershipTransferred event raised by the RelayBridge contract.
-type RelayBridgeOwnershipTransferred struct {
-	PreviousOwner common.Address
-	NewOwner      common.Address
-	Raw           types.Log // Blockchain specific contextual infos
-}
-
-// FilterOwnershipTransferred is a free log retrieval operation binding the contract event 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_RelayBridge *RelayBridgeFilterer) FilterOwnershipTransferred(opts *bind.FilterOpts, previousOwner []common.Address, newOwner []common.Address) (*RelayBridgeOwnershipTransferredIterator, error) {
-
-	var previousOwnerRule []interface{}
-	for _, previousOwnerItem := range previousOwner {
-		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
-	}
-	var newOwnerRule []interface{}
-	for _, newOwnerItem := range newOwner {
-		newOwnerRule = append(newOwnerRule, newOwnerItem)
-	}
-
-	logs, sub, err := _RelayBridge.contract.FilterLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
-	if err != nil {
-		return nil, err
-	}
-	return &RelayBridgeOwnershipTransferredIterator{contract: _RelayBridge.contract, event: "OwnershipTransferred", logs: logs, sub: sub}, nil
-}
-
-// WatchOwnershipTransferred is a free log subscription operation binding the contract event 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_RelayBridge *RelayBridgeFilterer) WatchOwnershipTransferred(opts *bind.WatchOpts, sink chan<- *RelayBridgeOwnershipTransferred, previousOwner []common.Address, newOwner []common.Address) (event.Subscription, error) {
-
-	var previousOwnerRule []interface{}
-	for _, previousOwnerItem := range previousOwner {
-		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
-	}
-	var newOwnerRule []interface{}
-	for _, newOwnerItem := range newOwner {
-		newOwnerRule = append(newOwnerRule, newOwnerItem)
-	}
-
-	logs, sub, err := _RelayBridge.contract.WatchLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(RelayBridgeOwnershipTransferred)
-				if err := _RelayBridge.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseOwnershipTransferred is a log parse operation binding the contract event 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_RelayBridge *RelayBridgeFilterer) ParseOwnershipTransferred(log types.Log) (*RelayBridgeOwnershipTransferred, error) {
-	event := new(RelayBridgeOwnershipTransferred)
-	if err := _RelayBridge.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
