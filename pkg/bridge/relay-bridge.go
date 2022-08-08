@@ -30,7 +30,7 @@ var (
 
 // RelayBridgeMetaData contains all meta data concerning the RelayBridge contract.
 var RelayBridgeMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"name\":\"SentData\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"name\":\"TransmittedData\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"dataHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"destinationChainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"revertSend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"send\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sendData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"fromChainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"transmit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"transmitted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"}],\"name\":\"SentData\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"name\":\"TransmittedData\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"dataHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"destinationChainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"revertSend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"send\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sendData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"fromChainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"transmit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"transmitted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // RelayBridgeABI is the input ABI used to generate the binding from.
@@ -590,13 +590,15 @@ func (it *RelayBridgeSentDataIterator) Close() error {
 
 // RelayBridgeSentData represents a SentData event raised by the RelayBridge contract.
 type RelayBridgeSentData struct {
-	Hash [32]byte
-	Raw  types.Log // Blockchain specific contextual infos
+	Hash             [32]byte
+	SourceChain      *big.Int
+	DestinationChain *big.Int
+	Raw              types.Log // Blockchain specific contextual infos
 }
 
-// FilterSentData is a free log retrieval operation binding the contract event 0x0772e5782827b3340e53f44c38640372637d26e3e45ca5506d50692f3d736bc6.
+// FilterSentData is a free log retrieval operation binding the contract event 0x9489af087d48f842c0902ec275df2c6e5d5311687d375c1c4b9d2318dcd6a792.
 //
-// Solidity: event SentData(bytes32 hash)
+// Solidity: event SentData(bytes32 hash, uint256 sourceChain, uint256 destinationChain)
 func (_RelayBridge *RelayBridgeFilterer) FilterSentData(opts *bind.FilterOpts) (*RelayBridgeSentDataIterator, error) {
 
 	logs, sub, err := _RelayBridge.contract.FilterLogs(opts, "SentData")
@@ -606,9 +608,9 @@ func (_RelayBridge *RelayBridgeFilterer) FilterSentData(opts *bind.FilterOpts) (
 	return &RelayBridgeSentDataIterator{contract: _RelayBridge.contract, event: "SentData", logs: logs, sub: sub}, nil
 }
 
-// WatchSentData is a free log subscription operation binding the contract event 0x0772e5782827b3340e53f44c38640372637d26e3e45ca5506d50692f3d736bc6.
+// WatchSentData is a free log subscription operation binding the contract event 0x9489af087d48f842c0902ec275df2c6e5d5311687d375c1c4b9d2318dcd6a792.
 //
-// Solidity: event SentData(bytes32 hash)
+// Solidity: event SentData(bytes32 hash, uint256 sourceChain, uint256 destinationChain)
 func (_RelayBridge *RelayBridgeFilterer) WatchSentData(opts *bind.WatchOpts, sink chan<- *RelayBridgeSentData) (event.Subscription, error) {
 
 	logs, sub, err := _RelayBridge.contract.WatchLogs(opts, "SentData")
@@ -643,9 +645,9 @@ func (_RelayBridge *RelayBridgeFilterer) WatchSentData(opts *bind.WatchOpts, sin
 	}), nil
 }
 
-// ParseSentData is a log parse operation binding the contract event 0x0772e5782827b3340e53f44c38640372637d26e3e45ca5506d50692f3d736bc6.
+// ParseSentData is a log parse operation binding the contract event 0x9489af087d48f842c0902ec275df2c6e5d5311687d375c1c4b9d2318dcd6a792.
 //
-// Solidity: event SentData(bytes32 hash)
+// Solidity: event SentData(bytes32 hash, uint256 sourceChain, uint256 destinationChain)
 func (_RelayBridge *RelayBridgeFilterer) ParseSentData(log types.Log) (*RelayBridgeSentData, error) {
 	event := new(RelayBridgeSentData)
 	if err := _RelayBridge.contract.UnpackLog(event, "SentData", log); err != nil {

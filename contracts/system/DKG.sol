@@ -36,6 +36,8 @@ contract DKG is ContractKeys, Initializable {
 
     ContractRegistry public contractRegistry;
 
+    mapping(address => uint256) public signerToGeneration;
+
     GenerationInfo[] public generations;
     uint256 public lastActiveGeneration;
     uint256 public deadlinePeriod;
@@ -87,6 +89,7 @@ contract DKG is ContractKeys, Initializable {
     function initialize(address _contractRegistry, uint256 _deadlinePeriod) external initializer {
         generations.push();
         generations[0].signer = msg.sender;
+        signerToGeneration[msg.sender] = 0;
         contractRegistry = ContractRegistry(_contractRegistry);
         deadlinePeriod = _deadlinePeriod;
     }
@@ -179,6 +182,7 @@ contract DKG is ContractKeys, Initializable {
         bool enoughVotes = _enoughVotes(_generation, generations[_generation].signerVoteCounts[_signerAddress]);
         if (enoughVotes) {
             generations[_generation].signer = _signerAddress;
+            signerToGeneration[_signerAddress] = _generation;
             emit SignerAddressUpdated(_generation, _signerAddress);
         }
     }

@@ -148,6 +148,8 @@ describe('DKG', function () {
     await expect(dkgV2.voteSigner(newGeneration, signerAddress, signature))
       .to.emit(dkgV2, 'SignerAddressUpdated')
       .withArgs(newGeneration, signerAddress);
+
+    expect(await dkg.signerToGeneration(signerAddress)).to.equal(1);
   });
 
   it('should get active and pending status', async function () {
