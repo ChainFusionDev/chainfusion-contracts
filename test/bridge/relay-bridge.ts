@@ -4,6 +4,8 @@ import { deployBridge, deployBridgeWithMocks } from '../utils/deploy';
 
 describe('RelayBridge', function () {
   it('should send data', async function () {
+    const [validator] = await ethers.getSigners();
+
     const chainId = 2;
     const data = ethers.utils.keccak256('0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF');
 
@@ -11,7 +13,9 @@ describe('RelayBridge', function () {
 
     const hash = await relayBridge.dataHash(chainId, data);
 
-    await expect(relayBridge.send(chainId, data)).to.emit(relayBridge, 'SentData').withArgs(hash);
+    await expect(relayBridge.send(chainId, data))
+      .to.emit(relayBridge, 'SentData')
+      .withArgs(hash, validator.getChainId, chainId);
     await expect(relayBridge.send(chainId, data)).to.be.revertedWith('RelayBridge: data already send');
 
     expect(await relayBridge.sendData(hash)).to.equals(data);

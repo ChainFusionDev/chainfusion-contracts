@@ -14,7 +14,7 @@ contract RelayBridge is Initializable, SignerOwnable {
     mapping(bytes32 => bytes) public sendData;
     mapping(bytes32 => bool) public transmitted;
 
-    event SentData(bytes32 hash);
+    event SentData(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
     event TransmittedData(bytes32 hash);
 
     function initialize(address _signerStorage) external initializer {
@@ -27,7 +27,7 @@ contract RelayBridge is Initializable, SignerOwnable {
 
         sendData[hash] = data;
 
-        emit SentData(hash);
+        emit SentData(hash, block.chainid, chainId);
     }
 
     function transmit(
