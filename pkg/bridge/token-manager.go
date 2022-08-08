@@ -30,7 +30,7 @@ var (
 
 // TokenManagerMetaData contains all meta data concerning the TokenManager contract.
 var TokenManagerMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"}],\"name\":\"getDestinationToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"isTokenEnabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"isTokenMintable\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_destinationToken\",\"type\":\"address\"}],\"name\":\"setDestinationToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_isEnabled\",\"type\":\"bool\"}],\"name\":\"setEnabled\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_isMintable\",\"type\":\"bool\"}],\"name\":\"setMintable\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"supportedTokens\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isEnabled\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"isMintable\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"}],\"name\":\"getDestinationToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"isTokenEnabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"isTokenMintable\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_destinationToken\",\"type\":\"address\"}],\"name\":\"setDestinationToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_isEnabled\",\"type\":\"bool\"}],\"name\":\"setEnabled\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_isMintable\",\"type\":\"bool\"}],\"name\":\"setMintable\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"supportedTokens\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isEnabled\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"isMintable\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // TokenManagerABI is the input ABI used to generate the binding from.
@@ -272,12 +272,12 @@ func (_TokenManager *TokenManagerCallerSession) IsTokenMintable(_token common.Ad
 	return _TokenManager.Contract.IsTokenMintable(&_TokenManager.CallOpts, _token)
 }
 
-// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
+// SignerStorage is a free data retrieval call binding the contract method 0x449a23c7.
 //
-// Solidity: function owner() view returns(address)
-func (_TokenManager *TokenManagerCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
+// Solidity: function signerStorage() view returns(address)
+func (_TokenManager *TokenManagerCaller) SignerStorage(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _TokenManager.contract.Call(opts, &out, "owner")
+	err := _TokenManager.contract.Call(opts, &out, "signerStorage")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -289,18 +289,18 @@ func (_TokenManager *TokenManagerCaller) Owner(opts *bind.CallOpts) (common.Addr
 
 }
 
-// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
+// SignerStorage is a free data retrieval call binding the contract method 0x449a23c7.
 //
-// Solidity: function owner() view returns(address)
-func (_TokenManager *TokenManagerSession) Owner() (common.Address, error) {
-	return _TokenManager.Contract.Owner(&_TokenManager.CallOpts)
+// Solidity: function signerStorage() view returns(address)
+func (_TokenManager *TokenManagerSession) SignerStorage() (common.Address, error) {
+	return _TokenManager.Contract.SignerStorage(&_TokenManager.CallOpts)
 }
 
-// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
+// SignerStorage is a free data retrieval call binding the contract method 0x449a23c7.
 //
-// Solidity: function owner() view returns(address)
-func (_TokenManager *TokenManagerCallerSession) Owner() (common.Address, error) {
-	return _TokenManager.Contract.Owner(&_TokenManager.CallOpts)
+// Solidity: function signerStorage() view returns(address)
+func (_TokenManager *TokenManagerCallerSession) SignerStorage() (common.Address, error) {
+	return _TokenManager.Contract.SignerStorage(&_TokenManager.CallOpts)
 }
 
 // SupportedTokens is a free data retrieval call binding the contract method 0x68c4ac26.
@@ -350,44 +350,23 @@ func (_TokenManager *TokenManagerCallerSession) SupportedTokens(arg0 common.Addr
 
 // Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
 //
-// Solidity: function initialize(address _owner) returns()
-func (_TokenManager *TokenManagerTransactor) Initialize(opts *bind.TransactOpts, _owner common.Address) (*types.Transaction, error) {
-	return _TokenManager.contract.Transact(opts, "initialize", _owner)
+// Solidity: function initialize(address _signerStorage) returns()
+func (_TokenManager *TokenManagerTransactor) Initialize(opts *bind.TransactOpts, _signerStorage common.Address) (*types.Transaction, error) {
+	return _TokenManager.contract.Transact(opts, "initialize", _signerStorage)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
 //
-// Solidity: function initialize(address _owner) returns()
-func (_TokenManager *TokenManagerSession) Initialize(_owner common.Address) (*types.Transaction, error) {
-	return _TokenManager.Contract.Initialize(&_TokenManager.TransactOpts, _owner)
+// Solidity: function initialize(address _signerStorage) returns()
+func (_TokenManager *TokenManagerSession) Initialize(_signerStorage common.Address) (*types.Transaction, error) {
+	return _TokenManager.Contract.Initialize(&_TokenManager.TransactOpts, _signerStorage)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
 //
-// Solidity: function initialize(address _owner) returns()
-func (_TokenManager *TokenManagerTransactorSession) Initialize(_owner common.Address) (*types.Transaction, error) {
-	return _TokenManager.Contract.Initialize(&_TokenManager.TransactOpts, _owner)
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
-//
-// Solidity: function renounceOwnership() returns()
-func (_TokenManager *TokenManagerTransactor) RenounceOwnership(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _TokenManager.contract.Transact(opts, "renounceOwnership")
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
-//
-// Solidity: function renounceOwnership() returns()
-func (_TokenManager *TokenManagerSession) RenounceOwnership() (*types.Transaction, error) {
-	return _TokenManager.Contract.RenounceOwnership(&_TokenManager.TransactOpts)
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
-//
-// Solidity: function renounceOwnership() returns()
-func (_TokenManager *TokenManagerTransactorSession) RenounceOwnership() (*types.Transaction, error) {
-	return _TokenManager.Contract.RenounceOwnership(&_TokenManager.TransactOpts)
+// Solidity: function initialize(address _signerStorage) returns()
+func (_TokenManager *TokenManagerTransactorSession) Initialize(_signerStorage common.Address) (*types.Transaction, error) {
+	return _TokenManager.Contract.Initialize(&_TokenManager.TransactOpts, _signerStorage)
 }
 
 // SetDestinationToken is a paid mutator transaction binding the contract method 0xff1b14be.
@@ -451,27 +430,6 @@ func (_TokenManager *TokenManagerSession) SetMintable(_token common.Address, _is
 // Solidity: function setMintable(address _token, bool _isMintable) returns()
 func (_TokenManager *TokenManagerTransactorSession) SetMintable(_token common.Address, _isMintable bool) (*types.Transaction, error) {
 	return _TokenManager.Contract.SetMintable(&_TokenManager.TransactOpts, _token, _isMintable)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_TokenManager *TokenManagerTransactor) TransferOwnership(opts *bind.TransactOpts, newOwner common.Address) (*types.Transaction, error) {
-	return _TokenManager.contract.Transact(opts, "transferOwnership", newOwner)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_TokenManager *TokenManagerSession) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
-	return _TokenManager.Contract.TransferOwnership(&_TokenManager.TransactOpts, newOwner)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_TokenManager *TokenManagerTransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
-	return _TokenManager.Contract.TransferOwnership(&_TokenManager.TransactOpts, newOwner)
 }
 
 // TokenManagerInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the TokenManager contract.
@@ -602,159 +560,6 @@ func (_TokenManager *TokenManagerFilterer) WatchInitialized(opts *bind.WatchOpts
 func (_TokenManager *TokenManagerFilterer) ParseInitialized(log types.Log) (*TokenManagerInitialized, error) {
 	event := new(TokenManagerInitialized)
 	if err := _TokenManager.contract.UnpackLog(event, "Initialized", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// TokenManagerOwnershipTransferredIterator is returned from FilterOwnershipTransferred and is used to iterate over the raw logs and unpacked data for OwnershipTransferred events raised by the TokenManager contract.
-type TokenManagerOwnershipTransferredIterator struct {
-	Event *TokenManagerOwnershipTransferred // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *TokenManagerOwnershipTransferredIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(TokenManagerOwnershipTransferred)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(TokenManagerOwnershipTransferred)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *TokenManagerOwnershipTransferredIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *TokenManagerOwnershipTransferredIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// TokenManagerOwnershipTransferred represents a OwnershipTransferred event raised by the TokenManager contract.
-type TokenManagerOwnershipTransferred struct {
-	PreviousOwner common.Address
-	NewOwner      common.Address
-	Raw           types.Log // Blockchain specific contextual infos
-}
-
-// FilterOwnershipTransferred is a free log retrieval operation binding the contract event 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_TokenManager *TokenManagerFilterer) FilterOwnershipTransferred(opts *bind.FilterOpts, previousOwner []common.Address, newOwner []common.Address) (*TokenManagerOwnershipTransferredIterator, error) {
-
-	var previousOwnerRule []interface{}
-	for _, previousOwnerItem := range previousOwner {
-		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
-	}
-	var newOwnerRule []interface{}
-	for _, newOwnerItem := range newOwner {
-		newOwnerRule = append(newOwnerRule, newOwnerItem)
-	}
-
-	logs, sub, err := _TokenManager.contract.FilterLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
-	if err != nil {
-		return nil, err
-	}
-	return &TokenManagerOwnershipTransferredIterator{contract: _TokenManager.contract, event: "OwnershipTransferred", logs: logs, sub: sub}, nil
-}
-
-// WatchOwnershipTransferred is a free log subscription operation binding the contract event 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_TokenManager *TokenManagerFilterer) WatchOwnershipTransferred(opts *bind.WatchOpts, sink chan<- *TokenManagerOwnershipTransferred, previousOwner []common.Address, newOwner []common.Address) (event.Subscription, error) {
-
-	var previousOwnerRule []interface{}
-	for _, previousOwnerItem := range previousOwner {
-		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
-	}
-	var newOwnerRule []interface{}
-	for _, newOwnerItem := range newOwner {
-		newOwnerRule = append(newOwnerRule, newOwnerItem)
-	}
-
-	logs, sub, err := _TokenManager.contract.WatchLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(TokenManagerOwnershipTransferred)
-				if err := _TokenManager.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseOwnershipTransferred is a log parse operation binding the contract event 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_TokenManager *TokenManagerFilterer) ParseOwnershipTransferred(log types.Log) (*TokenManagerOwnershipTransferred, error) {
-	event := new(TokenManagerOwnershipTransferred)
-	if err := _TokenManager.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

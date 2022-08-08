@@ -8,7 +8,6 @@ RUN mkdir bridge
 RUN mkdir system
 
 # Bridge contracts
-
 RUN abigen --abi artifacts/abi/bridge/Bridge.sol/Bridge.json --pkg bridge --type Bridge --out bridge/bridge.go
 RUN abigen --abi artifacts/abi/bridge/LiquidityPools.sol/LiquidityPools.json --pkg bridge --type LiquidityPools --out bridge/liquidity-pools.go
 RUN abigen --abi artifacts/abi/bridge/RelayBridge.sol/RelayBridge.json --pkg bridge --type RelayBridge --out bridge/relay-bridge.go
@@ -17,3 +16,4 @@ RUN abigen --abi artifacts/abi/bridge/TokenManager.sol/TokenManager.json --pkg b
 # System contracts
 RUN abigen --abi artifacts/abi/system/DKG.sol/DKG.json --pkg system --type DKG --out system/dkg.go
 RUN abigen --abi artifacts/abi/system/Staking.sol/Staking.json --pkg system --type Staking --out system/staking.go
+RUN abigen --abi artifacts/abi/system/ContractRegistry.sol/ContractRegistry.json --pkg system --type ContractRegistry --out system/contract-registry.go
