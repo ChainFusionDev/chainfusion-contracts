@@ -2,7 +2,7 @@ import { ethers } from 'hardhat';
 import { BigNumber } from 'ethers';
 import { deploySystemContracts, SystemDeploymentOptions, SystemDeploymentResult } from '../../scripts/deploy/system';
 import { BridgeDeploymentOptions, BridgeDeploymentResult, deployBridgeContracts } from '../../scripts/deploy/bridge';
-import { MockMintableBurnableToken, MockRelayBridgeApp, MockToken } from '../../typechain';
+import { MockMintableBurnableToken, MockBridgeApp, MockToken } from '../../typechain';
 
 export async function deploySystem(options?: SystemDeploymentOptions): Promise<SystemDeploymentResult> {
   return await deploySystemContracts(options);
@@ -38,15 +38,17 @@ export async function deployBridgeWithMocks(
   await deployment.tokenManager.setEnabled(mockMintableBurnableToken.address, true);
   await deployment.tokenManager.setMintable(mockMintableBurnableToken.address, true);
 
-  const MockRelayBridgeApp = await ethers.getContractFactory('MockRelayBridgeApp');
-  const mockRelayBridgeApp = await MockRelayBridgeApp.deploy();
-  await mockRelayBridgeApp.deployed();
+  const MockBridgeApp = await ethers.getContractFactory('MockBridgeApp');
+  const mockBridgeApp = await MockBridgeApp.deploy();
+  await mockBridgeApp.deployed();
+
+  await (await mockBridgeApp.initialize(deployment.relayBridge.address)).wait();
 
   return {
     mockChainId: chainId,
     mockToken: mockToken,
     mockMintableBurnableToken: mockMintableBurnableToken,
-    mockRelayBridgeApp: mockRelayBridgeApp,
+    mockBridgeApp: mockBridgeApp,
     ...deployment,
   };
 }
@@ -55,5 +57,5 @@ export interface BridgeWithMocksDeploymentResult extends BridgeDeploymentResult 
   mockChainId: BigNumber;
   mockToken: MockToken;
   mockMintableBurnableToken: MockMintableBurnableToken;
-  mockRelayBridgeApp: MockRelayBridgeApp;
+  mockBridgeApp: MockBridgeApp;
 }
