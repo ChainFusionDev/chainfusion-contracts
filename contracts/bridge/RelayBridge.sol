@@ -8,52 +8,79 @@ import "./Bridge.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
 import "hardhat/console.sol";
-import "../interfaces/IRelayBridgeApp.sol";
+import "../interfaces/IBridgeApp.sol";
+import "hardhat/console.sol";
 
 contract RelayBridge is Initializable, SignerOwnable {
-    mapping(bytes32 => bytes) public sendData;
-    mapping(bytes32 => bool) public transmitted;
+    mapping(bytes32 => bytes) public sentData;
 
-    event SentData(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
-    event TransmittedData(bytes32 hash);
+    mapping(bytes32 => bool) public sent;
+    mapping(bytes32 => bool) public executed;
+    mapping(bytes32 => bool) public reverted;
+
+    event Sent(bytes32 hash);
+    event Reverted(bytes32 hash);
+    event Executed(bytes32 hash);
 
     function initialize(address _signerStorage) external initializer {
         _setSignerStorage(_signerStorage);
     }
 
-    function send(uint256 chainId, bytes memory data) external {
-        bytes32 hash = dataHash(chainId, data);
-        require(sendData[hash].length == 0, "RelayBridge: data already send");
-
-        sendData[hash] = data;
-
-        emit SentData(hash, block.chainid, chainId);
-    }
-
-    function transmit(
-        address appContract,
-        uint256 fromChainId,
+    function send(
+        uint256 destinationChain,
+        uint256 gasLimit,
         bytes memory data
-    ) external onlySigner {
-        bytes32 hash = dataHash(fromChainId, data);
-        require(!transmitted[hash], "RelayBridge: data already transmitted");
+    ) external {
+        bytes32 hash = dataHash(msg.sender, block.chainid, destinationChain, gasLimit, data);
+        require(sentData[hash].length == 0, "RelayBridge: data already send");
 
-        IRelayBridgeApp(appContract).process(fromChainId, data);
+        sent[hash] = true;
+        sentData[hash] = data;
 
-        transmitted[hash] = true;
-
-        emit TransmittedData(hash);
+        emit Sent(hash);
     }
 
     function revertSend(
         address appContract,
-        uint256 destinationChainId,
+        uint256 destinationChain,
+        uint256 gasLimit,
         bytes memory data
-    ) public {
-        IRelayBridgeApp(appContract).revertSend(destinationChainId, data);
+    ) external onlySigner {
+        bytes32 hash = dataHash(appContract, block.chainid, destinationChain, gasLimit, data);
+        require(sent[hash], "RelayBridge: data never sent");
+        require(!reverted[hash], "RelayBridge: data already reverted");
+
+        reverted[hash] = true;
+
+        IBridgeApp(appContract).revertSend(destinationChain, data);
+
+        emit Reverted(hash);
     }
 
-    function dataHash(uint256 chainId, bytes memory data) public pure returns (bytes32) {
-        return keccak256(abi.encodePacked(chainId, data));
+    function execute(
+        address appContract,
+        uint256 sourceChain,
+        uint256 destinationChain,
+        uint256 gasLimit,
+        bytes memory data
+    ) external onlySigner {
+        bytes32 hash = dataHash(appContract, sourceChain, destinationChain, gasLimit, data);
+        require(!executed[hash], "RelayBridge: data already executed");
+
+        IBridgeApp(appContract).execute(sourceChain, data);
+
+        executed[hash] = true;
+
+        emit Executed(hash);
+    }
+
+    function dataHash(
+        address appContract,
+        uint256 sourceChain,
+        uint256 destinationChain,
+        uint256 gasLimit,
+        bytes memory data
+    ) public pure returns (bytes32) {
+        return keccak256(abi.encode(appContract, sourceChain, destinationChain, gasLimit, data));
     }
 }
