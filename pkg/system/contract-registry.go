@@ -30,7 +30,7 @@ var (
 
 // ContractRegistryMetaData contains all meta data concerning the ContractRegistry contract.
 var ContractRegistryMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"contracts\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_key\",\"type\":\"string\"}],\"name\":\"getContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerGetterAddress\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_key\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_value\",\"type\":\"address\"}],\"name\":\"setContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerGetter\",\"outputs\":[{\"internalType\":\"contractSignerGetter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_key\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_value\",\"type\":\"address\"}],\"name\":\"ContractAddressUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"contracts\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_key\",\"type\":\"string\"}],\"name\":\"getContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerGetterAddress\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_key\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_value\",\"type\":\"address\"}],\"name\":\"setContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerGetter\",\"outputs\":[{\"internalType\":\"contractSignerGetter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // ContractRegistryABI is the input ABI used to generate the binding from.
@@ -312,6 +312,141 @@ func (_ContractRegistry *ContractRegistrySession) SetContract(_key string, _valu
 // Solidity: function setContract(string _key, address _value) returns()
 func (_ContractRegistry *ContractRegistryTransactorSession) SetContract(_key string, _value common.Address) (*types.Transaction, error) {
 	return _ContractRegistry.Contract.SetContract(&_ContractRegistry.TransactOpts, _key, _value)
+}
+
+// ContractRegistryContractAddressUpdatedIterator is returned from FilterContractAddressUpdated and is used to iterate over the raw logs and unpacked data for ContractAddressUpdated events raised by the ContractRegistry contract.
+type ContractRegistryContractAddressUpdatedIterator struct {
+	Event *ContractRegistryContractAddressUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *ContractRegistryContractAddressUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(ContractRegistryContractAddressUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(ContractRegistryContractAddressUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *ContractRegistryContractAddressUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *ContractRegistryContractAddressUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// ContractRegistryContractAddressUpdated represents a ContractAddressUpdated event raised by the ContractRegistry contract.
+type ContractRegistryContractAddressUpdated struct {
+	Key   string
+	Value common.Address
+	Raw   types.Log // Blockchain specific contextual infos
+}
+
+// FilterContractAddressUpdated is a free log retrieval operation binding the contract event 0xa42de6429c1410f4470a8ff5afeeae27c734519ac1693e8eb58798a81715c947.
+//
+// Solidity: event ContractAddressUpdated(string _key, address _value)
+func (_ContractRegistry *ContractRegistryFilterer) FilterContractAddressUpdated(opts *bind.FilterOpts) (*ContractRegistryContractAddressUpdatedIterator, error) {
+
+	logs, sub, err := _ContractRegistry.contract.FilterLogs(opts, "ContractAddressUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &ContractRegistryContractAddressUpdatedIterator{contract: _ContractRegistry.contract, event: "ContractAddressUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchContractAddressUpdated is a free log subscription operation binding the contract event 0xa42de6429c1410f4470a8ff5afeeae27c734519ac1693e8eb58798a81715c947.
+//
+// Solidity: event ContractAddressUpdated(string _key, address _value)
+func (_ContractRegistry *ContractRegistryFilterer) WatchContractAddressUpdated(opts *bind.WatchOpts, sink chan<- *ContractRegistryContractAddressUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _ContractRegistry.contract.WatchLogs(opts, "ContractAddressUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(ContractRegistryContractAddressUpdated)
+				if err := _ContractRegistry.contract.UnpackLog(event, "ContractAddressUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseContractAddressUpdated is a log parse operation binding the contract event 0xa42de6429c1410f4470a8ff5afeeae27c734519ac1693e8eb58798a81715c947.
+//
+// Solidity: event ContractAddressUpdated(string _key, address _value)
+func (_ContractRegistry *ContractRegistryFilterer) ParseContractAddressUpdated(log types.Log) (*ContractRegistryContractAddressUpdated, error) {
+	event := new(ContractRegistryContractAddressUpdated)
+	if err := _ContractRegistry.contract.UnpackLog(event, "ContractAddressUpdated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }
 
 // ContractRegistryInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the ContractRegistry contract.
