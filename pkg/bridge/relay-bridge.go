@@ -30,7 +30,7 @@ var (
 
 // RelayBridgeMetaData contains all meta data concerning the RelayBridge contract.
 var RelayBridgeMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"}],\"name\":\"SentData\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"name\":\"TransmittedData\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"dataHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"destinationChainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"revertSend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"send\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sendData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"fromChainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"transmit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"transmitted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"name\":\"Executed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"name\":\"Reverted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"}],\"name\":\"Sent\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"dataHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"executed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"revertSend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"reverted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"send\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sent\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sentData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // RelayBridgeABI is the input ABI used to generate the binding from.
@@ -179,12 +179,12 @@ func (_RelayBridge *RelayBridgeTransactorRaw) Transact(opts *bind.TransactOpts, 
 	return _RelayBridge.Contract.contract.Transact(opts, method, params...)
 }
 
-// DataHash is a free data retrieval call binding the contract method 0xaea02932.
+// DataHash is a free data retrieval call binding the contract method 0x742cd421.
 //
-// Solidity: function dataHash(uint256 chainId, bytes data) pure returns(bytes32)
-func (_RelayBridge *RelayBridgeCaller) DataHash(opts *bind.CallOpts, chainId *big.Int, data []byte) ([32]byte, error) {
+// Solidity: function dataHash(address appContract, uint256 sourceChain, uint256 destinationChain, uint256 gasLimit, bytes data) pure returns(bytes32)
+func (_RelayBridge *RelayBridgeCaller) DataHash(opts *bind.CallOpts, appContract common.Address, sourceChain *big.Int, destinationChain *big.Int, gasLimit *big.Int, data []byte) ([32]byte, error) {
 	var out []interface{}
-	err := _RelayBridge.contract.Call(opts, &out, "dataHash", chainId, data)
+	err := _RelayBridge.contract.Call(opts, &out, "dataHash", appContract, sourceChain, destinationChain, gasLimit, data)
 
 	if err != nil {
 		return *new([32]byte), err
@@ -196,26 +196,119 @@ func (_RelayBridge *RelayBridgeCaller) DataHash(opts *bind.CallOpts, chainId *bi
 
 }
 
-// DataHash is a free data retrieval call binding the contract method 0xaea02932.
+// DataHash is a free data retrieval call binding the contract method 0x742cd421.
 //
-// Solidity: function dataHash(uint256 chainId, bytes data) pure returns(bytes32)
-func (_RelayBridge *RelayBridgeSession) DataHash(chainId *big.Int, data []byte) ([32]byte, error) {
-	return _RelayBridge.Contract.DataHash(&_RelayBridge.CallOpts, chainId, data)
+// Solidity: function dataHash(address appContract, uint256 sourceChain, uint256 destinationChain, uint256 gasLimit, bytes data) pure returns(bytes32)
+func (_RelayBridge *RelayBridgeSession) DataHash(appContract common.Address, sourceChain *big.Int, destinationChain *big.Int, gasLimit *big.Int, data []byte) ([32]byte, error) {
+	return _RelayBridge.Contract.DataHash(&_RelayBridge.CallOpts, appContract, sourceChain, destinationChain, gasLimit, data)
 }
 
-// DataHash is a free data retrieval call binding the contract method 0xaea02932.
+// DataHash is a free data retrieval call binding the contract method 0x742cd421.
 //
-// Solidity: function dataHash(uint256 chainId, bytes data) pure returns(bytes32)
-func (_RelayBridge *RelayBridgeCallerSession) DataHash(chainId *big.Int, data []byte) ([32]byte, error) {
-	return _RelayBridge.Contract.DataHash(&_RelayBridge.CallOpts, chainId, data)
+// Solidity: function dataHash(address appContract, uint256 sourceChain, uint256 destinationChain, uint256 gasLimit, bytes data) pure returns(bytes32)
+func (_RelayBridge *RelayBridgeCallerSession) DataHash(appContract common.Address, sourceChain *big.Int, destinationChain *big.Int, gasLimit *big.Int, data []byte) ([32]byte, error) {
+	return _RelayBridge.Contract.DataHash(&_RelayBridge.CallOpts, appContract, sourceChain, destinationChain, gasLimit, data)
 }
 
-// SendData is a free data retrieval call binding the contract method 0xbb7a7425.
+// Executed is a free data retrieval call binding the contract method 0xa9fcfb33.
 //
-// Solidity: function sendData(bytes32 ) view returns(bytes)
-func (_RelayBridge *RelayBridgeCaller) SendData(opts *bind.CallOpts, arg0 [32]byte) ([]byte, error) {
+// Solidity: function executed(bytes32 ) view returns(bool)
+func (_RelayBridge *RelayBridgeCaller) Executed(opts *bind.CallOpts, arg0 [32]byte) (bool, error) {
 	var out []interface{}
-	err := _RelayBridge.contract.Call(opts, &out, "sendData", arg0)
+	err := _RelayBridge.contract.Call(opts, &out, "executed", arg0)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// Executed is a free data retrieval call binding the contract method 0xa9fcfb33.
+//
+// Solidity: function executed(bytes32 ) view returns(bool)
+func (_RelayBridge *RelayBridgeSession) Executed(arg0 [32]byte) (bool, error) {
+	return _RelayBridge.Contract.Executed(&_RelayBridge.CallOpts, arg0)
+}
+
+// Executed is a free data retrieval call binding the contract method 0xa9fcfb33.
+//
+// Solidity: function executed(bytes32 ) view returns(bool)
+func (_RelayBridge *RelayBridgeCallerSession) Executed(arg0 [32]byte) (bool, error) {
+	return _RelayBridge.Contract.Executed(&_RelayBridge.CallOpts, arg0)
+}
+
+// Reverted is a free data retrieval call binding the contract method 0xabe61ec4.
+//
+// Solidity: function reverted(bytes32 ) view returns(bool)
+func (_RelayBridge *RelayBridgeCaller) Reverted(opts *bind.CallOpts, arg0 [32]byte) (bool, error) {
+	var out []interface{}
+	err := _RelayBridge.contract.Call(opts, &out, "reverted", arg0)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// Reverted is a free data retrieval call binding the contract method 0xabe61ec4.
+//
+// Solidity: function reverted(bytes32 ) view returns(bool)
+func (_RelayBridge *RelayBridgeSession) Reverted(arg0 [32]byte) (bool, error) {
+	return _RelayBridge.Contract.Reverted(&_RelayBridge.CallOpts, arg0)
+}
+
+// Reverted is a free data retrieval call binding the contract method 0xabe61ec4.
+//
+// Solidity: function reverted(bytes32 ) view returns(bool)
+func (_RelayBridge *RelayBridgeCallerSession) Reverted(arg0 [32]byte) (bool, error) {
+	return _RelayBridge.Contract.Reverted(&_RelayBridge.CallOpts, arg0)
+}
+
+// Sent is a free data retrieval call binding the contract method 0x8ebc5074.
+//
+// Solidity: function sent(bytes32 ) view returns(bool)
+func (_RelayBridge *RelayBridgeCaller) Sent(opts *bind.CallOpts, arg0 [32]byte) (bool, error) {
+	var out []interface{}
+	err := _RelayBridge.contract.Call(opts, &out, "sent", arg0)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// Sent is a free data retrieval call binding the contract method 0x8ebc5074.
+//
+// Solidity: function sent(bytes32 ) view returns(bool)
+func (_RelayBridge *RelayBridgeSession) Sent(arg0 [32]byte) (bool, error) {
+	return _RelayBridge.Contract.Sent(&_RelayBridge.CallOpts, arg0)
+}
+
+// Sent is a free data retrieval call binding the contract method 0x8ebc5074.
+//
+// Solidity: function sent(bytes32 ) view returns(bool)
+func (_RelayBridge *RelayBridgeCallerSession) Sent(arg0 [32]byte) (bool, error) {
+	return _RelayBridge.Contract.Sent(&_RelayBridge.CallOpts, arg0)
+}
+
+// SentData is a free data retrieval call binding the contract method 0xf0b6c9db.
+//
+// Solidity: function sentData(bytes32 ) view returns(bytes)
+func (_RelayBridge *RelayBridgeCaller) SentData(opts *bind.CallOpts, arg0 [32]byte) ([]byte, error) {
+	var out []interface{}
+	err := _RelayBridge.contract.Call(opts, &out, "sentData", arg0)
 
 	if err != nil {
 		return *new([]byte), err
@@ -227,18 +320,18 @@ func (_RelayBridge *RelayBridgeCaller) SendData(opts *bind.CallOpts, arg0 [32]by
 
 }
 
-// SendData is a free data retrieval call binding the contract method 0xbb7a7425.
+// SentData is a free data retrieval call binding the contract method 0xf0b6c9db.
 //
-// Solidity: function sendData(bytes32 ) view returns(bytes)
-func (_RelayBridge *RelayBridgeSession) SendData(arg0 [32]byte) ([]byte, error) {
-	return _RelayBridge.Contract.SendData(&_RelayBridge.CallOpts, arg0)
+// Solidity: function sentData(bytes32 ) view returns(bytes)
+func (_RelayBridge *RelayBridgeSession) SentData(arg0 [32]byte) ([]byte, error) {
+	return _RelayBridge.Contract.SentData(&_RelayBridge.CallOpts, arg0)
 }
 
-// SendData is a free data retrieval call binding the contract method 0xbb7a7425.
+// SentData is a free data retrieval call binding the contract method 0xf0b6c9db.
 //
-// Solidity: function sendData(bytes32 ) view returns(bytes)
-func (_RelayBridge *RelayBridgeCallerSession) SendData(arg0 [32]byte) ([]byte, error) {
-	return _RelayBridge.Contract.SendData(&_RelayBridge.CallOpts, arg0)
+// Solidity: function sentData(bytes32 ) view returns(bytes)
+func (_RelayBridge *RelayBridgeCallerSession) SentData(arg0 [32]byte) ([]byte, error) {
+	return _RelayBridge.Contract.SentData(&_RelayBridge.CallOpts, arg0)
 }
 
 // SignerStorage is a free data retrieval call binding the contract method 0x449a23c7.
@@ -272,35 +365,25 @@ func (_RelayBridge *RelayBridgeCallerSession) SignerStorage() (common.Address, e
 	return _RelayBridge.Contract.SignerStorage(&_RelayBridge.CallOpts)
 }
 
-// Transmitted is a free data retrieval call binding the contract method 0xc84b3b2f.
+// Execute is a paid mutator transaction binding the contract method 0x5d2adbb6.
 //
-// Solidity: function transmitted(bytes32 ) view returns(bool)
-func (_RelayBridge *RelayBridgeCaller) Transmitted(opts *bind.CallOpts, arg0 [32]byte) (bool, error) {
-	var out []interface{}
-	err := _RelayBridge.contract.Call(opts, &out, "transmitted", arg0)
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
+// Solidity: function execute(address appContract, uint256 sourceChain, uint256 destinationChain, uint256 gasLimit, bytes data) returns()
+func (_RelayBridge *RelayBridgeTransactor) Execute(opts *bind.TransactOpts, appContract common.Address, sourceChain *big.Int, destinationChain *big.Int, gasLimit *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.contract.Transact(opts, "execute", appContract, sourceChain, destinationChain, gasLimit, data)
 }
 
-// Transmitted is a free data retrieval call binding the contract method 0xc84b3b2f.
+// Execute is a paid mutator transaction binding the contract method 0x5d2adbb6.
 //
-// Solidity: function transmitted(bytes32 ) view returns(bool)
-func (_RelayBridge *RelayBridgeSession) Transmitted(arg0 [32]byte) (bool, error) {
-	return _RelayBridge.Contract.Transmitted(&_RelayBridge.CallOpts, arg0)
+// Solidity: function execute(address appContract, uint256 sourceChain, uint256 destinationChain, uint256 gasLimit, bytes data) returns()
+func (_RelayBridge *RelayBridgeSession) Execute(appContract common.Address, sourceChain *big.Int, destinationChain *big.Int, gasLimit *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.Contract.Execute(&_RelayBridge.TransactOpts, appContract, sourceChain, destinationChain, gasLimit, data)
 }
 
-// Transmitted is a free data retrieval call binding the contract method 0xc84b3b2f.
+// Execute is a paid mutator transaction binding the contract method 0x5d2adbb6.
 //
-// Solidity: function transmitted(bytes32 ) view returns(bool)
-func (_RelayBridge *RelayBridgeCallerSession) Transmitted(arg0 [32]byte) (bool, error) {
-	return _RelayBridge.Contract.Transmitted(&_RelayBridge.CallOpts, arg0)
+// Solidity: function execute(address appContract, uint256 sourceChain, uint256 destinationChain, uint256 gasLimit, bytes data) returns()
+func (_RelayBridge *RelayBridgeTransactorSession) Execute(appContract common.Address, sourceChain *big.Int, destinationChain *big.Int, gasLimit *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.Contract.Execute(&_RelayBridge.TransactOpts, appContract, sourceChain, destinationChain, gasLimit, data)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
@@ -324,67 +407,180 @@ func (_RelayBridge *RelayBridgeTransactorSession) Initialize(_signerStorage comm
 	return _RelayBridge.Contract.Initialize(&_RelayBridge.TransactOpts, _signerStorage)
 }
 
-// RevertSend is a paid mutator transaction binding the contract method 0x03c8c385.
+// RevertSend is a paid mutator transaction binding the contract method 0x05d17515.
 //
-// Solidity: function revertSend(address appContract, uint256 destinationChainId, bytes data) returns()
-func (_RelayBridge *RelayBridgeTransactor) RevertSend(opts *bind.TransactOpts, appContract common.Address, destinationChainId *big.Int, data []byte) (*types.Transaction, error) {
-	return _RelayBridge.contract.Transact(opts, "revertSend", appContract, destinationChainId, data)
+// Solidity: function revertSend(address appContract, uint256 destinationChain, uint256 gasLimit, bytes data) returns()
+func (_RelayBridge *RelayBridgeTransactor) RevertSend(opts *bind.TransactOpts, appContract common.Address, destinationChain *big.Int, gasLimit *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.contract.Transact(opts, "revertSend", appContract, destinationChain, gasLimit, data)
 }
 
-// RevertSend is a paid mutator transaction binding the contract method 0x03c8c385.
+// RevertSend is a paid mutator transaction binding the contract method 0x05d17515.
 //
-// Solidity: function revertSend(address appContract, uint256 destinationChainId, bytes data) returns()
-func (_RelayBridge *RelayBridgeSession) RevertSend(appContract common.Address, destinationChainId *big.Int, data []byte) (*types.Transaction, error) {
-	return _RelayBridge.Contract.RevertSend(&_RelayBridge.TransactOpts, appContract, destinationChainId, data)
+// Solidity: function revertSend(address appContract, uint256 destinationChain, uint256 gasLimit, bytes data) returns()
+func (_RelayBridge *RelayBridgeSession) RevertSend(appContract common.Address, destinationChain *big.Int, gasLimit *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.Contract.RevertSend(&_RelayBridge.TransactOpts, appContract, destinationChain, gasLimit, data)
 }
 
-// RevertSend is a paid mutator transaction binding the contract method 0x03c8c385.
+// RevertSend is a paid mutator transaction binding the contract method 0x05d17515.
 //
-// Solidity: function revertSend(address appContract, uint256 destinationChainId, bytes data) returns()
-func (_RelayBridge *RelayBridgeTransactorSession) RevertSend(appContract common.Address, destinationChainId *big.Int, data []byte) (*types.Transaction, error) {
-	return _RelayBridge.Contract.RevertSend(&_RelayBridge.TransactOpts, appContract, destinationChainId, data)
+// Solidity: function revertSend(address appContract, uint256 destinationChain, uint256 gasLimit, bytes data) returns()
+func (_RelayBridge *RelayBridgeTransactorSession) RevertSend(appContract common.Address, destinationChain *big.Int, gasLimit *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.Contract.RevertSend(&_RelayBridge.TransactOpts, appContract, destinationChain, gasLimit, data)
 }
 
-// Send is a paid mutator transaction binding the contract method 0x69bf1944.
+// Send is a paid mutator transaction binding the contract method 0x2a9bf608.
 //
-// Solidity: function send(uint256 chainId, bytes data) returns()
-func (_RelayBridge *RelayBridgeTransactor) Send(opts *bind.TransactOpts, chainId *big.Int, data []byte) (*types.Transaction, error) {
-	return _RelayBridge.contract.Transact(opts, "send", chainId, data)
+// Solidity: function send(uint256 destinationChain, uint256 gasLimit, bytes data) returns()
+func (_RelayBridge *RelayBridgeTransactor) Send(opts *bind.TransactOpts, destinationChain *big.Int, gasLimit *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.contract.Transact(opts, "send", destinationChain, gasLimit, data)
 }
 
-// Send is a paid mutator transaction binding the contract method 0x69bf1944.
+// Send is a paid mutator transaction binding the contract method 0x2a9bf608.
 //
-// Solidity: function send(uint256 chainId, bytes data) returns()
-func (_RelayBridge *RelayBridgeSession) Send(chainId *big.Int, data []byte) (*types.Transaction, error) {
-	return _RelayBridge.Contract.Send(&_RelayBridge.TransactOpts, chainId, data)
+// Solidity: function send(uint256 destinationChain, uint256 gasLimit, bytes data) returns()
+func (_RelayBridge *RelayBridgeSession) Send(destinationChain *big.Int, gasLimit *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.Contract.Send(&_RelayBridge.TransactOpts, destinationChain, gasLimit, data)
 }
 
-// Send is a paid mutator transaction binding the contract method 0x69bf1944.
+// Send is a paid mutator transaction binding the contract method 0x2a9bf608.
 //
-// Solidity: function send(uint256 chainId, bytes data) returns()
-func (_RelayBridge *RelayBridgeTransactorSession) Send(chainId *big.Int, data []byte) (*types.Transaction, error) {
-	return _RelayBridge.Contract.Send(&_RelayBridge.TransactOpts, chainId, data)
+// Solidity: function send(uint256 destinationChain, uint256 gasLimit, bytes data) returns()
+func (_RelayBridge *RelayBridgeTransactorSession) Send(destinationChain *big.Int, gasLimit *big.Int, data []byte) (*types.Transaction, error) {
+	return _RelayBridge.Contract.Send(&_RelayBridge.TransactOpts, destinationChain, gasLimit, data)
 }
 
-// Transmit is a paid mutator transaction binding the contract method 0x7f28d90b.
-//
-// Solidity: function transmit(address appContract, uint256 fromChainId, bytes data) returns()
-func (_RelayBridge *RelayBridgeTransactor) Transmit(opts *bind.TransactOpts, appContract common.Address, fromChainId *big.Int, data []byte) (*types.Transaction, error) {
-	return _RelayBridge.contract.Transact(opts, "transmit", appContract, fromChainId, data)
+// RelayBridgeExecutedIterator is returned from FilterExecuted and is used to iterate over the raw logs and unpacked data for Executed events raised by the RelayBridge contract.
+type RelayBridgeExecutedIterator struct {
+	Event *RelayBridgeExecuted // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
 }
 
-// Transmit is a paid mutator transaction binding the contract method 0x7f28d90b.
-//
-// Solidity: function transmit(address appContract, uint256 fromChainId, bytes data) returns()
-func (_RelayBridge *RelayBridgeSession) Transmit(appContract common.Address, fromChainId *big.Int, data []byte) (*types.Transaction, error) {
-	return _RelayBridge.Contract.Transmit(&_RelayBridge.TransactOpts, appContract, fromChainId, data)
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *RelayBridgeExecutedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(RelayBridgeExecuted)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(RelayBridgeExecuted)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
 }
 
-// Transmit is a paid mutator transaction binding the contract method 0x7f28d90b.
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *RelayBridgeExecutedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *RelayBridgeExecutedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// RelayBridgeExecuted represents a Executed event raised by the RelayBridge contract.
+type RelayBridgeExecuted struct {
+	Hash [32]byte
+	Raw  types.Log // Blockchain specific contextual infos
+}
+
+// FilterExecuted is a free log retrieval operation binding the contract event 0xa74c8847d513feba22a0f0cb38d53081abf97562cdb293926ba243689e7c41ca.
 //
-// Solidity: function transmit(address appContract, uint256 fromChainId, bytes data) returns()
-func (_RelayBridge *RelayBridgeTransactorSession) Transmit(appContract common.Address, fromChainId *big.Int, data []byte) (*types.Transaction, error) {
-	return _RelayBridge.Contract.Transmit(&_RelayBridge.TransactOpts, appContract, fromChainId, data)
+// Solidity: event Executed(bytes32 hash)
+func (_RelayBridge *RelayBridgeFilterer) FilterExecuted(opts *bind.FilterOpts) (*RelayBridgeExecutedIterator, error) {
+
+	logs, sub, err := _RelayBridge.contract.FilterLogs(opts, "Executed")
+	if err != nil {
+		return nil, err
+	}
+	return &RelayBridgeExecutedIterator{contract: _RelayBridge.contract, event: "Executed", logs: logs, sub: sub}, nil
+}
+
+// WatchExecuted is a free log subscription operation binding the contract event 0xa74c8847d513feba22a0f0cb38d53081abf97562cdb293926ba243689e7c41ca.
+//
+// Solidity: event Executed(bytes32 hash)
+func (_RelayBridge *RelayBridgeFilterer) WatchExecuted(opts *bind.WatchOpts, sink chan<- *RelayBridgeExecuted) (event.Subscription, error) {
+
+	logs, sub, err := _RelayBridge.contract.WatchLogs(opts, "Executed")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(RelayBridgeExecuted)
+				if err := _RelayBridge.contract.UnpackLog(event, "Executed", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseExecuted is a log parse operation binding the contract event 0xa74c8847d513feba22a0f0cb38d53081abf97562cdb293926ba243689e7c41ca.
+//
+// Solidity: event Executed(bytes32 hash)
+func (_RelayBridge *RelayBridgeFilterer) ParseExecuted(log types.Log) (*RelayBridgeExecuted, error) {
+	event := new(RelayBridgeExecuted)
+	if err := _RelayBridge.contract.UnpackLog(event, "Executed", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }
 
 // RelayBridgeInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the RelayBridge contract.
@@ -521,9 +717,9 @@ func (_RelayBridge *RelayBridgeFilterer) ParseInitialized(log types.Log) (*Relay
 	return event, nil
 }
 
-// RelayBridgeSentDataIterator is returned from FilterSentData and is used to iterate over the raw logs and unpacked data for SentData events raised by the RelayBridge contract.
-type RelayBridgeSentDataIterator struct {
-	Event *RelayBridgeSentData // Event containing the contract specifics and raw log
+// RelayBridgeRevertedIterator is returned from FilterReverted and is used to iterate over the raw logs and unpacked data for Reverted events raised by the RelayBridge contract.
+type RelayBridgeRevertedIterator struct {
+	Event *RelayBridgeReverted // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -537,7 +733,7 @@ type RelayBridgeSentDataIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *RelayBridgeSentDataIterator) Next() bool {
+func (it *RelayBridgeRevertedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -546,7 +742,7 @@ func (it *RelayBridgeSentDataIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(RelayBridgeSentData)
+			it.Event = new(RelayBridgeReverted)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -561,7 +757,7 @@ func (it *RelayBridgeSentDataIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(RelayBridgeSentData)
+		it.Event = new(RelayBridgeReverted)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -577,43 +773,41 @@ func (it *RelayBridgeSentDataIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *RelayBridgeSentDataIterator) Error() error {
+func (it *RelayBridgeRevertedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *RelayBridgeSentDataIterator) Close() error {
+func (it *RelayBridgeRevertedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// RelayBridgeSentData represents a SentData event raised by the RelayBridge contract.
-type RelayBridgeSentData struct {
-	Hash             [32]byte
-	SourceChain      *big.Int
-	DestinationChain *big.Int
-	Raw              types.Log // Blockchain specific contextual infos
+// RelayBridgeReverted represents a Reverted event raised by the RelayBridge contract.
+type RelayBridgeReverted struct {
+	Hash [32]byte
+	Raw  types.Log // Blockchain specific contextual infos
 }
 
-// FilterSentData is a free log retrieval operation binding the contract event 0x9489af087d48f842c0902ec275df2c6e5d5311687d375c1c4b9d2318dcd6a792.
+// FilterReverted is a free log retrieval operation binding the contract event 0xb66b13449e4bb2c30749a37f3081f1988fcee5ff5d98ce740b354d4e2d944095.
 //
-// Solidity: event SentData(bytes32 hash, uint256 sourceChain, uint256 destinationChain)
-func (_RelayBridge *RelayBridgeFilterer) FilterSentData(opts *bind.FilterOpts) (*RelayBridgeSentDataIterator, error) {
+// Solidity: event Reverted(bytes32 hash)
+func (_RelayBridge *RelayBridgeFilterer) FilterReverted(opts *bind.FilterOpts) (*RelayBridgeRevertedIterator, error) {
 
-	logs, sub, err := _RelayBridge.contract.FilterLogs(opts, "SentData")
+	logs, sub, err := _RelayBridge.contract.FilterLogs(opts, "Reverted")
 	if err != nil {
 		return nil, err
 	}
-	return &RelayBridgeSentDataIterator{contract: _RelayBridge.contract, event: "SentData", logs: logs, sub: sub}, nil
+	return &RelayBridgeRevertedIterator{contract: _RelayBridge.contract, event: "Reverted", logs: logs, sub: sub}, nil
 }
 
-// WatchSentData is a free log subscription operation binding the contract event 0x9489af087d48f842c0902ec275df2c6e5d5311687d375c1c4b9d2318dcd6a792.
+// WatchReverted is a free log subscription operation binding the contract event 0xb66b13449e4bb2c30749a37f3081f1988fcee5ff5d98ce740b354d4e2d944095.
 //
-// Solidity: event SentData(bytes32 hash, uint256 sourceChain, uint256 destinationChain)
-func (_RelayBridge *RelayBridgeFilterer) WatchSentData(opts *bind.WatchOpts, sink chan<- *RelayBridgeSentData) (event.Subscription, error) {
+// Solidity: event Reverted(bytes32 hash)
+func (_RelayBridge *RelayBridgeFilterer) WatchReverted(opts *bind.WatchOpts, sink chan<- *RelayBridgeReverted) (event.Subscription, error) {
 
-	logs, sub, err := _RelayBridge.contract.WatchLogs(opts, "SentData")
+	logs, sub, err := _RelayBridge.contract.WatchLogs(opts, "Reverted")
 	if err != nil {
 		return nil, err
 	}
@@ -623,8 +817,8 @@ func (_RelayBridge *RelayBridgeFilterer) WatchSentData(opts *bind.WatchOpts, sin
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(RelayBridgeSentData)
-				if err := _RelayBridge.contract.UnpackLog(event, "SentData", log); err != nil {
+				event := new(RelayBridgeReverted)
+				if err := _RelayBridge.contract.UnpackLog(event, "Reverted", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -645,21 +839,21 @@ func (_RelayBridge *RelayBridgeFilterer) WatchSentData(opts *bind.WatchOpts, sin
 	}), nil
 }
 
-// ParseSentData is a log parse operation binding the contract event 0x9489af087d48f842c0902ec275df2c6e5d5311687d375c1c4b9d2318dcd6a792.
+// ParseReverted is a log parse operation binding the contract event 0xb66b13449e4bb2c30749a37f3081f1988fcee5ff5d98ce740b354d4e2d944095.
 //
-// Solidity: event SentData(bytes32 hash, uint256 sourceChain, uint256 destinationChain)
-func (_RelayBridge *RelayBridgeFilterer) ParseSentData(log types.Log) (*RelayBridgeSentData, error) {
-	event := new(RelayBridgeSentData)
-	if err := _RelayBridge.contract.UnpackLog(event, "SentData", log); err != nil {
+// Solidity: event Reverted(bytes32 hash)
+func (_RelayBridge *RelayBridgeFilterer) ParseReverted(log types.Log) (*RelayBridgeReverted, error) {
+	event := new(RelayBridgeReverted)
+	if err := _RelayBridge.contract.UnpackLog(event, "Reverted", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// RelayBridgeTransmittedDataIterator is returned from FilterTransmittedData and is used to iterate over the raw logs and unpacked data for TransmittedData events raised by the RelayBridge contract.
-type RelayBridgeTransmittedDataIterator struct {
-	Event *RelayBridgeTransmittedData // Event containing the contract specifics and raw log
+// RelayBridgeSentIterator is returned from FilterSent and is used to iterate over the raw logs and unpacked data for Sent events raised by the RelayBridge contract.
+type RelayBridgeSentIterator struct {
+	Event *RelayBridgeSent // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -673,7 +867,7 @@ type RelayBridgeTransmittedDataIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *RelayBridgeTransmittedDataIterator) Next() bool {
+func (it *RelayBridgeSentIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -682,7 +876,7 @@ func (it *RelayBridgeTransmittedDataIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(RelayBridgeTransmittedData)
+			it.Event = new(RelayBridgeSent)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -697,7 +891,7 @@ func (it *RelayBridgeTransmittedDataIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(RelayBridgeTransmittedData)
+		it.Event = new(RelayBridgeSent)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -713,41 +907,41 @@ func (it *RelayBridgeTransmittedDataIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *RelayBridgeTransmittedDataIterator) Error() error {
+func (it *RelayBridgeSentIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *RelayBridgeTransmittedDataIterator) Close() error {
+func (it *RelayBridgeSentIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// RelayBridgeTransmittedData represents a TransmittedData event raised by the RelayBridge contract.
-type RelayBridgeTransmittedData struct {
+// RelayBridgeSent represents a Sent event raised by the RelayBridge contract.
+type RelayBridgeSent struct {
 	Hash [32]byte
 	Raw  types.Log // Blockchain specific contextual infos
 }
 
-// FilterTransmittedData is a free log retrieval operation binding the contract event 0x9fe4b61f465b1e0093aada1ea2c53d139a58503717d5c6d8224581c278515743.
+// FilterSent is a free log retrieval operation binding the contract event 0x27b5aea9f5736c02241d8a0272e9ec988ea44cf85c4b4760329431aa19678394.
 //
-// Solidity: event TransmittedData(bytes32 hash)
-func (_RelayBridge *RelayBridgeFilterer) FilterTransmittedData(opts *bind.FilterOpts) (*RelayBridgeTransmittedDataIterator, error) {
+// Solidity: event Sent(bytes32 hash)
+func (_RelayBridge *RelayBridgeFilterer) FilterSent(opts *bind.FilterOpts) (*RelayBridgeSentIterator, error) {
 
-	logs, sub, err := _RelayBridge.contract.FilterLogs(opts, "TransmittedData")
+	logs, sub, err := _RelayBridge.contract.FilterLogs(opts, "Sent")
 	if err != nil {
 		return nil, err
 	}
-	return &RelayBridgeTransmittedDataIterator{contract: _RelayBridge.contract, event: "TransmittedData", logs: logs, sub: sub}, nil
+	return &RelayBridgeSentIterator{contract: _RelayBridge.contract, event: "Sent", logs: logs, sub: sub}, nil
 }
 
-// WatchTransmittedData is a free log subscription operation binding the contract event 0x9fe4b61f465b1e0093aada1ea2c53d139a58503717d5c6d8224581c278515743.
+// WatchSent is a free log subscription operation binding the contract event 0x27b5aea9f5736c02241d8a0272e9ec988ea44cf85c4b4760329431aa19678394.
 //
-// Solidity: event TransmittedData(bytes32 hash)
-func (_RelayBridge *RelayBridgeFilterer) WatchTransmittedData(opts *bind.WatchOpts, sink chan<- *RelayBridgeTransmittedData) (event.Subscription, error) {
+// Solidity: event Sent(bytes32 hash)
+func (_RelayBridge *RelayBridgeFilterer) WatchSent(opts *bind.WatchOpts, sink chan<- *RelayBridgeSent) (event.Subscription, error) {
 
-	logs, sub, err := _RelayBridge.contract.WatchLogs(opts, "TransmittedData")
+	logs, sub, err := _RelayBridge.contract.WatchLogs(opts, "Sent")
 	if err != nil {
 		return nil, err
 	}
@@ -757,8 +951,8 @@ func (_RelayBridge *RelayBridgeFilterer) WatchTransmittedData(opts *bind.WatchOp
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(RelayBridgeTransmittedData)
-				if err := _RelayBridge.contract.UnpackLog(event, "TransmittedData", log); err != nil {
+				event := new(RelayBridgeSent)
+				if err := _RelayBridge.contract.UnpackLog(event, "Sent", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -779,12 +973,12 @@ func (_RelayBridge *RelayBridgeFilterer) WatchTransmittedData(opts *bind.WatchOp
 	}), nil
 }
 
-// ParseTransmittedData is a log parse operation binding the contract event 0x9fe4b61f465b1e0093aada1ea2c53d139a58503717d5c6d8224581c278515743.
+// ParseSent is a log parse operation binding the contract event 0x27b5aea9f5736c02241d8a0272e9ec988ea44cf85c4b4760329431aa19678394.
 //
-// Solidity: event TransmittedData(bytes32 hash)
-func (_RelayBridge *RelayBridgeFilterer) ParseTransmittedData(log types.Log) (*RelayBridgeTransmittedData, error) {
-	event := new(RelayBridgeTransmittedData)
-	if err := _RelayBridge.contract.UnpackLog(event, "TransmittedData", log); err != nil {
+// Solidity: event Sent(bytes32 hash)
+func (_RelayBridge *RelayBridgeFilterer) ParseSent(log types.Log) (*RelayBridgeSent, error) {
+	event := new(RelayBridgeSent)
+	if err := _RelayBridge.contract.UnpackLog(event, "Sent", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
