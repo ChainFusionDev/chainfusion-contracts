@@ -18,9 +18,9 @@ contract RelayBridge is Initializable, SignerOwnable {
     mapping(bytes32 => bool) public executed;
     mapping(bytes32 => bool) public reverted;
 
-    event Sent(bytes32 hash);
-    event Reverted(bytes32 hash);
-    event Executed(bytes32 hash);
+    event Sent(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
+    event Reverted(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
+    event Executed(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
 
     function initialize(address _signerStorage) external initializer {
         _setSignerStorage(_signerStorage);
@@ -37,7 +37,7 @@ contract RelayBridge is Initializable, SignerOwnable {
         sent[hash] = true;
         sentData[hash] = data;
 
-        emit Sent(hash);
+        emit Sent(hash, block.chainid, destinationChain);
     }
 
     function revertSend(
@@ -54,7 +54,7 @@ contract RelayBridge is Initializable, SignerOwnable {
 
         IBridgeApp(appContract).revertSend(destinationChain, data);
 
-        emit Reverted(hash);
+        emit Reverted(hash, block.chainid, destinationChain);
     }
 
     function execute(
@@ -71,7 +71,7 @@ contract RelayBridge is Initializable, SignerOwnable {
 
         executed[hash] = true;
 
-        emit Executed(hash);
+        emit Executed(hash, sourceChain, destinationChain);
     }
 
     function dataHash(
