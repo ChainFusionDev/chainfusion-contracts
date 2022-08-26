@@ -94,6 +94,7 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
   await res.contractRegistry.setContract(await res.staking.STAKING_KEY(), res.staking.address);
   await res.contractRegistry.setContract(await res.dkg.DKG_KEY(), res.dkg.address);
   await res.contractRegistry.setContract(await res.supportedTokens.SUPPORTED_TOKENS_KEY(), res.supportedTokens.address);
+  await res.contractRegistry.setContract(await res.supportedTokens.EVENT_REGISTRY_KEY(), res.eventRegistry.address);
 
   deployer.log('Successfully initialized contracts\n');
 
