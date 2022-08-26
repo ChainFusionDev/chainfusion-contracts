@@ -7,6 +7,7 @@ import "./ContractKeys.sol";
 import "./ContractRegistry.sol";
 import "./ValidatorOwnable.sol";
 import "./Staking.sol";
+import "./DKG.sol";
 
 enum SlashingReason {
     REASON_NO_RECENT_BLOCKS,
@@ -65,6 +66,8 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
         bytes calldata _nonce
     ) external onlyValidator {
         Staking staking = _stakingContract();
+        DKG dkg = _dkgContract();
+
         bytes32 voteHash = votingHashWithReason(_validator, _reason, _nonce);
 
         require(staking.isValidatorActive(_validator) == true, "SlashingVoting: target is not active validator");
@@ -82,6 +85,10 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
             bansByReason[epoch][_validator][_reason] = true;
             bansByEpoch[epoch][_validator]++;
             emit BannedWithReason(_validator, _reason);
+
+            if (_reason == SlashingReason.REASON_DKG_INACTIVITY || _reason == SlashingReason.REASON_DKG_VIOLATION) {
+                dkg.updateGeneration();
+            }
         }
 
         if (shouldShash(epoch, _validator)) {
@@ -146,5 +153,9 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
 
     function _stakingContract() private view returns (Staking) {
         return Staking(contractRegistry.getContract(STAKING_KEY));
+    }
+
+    function _dkgContract() private view returns (DKG) {
+        return DKG(contractRegistry.getContract(DKG_KEY));
     }
 }
