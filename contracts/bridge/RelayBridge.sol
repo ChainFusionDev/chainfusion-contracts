@@ -9,7 +9,6 @@ import "./FeeManager.sol";
 import "./Globals.sol";
 import "hardhat/console.sol";
 import "../interfaces/IBridgeApp.sol";
-import "hardhat/console.sol";
 
 contract RelayBridge is Initializable, SignerOwnable {
     mapping(bytes32 => bytes) public sentData;
@@ -18,9 +17,9 @@ contract RelayBridge is Initializable, SignerOwnable {
     mapping(bytes32 => bool) public executed;
     mapping(bytes32 => bool) public reverted;
 
-    event Sent(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
-    event Reverted(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
-    event Executed(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
+    event Sent(bytes32 hash);
+    event Reverted(bytes32 hash);
+    event Executed(bytes32 hash);
 
     function initialize(address _signerStorage) external initializer {
         _setSignerStorage(_signerStorage);
@@ -37,7 +36,7 @@ contract RelayBridge is Initializable, SignerOwnable {
         sent[hash] = true;
         sentData[hash] = data;
 
-        emit Sent(hash, block.chainid, destinationChain);
+        emit Sent(hash);
     }
 
     function revertSend(
@@ -54,24 +53,23 @@ contract RelayBridge is Initializable, SignerOwnable {
 
         IBridgeApp(appContract).revertSend(destinationChain, data);
 
-        emit Reverted(hash, block.chainid, destinationChain);
+        emit Reverted(hash);
     }
 
     function execute(
         address appContract,
         uint256 sourceChain,
-        uint256 destinationChain,
         uint256 gasLimit,
         bytes memory data
     ) external onlySigner {
-        bytes32 hash = dataHash(appContract, sourceChain, destinationChain, gasLimit, data);
+        bytes32 hash = dataHash(appContract, sourceChain, block.chainid, gasLimit, data);
         require(!executed[hash], "RelayBridge: data already executed");
 
         IBridgeApp(appContract).execute(sourceChain, data);
 
         executed[hash] = true;
 
-        emit Executed(hash, sourceChain, destinationChain);
+        emit Executed(hash);
     }
 
     function dataHash(

@@ -17,9 +17,7 @@ describe('RelayBridge', function () {
 
     const hash = await relayBridge.dataHash(appContract.address, sourceChain, destinationChain, gasLimit, data);
 
-    await expect(relayBridge.send(destinationChain, gasLimit, data))
-      .to.emit(relayBridge, 'Sent')
-      .withArgs(hash, sourceChain, destinationChain);
+    await expect(relayBridge.send(destinationChain, gasLimit, data)).to.emit(relayBridge, 'Sent').withArgs(hash);
     await expect(relayBridge.send(destinationChain, gasLimit, data)).to.be.revertedWith(
       'RelayBridge: data already send'
     );
@@ -57,12 +55,13 @@ describe('RelayBridge', function () {
 
     const hash = await relayBridge.dataHash(mockBridgeApp.address, sourceChain, destinationChain, gasLimit, data);
 
-    await expect(relayBridge.execute(mockBridgeApp.address, sourceChain, destinationChain, gasLimit, data))
+    await expect(relayBridge.execute(mockBridgeApp.address, sourceChain, gasLimit, data))
       .to.emit(relayBridge, 'Executed')
-      .withArgs(hash, sourceChain, destinationChain);
-    await expect(
-      relayBridge.execute(mockBridgeApp.address, sourceChain, destinationChain, gasLimit, data)
-    ).to.be.revertedWith('RelayBridge: data already executed');
+
+      .withArgs(hash);
+    await expect(relayBridge.execute(mockBridgeApp.address, sourceChain, gasLimit, data)).to.be.revertedWith(
+      'RelayBridge: data already executed'
+    );
 
     expect(await relayBridge.executed(hash)).to.equals(true);
     expect(await mockBridgeApp.value()).to.equals('dataforsend');
