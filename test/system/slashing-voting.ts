@@ -57,6 +57,8 @@ describe('SlashingVoting', function () {
     await expect(slashingVoting3.voteWithReason(v3.address, reason, nonce)).to.be.revertedWith(
       'SlashingVoting: validator is already banned'
     );
+
+    expect(await slashingVoting.getBannedValidatorsByReason(reason)).to.be.eql([v3.address]);
   });
 
   it('should check if we can ban slashed validator', async function () {

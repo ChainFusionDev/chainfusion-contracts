@@ -39,6 +39,7 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
     mapping(bytes32 => bool) public bans;
     mapping(uint256 => mapping(address => mapping(SlashingReason => bool))) public bansByReason;
     mapping(uint256 => mapping(address => uint256)) public bansByEpoch;
+    mapping(uint256 => mapping(SlashingReason => address[])) public bannedValidators;
 
     event VotedWithReason(address voter, address validator, SlashingReason reason);
     event BannedWithReason(address validator, SlashingReason reason);
@@ -84,6 +85,7 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
             bans[voteHash] = true;
             bansByReason[epoch][_validator][_reason] = true;
             bansByEpoch[epoch][_validator]++;
+            bannedValidators[epoch][_reason].push(_validator);
             emit BannedWithReason(_validator, _reason);
 
             if (_reason == SlashingReason.REASON_DKG_INACTIVITY || _reason == SlashingReason.REASON_DKG_VIOLATION) {
@@ -133,6 +135,10 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
 
     function getBansByEpoch(uint256 _epoch, address _validator) public view returns (uint256) {
         return bansByEpoch[_epoch][_validator];
+    }
+
+    function getBannedValidatorsByReason(SlashingReason _reason) public view returns (address[] memory) {
+        return bannedValidators[currentEpoch()][_reason];
     }
 
     function currentEpoch() public view returns (uint256) {
