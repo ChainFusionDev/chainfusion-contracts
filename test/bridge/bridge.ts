@@ -27,7 +27,7 @@ describe('Bridge', function () {
   });
 
   it('should deposit tokens to bridge', async function () {
-    const [, receiver] = await ethers.getSigners();
+    const [sender, receiver] = await ethers.getSigners();
 
     const depositAmount = '1000000000000000000';
     const transferAmount = '990000000000000000';
@@ -41,8 +41,8 @@ describe('Bridge', function () {
 
     const abiCoder = ethers.utils.defaultAbiCoder;
     const data = abiCoder.encode(
-      ['address', 'uint256', 'address', 'uint256'],
-      [mockToken.address, mockChainId, receiver.address, transferAmount]
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, mockToken.address, mockChainId, receiver.address, transferAmount]
     );
 
     const dataForHash = abiCoder.encode(
@@ -56,7 +56,7 @@ describe('Bridge', function () {
   });
 
   it('should revert deposit', async function () {
-    const [signer, receiver] = await ethers.getSigners();
+    const [sender, receiver] = await ethers.getSigners();
 
     const initialSupply = '100000000000000000000';
     const depositAmount = '1000000000000000000';
@@ -70,18 +70,18 @@ describe('Bridge', function () {
 
     const abiCoder = ethers.utils.defaultAbiCoder;
     const data = abiCoder.encode(
-      ['address', 'uint256', 'address', 'uint256'],
-      [mockToken.address, mockChainId, receiver.address, transferAmount]
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, mockToken.address, mockChainId, receiver.address, transferAmount]
     );
 
     const dataMintableToken = abiCoder.encode(
-      ['address', 'uint256', 'address', 'uint256'],
-      [mockMintableBurnableToken.address, mockChainId, receiver.address, transferAmount]
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, mockMintableBurnableToken.address, mockChainId, receiver.address, transferAmount]
     );
 
     const dataNativeToken = abiCoder.encode(
-      ['address', 'uint256', 'address', 'uint256'],
-      [NATIVE_TOKEN, mockChainId, receiver.address, transferAmount]
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, NATIVE_TOKEN, mockChainId, receiver.address, transferAmount]
     );
 
     const hashToken = await relayBridge.dataHash(bridge.address, sourceChainId, mockChainId, gasLimit, data);
@@ -102,7 +102,7 @@ describe('Bridge', function () {
       dataNativeToken
     );
 
-    const mockReceiverBalanceBeforeDeposit = await mockToken.balanceOf(receiver.address);
+    const mockSenderBalanceBeforeDeposit = await mockToken.balanceOf(sender.address);
     const mockLiquidityBalanceBeforeDeposit = await mockToken.balanceOf(liquidityPools.address);
 
     await mockToken.approve(bridge.address, depositAmount);
@@ -116,22 +116,15 @@ describe('Bridge', function () {
 
     expect(await relayBridge.sent(hashToken)).to.equals(true);
 
-    const mockReceiverBalanceAfterRevert = await mockToken.balanceOf(receiver.address);
-    expect(mockReceiverBalanceAfterRevert.sub(mockReceiverBalanceBeforeDeposit)).to.equal(transferAmount);
-    expect(await mockToken.balanceOf(receiver.address)).to.equal(transferAmount);
+    const mockExpectedBalance = mockSenderBalanceBeforeDeposit.sub(depositAmount).add(transferAmount);
+    expect(await mockToken.balanceOf(sender.address)).to.equal(mockExpectedBalance);
 
-    const mintableReceiverBalanceBeforeDeposit = await mockMintableBurnableToken.balanceOf(receiver.address);
-    const mintableSignerBalanceBeforeDeposit = await mockMintableBurnableToken.balanceOf(signer.address);
+    const mintableSenderBalanceBeforeDeposit = await mockMintableBurnableToken.balanceOf(sender.address);
 
-    await mockMintableBurnableToken.mint(signer.address, initialSupply);
+    await mockMintableBurnableToken.mint(sender.address, initialSupply);
     await mockMintableBurnableToken.transferOwnership(bridge.address);
     await mockMintableBurnableToken.approve(bridge.address, depositAmount);
     await bridge.deposit(mockMintableBurnableToken.address, mockChainId, receiver.address, depositAmount);
-
-    const mintableExpectedBalance = mintableSignerBalanceBeforeDeposit.add(
-      BigNumber.from(initialSupply).sub(depositAmount)
-    );
-    expect(await mockMintableBurnableToken.balanceOf(signer.address)).to.equal(mintableExpectedBalance);
 
     await expect(relayBridge.revertSend(bridge.address, mockChainId, gasLimit, dataMintableToken))
       .emit(relayBridge, 'Reverted')
@@ -139,42 +132,86 @@ describe('Bridge', function () {
 
     expect(await relayBridge.sent(hashMintToken)).to.equals(true);
 
-    const mintableReceiverBalanceAfterRevert = await mockToken.balanceOf(receiver.address);
-    expect(mintableReceiverBalanceAfterRevert.sub(mintableReceiverBalanceBeforeDeposit)).to.equal(transferAmount);
+    const mintableExpectedBalance = mintableSenderBalanceBeforeDeposit
+      .add(initialSupply)
+      .sub(depositAmount)
+      .add(transferAmount);
+    expect(await mockMintableBurnableToken.balanceOf(sender.address)).to.equal(mintableExpectedBalance);
 
     await tokenManager.setEnabled(NATIVE_TOKEN, true);
     expect(await tokenManager.isTokenEnabled(NATIVE_TOKEN)).to.equal(true);
     await liquidityPools.addNativeLiquidity({ value: depositAmount });
 
+    const nativeSenderBalanceBeforeDeposit = await ethers.provider.getBalance(sender.address);
     const nativeLiquidityBalanceBeforeDeposit = await ethers.provider.getBalance(liquidityPools.address);
-    const nativeSignerBalanceBeforeDeposit = await ethers.provider.getBalance(signer.address);
 
     const nativeDepositTx = await (
       await bridge.depositNative(mockChainId, receiver.address, { value: depositAmount })
     ).wait();
-    const txFee = nativeDepositTx.gasUsed.mul(nativeDepositTx.effectiveGasPrice);
+    const depositTxFee = nativeDepositTx.gasUsed.mul(nativeDepositTx.effectiveGasPrice);
 
-    const nativeSignerBalanceAfterDeposit = await ethers.provider.getBalance(signer.address);
-    const nativeExpectedBalance = nativeSignerBalanceBeforeDeposit.sub(BigNumber.from(depositAmount).add(txFee));
-    expect(nativeSignerBalanceAfterDeposit).to.equal(nativeExpectedBalance);
+    const nativeSenderBalanceAfterDeposit = await ethers.provider.getBalance(sender.address);
+    const nativeExpectedBalanceDeposit = nativeSenderBalanceBeforeDeposit.sub(
+      BigNumber.from(depositAmount).add(depositTxFee)
+    );
+    expect(nativeSenderBalanceAfterDeposit).to.equal(nativeExpectedBalanceDeposit);
 
     const nativeLiquidityBalanceAfterDeposit = await ethers.provider.getBalance(liquidityPools.address);
     expect(nativeLiquidityBalanceAfterDeposit.sub(nativeLiquidityBalanceBeforeDeposit)).to.equal(transferAmount);
 
-    const nativeReceiverBalanceBeforeRevert = await ethers.provider.getBalance(receiver.address);
+    const nativeSenderBalanceBeforeRevert = await ethers.provider.getBalance(sender.address);
+
+    const nativeRevertTx = await (
+      await relayBridge.revertSend(bridge.address, mockChainId, gasLimit, dataNativeToken)
+    ).wait();
+    const revertTxFee = nativeRevertTx.gasUsed.mul(nativeRevertTx.effectiveGasPrice);
+
+    expect(await relayBridge.sent(hashNativeToken)).to.equals(true);
+
+    const nativeSenderBalanceAfterRevert = await ethers.provider.getBalance(sender.address);
+    const nativeExpectedBalanceRevert = nativeSenderBalanceBeforeRevert.add(
+      BigNumber.from(transferAmount).sub(revertTxFee)
+    );
+    expect(nativeSenderBalanceAfterRevert).to.equal(nativeExpectedBalanceRevert);
+  });
+
+  it('should emit event Reverted native token', async function () {
+    const [sender, receiver] = await ethers.getSigners();
+
+    const depositAmount = '1000000000000000000';
+    const transferAmount = '990000000000000000';
+    const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+    const sourceChainId = ethers.provider.network.chainId;
+    const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
+
+    const { mockChainId, bridge, liquidityPools, relayBridge, tokenManager } = await deployBridgeWithMocks();
+
+    const abiCoder = ethers.utils.defaultAbiCoder;
+    const dataNativeToken = abiCoder.encode(
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, NATIVE_TOKEN, mockChainId, receiver.address, transferAmount]
+    );
+
+    const hashNativeToken = await relayBridge.dataHash(
+      bridge.address,
+      sourceChainId,
+      mockChainId,
+      gasLimit,
+      dataNativeToken
+    );
+
+    await tokenManager.setEnabled(NATIVE_TOKEN, true);
+    expect(await tokenManager.isTokenEnabled(NATIVE_TOKEN)).to.equal(true);
+    await liquidityPools.addNativeLiquidity({ value: depositAmount });
+    await bridge.depositNative(mockChainId, receiver.address, { value: depositAmount });
 
     await expect(relayBridge.revertSend(bridge.address, mockChainId, gasLimit, dataNativeToken))
       .emit(relayBridge, 'Reverted')
       .withArgs(hashNativeToken);
-
-    expect(await relayBridge.sent(hashNativeToken)).to.equals(true);
-
-    const nativeReceiverBalanceAfterRevert = await ethers.provider.getBalance(receiver.address);
-    expect(nativeReceiverBalanceAfterRevert.sub(nativeReceiverBalanceBeforeRevert)).to.equal(transferAmount);
   });
 
   it('should execute', async function () {
-    const [, receiver] = await ethers.getSigners();
+    const [sender, receiver] = await ethers.getSigners();
     const depositAmount = '10000000000000000000';
     const transferAmount = '990000000000000000';
     const sourceChain = ethers.provider.network.chainId;
@@ -184,8 +221,8 @@ describe('Bridge', function () {
 
     const abiCoder = ethers.utils.defaultAbiCoder;
     const data = abiCoder.encode(
-      ['address', 'uint256', 'address', 'uint256'],
-      [mockToken.address, mockChainId, receiver.address, transferAmount]
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, mockToken.address, mockChainId, receiver.address, transferAmount]
     );
     const txHash = data;
 
@@ -211,16 +248,25 @@ describe('Bridge', function () {
     const receiverBalanceAfterExecute = await mockToken.balanceOf(receiver.address);
     expect(receiverBalanceAfterExecute.sub(receiverBalanceBeforeExecute)).to.equal(transferAmount);
 
-    expect(await bridge.isExecuted(txHash, mockToken.address, receiver.address, transferAmount)).to.equal(true);
+    expect(
+      await bridge.isExecuted(sender.address, txHash, mockToken.address, receiver.address, transferAmount)
+    ).to.equal(true);
   });
 
   it('should execute transfer', async function () {
-    const [, receiver] = await ethers.getSigners();
+    const [sender, receiver] = await ethers.getSigners();
     const depositAmount = '10000000000000000000';
+    const transferAmount = '990000000000000000';
+    const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
 
-    const { mockChainId, mockToken, bridge, liquidityPools, tokenManager } = await deployBridgeWithMocks();
+    const { mockChainId, mockToken, bridge, liquidityPools, tokenManager, relayBridge } = await deployBridgeWithMocks();
 
-    const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
+    const abiCoder = ethers.utils.defaultAbiCoder;
+    const data = abiCoder.encode(
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, mockToken.address, mockChainId, receiver.address, transferAmount]
+    );
+    const txHash = data;
 
     expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
@@ -229,13 +275,13 @@ describe('Bridge', function () {
     await liquidityPools.addLiquidity(mockToken.address, depositAmount);
     await bridge.deposit(mockToken.address, mockChainId, receiver.address, depositAmount);
 
-    await expect(bridge.executeTransfer(txHash, mockToken.address, mockChainId, receiver.address, depositAmount))
-      .emit(bridge, 'Transferred')
-      .withArgs(mockToken.address, mockChainId, receiver.address, depositAmount);
+    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data))
+      .to.emit(bridge, 'Transferred')
+      .withArgs(sender.address, mockToken.address, mockChainId, receiver.address, transferAmount);
 
-    await bridge.executeTransfer(txHash, mockToken.address, mockChainId, receiver.address, depositAmount);
-
-    expect(await bridge.isExecuted(txHash, mockToken.address, receiver.address, depositAmount)).to.equal(true);
+    expect(
+      await bridge.isExecuted(sender.address, txHash, mockToken.address, receiver.address, transferAmount)
+    ).to.equal(true);
   });
 
   it('should deposit supported tokens to bridge', async function () {
@@ -259,57 +305,70 @@ describe('Bridge', function () {
   });
 
   it('should mint and burn tokens', async function () {
-    const [signer, receiver] = await ethers.getSigners();
+    const [sender, receiver] = await ethers.getSigners();
     const depositAmount = '10000000000000000000';
     const initialSupply = '100000000000000000000';
     const transferAmount = '9990000000000000000';
-    const sourceChainId = 123;
+    const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
 
-    const { mockChainId, mockMintableBurnableToken, bridge } = await deployBridgeWithMocks();
+    const { mockChainId, mockMintableBurnableToken, bridge, relayBridge } = await deployBridgeWithMocks();
 
-    const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
+    const abiCoder = ethers.utils.defaultAbiCoder;
+    const dataMintableToken = abiCoder.encode(
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, mockMintableBurnableToken.address, mockChainId, receiver.address, transferAmount]
+    );
 
-    await mockMintableBurnableToken.mint(signer.address, initialSupply);
-
+    await mockMintableBurnableToken.mint(sender.address, initialSupply);
     await mockMintableBurnableToken.transferOwnership(bridge.address);
 
-    await expect(
-      bridge.executeTransfer(txHash, mockMintableBurnableToken.address, sourceChainId, receiver.address, depositAmount)
-    )
-      .emit(mockMintableBurnableToken, 'Transfer')
-      .withArgs('0x0000000000000000000000000000000000000000', receiver.address, depositAmount);
+    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, dataMintableToken))
+      .to.emit(mockMintableBurnableToken, 'Transfer')
+      .withArgs('0x0000000000000000000000000000000000000000', receiver.address, transferAmount);
 
     await mockMintableBurnableToken.approve(bridge.address, depositAmount);
     await expect(bridge.deposit(mockMintableBurnableToken.address, mockChainId, receiver.address, depositAmount))
       .emit(mockMintableBurnableToken, 'Transfer')
-      .withArgs(signer.address, '0x0000000000000000000000000000000000000000', transferAmount);
+      .withArgs(sender.address, '0x0000000000000000000000000000000000000000', transferAmount);
   });
 
   it('should deposit and transfer using native currency', async function () {
-    const [, receiver] = await ethers.getSigners();
-    const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
-    const amount = '1000000000000000000';
-    const fee = '990000000000000000';
+    const [sender, receiver] = await ethers.getSigners();
 
-    const { mockChainId, liquidityPools, tokenManager, bridge } = await deployBridgeWithMocks();
+    const depositAmount = '1000000000000000000';
+    const transferAmount = '990000000000000000';
+    const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+    const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
+
+    const { mockChainId, bridge, liquidityPools, relayBridge, tokenManager } = await deployBridgeWithMocks();
+
+    const abiCoder = ethers.utils.defaultAbiCoder;
+    const data = abiCoder.encode(
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, NATIVE_TOKEN, mockChainId, receiver.address, transferAmount]
+    );
+    const txHash = data;
 
     await tokenManager.setEnabled(NATIVE_TOKEN, true);
-
     expect(await tokenManager.isTokenEnabled(NATIVE_TOKEN)).to.equal(true);
 
-    await liquidityPools.addNativeLiquidity({ value: amount });
+    await tokenManager.setDestinationToken(mockChainId, NATIVE_TOKEN, NATIVE_TOKEN);
 
-    const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
+    await liquidityPools.addNativeLiquidity({ value: depositAmount });
+    await bridge.depositNative(mockChainId, receiver.address, { value: depositAmount });
 
-    await bridge.depositNative(mockChainId, receiver.address, { value: amount });
-    const balanceReceiverTo = await ethers.provider.getBalance(receiver.address);
+    const balanceReceiverBefore = await ethers.provider.getBalance(receiver.address);
 
-    const balance = await ethers.provider.getBalance(liquidityPools.address);
-    expect(Number(balance) - Number(amount)).to.equal(Number(fee));
+    await relayBridge.execute(bridge.address, mockChainId, gasLimit, data);
+    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data)).to.be.revertedWith(
+      'RelayBridge: data already executed'
+    );
 
-    await bridge.executeTransfer(txHash, NATIVE_TOKEN, mockChainId, receiver.address, amount);
     const balanceReceiverAfter = await ethers.provider.getBalance(receiver.address);
-    expect(Number(balanceReceiverAfter)).to.equal(Number(balanceReceiverTo) + Number(amount));
-    expect(await bridge.isExecuted(txHash, NATIVE_TOKEN, receiver.address, amount)).to.equal(true);
+    expect(balanceReceiverAfter).to.equal(balanceReceiverBefore.add(transferAmount));
+
+    expect(await bridge.isExecuted(sender.address, txHash, NATIVE_TOKEN, receiver.address, transferAmount)).to.equal(
+      true
+    );
   });
 });

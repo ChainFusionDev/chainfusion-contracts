@@ -24,6 +24,7 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
     RelayBridge public relayBridge;
 
     event Deposited(
+        address sender,
         address token,
         address destinationToken,
         uint256 destinationChainId,
@@ -32,18 +33,19 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
         uint256 transferAmount
     );
     event DepositedNative(
+        address sender,
         address token,
         uint256 destinationChainId,
         address receiver,
         uint256 fee,
         uint256 transferAmount
     );
-    event Transferred(address token, uint256 sourceChainId, address receiver, uint256 amount);
+    event Transferred(address sender, address token, uint256 sourceChainId, address receiver, uint256 amount);
     event TokenManagerUpdated(address _tokenManager);
     event ValidatorAddressUpdated(address _validatorAddress);
     event LiquidityPoolsUpdated(address _liquidityPools);
     event FeeManagerUpdated(address _feeManager);
-    event Reverted(address token, uint256 sourceChainId, address receiver, uint256 amount);
+    event Reverted(address sender, address token, uint256 sourceChainId, address receiver, uint256 amount);
 
     modifier onlyRelayBridge() {
         require(msg.sender == address(relayBridge), "Bridge: only RelayBridge");
@@ -91,52 +93,42 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
 
         address destinationToken = tokenManager.getDestinationToken(_token, _chainId);
 
-        emit Deposited(_token, destinationToken, _chainId, _receiver, fee, transferAmount);
+        emit Deposited(msg.sender, _token, destinationToken, _chainId, _receiver, fee, transferAmount);
 
-        bytes memory data = abi.encode(_token, _chainId, _receiver, transferAmount);
+        bytes memory data = abi.encode(msg.sender, _token, _chainId, _receiver, transferAmount);
 
         // solhint-disable-next-line check-send-result
         relayBridge.send(_chainId, block.gaslimit, data);
     }
 
     function execute(uint256, bytes memory data) external onlyRelayBridge {
-        (address _token, uint256 _chainId, address _receiver, uint256 transferAmount) = abi.decode(
+        (address _sender, address _token, uint256 _chainId, address _receiver, uint256 transferAmount) = abi.decode(
             data,
-            (address, uint256, address, uint256)
+            (address, address, uint256, address, uint256)
         );
 
         address destinationToken = tokenManager.getDestinationToken(_token, _chainId);
 
-        _executeTransfer(data, destinationToken, _chainId, _receiver, transferAmount);
-    }
-
-    function executeTransfer(
-        bytes calldata _txHash,
-        address _token,
-        uint256 _sourceChainId,
-        address _receiver,
-        uint256 _amount
-    ) external onlySigner {
-        _executeTransfer(_txHash, _token, _sourceChainId, _receiver, _amount);
+        _executeTransfer(_sender, data, destinationToken, _chainId, _receiver, transferAmount);
     }
 
     function revertSend(uint256, bytes memory data) external onlyRelayBridge {
-        (address _token, uint256 _chainId, address _receiver, uint256 _amount) = abi.decode(
+        (address _sender, address _token, uint256 _chainId, address _receiver, uint256 _amount) = abi.decode(
             data,
-            (address, uint256, address, uint256)
+            (address, address, uint256, address, uint256)
         );
 
         require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not enabled");
 
         if (tokenManager.isTokenMintable(_token)) {
-            IERC20MintableBurnable(_token).mint(_receiver, _amount);
+            IERC20MintableBurnable(_token).mint(_sender, _amount);
         } else if (_token == NATIVE_TOKEN) {
-            liquidityPools.transferNative(_receiver, _amount);
+            liquidityPools.transferNative(_sender, _amount);
         } else {
-            liquidityPools.transfer(_token, _receiver, _amount);
+            liquidityPools.transfer(_token, _sender, _amount);
         }
 
-        emit Reverted(_token, _chainId, _receiver, _amount);
+        emit Reverted(_sender, _token, _chainId, _receiver, _amount);
     }
 
     function setTokenManager(address _tokenManager) public onlySigner {
@@ -171,25 +163,27 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
         (success, ) = address(liquidityPools).call{value: transferAmount, gas: 21000}("");
         require(success, "Bridge: transfer native token failed");
 
-        emit DepositedNative(NATIVE_TOKEN, _chainId, _receiver, fee, transferAmount);
+        emit DepositedNative(msg.sender, NATIVE_TOKEN, _chainId, _receiver, fee, transferAmount);
 
-        bytes memory data = abi.encode(NATIVE_TOKEN, _chainId, _receiver, transferAmount);
+        bytes memory data = abi.encode(msg.sender, NATIVE_TOKEN, _chainId, _receiver, transferAmount);
 
         // solhint-disable-next-line check-send-result
         relayBridge.send(_chainId, block.gaslimit, data);
     }
 
     function isExecuted(
+        address _sender,
         bytes calldata _txHash,
         address _token,
         address _receiver,
         uint256 _amount
     ) public view returns (bool) {
-        bytes32 id = keccak256(abi.encodePacked(_txHash, _token, _receiver, _amount));
+        bytes32 id = keccak256(abi.encodePacked(_sender, _txHash, _token, _receiver, _amount));
         return executed[id];
     }
 
     function _executeTransfer(
+        address _sender,
         bytes memory _txHash,
         address _token,
         uint256 _sourceChainId,
@@ -197,11 +191,7 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
         uint256 _amount
     ) private {
         require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not enabled");
-        bytes32 id = keccak256(abi.encodePacked(_txHash, _token, _receiver, _amount));
-
-        if (executed[id]) {
-            return;
-        }
+        bytes32 id = keccak256(abi.encodePacked(_sender, _txHash, _token, _receiver, _amount));
 
         executed[id] = true;
 
@@ -213,6 +203,6 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
             liquidityPools.transfer(_token, _receiver, _amount);
         }
 
-        emit Transferred(_token, _sourceChainId, _receiver, _amount);
+        emit Transferred(_sender, _token, _sourceChainId, _receiver, _amount);
     }
 }
