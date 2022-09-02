@@ -126,6 +126,8 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
             (address, uint256, address, uint256)
         );
 
+        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not enabled");
+
         if (tokenManager.isTokenMintable(_token)) {
             IERC20MintableBurnable(_token).mint(_receiver, _amount);
         } else if (_token == NATIVE_TOKEN) {
