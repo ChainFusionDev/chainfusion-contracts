@@ -68,12 +68,17 @@ contract LiquidityPools is Initializable, SignerOwnable {
         address _receiver,
         uint256 _transferAmount
     ) external onlyBridge {
-        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
         require(
             IERC20(_token).balanceOf(address(this)) >= _transferAmount,
             "IERC20: amount more than contract balance"
         );
         require(ERC20(_token).transfer(_receiver, _transferAmount), "ERC20: transfer failed");
+    }
+
+    function transferNative(address _receiver, uint256 _amount) external onlyBridge {
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool success, ) = _receiver.call{value: _amount, gas: 21000}("");
+        require(success, "LiquidityPools: transfer native token failed");
     }
 
     function distributeFee(address _token, uint256 _amount) external onlyFeeManager {
@@ -138,14 +143,6 @@ contract LiquidityPools is Initializable, SignerOwnable {
             liquidityPositions[_token][msg.sender].balance += rewardsOwingAmount;
             liquidityPositions[_token][msg.sender].lastRewardPoints = totalRewardPoints[_token];
         }
-    }
-
-    function transferNative(address _receiver, uint256 _amount) public payable onlyBridge {
-        require(tokenManager.isTokenEnabled(NATIVE_TOKEN), "TokenManager: token is not supported");
-
-        // solhint-disable-next-line avoid-low-level-calls
-        (bool success, ) = _receiver.call{value: _amount, gas: 21000}("");
-        require(success, "LiquidityPools: transfer native token failed");
     }
 
     function addNativeLiquidity() public payable {

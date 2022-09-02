@@ -31,12 +31,16 @@ describe('LiquidityPools', function () {
   it('should add liquidity for supported token', async function () {
     const [validator] = await ethers.getSigners();
     const amount = '100000';
+    const untrueAmount = '10000000';
 
     const { mockToken, liquidityPools, tokenManager } = await deployBridgeWithMocks();
 
     expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
 
     await mockToken.approve(liquidityPools.address, amount);
+    await expect(liquidityPools.addLiquidity(mockToken.address, untrueAmount)).to.be.revertedWith(
+      'ERC20: insufficient allowance'
+    );
     await expect(liquidityPools.addLiquidity(mockToken.address, amount))
       .to.emit(liquidityPools, 'LiquidityAdded')
       .withArgs(mockToken.address, validator.address, amount);
@@ -149,6 +153,10 @@ describe('LiquidityPools', function () {
 
     await bridge.deposit(mockToken.address, mockChainId, receiver.address, depositAmount);
     await feeManager.distributeRewards(mockToken.address);
+
+    await expect(liquidityPools.distributeFee(mockToken.address, depositAmount)).to.be.revertedWith(
+      'LiquidityPools: only feeManager'
+    );
     expect(await liquidityPoolsProvider.collectedFees(mockToken.address)).to.equal('3000000000030000');
   });
 
@@ -160,12 +168,30 @@ describe('LiquidityPools', function () {
     const liquidityReward = '300000000000000000';
     const sourceChainId = 5;
     const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
+    const nullAddress = '0x0000000000000000000000000000000000000000';
 
     const { mockToken, liquidityPools, bridge, feeManager } = await deployBridgeWithMocks();
+
+    await expect(
+      bridge.executeTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount)
+    ).to.be.revertedWith('IERC20: amount more than contract balance');
 
     await mockToken.approve(bridge.address, depositAmount);
     await mockToken.approve(liquidityPools.address, depositAmount);
     await liquidityPools.addLiquidity(mockToken.address, depositAmount);
+
+    await expect(
+      bridge.executeTransfer(txHash, mockToken.address, sourceChainId, nullAddress, depositAmount)
+    ).to.be.revertedWith('ERC20: transfer to the zero address');
+    await expect(feeManager.distributeRewards(mockToken.address)).to.be.revertedWith(
+      'LiquidityPools: amount must be greater than zero'
+    );
+    await expect(liquidityPools.transfer(mockToken.address, receiver.address, depositAmount)).to.be.revertedWith(
+      'LiquidityPools: only bridge'
+    );
+    await expect(liquidityPools.transferNative(receiver.address, depositAmount)).to.be.revertedWith(
+      'LiquidityPools: only bridge'
+    );
 
     await bridge.deposit(mockToken.address, sourceChainId, receiver.address, depositAmount);
     await bridge.executeTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount);
@@ -192,6 +218,12 @@ describe('LiquidityPools', function () {
     await liquidityPools.addLiquidity(mockToken.address, amountLiquidity);
 
     expect(await liquidityPools.providedLiquidity(mockToken.address)).to.equal(3 * Number(amountLiquidity));
+
+    const MockToken = await ethers.getContractFactory('MockToken');
+    const mockToken2 = await MockToken.deploy('Token2', 'TKN2', amountLiquidity);
+    await expect(liquidityPools.removeLiquidity(mockToken2.address, amountLiquidity)).to.be.revertedWith(
+      'TokenManager: token is not supported'
+    );
 
     await liquidityPools.removeLiquidity(mockToken.address, amountLiquidity);
     await liquidityPools.removeLiquidity(mockToken.address, amountLiquidity);
