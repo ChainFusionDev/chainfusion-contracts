@@ -161,28 +161,40 @@ describe('LiquidityPools', function () {
   });
 
   it('should claim rewards', async function () {
-    const [, receiver] = await ethers.getSigners();
+    const [sender, receiver] = await ethers.getSigners();
     const depositAmount = '10000000000000000000';
     const tokenFee = '10000';
     const validatorReward = '300000000000000000';
     const liquidityReward = '300000000000000000';
     const sourceChainId = 5;
-    const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
+    const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
+    const transferAmount = '990000000000000000';
     const nullAddress = '0x0000000000000000000000000000000000000000';
 
-    const { mockToken, liquidityPools, bridge, feeManager } = await deployBridgeWithMocks();
+    const { mockChainId, mockToken, liquidityPools, bridge, feeManager, relayBridge } = await deployBridgeWithMocks();
 
-    await expect(
-      bridge.executeTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount)
-    ).to.be.revertedWith('IERC20: amount more than contract balance');
+    const abiCoder = ethers.utils.defaultAbiCoder;
+    const data = abiCoder.encode(
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, mockToken.address, mockChainId, receiver.address, transferAmount]
+    );
+
+    const dataNullAddress = abiCoder.encode(
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, mockToken.address, mockChainId, nullAddress, transferAmount]
+    );
+
+    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data)).to.be.revertedWith(
+      'IERC20: amount more than contract balance'
+    );
 
     await mockToken.approve(bridge.address, depositAmount);
     await mockToken.approve(liquidityPools.address, depositAmount);
     await liquidityPools.addLiquidity(mockToken.address, depositAmount);
 
-    await expect(
-      bridge.executeTransfer(txHash, mockToken.address, sourceChainId, nullAddress, depositAmount)
-    ).to.be.revertedWith('ERC20: transfer to the zero address');
+    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, dataNullAddress)).to.be.revertedWith(
+      'ERC20: transfer to the zero address'
+    );
     await expect(feeManager.distributeRewards(mockToken.address)).to.be.revertedWith(
       'LiquidityPools: amount must be greater than zero'
     );
@@ -194,7 +206,8 @@ describe('LiquidityPools', function () {
     );
 
     await bridge.deposit(mockToken.address, sourceChainId, receiver.address, depositAmount);
-    await bridge.executeTransfer(txHash, mockToken.address, sourceChainId, receiver.address, depositAmount);
+
+    expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data));
 
     await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward);
     await feeManager.distributeRewards(mockToken.address);
@@ -259,7 +272,7 @@ describe('LiquidityPools', function () {
   });
 
   it('should distribute the reward equally', async function () {
-    const [, v1, v2, receiver] = await ethers.getSigners();
+    const [sender, v1, v2, receiver] = await ethers.getSigners();
     const amountTransfer = '1000000000000000000';
     const amount = '100000000000000000';
     const tokenFee = '10000';
@@ -267,9 +280,16 @@ describe('LiquidityPools', function () {
     const liquidityReward = '10000';
     const fee = '100';
     const sourceChainId = 5;
-    const txHash = '0x54c96e7f79d5fd653951c49783fc2fa7299f14c01a5a3a03f8bfb55eecb2751f';
+    const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
+    const transferAmount = '990000000000000000';
 
-    const { mockToken, liquidityPools, bridge, feeManager } = await deployBridgeWithMocks();
+    const { mockChainId, mockToken, liquidityPools, bridge, feeManager, relayBridge } = await deployBridgeWithMocks();
+
+    const abiCoder = ethers.utils.defaultAbiCoder;
+    const data = abiCoder.encode(
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, mockToken.address, mockChainId, receiver.address, transferAmount]
+    );
 
     await mockToken.transfer(v1.address, amountTransfer);
     await mockToken.transfer(v2.address, amountTransfer);
@@ -294,7 +314,7 @@ describe('LiquidityPools', function () {
 
     await bridge1.deposit(mockToken1.address, sourceChainId, receiver.address, amount);
 
-    await bridge.executeTransfer(txHash, mockToken.address, sourceChainId, receiver.address, amount);
+    expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data));
 
     await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward);
 
