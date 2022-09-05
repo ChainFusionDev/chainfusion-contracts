@@ -17,6 +17,8 @@ contract RelayBridge is Initializable, SignerOwnable {
     mapping(bytes32 => bool) public executed;
     mapping(bytes32 => bool) public reverted;
 
+    uint256 public nonce;
+
     event Sent(bytes32 hash);
     event Reverted(bytes32 hash);
     event Executed(bytes32 hash);
@@ -30,11 +32,12 @@ contract RelayBridge is Initializable, SignerOwnable {
         uint256 gasLimit,
         bytes memory data
     ) external {
-        bytes32 hash = dataHash(msg.sender, block.chainid, destinationChain, gasLimit, data);
+        bytes32 hash = dataHash(msg.sender, block.chainid, destinationChain, gasLimit, data, nonce);
         require(sentData[hash].length == 0, "RelayBridge: data already send");
 
         sent[hash] = true;
         sentData[hash] = data;
+        nonce++;
 
         emit Sent(hash);
     }
@@ -43,9 +46,10 @@ contract RelayBridge is Initializable, SignerOwnable {
         address appContract,
         uint256 destinationChain,
         uint256 gasLimit,
-        bytes memory data
+        bytes memory data,
+        uint256 _nonce
     ) external onlySigner {
-        bytes32 hash = dataHash(appContract, block.chainid, destinationChain, gasLimit, data);
+        bytes32 hash = dataHash(appContract, block.chainid, destinationChain, gasLimit, data, _nonce);
         require(sent[hash], "RelayBridge: data never sent");
         require(!reverted[hash], "RelayBridge: data already reverted");
 
@@ -60,9 +64,10 @@ contract RelayBridge is Initializable, SignerOwnable {
         address appContract,
         uint256 sourceChain,
         uint256 gasLimit,
-        bytes memory data
+        bytes memory data,
+        uint256 _nonce
     ) external onlySigner {
-        bytes32 hash = dataHash(appContract, sourceChain, block.chainid, gasLimit, data);
+        bytes32 hash = dataHash(appContract, sourceChain, block.chainid, gasLimit, data, _nonce);
         require(!executed[hash], "RelayBridge: data already executed");
 
         IBridgeApp(appContract).execute(sourceChain, data);
@@ -77,8 +82,9 @@ contract RelayBridge is Initializable, SignerOwnable {
         uint256 sourceChain,
         uint256 destinationChain,
         uint256 gasLimit,
-        bytes memory data
+        bytes memory data,
+        uint256 _nonce
     ) public pure returns (bytes32) {
-        return keccak256(abi.encode(appContract, sourceChain, destinationChain, gasLimit, data));
+        return keccak256(abi.encode(appContract, sourceChain, destinationChain, gasLimit, data, _nonce));
     }
 }

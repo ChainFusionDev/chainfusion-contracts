@@ -34,6 +34,7 @@ describe('Bridge', function () {
     const { mockChainId, mockToken, bridge, liquidityPools, relayBridge } = await deployBridgeWithMocks();
     const sourceChain = ethers.provider.network.chainId;
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
+    const nonce = 0;
 
     await mockToken.approve(bridge.address, depositAmount);
     await mockToken.approve(liquidityPools.address, depositAmount);
@@ -46,8 +47,8 @@ describe('Bridge', function () {
     );
 
     const dataForHash = abiCoder.encode(
-      ['address', 'uint256', 'uint256', 'uint256', 'bytes'],
-      [bridge.address, sourceChain, mockChainId, gasLimit, data]
+      ['address', 'uint256', 'uint256', 'uint256', 'bytes', 'uint256'],
+      [bridge.address, sourceChain, mockChainId, gasLimit, data, nonce]
     );
     const hash = ethers.utils.keccak256(dataForHash);
 
@@ -84,14 +85,15 @@ describe('Bridge', function () {
       [sender.address, NATIVE_TOKEN, mockChainId, receiver.address, transferAmount]
     );
 
-    const hashToken = await relayBridge.dataHash(bridge.address, sourceChainId, mockChainId, gasLimit, data);
+    const hashToken = await relayBridge.dataHash(bridge.address, sourceChainId, mockChainId, gasLimit, data, 0);
 
     const hashMintToken = await relayBridge.dataHash(
       bridge.address,
       sourceChainId,
       mockChainId,
       gasLimit,
-      dataMintableToken
+      dataMintableToken,
+      1
     );
 
     const hashNativeToken = await relayBridge.dataHash(
@@ -99,7 +101,8 @@ describe('Bridge', function () {
       sourceChainId,
       mockChainId,
       gasLimit,
-      dataNativeToken
+      dataNativeToken,
+      2
     );
 
     const mockSenderBalanceBeforeDeposit = await mockToken.balanceOf(sender.address);
@@ -112,7 +115,7 @@ describe('Bridge', function () {
     const mockLiquidityBalanceAfterDeposit = await mockToken.balanceOf(liquidityPools.address);
     expect(mockLiquidityBalanceAfterDeposit.sub(mockLiquidityBalanceBeforeDeposit)).to.equal(transferAmount);
 
-    await relayBridge.revertSend(bridge.address, mockChainId, gasLimit, data);
+    await relayBridge.revertSend(bridge.address, mockChainId, gasLimit, data, 0);
 
     expect(await relayBridge.sent(hashToken)).to.equals(true);
 
@@ -126,7 +129,7 @@ describe('Bridge', function () {
     await mockMintableBurnableToken.approve(bridge.address, depositAmount);
     await bridge.deposit(mockMintableBurnableToken.address, mockChainId, receiver.address, depositAmount);
 
-    await expect(relayBridge.revertSend(bridge.address, mockChainId, gasLimit, dataMintableToken))
+    await expect(relayBridge.revertSend(bridge.address, mockChainId, gasLimit, dataMintableToken, 1))
       .emit(relayBridge, 'Reverted')
       .withArgs(hashMintToken);
 
@@ -162,7 +165,7 @@ describe('Bridge', function () {
     const nativeSenderBalanceBeforeRevert = await ethers.provider.getBalance(sender.address);
 
     const nativeRevertTx = await (
-      await relayBridge.revertSend(bridge.address, mockChainId, gasLimit, dataNativeToken)
+      await relayBridge.revertSend(bridge.address, mockChainId, gasLimit, dataNativeToken, 2)
     ).wait();
     const revertTxFee = nativeRevertTx.gasUsed.mul(nativeRevertTx.effectiveGasPrice);
 
@@ -183,6 +186,7 @@ describe('Bridge', function () {
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     const sourceChainId = ethers.provider.network.chainId;
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
+    const nonce = 0;
 
     const { mockChainId, bridge, liquidityPools, relayBridge, tokenManager } = await deployBridgeWithMocks();
 
@@ -197,7 +201,8 @@ describe('Bridge', function () {
       sourceChainId,
       mockChainId,
       gasLimit,
-      dataNativeToken
+      dataNativeToken,
+      nonce
     );
 
     await tokenManager.setEnabled(NATIVE_TOKEN, true);
@@ -205,7 +210,7 @@ describe('Bridge', function () {
     await liquidityPools.addNativeLiquidity({ value: depositAmount });
     await bridge.depositNative(mockChainId, receiver.address, { value: depositAmount });
 
-    await expect(relayBridge.revertSend(bridge.address, mockChainId, gasLimit, dataNativeToken))
+    await expect(relayBridge.revertSend(bridge.address, mockChainId, gasLimit, dataNativeToken, nonce))
       .emit(relayBridge, 'Reverted')
       .withArgs(hashNativeToken);
   });
@@ -216,6 +221,7 @@ describe('Bridge', function () {
     const transferAmount = '990000000000000000';
     const sourceChain = ethers.provider.network.chainId;
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
+    const nonce = 0;
 
     const { mockChainId, mockToken, bridge, liquidityPools, tokenManager, relayBridge } = await deployBridgeWithMocks();
 
@@ -227,8 +233,8 @@ describe('Bridge', function () {
     const txHash = data;
 
     const dataForHash = abiCoder.encode(
-      ['address', 'uint256', 'uint256', 'uint256', 'bytes'],
-      [bridge.address, mockChainId, sourceChain, gasLimit, data]
+      ['address', 'uint256', 'uint256', 'uint256', 'bytes', 'uint256'],
+      [bridge.address, mockChainId, sourceChain, gasLimit, data, nonce]
     );
     const hash = ethers.utils.keccak256(dataForHash);
 
@@ -241,7 +247,7 @@ describe('Bridge', function () {
 
     const receiverBalanceBeforeExecute = await mockToken.balanceOf(receiver.address);
 
-    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data))
+    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data, nonce))
       .to.emit(relayBridge, 'Executed')
       .withArgs(hash);
 
@@ -258,6 +264,7 @@ describe('Bridge', function () {
     const depositAmount = '10000000000000000000';
     const transferAmount = '990000000000000000';
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
+    const nonce = 1;
 
     const { mockChainId, mockToken, bridge, liquidityPools, tokenManager, relayBridge } = await deployBridgeWithMocks();
 
@@ -275,7 +282,7 @@ describe('Bridge', function () {
     await liquidityPools.addLiquidity(mockToken.address, depositAmount);
     await bridge.deposit(mockToken.address, mockChainId, receiver.address, depositAmount);
 
-    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data))
+    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data, nonce))
       .to.emit(bridge, 'Transferred')
       .withArgs(sender.address, mockToken.address, mockChainId, receiver.address, transferAmount);
 
@@ -310,6 +317,7 @@ describe('Bridge', function () {
     const initialSupply = '100000000000000000000';
     const transferAmount = '9990000000000000000';
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
+    const nonce = 1;
 
     const { mockChainId, mockMintableBurnableToken, bridge, relayBridge } = await deployBridgeWithMocks();
 
@@ -322,7 +330,7 @@ describe('Bridge', function () {
     await mockMintableBurnableToken.mint(sender.address, initialSupply);
     await mockMintableBurnableToken.transferOwnership(bridge.address);
 
-    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, dataMintableToken))
+    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, dataMintableToken, nonce))
       .to.emit(mockMintableBurnableToken, 'Transfer')
       .withArgs('0x0000000000000000000000000000000000000000', receiver.address, transferAmount);
 
@@ -339,6 +347,7 @@ describe('Bridge', function () {
     const transferAmount = '990000000000000000';
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
+    const nonce = 1;
 
     const { mockChainId, bridge, liquidityPools, relayBridge, tokenManager } = await deployBridgeWithMocks();
 
@@ -359,8 +368,8 @@ describe('Bridge', function () {
 
     const balanceReceiverBefore = await ethers.provider.getBalance(receiver.address);
 
-    await relayBridge.execute(bridge.address, mockChainId, gasLimit, data);
-    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data)).to.be.revertedWith(
+    await relayBridge.execute(bridge.address, mockChainId, gasLimit, data, nonce);
+    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data, nonce)).to.be.revertedWith(
       'RelayBridge: data already executed'
     );
 
