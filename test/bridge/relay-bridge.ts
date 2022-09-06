@@ -17,7 +17,6 @@ describe('RelayBridge', function () {
     const { relayBridge } = await deployBridge();
 
     const hash = await relayBridge.dataHash(appContract.address, sourceChain, destinationChain, gasLimit, data, nonce);
-
     await expect(relayBridge.send(destinationChain, gasLimit, data)).to.emit(relayBridge, 'Sent').withArgs(hash);
 
     expect(await relayBridge.sentData(hash)).to.equals(data);
@@ -27,6 +26,7 @@ describe('RelayBridge', function () {
     const destinationChain = 1;
     const gasLimit = 1;
     const nonce = 0;
+    const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 
     const abiCoder = ethers.utils.defaultAbiCoder;
     const data = abiCoder.encode(['string'], ['dataforsend']);
@@ -35,11 +35,17 @@ describe('RelayBridge', function () {
 
     await mockBridgeApp.send(destinationChain, gasLimit, data);
 
-    const hash = ethers.utils.keccak256(data);
+    const leaderBeforeRevert = await relayBridge.leaderHistoryLength();
 
-    await expect(relayBridge.revertSend(mockBridgeApp.address, destinationChain, gasLimit, data, nonce))
+    const hash = ethers.utils.keccak256(data);
+    await expect(relayBridge.revertSend(mockBridgeApp.address, destinationChain, gasLimit, data, nonce, leader))
       .to.emit(mockBridgeApp, 'Reverted')
       .withArgs(hash);
+
+    expect(await relayBridge.leaderHistory(0)).to.equal(leader);
+
+    const leaderAfterRevert = await relayBridge.leaderHistoryLength();
+    expect(leaderAfterRevert.sub(leaderBeforeRevert)).to.equal(1);
   });
 
   it('should execute data', async function () {
@@ -47,6 +53,7 @@ describe('RelayBridge', function () {
     const destinationChain = ethers.provider.network.chainId;
     const gasLimit = 1;
     const nonce = 1;
+    const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 
     const abiCoder = ethers.utils.defaultAbiCoder;
     const data = abiCoder.encode(['string'], ['dataforsend']);
@@ -62,13 +69,20 @@ describe('RelayBridge', function () {
       nonce
     );
 
-    await expect(relayBridge.execute(mockBridgeApp.address, sourceChain, gasLimit, data, nonce))
-      .to.emit(relayBridge, 'Executed')
+    const leaderBeforeExecute = await relayBridge.leaderHistoryLength();
 
+    await expect(relayBridge.execute(mockBridgeApp.address, sourceChain, gasLimit, data, nonce, leader))
+      .to.emit(relayBridge, 'Executed')
       .withArgs(hash);
-    await expect(relayBridge.execute(mockBridgeApp.address, sourceChain, gasLimit, data, nonce)).to.be.revertedWith(
-      'RelayBridge: data already executed'
-    );
+
+    expect(await relayBridge.leaderHistory(0)).to.equal(leader);
+
+    const leaderAfterExecute = await relayBridge.leaderHistoryLength();
+    expect(leaderAfterExecute.sub(leaderBeforeExecute)).to.equal(1);
+
+    await expect(
+      relayBridge.execute(mockBridgeApp.address, sourceChain, gasLimit, data, nonce, leader)
+    ).to.be.revertedWith('RelayBridge: data already executed');
 
     expect(await relayBridge.executed(hash)).to.equals(true);
     expect(await mockBridgeApp.value()).to.equals('dataforsend');

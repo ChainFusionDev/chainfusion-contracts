@@ -170,6 +170,7 @@ describe('LiquidityPools', function () {
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
     const transferAmount = '990000000000000000';
     const nullAddress = '0x0000000000000000000000000000000000000000';
+    const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     const nonce = 1;
 
     const { mockChainId, mockToken, liquidityPools, bridge, feeManager, relayBridge } = await deployBridgeWithMocks();
@@ -185,7 +186,7 @@ describe('LiquidityPools', function () {
       [sender.address, mockToken.address, mockChainId, nullAddress, transferAmount]
     );
 
-    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data, nonce)).to.be.revertedWith(
+    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data, nonce, leader)).to.be.revertedWith(
       'IERC20: amount more than contract balance'
     );
 
@@ -193,9 +194,9 @@ describe('LiquidityPools', function () {
     await mockToken.approve(liquidityPools.address, depositAmount);
     await liquidityPools.addLiquidity(mockToken.address, depositAmount);
 
-    await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, dataNullAddress, nonce)).to.be.revertedWith(
-      'ERC20: transfer to the zero address'
-    );
+    await expect(
+      relayBridge.execute(bridge.address, mockChainId, gasLimit, dataNullAddress, nonce, leader)
+    ).to.be.revertedWith('ERC20: transfer to the zero address');
     await expect(feeManager.distributeRewards(mockToken.address)).to.be.revertedWith(
       'LiquidityPools: amount must be greater than zero'
     );
@@ -208,7 +209,7 @@ describe('LiquidityPools', function () {
 
     await bridge.deposit(mockToken.address, sourceChainId, receiver.address, depositAmount);
 
-    expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data, nonce));
+    expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data, nonce, leader));
 
     await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward);
     await feeManager.distributeRewards(mockToken.address);
@@ -284,6 +285,7 @@ describe('LiquidityPools', function () {
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
     const transferAmount = '990000000000000000';
     const nonce = 1;
+    const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 
     const { mockChainId, mockToken, liquidityPools, bridge, feeManager, relayBridge } = await deployBridgeWithMocks();
 
@@ -316,7 +318,7 @@ describe('LiquidityPools', function () {
 
     await bridge1.deposit(mockToken1.address, sourceChainId, receiver.address, amount);
 
-    expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data, nonce));
+    expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data, nonce, leader));
 
     await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward);
 

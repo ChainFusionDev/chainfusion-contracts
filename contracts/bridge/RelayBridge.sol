@@ -17,6 +17,8 @@ contract RelayBridge is Initializable, SignerOwnable {
     mapping(bytes32 => bool) public executed;
     mapping(bytes32 => bool) public reverted;
 
+    address[] public leaderHistory;
+
     uint256 public nonce;
 
     event Sent(bytes32 hash);
@@ -47,13 +49,15 @@ contract RelayBridge is Initializable, SignerOwnable {
         uint256 destinationChain,
         uint256 gasLimit,
         bytes memory data,
-        uint256 _nonce
+        uint256 _nonce,
+        address leader
     ) external onlySigner {
         bytes32 hash = dataHash(appContract, block.chainid, destinationChain, gasLimit, data, _nonce);
         require(sent[hash], "RelayBridge: data never sent");
         require(!reverted[hash], "RelayBridge: data already reverted");
 
         reverted[hash] = true;
+        leaderHistory.push(leader);
 
         IBridgeApp(appContract).revertSend(destinationChain, data);
 
@@ -65,16 +69,22 @@ contract RelayBridge is Initializable, SignerOwnable {
         uint256 sourceChain,
         uint256 gasLimit,
         bytes memory data,
-        uint256 _nonce
+        uint256 _nonce,
+        address leader
     ) external onlySigner {
         bytes32 hash = dataHash(appContract, sourceChain, block.chainid, gasLimit, data, _nonce);
         require(!executed[hash], "RelayBridge: data already executed");
 
+        executed[hash] = true;
+        leaderHistory.push(leader);
+
         IBridgeApp(appContract).execute(sourceChain, data);
 
-        executed[hash] = true;
-
         emit Executed(hash);
+    }
+
+    function leaderHistoryLength() external view returns (uint256) {
+        return leaderHistory.length;
     }
 
     function dataHash(
