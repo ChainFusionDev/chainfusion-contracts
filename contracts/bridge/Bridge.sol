@@ -11,7 +11,6 @@ import "./Globals.sol";
 import "../interfaces/IERC20MintableBurnable.sol";
 import "./RelayBridge.sol";
 import "../interfaces/IBridgeApp.sol";
-import "hardhat/console.sol";
 
 contract Bridge is Initializable, SignerOwnable, IBridgeApp {
     mapping(bytes32 => bool) public executed;

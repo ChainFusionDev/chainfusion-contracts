@@ -1,6 +1,14 @@
 import { BigNumber } from 'ethers';
 import { ethers } from 'hardhat';
-import { Bridge, FeeManager, LiquidityPools, RelayBridge, SignerStorage, TokenManager } from '../../typechain';
+import {
+  Bridge,
+  FeeManager,
+  BridgeValidatorFeePool,
+  LiquidityPools,
+  RelayBridge,
+  SignerStorage,
+  TokenManager,
+} from '../../typechain';
 import { Deployer } from './deployer';
 
 const defaultBridgeDeploymentParameters: BridgeDeploymentParameters = {
@@ -24,6 +32,10 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
     signerStorage: await deployer.deploy(ethers.getContractFactory('SignerStorage'), 'SignerStorage'),
     tokenManager: await deployer.deploy(ethers.getContractFactory('TokenManager'), 'TokenManager'),
     feeManager: await deployer.deploy(ethers.getContractFactory('FeeManager'), 'FeeManager'),
+    bridgeValidatorFeePool: await deployer.deploy(
+      ethers.getContractFactory('BridgeValidatorFeePool'),
+      'BridgeValidatorFeePool'
+    ),
     liquidityPools: await deployer.deploy(ethers.getContractFactory('LiquidityPools'), 'LiquidityPools'),
     bridge: await deployer.deploy(ethers.getContractFactory('Bridge'), 'Bridge'),
     relayBridge: await deployer.deploy(ethers.getContractFactory('RelayBridge'), 'RelayBridge'),
@@ -41,6 +53,7 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
       res.signerStorage.address,
       res.liquidityPools.address,
       params.foundationAddress,
+      res.bridgeValidatorFeePool.address,
       params.validatorRefundFee
     ),
     'Initializing FeeManager'
@@ -70,6 +83,10 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
   );
 
   await deployer.sendTransaction(res.relayBridge.initialize(res.signerStorage.address), 'Initializing RelayBridge');
+  await deployer.sendTransaction(
+    res.bridgeValidatorFeePool.initialize(res.signerStorage.address, res.bridge.address, validator.address),
+    'Initializing BridgeValidatorFeePool'
+  );
 
   deployer.log('Successfully initialized contracts\n');
 
@@ -123,6 +140,7 @@ export interface BridgeDeployment {
   signerStorage: SignerStorage;
   tokenManager: TokenManager;
   feeManager: FeeManager;
+  bridgeValidatorFeePool: BridgeValidatorFeePool;
   liquidityPools: LiquidityPools;
   bridge: Bridge;
   relayBridge: RelayBridge;
