@@ -7,6 +7,7 @@ describe('DKG', function () {
   it('should broadcast all rounds', async function () {
     const initialGeneration = 0;
     const newGeneration = 1;
+    const badGaneration = 4;
 
     const data1 = ethers.utils.keccak256([1]);
     const data2 = ethers.utils.keccak256([2]);
@@ -40,6 +41,7 @@ describe('DKG', function () {
     expect(await dkg.isCurrentValidator(v2.address)).to.equal(true);
 
     expect(await dkg.getGenerationsCount()).to.equal(2);
+    expect(await dkg.isValidator(badGaneration, v1.address)).to.equal(false);
     expect(await dkg.isValidator(newGeneration, v1.address)).to.equal(true);
     expect(await dkg.isValidator(newGeneration, v2.address)).to.equal(true);
     expect(await dkg.getValidators(newGeneration)).to.deep.equal([v1.address, v2.address]);
