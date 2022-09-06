@@ -7,7 +7,6 @@ import "./TokenManager.sol";
 import "./Bridge.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
-import "hardhat/console.sol";
 import "../interfaces/IBridgeApp.sol";
 
 contract RelayBridge is Initializable, SignerOwnable {

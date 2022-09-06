@@ -20,7 +20,7 @@ export async function deployBridgeWithMocks(
   const deployment = await deployBridgeContracts(options);
 
   const MockToken = await ethers.getContractFactory('MockToken');
-  const mockToken = await MockToken.deploy('Mock Token', 'MOCK', BigNumber.from('10000000000000000000000'));
+  const mockToken = await MockToken.deploy('Mock Token', 'MOCK', BigNumber.from('10000000000000000000000000'));
   await mockToken.deployed();
 
   await deployment.tokenManager.setDestinationToken(chainId, mockToken.address, mockToken.address);
