@@ -45,4 +45,23 @@ describe('BridgeAppFactory', function () {
       'Ownable: caller is not the owner'
     );
   });
+
+  it('should set mediator', async function () {
+    const [owner] = await ethers.getSigners();
+    const mediatorAddress = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
+
+    const { bridgeAppFactory } = await deploySystem();
+
+    const appAddress = ethers.utils.getContractAddress({
+      from: bridgeAppFactory.address,
+      nonce: await ethers.provider.getTransactionCount(bridgeAppFactory.address),
+    });
+
+    await bridgeAppFactory.createApp();
+
+    const BridgeAppOwner = await ethers.getContractAt('BridgeApp', appAddress, owner);
+    await expect(BridgeAppOwner.setMediator(mediatorAddress))
+      .to.emit(BridgeAppOwner, 'MediatorAddress')
+      .withArgs(mediatorAddress);
+  });
 });
