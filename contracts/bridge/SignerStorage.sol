@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "hardhat/console.sol";
 
 contract SignerStorage is Initializable {
     address public signer;
@@ -12,9 +13,16 @@ contract SignerStorage is Initializable {
         signer = _signer;
     }
 
-    function setAddress(address _newSigner) public {
+    function setAddress(address _newSigner) public payable {
         require(signer == msg.sender, "SignerStorage: only signer");
         signer = _newSigner;
+
+        uint256 _value = msg.value;
+
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool success, ) = _newSigner.call{value: _value, gas: 21000}("");
+        require(success, "SignerStorage: transfer value failed");
+
         emit SignerUpdated(_newSigner);
     }
 
