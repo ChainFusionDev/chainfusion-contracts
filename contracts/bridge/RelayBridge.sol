@@ -8,6 +8,7 @@ import "./Bridge.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
 import "../interfaces/IBridgeApp.sol";
+import "../interfaces/IBridgeMediator.sol";
 
 contract RelayBridge is Initializable, SignerOwnable {
     mapping(bytes32 => bytes) public sentData;

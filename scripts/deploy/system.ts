@@ -11,6 +11,7 @@ import {
   ContractRegistry,
   EventRegistry,
   BridgeAppFactory,
+  ERC20BridgeMediator,
 } from '../../typechain';
 
 const defaultSystemDeploymentParameters: SystemDeploymentParameters = {
@@ -43,6 +44,7 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
     supportedTokens: await deployer.deploy(ethers.getContractFactory('SupportedTokens'), 'SupportedTokens'),
     slashingVoting: await deployer.deploy(ethers.getContractFactory('SlashingVoting'), 'SlashingVoting'),
     bridgeAppFactory: await deployer.deploy(ethers.getContractFactory('BridgeAppFactory'), 'BridgeAppFactory'),
+    erc20BridgeMediator: await deployer.deploy(ethers.getContractFactory('ERC20BridgeMediator'), 'ERC20BridgeMediator'),
   };
 
   deployer.log('Successfully deployed contracts\n');
@@ -178,6 +180,7 @@ export interface SystemDeployment {
   contractRegistry: ContractRegistry;
   eventRegistry: EventRegistry;
   bridgeAppFactory: BridgeAppFactory;
+  erc20BridgeMediator: ERC20BridgeMediator;
 }
 
 export interface SystemDeploymentParameters {
