@@ -20,9 +20,9 @@ contract RelayBridge is Initializable, SignerOwnable {
 
     uint256 public nonce;
 
-    event Sent(bytes32 hash);
-    event Reverted(bytes32 hash);
-    event Executed(bytes32 hash);
+    event Sent(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
+    event Reverted(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
+    event Executed(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
 
     function initialize(address _signerStorage) external initializer {
         _setSignerStorage(_signerStorage);
@@ -40,7 +40,7 @@ contract RelayBridge is Initializable, SignerOwnable {
         sentData[hash] = data;
         nonce++;
 
-        emit Sent(hash);
+        emit Sent(hash, block.chainid, destinationChain);
     }
 
     function revertSend(
@@ -60,7 +60,7 @@ contract RelayBridge is Initializable, SignerOwnable {
 
         IBridgeApp(appContract).revertSend(destinationChain, data);
 
-        emit Reverted(hash);
+        emit Reverted(hash, block.chainid, destinationChain);
     }
 
     function execute(
@@ -79,7 +79,7 @@ contract RelayBridge is Initializable, SignerOwnable {
 
         IBridgeApp(appContract).execute(sourceChain, data);
 
-        emit Executed(hash);
+        emit Executed(hash, sourceChain, block.chainid);
     }
 
     function leaderHistoryLength() external view returns (uint256) {
