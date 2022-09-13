@@ -132,7 +132,7 @@ describe('Bridge', function () {
 
     await expect(relayBridge.revertSend(bridge.address, mockChainId, gasLimit, dataMintableToken, 1, leader))
       .emit(relayBridge, 'Reverted')
-      .withArgs(hashMintToken);
+      .withArgs(hashMintToken, sourceChainId, mockChainId);
 
     expect(await relayBridge.sent(hashMintToken)).to.equals(true);
 
@@ -214,7 +214,7 @@ describe('Bridge', function () {
 
     await expect(relayBridge.revertSend(bridge.address, mockChainId, gasLimit, dataNativeToken, nonce, leader))
       .emit(relayBridge, 'Reverted')
-      .withArgs(hashNativeToken);
+      .withArgs(hashNativeToken, sourceChainId, mockChainId);
   });
 
   it('should execute', async function () {
@@ -252,7 +252,7 @@ describe('Bridge', function () {
 
     await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data, nonce, leader))
       .to.emit(relayBridge, 'Executed')
-      .withArgs(hash);
+      .withArgs(hash, mockChainId, sourceChain);
 
     const receiverBalanceAfterExecute = await mockToken.balanceOf(receiver.address);
     expect(receiverBalanceAfterExecute.sub(receiverBalanceBeforeExecute)).to.equal(transferAmount);
