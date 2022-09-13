@@ -17,7 +17,9 @@ describe('RelayBridge', function () {
     const { relayBridge } = await deployBridge();
 
     const hash = await relayBridge.dataHash(appContract.address, sourceChain, destinationChain, gasLimit, data, nonce);
-    await expect(relayBridge.send(destinationChain, gasLimit, data)).to.emit(relayBridge, 'Sent').withArgs(hash);
+    await expect(relayBridge.send(destinationChain, gasLimit, data))
+      .to.emit(relayBridge, 'Sent')
+      .withArgs(hash, sourceChain, destinationChain);
 
     expect(await relayBridge.sentData(hash)).to.equals(data);
   });
@@ -73,7 +75,7 @@ describe('RelayBridge', function () {
 
     await expect(relayBridge.execute(mockBridgeApp.address, sourceChain, gasLimit, data, nonce, leader))
       .to.emit(relayBridge, 'Executed')
-      .withArgs(hash);
+      .withArgs(hash, sourceChain, destinationChain);
 
     expect(await relayBridge.leaderHistory(0)).to.equal(leader);
 

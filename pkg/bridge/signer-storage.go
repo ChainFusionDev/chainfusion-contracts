@@ -30,7 +30,7 @@ var (
 
 // SignerStorageMetaData contains all meta data concerning the SignerStorage contract.
 var SignerStorageMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_signer\",\"type\":\"address\"}],\"name\":\"SignerUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signer\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newSigner\",\"type\":\"address\"}],\"name\":\"setAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signer\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_signer\",\"type\":\"address\"}],\"name\":\"SignerUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signer\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newSigner\",\"type\":\"address\"}],\"name\":\"setAddress\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signer\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // SignerStorageABI is the input ABI used to generate the binding from.
@@ -264,21 +264,21 @@ func (_SignerStorage *SignerStorageTransactorSession) Initialize(_signer common.
 
 // SetAddress is a paid mutator transaction binding the contract method 0xe30081a0.
 //
-// Solidity: function setAddress(address _newSigner) returns()
+// Solidity: function setAddress(address _newSigner) payable returns()
 func (_SignerStorage *SignerStorageTransactor) SetAddress(opts *bind.TransactOpts, _newSigner common.Address) (*types.Transaction, error) {
 	return _SignerStorage.contract.Transact(opts, "setAddress", _newSigner)
 }
 
 // SetAddress is a paid mutator transaction binding the contract method 0xe30081a0.
 //
-// Solidity: function setAddress(address _newSigner) returns()
+// Solidity: function setAddress(address _newSigner) payable returns()
 func (_SignerStorage *SignerStorageSession) SetAddress(_newSigner common.Address) (*types.Transaction, error) {
 	return _SignerStorage.Contract.SetAddress(&_SignerStorage.TransactOpts, _newSigner)
 }
 
 // SetAddress is a paid mutator transaction binding the contract method 0xe30081a0.
 //
-// Solidity: function setAddress(address _newSigner) returns()
+// Solidity: function setAddress(address _newSigner) payable returns()
 func (_SignerStorage *SignerStorageTransactorSession) SetAddress(_newSigner common.Address) (*types.Transaction, error) {
 	return _SignerStorage.Contract.SetAddress(&_SignerStorage.TransactOpts, _newSigner)
 }
