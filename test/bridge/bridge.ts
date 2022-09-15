@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { BigNumber } from 'ethers';
+import { utils } from 'ethers';
 import { ethers } from 'hardhat';
 import { deployBridge, deployBridgeWithMocks } from '../utils/deploy';
 
@@ -29,8 +29,8 @@ describe('Bridge', function () {
   it('should deposit tokens to bridge', async function () {
     const [sender, receiver] = await ethers.getSigners();
 
-    const depositAmount = '1000000000000000000';
-    const transferAmount = '990000000000000000';
+    const depositAmount = utils.parseEther('1');
+    const transferAmount = utils.parseEther('0.99');
     const { mockChainId, mockToken, bridge, liquidityPools, relayBridge } = await deployBridgeWithMocks();
     const sourceChain = ethers.provider.network.chainId;
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
@@ -59,9 +59,9 @@ describe('Bridge', function () {
   it('should revert deposit', async function () {
     const [sender, receiver] = await ethers.getSigners();
 
-    const initialSupply = '100000000000000000000';
-    const depositAmount = '1000000000000000000';
-    const transferAmount = '990000000000000000';
+    const initialSupply = utils.parseEther('1');
+    const depositAmount = utils.parseEther('1');
+    const transferAmount = utils.parseEther('0.99');
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     const sourceChainId = ethers.provider.network.chainId;
@@ -155,9 +155,7 @@ describe('Bridge', function () {
     const depositTxFee = nativeDepositTx.gasUsed.mul(nativeDepositTx.effectiveGasPrice);
 
     const nativeSenderBalanceAfterDeposit = await ethers.provider.getBalance(sender.address);
-    const nativeExpectedBalanceDeposit = nativeSenderBalanceBeforeDeposit.sub(
-      BigNumber.from(depositAmount).add(depositTxFee)
-    );
+    const nativeExpectedBalanceDeposit = nativeSenderBalanceBeforeDeposit.sub(depositAmount.add(depositTxFee));
     expect(nativeSenderBalanceAfterDeposit).to.equal(nativeExpectedBalanceDeposit);
 
     const nativeLiquidityBalanceAfterDeposit = await ethers.provider.getBalance(liquidityPools.address);
@@ -173,17 +171,15 @@ describe('Bridge', function () {
     expect(await relayBridge.sent(hashNativeToken)).to.equals(true);
 
     const nativeSenderBalanceAfterRevert = await ethers.provider.getBalance(sender.address);
-    const nativeExpectedBalanceRevert = nativeSenderBalanceBeforeRevert.add(
-      BigNumber.from(transferAmount).sub(revertTxFee)
-    );
+    const nativeExpectedBalanceRevert = nativeSenderBalanceBeforeRevert.add(transferAmount.sub(revertTxFee));
     expect(nativeSenderBalanceAfterRevert).to.equal(nativeExpectedBalanceRevert);
   });
 
   it('should emit event Reverted native token', async function () {
     const [sender, receiver] = await ethers.getSigners();
 
-    const depositAmount = '1000000000000000000';
-    const transferAmount = '990000000000000000';
+    const depositAmount = utils.parseEther('1');
+    const transferAmount = utils.parseEther('0.99');
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     const sourceChainId = ethers.provider.network.chainId;
@@ -219,8 +215,8 @@ describe('Bridge', function () {
 
   it('should execute', async function () {
     const [sender, receiver] = await ethers.getSigners();
-    const depositAmount = '10000000000000000000';
-    const transferAmount = '990000000000000000';
+    const depositAmount = utils.parseEther('1');
+    const transferAmount = utils.parseEther('0.99');
     const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     const sourceChain = ethers.provider.network.chainId;
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
@@ -264,8 +260,8 @@ describe('Bridge', function () {
 
   it('should execute transfer', async function () {
     const [sender, receiver] = await ethers.getSigners();
-    const depositAmount = '10000000000000000000';
-    const transferAmount = '990000000000000000';
+    const depositAmount = utils.parseEther('1');
+    const transferAmount = utils.parseEther('0.99');
     const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
     const nonce = 1;
@@ -297,8 +293,8 @@ describe('Bridge', function () {
 
   it('should deposit supported tokens to bridge', async function () {
     const [, receiver] = await ethers.getSigners();
-    const depositAmount = '10000000000000000000';
-    const mintAmount = '100000000000000000000';
+    const depositAmount = utils.parseEther('1');
+    const mintAmount = utils.parseEther('1');
     const { mockChainId, mockToken, bridge } = await deployBridgeWithMocks();
 
     const MockToken = await ethers.getContractFactory('MockToken');
@@ -317,9 +313,9 @@ describe('Bridge', function () {
 
   it('should mint and burn tokens', async function () {
     const [sender, receiver] = await ethers.getSigners();
-    const depositAmount = '10000000000000000000';
-    const initialSupply = '100000000000000000000';
-    const transferAmount = '9990000000000000000';
+    const depositAmount = utils.parseEther('1');
+    const initialSupply = utils.parseEther('1');
+    const transferAmount = utils.parseEther('0.99');
     const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
     const nonce = 1;
@@ -348,8 +344,8 @@ describe('Bridge', function () {
   it('should deposit and transfer using native currency', async function () {
     const [sender, receiver] = await ethers.getSigners();
 
-    const depositAmount = '1000000000000000000';
-    const transferAmount = '990000000000000000';
+    const depositAmount = utils.parseEther('1');
+    const transferAmount = utils.parseEther('0.99');
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;

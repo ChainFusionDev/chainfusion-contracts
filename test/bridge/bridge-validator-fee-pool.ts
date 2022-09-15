@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { BigNumber } from 'ethers';
+import { utils } from 'ethers';
 import { ethers } from 'hardhat';
 import { deployBridgeWithMocks } from '../utils/deploy';
 
@@ -7,7 +7,7 @@ describe('BridgeValidatorFeePool', function () {
   it('should change all setters', async function () {
     const [, validator, user] = await ethers.getSigners();
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
-    const tokenLimit = '1000000000000';
+    const tokenLimit = utils.parseEther('1');
 
     const { mockToken, bridgeValidatorFeePool, bridge } = await deployBridgeWithMocks();
     const bridgeValidatorFeePoolByUser = await ethers.getContractAt(
@@ -51,12 +51,12 @@ describe('BridgeValidatorFeePool', function () {
   it('should collect fees', async function () {
     const [, receiver] = await ethers.getSigners();
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
-    const depositAmount = '10000000000000000000';
+    const depositAmount = utils.parseEther('10');
 
-    const tokenLimit = '10000000';
-    const tokenFee = '10000000000000000';
-    const validatorReward = '300000000000000000';
-    const liquidityReward = '300000000000000000';
+    const tokenLimit = utils.parseEther('0.000001');
+    const tokenFee = utils.parseEther('0.01');
+    const validatorReward = utils.parseEther('0.3');
+    const liquidityReward = utils.parseEther('0.3');
 
     const { tokenManager, liquidityPools, mockChainId, mockToken, bridgeValidatorFeePool, bridge, feeManager } =
       await deployBridgeWithMocks();
@@ -94,7 +94,7 @@ describe('BridgeValidatorFeePool', function () {
     await feeManager.distributeRewards(NATIVE_TOKEN);
     await feeManager.distributeRewards(mockToken.address);
 
-    let reward = BigNumber.from('33000000000000000');
+    let reward = utils.parseEther('0.033');
 
     await expect(bridgeValidatorFeePool.collect(mockToken2.address)).to.be.revertedWith(
       'BridgeValidatorFeePool: no limit for this token'
