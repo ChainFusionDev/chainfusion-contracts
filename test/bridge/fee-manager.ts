@@ -1,13 +1,13 @@
 import { expect } from 'chai';
-import { BigNumber } from 'ethers';
+import { utils } from 'ethers';
 import { ethers } from 'hardhat';
 import { deployBridgeWithMocks } from '../utils/deploy';
 
 describe('FeeManager', function () {
   it('should check if fee is transferred to FeeManager contract', async function () {
     const [, receiver] = await ethers.getSigners();
-    const amount = '10000000000000000000';
-    const fee = '10000000000000000';
+    const amount = utils.parseEther('1');
+    const fee = utils.parseEther('0.01');
 
     const { mockToken, mockChainId, liquidityPools, tokenManager, bridge, feeManager } = await deployBridgeWithMocks();
 
@@ -23,12 +23,12 @@ describe('FeeManager', function () {
 
   it('should collect fee in native currency', async function () {
     const [, foundation, receiver, user] = await ethers.getSigners();
-    const amount = '1000000000000000000000';
-    const tokenFee = '10000000000000000';
-    const fee = '10000000000000000';
-    const validatorReward = '300000000000000000';
-    const liquidityReward = '300000000000000000';
-    const tokenLimit = '10000000000000';
+    const amount = utils.parseEther('1');
+    const tokenFee = utils.parseEther('0.01');
+    const fee = utils.parseEther('0.01');
+    const validatorReward = utils.parseEther('0.3');
+    const liquidityReward = utils.parseEther('0.3');
+    const tokenLimit = utils.parseEther('0.1');
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
 
     const { mockChainId, liquidityPools, tokenManager, bridge, feeManager, bridgeValidatorFeePool } =
@@ -60,9 +60,9 @@ describe('FeeManager', function () {
     const balanceLiquidityPoolsAfter = await ethers.provider.getBalance(feeManager.liquidityPools());
     const balanceFoundationAddressAfter = await ethers.provider.getBalance(foundation.address);
 
-    let validatorRewards = BigNumber.from('3000000000000000');
-    let liquidityRewards = BigNumber.from('3000000000000000');
-    let foundationRewards = BigNumber.from('4000000000000000');
+    let validatorRewards = utils.parseEther('0.003');
+    let liquidityRewards = utils.parseEther('0.003');
+    let foundationRewards = utils.parseEther('0.004');
 
     expect(balanceValidatorFeePoolAfter).to.equal(balanceValidatorFeePoolBefore.add(validatorRewards));
     expect(balanceLiquidityPoolsAfter).to.equal(balanceLiquidityPoolsBefore.add(liquidityRewards));
