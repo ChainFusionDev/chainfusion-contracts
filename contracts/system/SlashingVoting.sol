@@ -25,11 +25,21 @@ enum SlashingReasonGroup {
 }
 
 contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initializable {
+    struct SlashingProposal {
+        address validator;
+        string reason;
+    }
+
+    SlashingProposal[] public proposals;
+
     ContractRegistry public contractRegistry;
 
     uint256 public epochPeriod;
     uint256 public slashingThresold;
     uint256 public slashingEpochs;
+
+    mapping(uint256 => mapping(address => bool)) public votesSlashingProposal;
+    mapping(uint256 => uint256) public voteCountsSlashingProposal;
 
     // Votes
     mapping(bytes32 => mapping(address => bool)) public votes;
@@ -96,6 +106,37 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
         if (shouldShash(epoch, _validator)) {
             _stakingContract().slash(_validator);
             emit SlashedWithReason(_validator);
+        }
+    }
+
+    function createProposal(address _validator, string memory _reason) external onlyValidator {
+        SlashingProposal memory newProposal = SlashingProposal({validator: _validator, reason: _reason});
+
+        proposals.push(newProposal);
+    }
+
+    function voteProposal(uint256 proposalId) external onlyValidator {
+        Staking staking = _stakingContract();
+
+        require(proposalId < proposals.length, "SlashingVoting: proposal doesn't exist!");
+
+        SlashingProposal memory proposal = proposals[proposalId];
+
+        require(
+            staking.isValidatorActive(proposal.validator) == true,
+            "SlashingVoting: target is not active validator"
+        );
+        require(
+            votesSlashingProposal[proposalId][msg.sender] == false,
+            "SlashingVoting: voter is already voted against given validator"
+        );
+
+        votesSlashingProposal[proposalId][msg.sender] = true;
+        voteCountsSlashingProposal[proposalId]++;
+
+        address[] memory validators = staking.getValidators();
+        if (voteCountsSlashingProposal[proposalId] >= (validators.length / 2 + 1)) {
+            _stakingContract().slash(proposal.validator);
         }
     }
 

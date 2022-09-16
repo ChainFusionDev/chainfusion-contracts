@@ -132,4 +132,53 @@ describe('SlashingVoting', function () {
       'SlashingVoting: voter is already voted against given validator'
     );
   });
+
+  it('should create proposal with saving to an array', async function () {
+    const [, v2] = await ethers.getSigners();
+    const reasonProposal = 'offline';
+
+    const { slashingVoting, staking, minimalStake } = await deploySystem();
+    const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
+
+    await expect(slashingVoting.createProposal(v2.address, reasonProposal)).to.be.revertedWith(
+      'ValidatorOwnable: only validator'
+    );
+
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
+
+    await slashingVoting.createProposal(v2.address, reasonProposal);
+    expect((await slashingVoting.proposals(0)).validator).to.equal(v2.address);
+  });
+
+  it('should vote proposal and slashed validator', async function () {
+    const [, v2, v3] = await ethers.getSigners();
+    const reasonProposal = 'offline';
+
+    const { slashingVoting, staking, minimalStake } = await deploySystem();
+
+    const slashingVoting2 = await ethers.getContractAt('SlashingVoting', slashingVoting.address, v2);
+
+    const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
+    const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
+
+    await expect(slashingVoting.voteProposal(0)).to.be.revertedWith('ValidatorOwnable: only validator');
+
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
+    await staking3.stake({ value: minimalStake });
+
+    await slashingVoting.createProposal(v3.address, reasonProposal);
+
+    await slashingVoting.voteProposal(0);
+    await expect(slashingVoting.voteProposal(0)).to.be.revertedWith(
+      'SlashingVoting: voter is already voted against given validator'
+    );
+    await slashingVoting2.voteProposal(0);
+
+    expect(await staking.isValidatorSlashed(v3.address)).to.equal(true);
+
+    await expect(slashingVoting.voteProposal(0)).to.be.revertedWith('SlashingVoting: target is not active validator');
+    await expect(slashingVoting.voteProposal(1)).to.be.revertedWith("SlashingVoting: proposal doesn't exist!");
+  });
 });
