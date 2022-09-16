@@ -158,7 +158,7 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
     }
 
     function _stakingContract() private view returns (Staking) {
-        return Staking(contractRegistry.getContract(STAKING_KEY));
+        return Staking(payable(contractRegistry.getContract(STAKING_KEY)));
     }
 
     function _dkgContract() private view returns (DKG) {

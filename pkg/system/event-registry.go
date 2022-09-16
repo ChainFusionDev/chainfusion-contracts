@@ -30,7 +30,7 @@ var (
 
 // EventRegistryMetaData contains all meta data concerning the EventRegistry contract.
 var EventRegistryMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"}],\"name\":\"EventRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"}],\"name\":\"eventKey\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validatorGetterAddress\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"}],\"name\":\"registerEvent\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"registeredEvents\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorGetter\",\"outputs\":[{\"internalType\":\"contractValidatorGetter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"}],\"name\":\"EventRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DKG_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"EVENT_REGISTRY_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SLASHING_VOTING_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKING_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SUPPORTED_TOKENS_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"}],\"name\":\"eventKey\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validatorGetterAddress\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_generation\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"}],\"name\":\"registerEvent\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"registeredEvents\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorGetter\",\"outputs\":[{\"internalType\":\"contractValidatorGetter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // EventRegistryABI is the input ABI used to generate the binding from.
@@ -177,6 +177,192 @@ func (_EventRegistry *EventRegistryTransactorRaw) Transfer(opts *bind.TransactOp
 // Transact invokes the (paid) contract method with params as input values.
 func (_EventRegistry *EventRegistryTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	return _EventRegistry.Contract.contract.Transact(opts, method, params...)
+}
+
+// DKGKEY is a free data retrieval call binding the contract method 0x3a9783f3.
+//
+// Solidity: function DKG_KEY() view returns(string)
+func (_EventRegistry *EventRegistryCaller) DKGKEY(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _EventRegistry.contract.Call(opts, &out, "DKG_KEY")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// DKGKEY is a free data retrieval call binding the contract method 0x3a9783f3.
+//
+// Solidity: function DKG_KEY() view returns(string)
+func (_EventRegistry *EventRegistrySession) DKGKEY() (string, error) {
+	return _EventRegistry.Contract.DKGKEY(&_EventRegistry.CallOpts)
+}
+
+// DKGKEY is a free data retrieval call binding the contract method 0x3a9783f3.
+//
+// Solidity: function DKG_KEY() view returns(string)
+func (_EventRegistry *EventRegistryCallerSession) DKGKEY() (string, error) {
+	return _EventRegistry.Contract.DKGKEY(&_EventRegistry.CallOpts)
+}
+
+// EVENTREGISTRYKEY is a free data retrieval call binding the contract method 0x3580e192.
+//
+// Solidity: function EVENT_REGISTRY_KEY() view returns(string)
+func (_EventRegistry *EventRegistryCaller) EVENTREGISTRYKEY(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _EventRegistry.contract.Call(opts, &out, "EVENT_REGISTRY_KEY")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// EVENTREGISTRYKEY is a free data retrieval call binding the contract method 0x3580e192.
+//
+// Solidity: function EVENT_REGISTRY_KEY() view returns(string)
+func (_EventRegistry *EventRegistrySession) EVENTREGISTRYKEY() (string, error) {
+	return _EventRegistry.Contract.EVENTREGISTRYKEY(&_EventRegistry.CallOpts)
+}
+
+// EVENTREGISTRYKEY is a free data retrieval call binding the contract method 0x3580e192.
+//
+// Solidity: function EVENT_REGISTRY_KEY() view returns(string)
+func (_EventRegistry *EventRegistryCallerSession) EVENTREGISTRYKEY() (string, error) {
+	return _EventRegistry.Contract.EVENTREGISTRYKEY(&_EventRegistry.CallOpts)
+}
+
+// SLASHINGVOTINGKEY is a free data retrieval call binding the contract method 0xfaaa8a64.
+//
+// Solidity: function SLASHING_VOTING_KEY() view returns(string)
+func (_EventRegistry *EventRegistryCaller) SLASHINGVOTINGKEY(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _EventRegistry.contract.Call(opts, &out, "SLASHING_VOTING_KEY")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// SLASHINGVOTINGKEY is a free data retrieval call binding the contract method 0xfaaa8a64.
+//
+// Solidity: function SLASHING_VOTING_KEY() view returns(string)
+func (_EventRegistry *EventRegistrySession) SLASHINGVOTINGKEY() (string, error) {
+	return _EventRegistry.Contract.SLASHINGVOTINGKEY(&_EventRegistry.CallOpts)
+}
+
+// SLASHINGVOTINGKEY is a free data retrieval call binding the contract method 0xfaaa8a64.
+//
+// Solidity: function SLASHING_VOTING_KEY() view returns(string)
+func (_EventRegistry *EventRegistryCallerSession) SLASHINGVOTINGKEY() (string, error) {
+	return _EventRegistry.Contract.SLASHINGVOTINGKEY(&_EventRegistry.CallOpts)
+}
+
+// STAKINGKEY is a free data retrieval call binding the contract method 0x561ff9a9.
+//
+// Solidity: function STAKING_KEY() view returns(string)
+func (_EventRegistry *EventRegistryCaller) STAKINGKEY(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _EventRegistry.contract.Call(opts, &out, "STAKING_KEY")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// STAKINGKEY is a free data retrieval call binding the contract method 0x561ff9a9.
+//
+// Solidity: function STAKING_KEY() view returns(string)
+func (_EventRegistry *EventRegistrySession) STAKINGKEY() (string, error) {
+	return _EventRegistry.Contract.STAKINGKEY(&_EventRegistry.CallOpts)
+}
+
+// STAKINGKEY is a free data retrieval call binding the contract method 0x561ff9a9.
+//
+// Solidity: function STAKING_KEY() view returns(string)
+func (_EventRegistry *EventRegistryCallerSession) STAKINGKEY() (string, error) {
+	return _EventRegistry.Contract.STAKINGKEY(&_EventRegistry.CallOpts)
+}
+
+// SUPPORTEDTOKENSKEY is a free data retrieval call binding the contract method 0x78a5c206.
+//
+// Solidity: function SUPPORTED_TOKENS_KEY() view returns(string)
+func (_EventRegistry *EventRegistryCaller) SUPPORTEDTOKENSKEY(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _EventRegistry.contract.Call(opts, &out, "SUPPORTED_TOKENS_KEY")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// SUPPORTEDTOKENSKEY is a free data retrieval call binding the contract method 0x78a5c206.
+//
+// Solidity: function SUPPORTED_TOKENS_KEY() view returns(string)
+func (_EventRegistry *EventRegistrySession) SUPPORTEDTOKENSKEY() (string, error) {
+	return _EventRegistry.Contract.SUPPORTEDTOKENSKEY(&_EventRegistry.CallOpts)
+}
+
+// SUPPORTEDTOKENSKEY is a free data retrieval call binding the contract method 0x78a5c206.
+//
+// Solidity: function SUPPORTED_TOKENS_KEY() view returns(string)
+func (_EventRegistry *EventRegistryCallerSession) SUPPORTEDTOKENSKEY() (string, error) {
+	return _EventRegistry.Contract.SUPPORTEDTOKENSKEY(&_EventRegistry.CallOpts)
+}
+
+// VALIDATORREWARDDISTRIBUTIONPOOLKEY is a free data retrieval call binding the contract method 0x93107614.
+//
+// Solidity: function VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY() view returns(string)
+func (_EventRegistry *EventRegistryCaller) VALIDATORREWARDDISTRIBUTIONPOOLKEY(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _EventRegistry.contract.Call(opts, &out, "VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// VALIDATORREWARDDISTRIBUTIONPOOLKEY is a free data retrieval call binding the contract method 0x93107614.
+//
+// Solidity: function VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY() view returns(string)
+func (_EventRegistry *EventRegistrySession) VALIDATORREWARDDISTRIBUTIONPOOLKEY() (string, error) {
+	return _EventRegistry.Contract.VALIDATORREWARDDISTRIBUTIONPOOLKEY(&_EventRegistry.CallOpts)
+}
+
+// VALIDATORREWARDDISTRIBUTIONPOOLKEY is a free data retrieval call binding the contract method 0x93107614.
+//
+// Solidity: function VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY() view returns(string)
+func (_EventRegistry *EventRegistryCallerSession) VALIDATORREWARDDISTRIBUTIONPOOLKEY() (string, error) {
+	return _EventRegistry.Contract.VALIDATORREWARDDISTRIBUTIONPOOLKEY(&_EventRegistry.CallOpts)
 }
 
 // EventKey is a free data retrieval call binding the contract method 0x547006bf.
