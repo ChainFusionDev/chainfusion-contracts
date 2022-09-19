@@ -5,7 +5,7 @@ import { BigNumber } from 'ethers';
 
 describe('ValidatorRewardDistributionPool', function () {
   it('should collect rewards', async function () {
-    const [signer, v2, v3, v4] = await ethers.getSigners();
+    const [signer, v2, v3] = await ethers.getSigners();
     const totalReward = ethers.utils.parseEther('1');
     const rewards = ethers.utils.parseEther('0.1');
     const { validatorRewardDistributionPool, staking, minimalStake } = await deploySystem();
