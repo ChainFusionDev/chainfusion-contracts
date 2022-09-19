@@ -172,7 +172,7 @@ describe('SlashingVoting', function () {
 
     await slashingVoting.voteProposal(0);
     await expect(slashingVoting.voteProposal(0)).to.be.revertedWith(
-      'SlashingVoting: voter is already voted against given validator'
+      'SlashingVoting: you already voted in this proposal'
     );
     await slashingVoting2.voteProposal(0);
 
