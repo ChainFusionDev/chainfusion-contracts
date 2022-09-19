@@ -128,7 +128,7 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
         );
         require(
             votesSlashingProposal[proposalId][msg.sender] == false,
-            "SlashingVoting: voter is already voted against given validator"
+            "SlashingVoting: you already voted in this proposal"
         );
 
         votesSlashingProposal[proposalId][msg.sender] = true;
