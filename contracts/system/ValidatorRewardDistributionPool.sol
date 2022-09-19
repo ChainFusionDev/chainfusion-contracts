@@ -12,13 +12,12 @@ import "hardhat/console.sol";
 contract ValidatorRewardDistributionPool is Initializable, ContractKeys {
     struct RewardPosition {
         uint256 stake;
-        uint256 balance;
+        uint256 reward;
         uint256 lastRewardPoints;
     }
 
     ContractRegistry public contractRegistry;
 
-    uint256 public collectedRewards;
     uint256 public totalRewardPoints;
     uint256 public providedStake;
 
@@ -36,40 +35,26 @@ contract ValidatorRewardDistributionPool is Initializable, ContractKeys {
     function distributeRewards(uint256 _amount) public {
         require(_amount > 0, "ValidatorRewardDistributionPool: amount must be greater than 0");
 
-        _updateValidatorStake();
-
         providedStake = _stakingContract().getTotalStake();
-        totalRewardPoints += (_amount * BASE_DIVISOR) / providedStake;
-        collectedRewards += _amount;
+        totalRewardPoints = (_amount * BASE_DIVISOR) / providedStake;
+
+        _updateValidatorStake();
+        _distributeRewards();
     }
 
     function collectRewards() public {
-        claimRewards();
         _sendRewards(msg.sender);
     }
 
     function reinvestRewards() public {
-        claimRewards();
-
-        uint256 reward = rewardPositions[msg.sender].balance;
+        uint256 reward = rewardPositions[msg.sender].reward;
 
         _sendRewards(address(_stakingContract()));
         _stakingContract().addRewardsToStake(msg.sender, reward);
     }
 
-    function claimRewards() public {
-        uint256 rewardsOwingAmount = rewardsOwing();
-        if (rewardsOwingAmount > 0) {
-            collectedRewards -= rewardsOwingAmount;
-            rewardPositions[msg.sender].balance += rewardsOwingAmount;
-            rewardPositions[msg.sender].lastRewardPoints = totalRewardPoints;
-        }
-    }
-
-    function rewardsOwing() public view returns (uint256) {
-        uint256 newRewardPoints = totalRewardPoints - rewardPositions[msg.sender].lastRewardPoints;
-
-        return (rewardPositions[msg.sender].stake * newRewardPoints) / BASE_DIVISOR;
+    function rewardsOwing(address validator) public view returns (uint256) {
+        return (rewardPositions[validator].stake * totalRewardPoints) / BASE_DIVISOR;
     }
 
     function _updateValidatorStake() private {
@@ -80,12 +65,20 @@ contract ValidatorRewardDistributionPool is Initializable, ContractKeys {
         }
     }
 
+    function _distributeRewards() private {
+        address[] memory validators = _stakingContract().getValidators();
+        for (uint256 i = 0; i < validators.length; i++) {
+            uint256 rewardsOwingAmount = rewardsOwing(validators[i]);
+            rewardPositions[validators[i]].reward += rewardsOwingAmount;
+        }
+    }
+
     function _sendRewards(address _receiver) private {
-        uint256 reward = rewardPositions[msg.sender].balance;
+        uint256 reward = rewardPositions[msg.sender].reward;
 
         require(reward > 0, "ValidatorRewardDistributionPool: reward must be greater than 0");
 
-        rewardPositions[msg.sender].balance -= reward;
+        rewardPositions[msg.sender].reward -= reward;
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = _receiver.call{value: reward, gas: 21000}("");
