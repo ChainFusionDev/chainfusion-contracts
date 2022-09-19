@@ -22,7 +22,7 @@ describe('FeeManager', function () {
   });
 
   it('should collect fee in native currency', async function () {
-    const [, foundation, receiver, user] = await ethers.getSigners();
+    const [deployer, foundation, receiver, user] = await ethers.getSigners();
     const amount = '1000000000000000000000';
     const tokenFee = '10000000000000000';
     const fee = '10000000000000000';
@@ -68,8 +68,8 @@ describe('FeeManager', function () {
     expect(balanceLiquidityPoolsAfter).to.equal(balanceLiquidityPoolsBefore.add(liquidityRewards));
     expect(balanceFoundationAddressAfter).to.equal(balanceFoundationAddressBefore.add(foundationRewards));
 
-    expect(await liquidityPools.collectedFees(NATIVE_TOKEN)).to.equal(liquidityRewards);
-    await liquidityPools.claimRewards(NATIVE_TOKEN);
-    expect(await liquidityPools.collectedFees(NATIVE_TOKEN)).to.equal(0);
+    expect(await (await liquidityPools.liquidityPositions(NATIVE_TOKEN, deployer.address)).balance).to.equal(
+      liquidityRewards.add(amount)
+    );
   });
 });

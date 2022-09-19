@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
+import { BigNumber } from 'ethers';
 import { deployBridge, deployBridgeWithMocks } from '../utils/deploy';
 
 describe('LiquidityPools', function () {
@@ -131,6 +132,7 @@ describe('LiquidityPools', function () {
     const tokenFee = '10000';
     const validatorReward = '300000000000000000';
     const liquidityReward = '300000000000000000';
+    const fee = BigNumber.from('3000000000030000');
 
     const { mockChainId, mockToken, liquidityPools, tokenManager, bridge, feeManager } = await deployBridgeWithMocks();
 
@@ -157,7 +159,12 @@ describe('LiquidityPools', function () {
     await expect(liquidityPools.distributeFee(mockToken.address, depositAmount)).to.be.revertedWith(
       'LiquidityPools: only feeManager'
     );
-    expect(await liquidityPoolsProvider.collectedFees(mockToken.address)).to.equal('3000000000030000');
+
+    expect(
+      await (
+        await liquidityPools.liquidityPositions(mockToken.address, liquidityProvider.address)
+      ).balance
+    ).to.equal(fee.add(depositAmount));
   });
 
   it('should claim rewards', async function () {
@@ -172,6 +179,7 @@ describe('LiquidityPools', function () {
     const nullAddress = '0x0000000000000000000000000000000000000000';
     const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     const nonce = 1;
+    const fee = BigNumber.from('3000000000000000');
 
     const { mockChainId, mockToken, liquidityPools, bridge, feeManager, relayBridge } = await deployBridgeWithMocks();
 
@@ -214,10 +222,9 @@ describe('LiquidityPools', function () {
     await feeManager.setTokenFee(mockToken.address, tokenFee, validatorReward, liquidityReward);
     await feeManager.distributeRewards(mockToken.address);
 
-    expect(await liquidityPools.collectedFees(mockToken.address)).to.equal('3000000000000000');
-    expect(await liquidityPools.rewardsOwing(mockToken.address)).to.equal('3000000000000000');
-    await liquidityPools.claimRewards(mockToken.address);
-    expect(await liquidityPools.rewardsOwing(mockToken.address)).to.equal(0);
+    expect(await (await liquidityPools.liquidityPositions(mockToken.address, sender.address)).balance).to.equal(
+      fee.add(depositAmount)
+    );
   });
 
   it('should add and remove liquidity several times', async function () {
@@ -280,7 +287,6 @@ describe('LiquidityPools', function () {
     const tokenFee = '10000';
     const validatorReward = '10000';
     const liquidityReward = '10000';
-    const fee = '100';
     const sourceChainId = 5;
     const gasLimit = (await ethers.provider.getBlock(0)).gasLimit;
     const transferAmount = '990000000000000000';
@@ -328,14 +334,14 @@ describe('LiquidityPools', function () {
 
     expect(after).to.equal(before.add(100));
 
-    expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(fee);
+    const fee = BigNumber.from('100');
 
-    await liquidityPools1.claimRewards(mockToken1.address);
-
-    expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(Number(fee) / 2);
-
-    await liquidityPools2.claimRewards(mockToken2.address);
-    expect(await liquidityPools.collectedFees(mockToken.address)).to.equal(0);
+    expect(await (await liquidityPools1.liquidityPositions(mockToken1.address, v1.address)).balance).to.equal(
+      fee.div(2).add(amount)
+    );
+    expect(await (await liquidityPools2.liquidityPositions(mockToken2.address, v2.address)).balance).to.equal(
+      fee.div(2).add(amount)
+    );
   });
 
   it('should remove liquidity using native token', async function () {

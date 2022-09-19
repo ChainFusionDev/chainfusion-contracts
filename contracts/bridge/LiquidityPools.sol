@@ -23,9 +23,10 @@ contract LiquidityPools is Initializable, SignerOwnable {
     uint256 public feePercentage;
 
     mapping(address => uint256) public providedLiquidity;
+    mapping(address => address[]) public liquidityProviders;
+
     mapping(address => uint256) public availableLiquidity;
     mapping(address => mapping(address => LiquidityPosition)) public liquidityPositions;
-    mapping(address => uint256) public collectedFees;
     mapping(address => uint256) public totalRewardPoints;
 
     event TokenManagerUpdated(address tokenManager);
@@ -83,10 +84,11 @@ contract LiquidityPools is Initializable, SignerOwnable {
 
     function distributeFee(address _token, uint256 _amount) external onlyFeeManager {
         require(_amount > 0, "LiquidityPools: amount must be greater than zero");
-        totalRewardPoints[_token] += (_amount * BASE_DIVISOR) / providedLiquidity[_token];
+        totalRewardPoints[_token] = (_amount * BASE_DIVISOR) / providedLiquidity[_token];
         providedLiquidity[_token] += _amount;
-        collectedFees[_token] += _amount;
         availableLiquidity[_token] += _amount;
+
+        _distributeFee(_token);
     }
 
     function setTokenManager(address _tokenManager) public onlySigner {
@@ -110,8 +112,6 @@ contract LiquidityPools is Initializable, SignerOwnable {
     }
 
     function addLiquidity(address _token, uint256 _amount) public {
-        claimRewards(_token);
-
         require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "IERC20: transfer failed");
 
@@ -119,8 +119,6 @@ contract LiquidityPools is Initializable, SignerOwnable {
     }
 
     function removeLiquidity(address _token, uint256 _amount) public payable {
-        claimRewards(_token);
-
         require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
         require(liquidityPositions[_token][msg.sender].balance >= _amount, "LiquidityPools: too much amount");
 
@@ -136,30 +134,27 @@ contract LiquidityPools is Initializable, SignerOwnable {
         }
     }
 
-    function claimRewards(address _token) public {
-        uint256 rewardsOwingAmount = rewardsOwing(_token);
-        if (rewardsOwingAmount > 0) {
-            collectedFees[_token] -= rewardsOwingAmount;
-            liquidityPositions[_token][msg.sender].balance += rewardsOwingAmount;
-            liquidityPositions[_token][msg.sender].lastRewardPoints = totalRewardPoints[_token];
-        }
-    }
-
     function addNativeLiquidity() public payable {
-        claimRewards(NATIVE_TOKEN);
-
         _addLiquidity(NATIVE_TOKEN, msg.value);
     }
 
-    function rewardsOwing(address _token) public view returns (uint256) {
-        uint256 newRewardPoints = totalRewardPoints[_token] - liquidityPositions[_token][msg.sender].lastRewardPoints;
-        return (liquidityPositions[_token][msg.sender].balance * newRewardPoints) / BASE_DIVISOR;
+    function rewardsOwing(address _token, address _provider) public view returns (uint256) {
+        return (liquidityPositions[_token][_provider].balance * totalRewardPoints[_token]) / BASE_DIVISOR;
+    }
+
+    function _distributeFee(address _token) private {
+        address[] memory providers = liquidityProviders[_token];
+        for (uint256 i = 0; i < providers.length; i++) {
+            uint256 rewardsOwingAmount = rewardsOwing(_token, providers[i]);
+            liquidityPositions[_token][providers[i]].balance += rewardsOwingAmount;
+        }
     }
 
     function _addLiquidity(address _token, uint256 _amount) private {
         providedLiquidity[_token] += _amount;
         availableLiquidity[_token] += _amount;
         liquidityPositions[_token][msg.sender].balance += _amount;
+        liquidityProviders[_token].push(msg.sender);
 
         emit LiquidityAdded(_token, msg.sender, _amount);
     }
@@ -167,6 +162,15 @@ contract LiquidityPools is Initializable, SignerOwnable {
     function _removeLiquidity(address _token, uint256 _amount) private {
         providedLiquidity[_token] -= _amount;
         availableLiquidity[_token] -= _amount;
+
+        if (liquidityPositions[_token][msg.sender].balance - _amount == 0) {
+            for (uint256 i = 0; i < liquidityProviders[_token].length; i++) {
+                if (liquidityProviders[_token][i] == msg.sender) {
+                    delete (liquidityProviders[_token][i]);
+                }
+            }
+        }
+
         liquidityPositions[_token][msg.sender].balance -= _amount;
 
         emit LiquidityRemoved(_token, msg.sender, _amount);
