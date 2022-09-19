@@ -133,7 +133,7 @@ describe('SlashingVoting', function () {
     );
   });
 
-  it('should create proposal with saving to an array', async function () {
+  it('should create proposal with saving to an array and emit', async function () {
     const [, v2] = await ethers.getSigners();
     const reasonProposal = 'offline';
 
@@ -147,11 +147,14 @@ describe('SlashingVoting', function () {
     await staking.stake({ value: minimalStake });
     await staking2.stake({ value: minimalStake });
 
-    await slashingVoting.createProposal(v2.address, reasonProposal);
+    await expect(slashingVoting.createProposal(v2.address, reasonProposal))
+      .to.emit(slashingVoting, 'ProposalCreated')
+      .withArgs(0, v2.address);
+
     expect((await slashingVoting.proposals(0)).validator).to.equal(v2.address);
   });
 
-  it('should vote proposal and slashed validator', async function () {
+  it('should vote proposal, slashed validator and emit', async function () {
     const [, v2, v3] = await ethers.getSigners();
     const reasonProposal = 'offline';
 
@@ -168,13 +171,18 @@ describe('SlashingVoting', function () {
     await staking2.stake({ value: minimalStake });
     await staking3.stake({ value: minimalStake });
 
-    await slashingVoting.createProposal(v3.address, reasonProposal);
+    await expect(slashingVoting.createProposal(v3.address, reasonProposal))
+      .to.emit(slashingVoting, 'ProposalCreated')
+      .withArgs(0, v3.address);
 
     await slashingVoting.voteProposal(0);
     await expect(slashingVoting.voteProposal(0)).to.be.revertedWith(
       'SlashingVoting: you already voted in this proposal'
     );
-    await slashingVoting2.voteProposal(0);
+
+    await expect(slashingVoting2.voteProposal(0))
+      .to.emit(slashingVoting, 'ProposalVoted')
+      .withArgs(0, v3.address, v2.address);
 
     expect(await staking.isValidatorSlashed(v3.address)).to.equal(true);
 

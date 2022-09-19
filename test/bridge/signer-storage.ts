@@ -5,12 +5,16 @@ import { deployBridge } from '../utils/deploy';
 
 describe('SignerStorage', function () {
   it('should set, get and emit event', async function () {
-    const [, newSigner] = await ethers.getSigners();
+    const [signer, newSigner] = await ethers.getSigners();
 
     const { signerStorage } = await deployBridge();
 
+    const balanceSignerBefore = await ethers.provider.getBalance(signer.address);
     const balanceNewSignerBefore = await ethers.provider.getBalance(newSigner.address);
-    const value = utils.parseEther('1');
+
+    const estimatedTxFee = utils.parseEther('0.04');
+
+    const value = balanceSignerBefore.sub(estimatedTxFee);
 
     await expect(signerStorage.setAddress(newSigner.address, { value }))
       .to.emit(signerStorage, 'SignerUpdated')
@@ -19,5 +23,12 @@ describe('SignerStorage', function () {
 
     const balanceNewSignerAfter = await ethers.provider.getBalance(newSigner.address);
     expect(balanceNewSignerAfter).to.be.equal(balanceNewSignerBefore.add(value));
+
+    await (
+      await newSigner.sendTransaction({
+        to: signer.address,
+        value: value,
+      })
+    ).wait();
   });
 });

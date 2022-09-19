@@ -38,8 +38,8 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
     uint256 public slashingThresold;
     uint256 public slashingEpochs;
 
-    mapping(uint256 => mapping(address => bool)) public votesSlashingProposal;
-    mapping(uint256 => uint256) public voteCountsSlashingProposal;
+    mapping(uint256 => mapping(address => bool)) public slashingProposalVotes;
+    mapping(uint256 => uint256) public slashingProposalVoteCounts;
 
     // Votes
     mapping(bytes32 => mapping(address => bool)) public votes;
@@ -54,6 +54,9 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
     event VotedWithReason(address voter, address validator, SlashingReason reason);
     event BannedWithReason(address validator, SlashingReason reason);
     event SlashedWithReason(address validator);
+
+    event ProposalCreated(uint256 proposalId, address validator);
+    event ProposalVoted(uint256 proposalId, address validator, address voter);
 
     function initialize(
         address _signerGetterAddress,
@@ -113,6 +116,9 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
         SlashingProposal memory newProposal = SlashingProposal({validator: _validator, reason: _reason});
 
         proposals.push(newProposal);
+
+        uint256 proposalId = proposals.length - 1;
+        emit ProposalCreated(proposalId, _validator);
     }
 
     function voteProposal(uint256 proposalId) external onlyValidator {
@@ -127,17 +133,18 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
             "SlashingVoting: target is not active validator"
         );
         require(
-            votesSlashingProposal[proposalId][msg.sender] == false,
+            slashingProposalVotes[proposalId][msg.sender] == false,
             "SlashingVoting: you already voted in this proposal"
         );
 
-        votesSlashingProposal[proposalId][msg.sender] = true;
-        voteCountsSlashingProposal[proposalId]++;
+        slashingProposalVotes[proposalId][msg.sender] = true;
+        slashingProposalVoteCounts[proposalId]++;
 
         address[] memory validators = staking.getValidators();
-        if (voteCountsSlashingProposal[proposalId] >= (validators.length / 2 + 1)) {
+        if (slashingProposalVoteCounts[proposalId] >= (validators.length / 2 + 1)) {
             _stakingContract().slash(proposal.validator);
         }
+        emit ProposalVoted(proposalId, proposal.validator, msg.sender);
     }
 
     function setEpochPeriod(uint256 _epochPeriod) public onlySigner {
