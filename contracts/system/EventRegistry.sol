@@ -3,8 +3,9 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./ValidatorOwnable.sol";
+import "./ContractKeys.sol";
 
-contract EventRegistry is ValidatorOwnable, Initializable {
+contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
     mapping(bytes32 => bool) public registeredEvents;
 
     event EventRegistered(bytes32 _hash, uint256 _generation, uint256 _sourceChain, uint256 _destinationChain);

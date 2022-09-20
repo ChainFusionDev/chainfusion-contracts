@@ -256,7 +256,7 @@ contract DKG is ContractKeys, Initializable {
     }
 
     function _stakingContract() private view returns (Staking) {
-        return Staking(contractRegistry.getContract(STAKING_KEY));
+        return Staking(payable(contractRegistry.getContract(STAKING_KEY)));
     }
 
     function _slashingVotingContract() private view returns (SlashingVoting) {
