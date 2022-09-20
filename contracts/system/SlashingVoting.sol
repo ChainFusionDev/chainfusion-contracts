@@ -25,6 +25,15 @@ enum SlashingReasonGroup {
 }
 
 contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initializable {
+    struct SlashingProposal {
+        address validator;
+        string reason;
+        mapping(address => bool) slashingProposalVotes;
+        uint256 slashingProposalVoteCounts;
+    }
+
+    SlashingProposal[] public proposals;
+
     ContractRegistry public contractRegistry;
 
     uint256 public epochPeriod;
@@ -44,6 +53,10 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
     event VotedWithReason(address voter, address validator, SlashingReason reason);
     event BannedWithReason(address validator, SlashingReason reason);
     event SlashedWithReason(address validator);
+
+    event ProposalCreated(uint256 proposalId, address validator);
+    event ProposalVoted(uint256 proposalId, address validator, address voter);
+    event ProposalExecuted(uint256 proposalId, address validator);
 
     function initialize(
         address _signerGetterAddress,
@@ -97,6 +110,45 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
             _stakingContract().slash(_validator);
             emit SlashedWithReason(_validator);
         }
+    }
+
+    function createProposal(address _validator, string memory _reason) external onlyValidator {
+        SlashingProposal storage newProposal = proposals.push();
+
+        newProposal.validator = _validator;
+        newProposal.reason = _reason;
+
+        uint256 proposalId = proposals.length - 1;
+        emit ProposalCreated(proposalId, _validator);
+
+        voteProposal(proposalId);
+    }
+
+    function voteProposal(uint256 proposalId) public onlyValidator {
+        Staking staking = _stakingContract();
+
+        require(proposalId < proposals.length, "SlashingVoting: proposal doesn't exist!");
+
+        SlashingProposal storage proposal = proposals[proposalId];
+
+        require(
+            staking.isValidatorActive(proposal.validator) == true,
+            "SlashingVoting: target is not active validator"
+        );
+        require(
+            proposals[proposalId].slashingProposalVotes[msg.sender] == false,
+            "SlashingVoting: you already voted in this proposal"
+        );
+
+        proposals[proposalId].slashingProposalVotes[msg.sender] = true;
+        proposals[proposalId].slashingProposalVoteCounts++;
+
+        address[] memory validators = staking.getValidators();
+        if (proposals[proposalId].slashingProposalVoteCounts >= (validators.length / 2 + 1)) {
+            _stakingContract().slash(proposal.validator);
+            emit ProposalExecuted(proposalId, proposal.validator);
+        }
+        emit ProposalVoted(proposalId, proposal.validator, msg.sender);
     }
 
     function setEpochPeriod(uint256 _epochPeriod) public onlySigner {

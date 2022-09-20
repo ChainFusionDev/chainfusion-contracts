@@ -132,4 +132,78 @@ describe('SlashingVoting', function () {
       'SlashingVoting: voter is already voted against given validator'
     );
   });
+
+  it('should create proposal with saving to an array and emit proposal created', async function () {
+    const [, v2] = await ethers.getSigners();
+    const reasonProposal = 'offline';
+
+    const { slashingVoting, staking, minimalStake } = await deploySystem();
+    const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
+
+    await expect(slashingVoting.createProposal(v2.address, reasonProposal)).to.be.revertedWith(
+      'ValidatorOwnable: only validator'
+    );
+
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
+
+    await expect(slashingVoting.createProposal(v2.address, reasonProposal))
+      .to.emit(slashingVoting, 'ProposalCreated')
+      .withArgs(0, v2.address);
+
+    expect((await slashingVoting.proposals(0)).validator).to.equal(v2.address);
+  });
+
+  it('should vote proposal, slashed validator and emit proposal voted', async function () {
+    const [, v2, v3] = await ethers.getSigners();
+    const reasonProposal = 'offline';
+
+    const { slashingVoting, staking, minimalStake } = await deploySystem();
+
+    const slashingVoting2 = await ethers.getContractAt('SlashingVoting', slashingVoting.address, v2);
+
+    const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
+    const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
+
+    await expect(slashingVoting.voteProposal(0)).to.be.revertedWith('ValidatorOwnable: only validator');
+
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
+    await staking3.stake({ value: minimalStake });
+
+    await slashingVoting.createProposal(v3.address, reasonProposal);
+
+    await expect(slashingVoting.voteProposal(0)).to.be.revertedWith(
+      'SlashingVoting: you already voted in this proposal'
+    );
+
+    await expect(slashingVoting2.voteProposal(0))
+      .to.emit(slashingVoting, 'ProposalVoted')
+      .withArgs(0, v3.address, v2.address);
+
+    expect(await staking.isValidatorSlashed(v3.address)).to.equal(true);
+
+    await expect(slashingVoting.voteProposal(0)).to.be.revertedWith('SlashingVoting: target is not active validator');
+    await expect(slashingVoting.voteProposal(1)).to.be.revertedWith("SlashingVoting: proposal doesn't exist!");
+  });
+
+  it('should emit proposal executed', async function () {
+    const [, v2, v3] = await ethers.getSigners();
+    const reasonProposal = 'offline';
+
+    const { slashingVoting, staking, minimalStake } = await deploySystem();
+
+    const slashingVoting2 = await ethers.getContractAt('SlashingVoting', slashingVoting.address, v2);
+
+    const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
+    const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
+
+    await staking.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
+    await staking3.stake({ value: minimalStake });
+
+    await slashingVoting.createProposal(v3.address, reasonProposal);
+
+    await expect(slashingVoting2.voteProposal(0)).to.emit(slashingVoting, 'ProposalExecuted').withArgs(0, v3.address);
+  });
 });
