@@ -160,6 +160,7 @@ contract LiquidityPools is Initializable, SignerOwnable {
         providedLiquidity[_token] += _amount;
         availableLiquidity[_token] += _amount;
         liquidityPositions[_token][msg.sender].balance += _amount;
+        liquidityPositions[_token][msg.sender].lastRewardPoints = totalRewardPoints[_token];
 
         emit LiquidityAdded(_token, msg.sender, _amount);
     }
