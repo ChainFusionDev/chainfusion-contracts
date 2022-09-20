@@ -12,6 +12,7 @@ import {
   EventRegistry,
   BridgeAppFactory,
   ERC20BridgeMediator,
+  ValidatorRewardDistributionPool,
 } from '../../typechain';
 
 const defaultSystemDeploymentParameters: SystemDeploymentParameters = {
@@ -45,6 +46,10 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
     slashingVoting: await deployer.deploy(ethers.getContractFactory('SlashingVoting'), 'SlashingVoting'),
     bridgeAppFactory: await deployer.deploy(ethers.getContractFactory('BridgeAppFactory'), 'BridgeAppFactory'),
     erc20BridgeMediator: await deployer.deploy(ethers.getContractFactory('ERC20BridgeMediator'), 'ERC20BridgeMediator'),
+    validatorRewardDistributionPool: await deployer.deploy(
+      ethers.getContractFactory('ValidatorRewardDistributionPool'),
+      'ValidatorRewardDistributionPool'
+    ),
   };
 
   deployer.log('Successfully deployed contracts\n');
@@ -91,12 +96,20 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
   );
 
   await deployer.sendTransaction(res.eventRegistry.initialize(res.staking.address), 'Initializing EventRegistry');
+  await deployer.sendTransaction(
+    res.validatorRewardDistributionPool.initialize(res.contractRegistry.address),
+    'Initializing ValidatorRewardDistributionPool'
+  );
 
   await res.contractRegistry.setContract(await res.slashingVoting.SLASHING_VOTING_KEY(), res.slashingVoting.address);
   await res.contractRegistry.setContract(await res.staking.STAKING_KEY(), res.staking.address);
   await res.contractRegistry.setContract(await res.dkg.DKG_KEY(), res.dkg.address);
   await res.contractRegistry.setContract(await res.supportedTokens.SUPPORTED_TOKENS_KEY(), res.supportedTokens.address);
-  await res.contractRegistry.setContract(await res.supportedTokens.EVENT_REGISTRY_KEY(), res.eventRegistry.address);
+  await res.contractRegistry.setContract(await res.eventRegistry.EVENT_REGISTRY_KEY(), res.eventRegistry.address);
+  await res.contractRegistry.setContract(
+    await res.validatorRewardDistributionPool.VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY(),
+    res.validatorRewardDistributionPool.address
+  );
 
   deployer.log('Successfully initialized contracts\n');
 
@@ -181,6 +194,7 @@ export interface SystemDeployment {
   eventRegistry: EventRegistry;
   bridgeAppFactory: BridgeAppFactory;
   erc20BridgeMediator: ERC20BridgeMediator;
+  validatorRewardDistributionPool: ValidatorRewardDistributionPool;
 }
 
 export interface SystemDeploymentParameters {

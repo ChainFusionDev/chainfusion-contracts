@@ -8,6 +8,7 @@ import "./SignerOwnable.sol";
 import "./ContractKeys.sol";
 import "./ContractRegistry.sol";
 import "./SlashingVoting.sol";
+import "./ValidatorRewardDistributionPool.sol";
 
 contract Staking is ContractKeys, SignerOwnable, Initializable {
     enum ValidatorStatus {
@@ -29,6 +30,7 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
 
     uint256 public minimalStake;
     uint256 public withdrawalPeriod;
+    uint256 public totalStake;
     mapping(address => ValidatorInfo) public stakes;
     mapping(address => WithdrawalAnnouncement) public withdrawalAnnouncements;
     ContractRegistry public contractRegistry;
@@ -48,6 +50,17 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
         _;
     }
 
+    modifier onlyValidatorRewardDistributionPool() {
+        require(
+            msg.sender == address(_validatorRewardDistributionPoolContract()),
+            "Staking: only ValidatorRewardDistributionPool contract"
+        );
+        _;
+    }
+
+    // solhint-disable-next-line no-empty-blocks
+    receive() external payable {}
+
     function initialize(
         address _signerGetterAddress,
         uint256 _minimalStake,
@@ -60,6 +73,11 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
         setWithdrawalPeriod(_withdrawalPeriod);
         contractRegistry = ContractRegistry(_contractRegistry);
         addressStorage = AddressStorage(_validatorStorage);
+    }
+
+    function addRewardsToStake(address _validator, uint256 _amount) external onlyValidatorRewardDistributionPool {
+        stakes[_validator].stake += _amount;
+        totalStake += _amount;
     }
 
     function isValidatorActive(address _validator) external view returns (bool) {
@@ -105,6 +123,7 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
         require(withdrawalAmount <= stakes[msg.sender].stake, "Staking: amount must be <= to validator stake");
 
         stakes[msg.sender].stake -= withdrawalAmount;
+        totalStake -= withdrawalAmount;
 
         withdrawalAnnouncements[msg.sender].amount = 0;
         withdrawalAnnouncements[msg.sender].time = 0;
@@ -129,10 +148,19 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
         }
 
         stakes[msg.sender].stake += msg.value;
+        totalStake += msg.value;
     }
 
     function getValidators() public view returns (address[] memory) {
         return addressStorage.getAddresses();
+    }
+
+    function getStake(address _validator) public view returns (uint256) {
+        return stakes[_validator].stake;
+    }
+
+    function getTotalStake() public view returns (uint256) {
+        return totalStake;
     }
 
     function _addValidator(address validator) private {
@@ -155,5 +183,12 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
 
     function _slashingVotingContract() private view returns (SlashingVoting) {
         return SlashingVoting(contractRegistry.getContract(SLASHING_VOTING_KEY));
+    }
+
+    function _validatorRewardDistributionPoolContract() private view returns (ValidatorRewardDistributionPool) {
+        return
+            ValidatorRewardDistributionPool(
+                payable(contractRegistry.getContract(VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY))
+            );
     }
 }
