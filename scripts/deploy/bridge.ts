@@ -82,7 +82,10 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
     'Initializing Bridge'
   );
 
-  await deployer.sendTransaction(res.relayBridge.initialize(res.signerStorage.address), 'Initializing RelayBridge');
+  await deployer.sendTransaction(
+    res.relayBridge.initialize(res.signerStorage.address, res.bridgeValidatorFeePool.address),
+    'Initializing RelayBridge'
+  );
   await deployer.sendTransaction(
     res.bridgeValidatorFeePool.initialize(res.signerStorage.address, res.bridge.address, validator.address),
     'Initializing BridgeValidatorFeePool'

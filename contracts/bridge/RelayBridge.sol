@@ -7,6 +7,7 @@ import "./TokenManager.sol";
 import "./Bridge.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
+import "./BridgeValidatorFeePool.sol";
 import "../interfaces/IBridgeApp.sol";
 import "../interfaces/IBridgeMediator.sol";
 
@@ -19,21 +20,24 @@ contract RelayBridge is Initializable, SignerOwnable {
 
     address[] public leaderHistory;
 
+    BridgeValidatorFeePool public bridgeValidatorFeePool;
+
     uint256 public nonce;
 
-    event Sent(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
+    event Sent(bytes32 hash, uint256 sourceChain, uint256 destinationChain, uint256 value);
     event Reverted(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
     event Executed(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
 
-    function initialize(address _signerStorage) external initializer {
+    function initialize(address _signerStorage, address payable _bridgeValidatorFeePool) external initializer {
         _setSignerStorage(_signerStorage);
+        bridgeValidatorFeePool = BridgeValidatorFeePool(_bridgeValidatorFeePool);
     }
 
     function send(
         uint256 destinationChain,
         uint256 gasLimit,
         bytes memory data
-    ) external {
+    ) external payable {
         bytes32 hash = dataHash(msg.sender, block.chainid, destinationChain, gasLimit, data, nonce);
         require(sentData[hash].length == 0, "RelayBridge: data already send");
 
@@ -41,7 +45,11 @@ contract RelayBridge is Initializable, SignerOwnable {
         sentData[hash] = data;
         nonce++;
 
-        emit Sent(hash, block.chainid, destinationChain);
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool success, ) = address(bridgeValidatorFeePool).call{value: msg.value, gas: 21000}("");
+        require(success, "RelayBridge: transfer value failed");
+
+        emit Sent(hash, block.chainid, destinationChain, msg.value);
     }
 
     function revertSend(
