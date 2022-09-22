@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { utils } from 'ethers';
 import { ethers } from 'hardhat';
 import { deployBridge, deployBridgeWithMocks } from '../utils/deploy';
 
@@ -10,18 +11,20 @@ describe('RelayBridge', function () {
     const destinationChain = 1;
     const gasLimit = 1;
     const nonce = 0;
+    const sendAmount = utils.parseEther('1');
 
     const abiCoder = ethers.utils.defaultAbiCoder;
     const data = abiCoder.encode(['string'], ['dataforsend']);
 
-    const { relayBridge } = await deployBridge();
+    const { relayBridge, bridgeValidatorFeePool } = await deployBridge();
 
     const hash = await relayBridge.dataHash(appContract.address, sourceChain, destinationChain, gasLimit, data, nonce);
-    await expect(relayBridge.send(destinationChain, gasLimit, data))
+    await expect(relayBridge.send(destinationChain, gasLimit, data, { value: sendAmount }))
       .to.emit(relayBridge, 'Sent')
-      .withArgs(hash, sourceChain, destinationChain);
+      .withArgs(hash, sourceChain, destinationChain, sendAmount);
 
     expect(await relayBridge.sentData(hash)).to.equals(data);
+    expect(await ethers.provider.getBalance(bridgeValidatorFeePool.address)).to.equals(sendAmount);
   });
 
   it('should emit event Reverted in appContract', async function () {
