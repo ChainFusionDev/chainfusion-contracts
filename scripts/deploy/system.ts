@@ -18,7 +18,7 @@ import {
 const defaultSystemDeploymentParameters: SystemDeploymentParameters = {
   minimalStake: ethers.utils.parseEther('100'),
   stakeWithdrawalPeriod: BigNumber.from(60),
-
+  router: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
   slashingEpochs: BigNumber.from(3),
   slashingEpochPeriod: BigNumber.from(1000),
   slashingBansThresold: BigNumber.from(10),
@@ -97,7 +97,7 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
 
   await deployer.sendTransaction(res.eventRegistry.initialize(res.staking.address), 'Initializing EventRegistry');
   await deployer.sendTransaction(
-    res.validatorRewardDistributionPool.initialize(res.contractRegistry.address),
+    res.validatorRewardDistributionPool.initialize(res.contractRegistry.address, params.router, res.dkg.address),
     'Initializing ValidatorRewardDistributionPool'
   );
 
@@ -179,6 +179,10 @@ function resolveParameters(options?: SystemDeploymentOptions): SystemDeploymentP
     parameters.stakingKeys = options.stakingKeys;
   }
 
+  if (options.router !== undefined) {
+    parameters.router = options.router;
+  }
+
   return parameters;
 }
 
@@ -207,6 +211,8 @@ export interface SystemDeploymentParameters {
 
   dkgDeadlinePeriod: BigNumber;
 
+  router: string;
+
   displayLogs: boolean;
   verify: boolean;
   stakingKeys: string[];
@@ -221,6 +227,8 @@ export interface SystemDeploymentOptions {
   slashingBansThresold?: BigNumber;
 
   dkgDeadlinePeriod?: BigNumber;
+
+  router?: string;
 
   displayLogs?: boolean;
   verify?: boolean;
