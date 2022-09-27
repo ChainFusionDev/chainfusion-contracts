@@ -30,6 +30,7 @@ describe('Bridge', function () {
     const [sender, receiver] = await ethers.getSigners();
 
     const depositAmount = utils.parseEther('1');
+    const depositAmountZero = utils.parseEther('0');
     const transferAmount = utils.parseEther('0.99');
     const { mockChainId, mockToken, bridge, liquidityPools, relayBridge } = await deployBridgeWithMocks();
     const sourceChain = ethers.provider.network.chainId;
@@ -38,6 +39,9 @@ describe('Bridge', function () {
 
     await mockToken.approve(bridge.address, depositAmount);
     await mockToken.approve(liquidityPools.address, depositAmount);
+    await expect(
+      bridge.deposit(mockToken.address, mockChainId, receiver.address, depositAmountZero)
+    ).to.be.revertedWith('Bridge: amount cannot be equal to 0.');
     await bridge.deposit(mockToken.address, mockChainId, receiver.address, depositAmount);
 
     const abiCoder = ethers.utils.defaultAbiCoder;
@@ -214,7 +218,7 @@ describe('Bridge', function () {
   });
 
   it('should execute', async function () {
-    const [sender, receiver] = await ethers.getSigners();
+    const [sender, receiver, user] = await ethers.getSigners();
     const depositAmount = utils.parseEther('1');
     const transferAmount = utils.parseEther('0.99');
     const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
@@ -245,6 +249,9 @@ describe('Bridge', function () {
     await bridge.deposit(mockToken.address, mockChainId, receiver.address, depositAmount);
 
     const receiverBalanceBeforeExecute = await mockToken.balanceOf(receiver.address);
+
+    const bridgeUser = await ethers.getContractAt('Bridge', bridge.address, user);
+    await expect(bridgeUser.execute(bridge.address, data)).to.be.revertedWith('Bridge: only RelayBridge');
 
     await expect(relayBridge.execute(bridge.address, mockChainId, gasLimit, data, nonce, leader))
       .to.emit(relayBridge, 'Executed')
@@ -345,6 +352,7 @@ describe('Bridge', function () {
     const [sender, receiver] = await ethers.getSigners();
 
     const depositAmount = utils.parseEther('1');
+    const depositAmountZero = utils.parseEther('0');
     const transferAmount = utils.parseEther('0.99');
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
@@ -366,6 +374,10 @@ describe('Bridge', function () {
     await tokenManager.setDestinationToken(mockChainId, NATIVE_TOKEN, NATIVE_TOKEN);
 
     await liquidityPools.addNativeLiquidity({ value: depositAmount });
+
+    await expect(bridge.depositNative(mockChainId, receiver.address, { value: depositAmountZero })).to.be.revertedWith(
+      'Bridge: amount cannot be equal to 0.'
+    );
     await bridge.depositNative(mockChainId, receiver.address, { value: depositAmount });
 
     const balanceReceiverBefore = await ethers.provider.getBalance(receiver.address);
