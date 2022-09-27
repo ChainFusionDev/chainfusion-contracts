@@ -5,7 +5,7 @@ import { deployBridge } from '../utils/deploy';
 
 describe('SignerStorage', function () {
   it('should set, get and emit event', async function () {
-    const [signer, newSigner] = await ethers.getSigners();
+    const [signer, newSigner, user] = await ethers.getSigners();
 
     const { signerStorage } = await deployBridge();
 
@@ -16,6 +16,8 @@ describe('SignerStorage', function () {
 
     const value = balanceSignerBefore.sub(estimatedTxFee);
 
+    const newUser = await ethers.getContractAt('SignerStorage', signerStorage.address, user);
+    await expect(newUser.setAddress(newSigner.address, { value })).to.be.revertedWith('SignerStorage: only signer');
     await expect(signerStorage.setAddress(newSigner.address, { value }))
       .to.emit(signerStorage, 'SignerUpdated')
       .withArgs(newSigner.address);

@@ -38,6 +38,9 @@ describe('RelayBridge', function () {
 
     const { relayBridge, mockBridgeApp } = await deployBridgeWithMocks();
 
+    await expect(
+      relayBridge.revertSend(mockBridgeApp.address, destinationChain, gasLimit, data, nonce, leader)
+    ).to.be.revertedWith('RelayBridge: data never sent');
     await mockBridgeApp.send(destinationChain, gasLimit, data);
 
     const leaderBeforeRevert = await relayBridge.leaderHistoryLength();
@@ -47,6 +50,9 @@ describe('RelayBridge', function () {
       .to.emit(mockBridgeApp, 'Reverted')
       .withArgs(hash);
 
+    await expect(
+      relayBridge.revertSend(mockBridgeApp.address, destinationChain, gasLimit, data, nonce, leader)
+    ).to.be.revertedWith('RelayBridge: data already reverted');
     expect(await relayBridge.leaderHistory(0)).to.equal(leader);
 
     const leaderAfterRevert = await relayBridge.leaderHistoryLength();
