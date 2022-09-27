@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
-import { deploySystem } from '../utils/deploy';
+import { deploySystemWithMocks } from '../utils/deploy';
 import { BigNumber } from 'ethers';
 
 describe('ValidatorRewardDistributionPool', function () {
@@ -9,7 +9,7 @@ describe('ValidatorRewardDistributionPool', function () {
     const totalReward = ethers.utils.parseEther('0.1');
     const minimalStake = ethers.utils.parseEther('100');
 
-    const { validatorRewardDistributionPool, staking } = await deploySystem();
+    const { validatorRewardDistributionPool, staking, mockDEXRouter, mockToken } = await deploySystemWithMocks();
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
     const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
@@ -32,15 +32,12 @@ describe('ValidatorRewardDistributionPool', function () {
       v4
     );
 
+    await expect(validatorRewardDistributionPool2.setRouter(v2.address)).to.be.revertedWith(
+      'SignerOwnable: only signer'
+    );
+
     await staking2.stake({ value: minimalStake });
     await staking3.stake({ value: minimalStake });
-
-    await (
-      await signer.sendTransaction({
-        to: validatorRewardDistributionPool.address,
-        value: totalReward,
-      })
-    ).wait();
 
     await expect(validatorRewardDistributionPool2.collectRewards()).to.be.revertedWith(
       'ValidatorRewardDistributionPool: reward must be greater than 0'
@@ -49,10 +46,22 @@ describe('ValidatorRewardDistributionPool', function () {
       'ValidatorRewardDistributionPool: reward must be greater than 0'
     );
 
-    await expect(validatorRewardDistributionPool.distributeRewards(0)).to.be.revertedWith(
+    await expect(validatorRewardDistributionPool.distributeRewards()).to.be.revertedWith(
       'ValidatorRewardDistributionPool: amount must be greater than 0'
     );
-    await validatorRewardDistributionPool.distributeRewards(totalReward);
+
+    await (
+      await signer.sendTransaction({
+        to: mockDEXRouter.address,
+        value: totalReward,
+      })
+    ).wait();
+
+    await mockToken.approve(validatorRewardDistributionPool.address, totalReward);
+    await mockToken.transfer(validatorRewardDistributionPool.address, totalReward);
+
+    await validatorRewardDistributionPool.distribute(mockToken.address);
+    await validatorRewardDistributionPool.distributeRewards();
 
     let validator3BalanceBefore = await ethers.provider.getBalance(v3.address);
     let validator2BalanceBefore = await ethers.provider.getBalance(v2.address);
@@ -82,16 +91,19 @@ describe('ValidatorRewardDistributionPool', function () {
       'ValidatorRewardDistributionPool: reward must be greater than 0'
     );
 
+    await staking4.stake({ value: minimalStake });
+
     await (
       await signer.sendTransaction({
-        to: validatorRewardDistributionPool.address,
+        to: mockDEXRouter.address,
         value: totalReward,
       })
     ).wait();
 
-    await staking4.stake({ value: minimalStake });
+    await mockToken.transfer(validatorRewardDistributionPool.address, totalReward);
 
-    await validatorRewardDistributionPool.distributeRewards(totalReward);
+    await validatorRewardDistributionPool.distribute(mockToken.address);
+    await validatorRewardDistributionPool.distributeRewards();
 
     let validator4BalanceBefore = await ethers.provider.getBalance(v4.address);
     validator3BalanceBefore = await ethers.provider.getBalance(v3.address);
@@ -123,14 +135,19 @@ describe('ValidatorRewardDistributionPool', function () {
 
     await (
       await signer.sendTransaction({
-        to: validatorRewardDistributionPool.address,
+        to: mockDEXRouter.address,
         value: totalReward,
       })
     ).wait();
 
+    await mockToken.transfer(validatorRewardDistributionPool.address, totalReward);
+
+    await validatorRewardDistributionPool.distribute(mockToken.address);
+    await validatorRewardDistributionPool.distributeRewards();
+
     reward = BigNumber.from('33333333333333300');
 
-    await validatorRewardDistributionPool.distributeRewards(totalReward);
+    await validatorRewardDistributionPool.distributeRewards();
 
     const validator4StakeBefore = await staking.getStake(v4.address);
     const validator3StakeBefore = await staking.getStake(v3.address);

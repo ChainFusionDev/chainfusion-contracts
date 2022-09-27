@@ -5,7 +5,6 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/IERC20MintableBurnable.sol";
-import "hardhat/console.sol";
 
 contract MockMintableBurnableToken is ERC20, IERC20MintableBurnable, ERC20Burnable, Ownable {
     constructor(string memory name, string memory symbol)
