@@ -30,7 +30,7 @@ var (
 
 // RelayBridgeMetaData contains all meta data concerning the RelayBridge contract.
 var RelayBridgeMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"}],\"name\":\"Executed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"}],\"name\":\"Reverted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"}],\"name\":\"Sent\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"dataHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"leader\",\"type\":\"address\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"executed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"leaderHistory\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"leaderHistoryLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"leader\",\"type\":\"address\"}],\"name\":\"revertSend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"reverted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"send\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sent\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sentData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"}],\"name\":\"Executed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"}],\"name\":\"Reverted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Sent\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"bridgeValidatorFeePool\",\"outputs\":[{\"internalType\":\"contractBridgeValidatorFeePool\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"dataHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"leader\",\"type\":\"address\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"executed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"},{\"internalType\":\"addresspayable\",\"name\":\"_bridgeValidatorFeePool\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"leaderHistory\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"leaderHistoryLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"leader\",\"type\":\"address\"}],\"name\":\"revertSend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"reverted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"send\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sent\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sentData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // RelayBridgeABI is the input ABI used to generate the binding from.
@@ -177,6 +177,37 @@ func (_RelayBridge *RelayBridgeTransactorRaw) Transfer(opts *bind.TransactOpts) 
 // Transact invokes the (paid) contract method with params as input values.
 func (_RelayBridge *RelayBridgeTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	return _RelayBridge.Contract.contract.Transact(opts, method, params...)
+}
+
+// BridgeValidatorFeePool is a free data retrieval call binding the contract method 0x6f4b418c.
+//
+// Solidity: function bridgeValidatorFeePool() view returns(address)
+func (_RelayBridge *RelayBridgeCaller) BridgeValidatorFeePool(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _RelayBridge.contract.Call(opts, &out, "bridgeValidatorFeePool")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// BridgeValidatorFeePool is a free data retrieval call binding the contract method 0x6f4b418c.
+//
+// Solidity: function bridgeValidatorFeePool() view returns(address)
+func (_RelayBridge *RelayBridgeSession) BridgeValidatorFeePool() (common.Address, error) {
+	return _RelayBridge.Contract.BridgeValidatorFeePool(&_RelayBridge.CallOpts)
+}
+
+// BridgeValidatorFeePool is a free data retrieval call binding the contract method 0x6f4b418c.
+//
+// Solidity: function bridgeValidatorFeePool() view returns(address)
+func (_RelayBridge *RelayBridgeCallerSession) BridgeValidatorFeePool() (common.Address, error) {
+	return _RelayBridge.Contract.BridgeValidatorFeePool(&_RelayBridge.CallOpts)
 }
 
 // DataHash is a free data retrieval call binding the contract method 0xc377a06b.
@@ -479,25 +510,25 @@ func (_RelayBridge *RelayBridgeTransactorSession) Execute(appContract common.Add
 	return _RelayBridge.Contract.Execute(&_RelayBridge.TransactOpts, appContract, sourceChain, gasLimit, data, _nonce, leader)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
 //
-// Solidity: function initialize(address _signerStorage) returns()
-func (_RelayBridge *RelayBridgeTransactor) Initialize(opts *bind.TransactOpts, _signerStorage common.Address) (*types.Transaction, error) {
-	return _RelayBridge.contract.Transact(opts, "initialize", _signerStorage)
+// Solidity: function initialize(address _signerStorage, address _bridgeValidatorFeePool) returns()
+func (_RelayBridge *RelayBridgeTransactor) Initialize(opts *bind.TransactOpts, _signerStorage common.Address, _bridgeValidatorFeePool common.Address) (*types.Transaction, error) {
+	return _RelayBridge.contract.Transact(opts, "initialize", _signerStorage, _bridgeValidatorFeePool)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
 //
-// Solidity: function initialize(address _signerStorage) returns()
-func (_RelayBridge *RelayBridgeSession) Initialize(_signerStorage common.Address) (*types.Transaction, error) {
-	return _RelayBridge.Contract.Initialize(&_RelayBridge.TransactOpts, _signerStorage)
+// Solidity: function initialize(address _signerStorage, address _bridgeValidatorFeePool) returns()
+func (_RelayBridge *RelayBridgeSession) Initialize(_signerStorage common.Address, _bridgeValidatorFeePool common.Address) (*types.Transaction, error) {
+	return _RelayBridge.Contract.Initialize(&_RelayBridge.TransactOpts, _signerStorage, _bridgeValidatorFeePool)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
 //
-// Solidity: function initialize(address _signerStorage) returns()
-func (_RelayBridge *RelayBridgeTransactorSession) Initialize(_signerStorage common.Address) (*types.Transaction, error) {
-	return _RelayBridge.Contract.Initialize(&_RelayBridge.TransactOpts, _signerStorage)
+// Solidity: function initialize(address _signerStorage, address _bridgeValidatorFeePool) returns()
+func (_RelayBridge *RelayBridgeTransactorSession) Initialize(_signerStorage common.Address, _bridgeValidatorFeePool common.Address) (*types.Transaction, error) {
+	return _RelayBridge.Contract.Initialize(&_RelayBridge.TransactOpts, _signerStorage, _bridgeValidatorFeePool)
 }
 
 // RevertSend is a paid mutator transaction binding the contract method 0x47176935.
@@ -523,21 +554,21 @@ func (_RelayBridge *RelayBridgeTransactorSession) RevertSend(appContract common.
 
 // Send is a paid mutator transaction binding the contract method 0x2a9bf608.
 //
-// Solidity: function send(uint256 destinationChain, uint256 gasLimit, bytes data) returns()
+// Solidity: function send(uint256 destinationChain, uint256 gasLimit, bytes data) payable returns()
 func (_RelayBridge *RelayBridgeTransactor) Send(opts *bind.TransactOpts, destinationChain *big.Int, gasLimit *big.Int, data []byte) (*types.Transaction, error) {
 	return _RelayBridge.contract.Transact(opts, "send", destinationChain, gasLimit, data)
 }
 
 // Send is a paid mutator transaction binding the contract method 0x2a9bf608.
 //
-// Solidity: function send(uint256 destinationChain, uint256 gasLimit, bytes data) returns()
+// Solidity: function send(uint256 destinationChain, uint256 gasLimit, bytes data) payable returns()
 func (_RelayBridge *RelayBridgeSession) Send(destinationChain *big.Int, gasLimit *big.Int, data []byte) (*types.Transaction, error) {
 	return _RelayBridge.Contract.Send(&_RelayBridge.TransactOpts, destinationChain, gasLimit, data)
 }
 
 // Send is a paid mutator transaction binding the contract method 0x2a9bf608.
 //
-// Solidity: function send(uint256 destinationChain, uint256 gasLimit, bytes data) returns()
+// Solidity: function send(uint256 destinationChain, uint256 gasLimit, bytes data) payable returns()
 func (_RelayBridge *RelayBridgeTransactorSession) Send(destinationChain *big.Int, gasLimit *big.Int, data []byte) (*types.Transaction, error) {
 	return _RelayBridge.Contract.Send(&_RelayBridge.TransactOpts, destinationChain, gasLimit, data)
 }
@@ -1020,12 +1051,13 @@ type RelayBridgeSent struct {
 	Hash             [32]byte
 	SourceChain      *big.Int
 	DestinationChain *big.Int
+	Value            *big.Int
 	Raw              types.Log // Blockchain specific contextual infos
 }
 
-// FilterSent is a free log retrieval operation binding the contract event 0xbbbacf56e8f8c5b2c2abd8b0ced818111b517c80584f24cfe1fa6324a5eee8b1.
+// FilterSent is a free log retrieval operation binding the contract event 0x6397a67cdf57ec00bb9bc48d60fdf03fffd9d92d47732ed72e3ce4f0d3cfaf95.
 //
-// Solidity: event Sent(bytes32 hash, uint256 sourceChain, uint256 destinationChain)
+// Solidity: event Sent(bytes32 hash, uint256 sourceChain, uint256 destinationChain, uint256 value)
 func (_RelayBridge *RelayBridgeFilterer) FilterSent(opts *bind.FilterOpts) (*RelayBridgeSentIterator, error) {
 
 	logs, sub, err := _RelayBridge.contract.FilterLogs(opts, "Sent")
@@ -1035,9 +1067,9 @@ func (_RelayBridge *RelayBridgeFilterer) FilterSent(opts *bind.FilterOpts) (*Rel
 	return &RelayBridgeSentIterator{contract: _RelayBridge.contract, event: "Sent", logs: logs, sub: sub}, nil
 }
 
-// WatchSent is a free log subscription operation binding the contract event 0xbbbacf56e8f8c5b2c2abd8b0ced818111b517c80584f24cfe1fa6324a5eee8b1.
+// WatchSent is a free log subscription operation binding the contract event 0x6397a67cdf57ec00bb9bc48d60fdf03fffd9d92d47732ed72e3ce4f0d3cfaf95.
 //
-// Solidity: event Sent(bytes32 hash, uint256 sourceChain, uint256 destinationChain)
+// Solidity: event Sent(bytes32 hash, uint256 sourceChain, uint256 destinationChain, uint256 value)
 func (_RelayBridge *RelayBridgeFilterer) WatchSent(opts *bind.WatchOpts, sink chan<- *RelayBridgeSent) (event.Subscription, error) {
 
 	logs, sub, err := _RelayBridge.contract.WatchLogs(opts, "Sent")
@@ -1072,9 +1104,9 @@ func (_RelayBridge *RelayBridgeFilterer) WatchSent(opts *bind.WatchOpts, sink ch
 	}), nil
 }
 
-// ParseSent is a log parse operation binding the contract event 0xbbbacf56e8f8c5b2c2abd8b0ced818111b517c80584f24cfe1fa6324a5eee8b1.
+// ParseSent is a log parse operation binding the contract event 0x6397a67cdf57ec00bb9bc48d60fdf03fffd9d92d47732ed72e3ce4f0d3cfaf95.
 //
-// Solidity: event Sent(bytes32 hash, uint256 sourceChain, uint256 destinationChain)
+// Solidity: event Sent(bytes32 hash, uint256 sourceChain, uint256 destinationChain, uint256 value)
 func (_RelayBridge *RelayBridgeFilterer) ParseSent(log types.Log) (*RelayBridgeSent, error) {
 	event := new(RelayBridgeSent)
 	if err := _RelayBridge.contract.UnpackLog(event, "Sent", log); err != nil {
