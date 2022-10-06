@@ -24,7 +24,16 @@ contract RelayBridge is Initializable, SignerOwnable {
 
     uint256 public nonce;
 
-    event Sent(bytes32 hash, uint256 sourceChain, uint256 destinationChain, uint256 value);
+    event Sent(
+        bytes32 hash,
+        address appContract,
+        uint256 sourceChain,
+        uint256 destinationChain,
+        bytes data,
+        uint256 gasLimit,
+        uint256 nonce,
+        uint256 value
+    );
     event Reverted(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
     event Executed(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
 
@@ -43,13 +52,14 @@ contract RelayBridge is Initializable, SignerOwnable {
 
         sent[hash] = true;
         sentData[hash] = data;
-        nonce++;
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = address(bridgeValidatorFeePool).call{value: msg.value, gas: 21000}("");
         require(success, "RelayBridge: transfer value failed");
 
-        emit Sent(hash, block.chainid, destinationChain, msg.value);
+        emit Sent(hash, msg.sender, block.chainid, destinationChain, data, gasLimit, nonce, msg.value);
+
+        nonce++;
     }
 
     function revertSend(
