@@ -21,7 +21,7 @@ describe('RelayBridge', function () {
     const hash = await relayBridge.dataHash(appContract.address, sourceChain, destinationChain, gasLimit, data, nonce);
     await expect(relayBridge.send(destinationChain, gasLimit, data, { value: sendAmount }))
       .to.emit(relayBridge, 'Sent')
-      .withArgs(hash, sourceChain, destinationChain, sendAmount);
+      .withArgs(hash, appContract.address, sourceChain, destinationChain, data, gasLimit, nonce, sendAmount);
 
     expect(await relayBridge.sentData(hash)).to.equals(data);
     expect(await ethers.provider.getBalance(bridgeValidatorFeePool.address)).to.equals(sendAmount);
