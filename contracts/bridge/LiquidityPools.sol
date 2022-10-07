@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./SignerOwnable.sol";
 import "./TokenManager.sol";
-import "./Bridge.sol";
+import "./ERC20Bridge.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
 
@@ -17,7 +17,7 @@ contract LiquidityPools is Initializable, SignerOwnable {
     }
 
     TokenManager public tokenManager;
-    Bridge public bridge;
+    ERC20Bridge public erc20Bridge;
     FeeManager public feeManager;
 
     uint256 public feePercentage;
@@ -29,15 +29,15 @@ contract LiquidityPools is Initializable, SignerOwnable {
     mapping(address => uint256) public totalRewardPoints;
 
     event TokenManagerUpdated(address tokenManager);
-    event BridgeUpdated(address bridge);
+    event ERC20BridgeUpdated(address erc20Bridge);
     event FeeManagerUpdated(address feeManager);
     event FeePercentageUpdated(uint256 feePercentage);
 
     event LiquidityAdded(address token, address account, uint256 amount);
     event LiquidityRemoved(address token, address account, uint256 amount);
 
-    modifier onlyBridge() {
-        require(msg.sender == address(bridge), "LiquidityPools: only bridge");
+    modifier onlyERC20Bridge() {
+        require(msg.sender == address(erc20Bridge), "LiquidityPools: only erc20Bridge");
         _;
     }
 
@@ -52,13 +52,13 @@ contract LiquidityPools is Initializable, SignerOwnable {
     function initialize(
         address _signerStorage,
         address _tokenManager,
-        address _bridge,
+        address _erc20Bridge,
         address payable _feeManager,
         uint256 _feePercentage
     ) external initializer {
         _setSignerStorage(_signerStorage);
         setTokenManager(_tokenManager);
-        setBridge(_bridge);
+        setERC20Bridge(_erc20Bridge);
         setFeeManager(_feeManager);
         setFeePercentage(_feePercentage);
     }
@@ -67,7 +67,7 @@ contract LiquidityPools is Initializable, SignerOwnable {
         address _token,
         address _receiver,
         uint256 _transferAmount
-    ) external onlyBridge {
+    ) external onlyERC20Bridge {
         require(
             IERC20(_token).balanceOf(address(this)) >= _transferAmount,
             "IERC20: amount more than contract balance"
@@ -75,7 +75,7 @@ contract LiquidityPools is Initializable, SignerOwnable {
         require(ERC20(_token).transfer(_receiver, _transferAmount), "ERC20: transfer failed");
     }
 
-    function transferNative(address _receiver, uint256 _amount) external onlyBridge {
+    function transferNative(address _receiver, uint256 _amount) external onlyERC20Bridge {
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = _receiver.call{value: _amount, gas: 21000}("");
         require(success, "LiquidityPools: transfer native token failed");
@@ -94,9 +94,9 @@ contract LiquidityPools is Initializable, SignerOwnable {
         emit TokenManagerUpdated(_tokenManager);
     }
 
-    function setBridge(address _bridge) public onlySigner {
-        bridge = Bridge(_bridge);
-        emit BridgeUpdated(_bridge);
+    function setERC20Bridge(address _erc20Bridge) public onlySigner {
+        erc20Bridge = ERC20Bridge(_erc20Bridge);
+        emit ERC20BridgeUpdated(_erc20Bridge);
     }
 
     function setFeeManager(address payable _feeManager) public onlySigner {
@@ -112,7 +112,7 @@ contract LiquidityPools is Initializable, SignerOwnable {
     function addLiquidity(address _token, uint256 _amount) public {
         claimRewards(_token);
 
-        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
+        require(tokenManager.getType(_token) == TokenType.PROVIDED, "TokenManager: token is not supported");
         require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "IERC20: transfer failed");
 
         _addLiquidity(_token, _amount);
@@ -121,7 +121,7 @@ contract LiquidityPools is Initializable, SignerOwnable {
     function removeLiquidity(address _token, uint256 _amount) public payable {
         claimRewards(_token);
 
-        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not supported");
+        require(tokenManager.getType(_token) == TokenType.PROVIDED, "TokenManager: token is not supported");
         require(liquidityPositions[_token][msg.sender].balance >= _amount, "LiquidityPools: too much amount");
 
         _removeLiquidity(_token, _amount);

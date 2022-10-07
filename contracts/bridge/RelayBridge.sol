@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./SignerOwnable.sol";
 import "./TokenManager.sol";
-import "./Bridge.sol";
+import "./ERC20Bridge.sol";
 import "./FeeManager.sol";
 import "./Globals.sol";
 import "./BridgeValidatorFeePool.sol";

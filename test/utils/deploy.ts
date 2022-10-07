@@ -23,20 +23,13 @@ export async function deployBridgeWithMocks(
   const mockToken = await MockToken.deploy('Mock Token', 'MOCK', BigNumber.from('10000000000000000000000000'));
   await mockToken.deployed();
 
-  await deployment.tokenManager.setDestinationToken(chainId, mockToken.address, mockToken.address);
-  await deployment.tokenManager.setEnabled(mockToken.address, true);
+  await deployment.tokenManager.setToken(mockToken.address, 1);
 
   const MockMintableBurnableToken = await ethers.getContractFactory('MockMintableBurnableToken');
   const mockMintableBurnableToken = await MockMintableBurnableToken.deploy('Mintable Mock Token', 'MINT');
   await mockMintableBurnableToken.deployed();
 
-  await deployment.tokenManager.setDestinationToken(
-    chainId,
-    mockMintableBurnableToken.address,
-    mockMintableBurnableToken.address
-  );
-  await deployment.tokenManager.setEnabled(mockMintableBurnableToken.address, true);
-  await deployment.tokenManager.setMintable(mockMintableBurnableToken.address, true);
+  await deployment.tokenManager.setToken(mockMintableBurnableToken.address, 2);
 
   const MockBridgeApp = await ethers.getContractFactory('MockBridgeApp');
   const mockBridgeApp = await MockBridgeApp.deploy();

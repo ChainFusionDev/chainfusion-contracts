@@ -9,15 +9,16 @@ describe('FeeManager', function () {
     const amount = utils.parseEther('1');
     const fee = utils.parseEther('0.01');
 
-    const { mockToken, mockChainId, liquidityPools, tokenManager, bridge, feeManager } = await deployBridgeWithMocks();
+    const { mockToken, mockChainId, liquidityPools, tokenManager, erc20Bridge, feeManager } =
+      await deployBridgeWithMocks();
 
-    expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
+    expect(await tokenManager.getType(mockToken.address)).to.equal(1);
 
-    await mockToken.approve(bridge.address, amount);
+    await mockToken.approve(erc20Bridge.address, amount);
     await mockToken.approve(liquidityPools.address, amount);
     await liquidityPools.addLiquidity(mockToken.address, amount);
 
-    await bridge.deposit(mockToken.address, mockChainId, receiver.address, amount);
+    await erc20Bridge.deposit(mockToken.address, mockChainId, receiver.address, amount);
     expect(await mockToken.balanceOf(feeManager.address)).to.equal(fee);
   });
 
@@ -31,18 +32,18 @@ describe('FeeManager', function () {
     const tokenLimit = utils.parseEther('0.1');
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
 
-    const { mockChainId, liquidityPools, tokenManager, bridge, feeManager, bridgeValidatorFeePool } =
+    const { mockChainId, liquidityPools, tokenManager, erc20Bridge, feeManager, bridgeValidatorFeePool } =
       await deployBridgeWithMocks({
         foundationAddress: foundation.address,
       });
 
-    await tokenManager.setEnabled(NATIVE_TOKEN, true);
-    expect(await tokenManager.isTokenEnabled(NATIVE_TOKEN)).to.equal(true);
+    await tokenManager.setToken(NATIVE_TOKEN, 1);
+    expect(await tokenManager.getType(NATIVE_TOKEN)).to.equal(1);
 
     await bridgeValidatorFeePool.setLimitPerToken(NATIVE_TOKEN, tokenLimit);
 
     await liquidityPools.addNativeLiquidity({ value: amount });
-    await bridge.depositNative(mockChainId, receiver.address, { value: amount });
+    await erc20Bridge.depositNative(mockChainId, receiver.address, { value: amount });
 
     await feeManager.setTokenFee(NATIVE_TOKEN, tokenFee, validatorReward, liquidityReward);
 
