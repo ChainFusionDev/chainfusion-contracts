@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 import { ethers } from 'hardhat';
 import {
-  Bridge,
+  ERC20Bridge,
   FeeManager,
   BridgeValidatorFeePool,
   LiquidityPools,
@@ -37,7 +37,7 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
       'BridgeValidatorFeePool'
     ),
     liquidityPools: await deployer.deploy(ethers.getContractFactory('LiquidityPools'), 'LiquidityPools'),
-    bridge: await deployer.deploy(ethers.getContractFactory('Bridge'), 'Bridge'),
+    erc20Bridge: await deployer.deploy(ethers.getContractFactory('ERC20Bridge'), 'ERC20Bridge'),
     relayBridge: await deployer.deploy(ethers.getContractFactory('RelayBridge'), 'RelayBridge'),
   };
 
@@ -63,7 +63,7 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
     res.liquidityPools.initialize(
       res.signerStorage.address,
       res.tokenManager.address,
-      res.bridge.address,
+      res.erc20Bridge.address,
       res.feeManager.address,
       params.feePercentage
     ),
@@ -71,7 +71,7 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
   );
 
   await deployer.sendTransaction(
-    res.bridge.initialize(
+    res.erc20Bridge.initialize(
       res.relayBridge.address,
       res.signerStorage.address,
       res.tokenManager.address,
@@ -79,7 +79,7 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
       res.feeManager.address,
       params.bridgeAppAddress
     ),
-    'Initializing Bridge'
+    'Initializing ERC20Bridge'
   );
 
   await deployer.sendTransaction(
@@ -87,7 +87,7 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
     'Initializing RelayBridge'
   );
   await deployer.sendTransaction(
-    res.bridgeValidatorFeePool.initialize(res.signerStorage.address, res.bridge.address, validator.address),
+    res.bridgeValidatorFeePool.initialize(res.signerStorage.address, res.erc20Bridge.address, validator.address),
     'Initializing BridgeValidatorFeePool'
   );
 
@@ -145,7 +145,7 @@ export interface BridgeDeployment {
   feeManager: FeeManager;
   bridgeValidatorFeePool: BridgeValidatorFeePool;
   liquidityPools: LiquidityPools;
-  bridge: Bridge;
+  erc20Bridge: ERC20Bridge;
   relayBridge: RelayBridge;
 }
 

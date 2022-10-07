@@ -12,7 +12,7 @@ import "../interfaces/IERC20MintableBurnable.sol";
 import "./RelayBridge.sol";
 import "../interfaces/IBridgeApp.sol";
 
-contract Bridge is Initializable, SignerOwnable, IBridgeApp {
+contract ERC20Bridge is Initializable, SignerOwnable, IBridgeApp {
     mapping(bytes32 => bool) public executed;
 
     address public bridgeAppAddress;
@@ -25,7 +25,6 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
     event Deposited(
         address sender,
         address token,
-        address destinationToken,
         uint256 destinationChainId,
         address receiver,
         uint256 fee,
@@ -47,7 +46,7 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
     event Reverted(address sender, address token, uint256 sourceChainId, address receiver, uint256 amount);
 
     modifier onlyRelayBridge() {
-        require(msg.sender == address(relayBridge), "Bridge: only RelayBridge");
+        require(msg.sender == address(relayBridge), "ERC20Bridge: only RelayBridge");
         _;
     }
 
@@ -73,15 +72,15 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
         address _receiver,
         uint256 _amount
     ) external {
-        require(_amount != 0, "Bridge: amount cannot be equal to 0.");
-        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not enabled");
+        require(_amount != 0, "ERC20Bridge: amount cannot be equal to 0.");
+        require(tokenManager.getType(_token) != TokenType.DISABLED, "TokenManager: token is not enabled");
 
         uint256 fee = feeManager.calculateFee(_token, _amount);
         require(IERC20(_token).transferFrom(msg.sender, address(feeManager), fee), "IERC20: transfer failed");
 
         uint256 transferAmount = _amount - fee;
 
-        if (tokenManager.isTokenMintable(_token)) {
+        if (tokenManager.getType(_token) == TokenType.MINTED) {
             IERC20MintableBurnable(_token).burnFrom(msg.sender, transferAmount);
         } else {
             require(
@@ -90,9 +89,7 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
             );
         }
 
-        address destinationToken = tokenManager.getDestinationToken(_token, _chainId);
-
-        emit Deposited(msg.sender, _token, destinationToken, _chainId, _receiver, fee, transferAmount);
+        emit Deposited(msg.sender, _token, _chainId, _receiver, fee, transferAmount);
 
         bytes memory data = abi.encode(msg.sender, _token, _chainId, _receiver, transferAmount);
 
@@ -106,9 +103,7 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
             (address, address, uint256, address, uint256)
         );
 
-        address destinationToken = tokenManager.getDestinationToken(_token, _chainId);
-
-        _executeTransfer(_sender, data, destinationToken, _chainId, _receiver, transferAmount);
+        _executeTransfer(_sender, data, _token, _chainId, _receiver, transferAmount);
     }
 
     function revertSend(uint256, bytes memory data) external onlyRelayBridge {
@@ -117,9 +112,9 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
             (address, address, uint256, address, uint256)
         );
 
-        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not enabled");
+        require(tokenManager.getType(_token) != TokenType.DISABLED, "TokenManager: token is not enabled");
 
-        if (tokenManager.isTokenMintable(_token)) {
+        if (tokenManager.getType(_token) == TokenType.MINTED) {
             IERC20MintableBurnable(_token).mint(_sender, _amount);
         } else if (_token == NATIVE_TOKEN) {
             liquidityPools.transferNative(_sender, _amount);
@@ -147,20 +142,20 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
 
     function depositNative(uint256 _chainId, address _receiver) public payable {
         uint256 _amount = msg.value;
-        require(_amount != 0, "Bridge: amount cannot be equal to 0.");
-        require(tokenManager.isTokenEnabled(NATIVE_TOKEN), "TokenManager: token is not enabled");
+        require(_amount != 0, "ERC20Bridge: amount cannot be equal to 0.");
+        require(tokenManager.getType(NATIVE_TOKEN) == TokenType.PROVIDED, "TokenManager: token is not enabled");
 
         uint256 fee = feeManager.calculateFee(NATIVE_TOKEN, _amount);
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = address(feeManager).call{value: fee, gas: 21000}("");
-        require(success, "Bridge: transfer native token failed");
+        require(success, "ERC20Bridge: transfer native token failed");
 
         uint256 transferAmount = _amount - fee;
 
         // solhint-disable-next-line avoid-low-level-calls
         (success, ) = address(liquidityPools).call{value: transferAmount, gas: 21000}("");
-        require(success, "Bridge: transfer native token failed");
+        require(success, "ERC20Bridge: transfer native token failed");
 
         emit DepositedNative(msg.sender, NATIVE_TOKEN, _chainId, _receiver, fee, transferAmount);
 
@@ -189,12 +184,12 @@ contract Bridge is Initializable, SignerOwnable, IBridgeApp {
         address _receiver,
         uint256 _amount
     ) private {
-        require(tokenManager.isTokenEnabled(_token), "TokenManager: token is not enabled");
+        require(tokenManager.getType(_token) != TokenType.DISABLED, "TokenManager: token is not enabled");
         bytes32 id = keccak256(abi.encodePacked(_sender, _txHash, _token, _receiver, _amount));
 
         executed[id] = true;
 
-        if (tokenManager.isTokenMintable(_token)) {
+        if (tokenManager.getType(_token) == TokenType.MINTED) {
             IERC20MintableBurnable(_token).mint(_receiver, _amount);
         } else if (_token == NATIVE_TOKEN) {
             liquidityPools.transferNative(_receiver, _amount);

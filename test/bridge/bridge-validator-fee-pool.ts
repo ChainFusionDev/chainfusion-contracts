@@ -9,21 +9,21 @@ describe('BridgeValidatorFeePool', function () {
     const NATIVE_TOKEN = '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF';
     const tokenLimit = utils.parseEther('1');
 
-    const { mockToken, bridgeValidatorFeePool, bridge } = await deployBridgeWithMocks();
+    const { mockToken, bridgeValidatorFeePool, erc20Bridge } = await deployBridgeWithMocks();
     const bridgeValidatorFeePoolByUser = await ethers.getContractAt(
       'BridgeValidatorFeePool',
       bridgeValidatorFeePool.address,
       user
     );
 
-    await expect(bridgeValidatorFeePoolByUser.setBridge(bridge.address)).to.be.revertedWith(
+    await expect(bridgeValidatorFeePoolByUser.setERC20Bridge(erc20Bridge.address)).to.be.revertedWith(
       'SignerOwnable: only signer'
     );
-    await expect(bridgeValidatorFeePool.setBridge(bridge.address))
-      .to.emit(bridgeValidatorFeePool, 'BridgeUpdated')
-      .withArgs(bridge.address);
+    await expect(bridgeValidatorFeePool.setERC20Bridge(erc20Bridge.address))
+      .to.emit(bridgeValidatorFeePool, 'ERC20BridgeUpdated')
+      .withArgs(erc20Bridge.address);
 
-    expect(await bridgeValidatorFeePool.bridge()).to.be.equal(bridge.address);
+    expect(await bridgeValidatorFeePool.erc20Bridge()).to.be.equal(erc20Bridge.address);
 
     await expect(bridgeValidatorFeePoolByUser.setValidatorFeeReceiver(validator.address)).to.be.revertedWith(
       'SignerOwnable: only signer'
@@ -58,7 +58,7 @@ describe('BridgeValidatorFeePool', function () {
     const validatorReward = utils.parseEther('0.3');
     const liquidityReward = utils.parseEther('0.3');
 
-    const { tokenManager, liquidityPools, mockChainId, mockToken, bridgeValidatorFeePool, bridge, feeManager } =
+    const { tokenManager, liquidityPools, mockChainId, mockToken, bridgeValidatorFeePool, erc20Bridge, feeManager } =
       await deployBridgeWithMocks();
 
     const MockToken = await ethers.getContractFactory('MockToken');
@@ -70,12 +70,12 @@ describe('BridgeValidatorFeePool', function () {
     expect(await bridgeValidatorFeePool.limitPerToken(mockToken.address)).to.be.equal(tokenLimit);
     expect(await bridgeValidatorFeePool.limitPerToken(NATIVE_TOKEN)).to.be.equal(tokenLimit);
 
-    await tokenManager.setEnabled(NATIVE_TOKEN, true);
-    await tokenManager.setEnabled(mockToken.address, true);
-    expect(await tokenManager.isTokenEnabled(NATIVE_TOKEN)).to.equal(true);
-    expect(await tokenManager.isTokenEnabled(mockToken.address)).to.equal(true);
+    await tokenManager.setToken(NATIVE_TOKEN, 1);
+    await tokenManager.setToken(mockToken.address, 1);
+    expect(await tokenManager.getType(NATIVE_TOKEN)).to.equal(1);
+    expect(await tokenManager.getType(mockToken.address)).to.equal(1);
 
-    await mockToken.approve(bridge.address, depositAmount);
+    await mockToken.approve(erc20Bridge.address, depositAmount);
     await mockToken.approve(liquidityPools.address, depositAmount);
 
     await liquidityPools.addNativeLiquidity({ value: depositAmount });
@@ -88,8 +88,8 @@ describe('BridgeValidatorFeePool', function () {
     expect(await bridgeValidatorFeePool.limitPerToken(NATIVE_TOKEN)).to.be.equal(tokenLimit);
     expect(await bridgeValidatorFeePool.limitPerToken(mockToken.address)).to.be.equal(tokenLimit);
 
-    await bridge.depositNative(mockChainId, receiver.address, { value: depositAmount });
-    await bridge.deposit(mockToken.address, mockChainId, receiver.address, depositAmount);
+    await erc20Bridge.depositNative(mockChainId, receiver.address, { value: depositAmount });
+    await erc20Bridge.deposit(mockToken.address, mockChainId, receiver.address, depositAmount);
 
     await feeManager.distributeRewards(NATIVE_TOKEN);
     await feeManager.distributeRewards(mockToken.address);

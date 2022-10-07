@@ -4,11 +4,11 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./SignerOwnable.sol";
-import "./Bridge.sol";
+import "./ERC20Bridge.sol";
 import "./Globals.sol";
 
 contract BridgeValidatorFeePool is Initializable, SignerOwnable {
-    Bridge public bridge;
+    ERC20Bridge public erc20Bridge;
 
     mapping(address => uint256) public limitPerToken;
 
@@ -16,7 +16,7 @@ contract BridgeValidatorFeePool is Initializable, SignerOwnable {
 
     event ValidatorFeeReceiverUpdated(address validatorFeeReceiver);
     event LimitPerTokenUpdated(address token, uint256 limit);
-    event BridgeUpdated(address bridge);
+    event ERC20BridgeUpdated(address erc20Bridge);
     event Collected(address token, uint256 amount);
 
     // solhint-disable-next-line no-empty-blocks
@@ -24,11 +24,11 @@ contract BridgeValidatorFeePool is Initializable, SignerOwnable {
 
     function initialize(
         address _signerStorage,
-        address _bridge,
+        address _erc20Bridge,
         address _validatorFeeReceiver
     ) external initializer {
         _setSignerStorage(_signerStorage);
-        setBridge(_bridge);
+        setERC20Bridge(_erc20Bridge);
         setValidatorFeeReceiver(_validatorFeeReceiver);
     }
 
@@ -42,9 +42,9 @@ contract BridgeValidatorFeePool is Initializable, SignerOwnable {
         emit LimitPerTokenUpdated(_token, _limit);
     }
 
-    function setBridge(address _bridge) public onlySigner {
-        bridge = Bridge(_bridge);
-        emit BridgeUpdated(_bridge);
+    function setERC20Bridge(address _erc20Bridge) public onlySigner {
+        erc20Bridge = ERC20Bridge(_erc20Bridge);
+        emit ERC20BridgeUpdated(_erc20Bridge);
     }
 
     function collect(address _token) public {
@@ -56,15 +56,15 @@ contract BridgeValidatorFeePool is Initializable, SignerOwnable {
             balanceAmount = address(this).balance;
 
             require(limitPerToken[_token] < balanceAmount, "BridgeValidatorFeePool: insufficient funds");
-            bridge.depositNative{value: balanceAmount}(block.chainid, validatorFeeReceiver);
+            erc20Bridge.depositNative{value: balanceAmount}(block.chainid, validatorFeeReceiver);
         } else {
             balanceAmount = IERC20(_token).balanceOf(address(this));
 
             require(limitPerToken[_token] < balanceAmount, "BridgeValidatorFeePool: insufficient funds");
 
-            IERC20(_token).approve(address(bridge), balanceAmount);
+            IERC20(_token).approve(address(erc20Bridge), balanceAmount);
 
-            bridge.deposit(_token, block.chainid, validatorFeeReceiver, balanceAmount);
+            erc20Bridge.deposit(_token, block.chainid, validatorFeeReceiver, balanceAmount);
         }
 
         emit Collected(_token, balanceAmount);
