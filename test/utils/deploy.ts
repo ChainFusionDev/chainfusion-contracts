@@ -2,7 +2,7 @@ import { ethers } from 'hardhat';
 import { BigNumber } from 'ethers';
 import { deploySystemContracts, SystemDeploymentOptions, SystemDeploymentResult } from '../../scripts/deploy/system';
 import { BridgeDeploymentOptions, BridgeDeploymentResult, deployBridgeContracts } from '../../scripts/deploy/bridge';
-import { MockMintableBurnableToken, MockBridgeApp, MockToken, MockDEXRouter } from '../../typechain';
+import { MockMintableBurnableToken, MockBridgeApp, MockToken, MockDEXRouter, ERC20Bridgeable } from '../../typechain';
 
 export async function deploySystem(options?: SystemDeploymentOptions): Promise<SystemDeploymentResult> {
   return await deploySystemContracts(options);
@@ -37,11 +37,16 @@ export async function deployBridgeWithMocks(
 
   await (await mockBridgeApp.initialize(deployment.relayBridge.address)).wait();
 
+  const ERC20Bridgeable = await ethers.getContractFactory('ERC20Bridgeable');
+  const erc20Bridgeable = await ERC20Bridgeable.deploy('CFN Token', 'CFN');
+  await erc20Bridgeable.deployed();
+
   return {
     mockChainId: chainId,
     mockToken: mockToken,
     mockMintableBurnableToken: mockMintableBurnableToken,
     mockBridgeApp: mockBridgeApp,
+    erc20Bridgeable: erc20Bridgeable,
     ...deployment,
   };
 }
@@ -74,6 +79,7 @@ export interface BridgeWithMocksDeploymentResult extends BridgeDeploymentResult 
   mockToken: MockToken;
   mockMintableBurnableToken: MockMintableBurnableToken;
   mockBridgeApp: MockBridgeApp;
+  erc20Bridgeable: ERC20Bridgeable;
 }
 
 export interface SystemWithMocksDeploymentResult extends SystemDeploymentResult {
