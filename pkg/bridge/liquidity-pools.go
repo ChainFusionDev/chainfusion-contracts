@@ -30,7 +30,7 @@ var (
 
 // LiquidityPoolsMetaData contains all meta data concerning the LiquidityPools contract.
 var LiquidityPoolsMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"bridge\",\"type\":\"address\"}],\"name\":\"BridgeUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"feeManager\",\"type\":\"address\"}],\"name\":\"FeeManagerUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feePercentage\",\"type\":\"uint256\"}],\"name\":\"FeePercentageUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LiquidityAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LiquidityRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenManager\",\"type\":\"address\"}],\"name\":\"TokenManagerUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"addLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"addNativeLiquidity\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"availableLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bridge\",\"outputs\":[{\"internalType\":\"contractBridge\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"claimRewards\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"collectedFees\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"distributeFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeManager\",\"outputs\":[{\"internalType\":\"contractFeeManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feePercentage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_bridge\",\"type\":\"address\"},{\"internalType\":\"addresspayable\",\"name\":\"_feeManager\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"liquidityPositions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"balance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lastRewardPoints\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"providedLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"removeLiquidity\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"rewardsOwing\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_bridge\",\"type\":\"address\"}],\"name\":\"setBridge\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_feeManager\",\"type\":\"address\"}],\"name\":\"setFeeManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"setFeePercentage\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"setTokenManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenManager\",\"outputs\":[{\"internalType\":\"contractTokenManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"totalRewardPoints\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_transferAmount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transferNative\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"erc20Bridge\",\"type\":\"address\"}],\"name\":\"ERC20BridgeUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"feeManager\",\"type\":\"address\"}],\"name\":\"FeeManagerUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feePercentage\",\"type\":\"uint256\"}],\"name\":\"FeePercentageUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LiquidityAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LiquidityRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenManager\",\"type\":\"address\"}],\"name\":\"TokenManagerUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"addLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"addNativeLiquidity\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"availableLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"claimRewards\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"collectedFees\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"distributeFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"erc20Bridge\",\"outputs\":[{\"internalType\":\"contractERC20Bridge\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeManager\",\"outputs\":[{\"internalType\":\"contractFeeManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feePercentage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_erc20Bridge\",\"type\":\"address\"},{\"internalType\":\"addresspayable\",\"name\":\"_feeManager\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"liquidityPositions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"balance\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lastRewardPoints\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"providedLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"removeLiquidity\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"rewardsOwing\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_erc20Bridge\",\"type\":\"address\"}],\"name\":\"setERC20Bridge\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_feeManager\",\"type\":\"address\"}],\"name\":\"setFeeManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_feePercentage\",\"type\":\"uint256\"}],\"name\":\"setFeePercentage\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenManager\",\"type\":\"address\"}],\"name\":\"setTokenManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenManager\",\"outputs\":[{\"internalType\":\"contractTokenManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"totalRewardPoints\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_transferAmount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transferNative\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
 }
 
 // LiquidityPoolsABI is the input ABI used to generate the binding from.
@@ -210,37 +210,6 @@ func (_LiquidityPools *LiquidityPoolsCallerSession) AvailableLiquidity(arg0 comm
 	return _LiquidityPools.Contract.AvailableLiquidity(&_LiquidityPools.CallOpts, arg0)
 }
 
-// Bridge is a free data retrieval call binding the contract method 0xe78cea92.
-//
-// Solidity: function bridge() view returns(address)
-func (_LiquidityPools *LiquidityPoolsCaller) Bridge(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _LiquidityPools.contract.Call(opts, &out, "bridge")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// Bridge is a free data retrieval call binding the contract method 0xe78cea92.
-//
-// Solidity: function bridge() view returns(address)
-func (_LiquidityPools *LiquidityPoolsSession) Bridge() (common.Address, error) {
-	return _LiquidityPools.Contract.Bridge(&_LiquidityPools.CallOpts)
-}
-
-// Bridge is a free data retrieval call binding the contract method 0xe78cea92.
-//
-// Solidity: function bridge() view returns(address)
-func (_LiquidityPools *LiquidityPoolsCallerSession) Bridge() (common.Address, error) {
-	return _LiquidityPools.Contract.Bridge(&_LiquidityPools.CallOpts)
-}
-
 // CollectedFees is a free data retrieval call binding the contract method 0x1cead9a7.
 //
 // Solidity: function collectedFees(address ) view returns(uint256)
@@ -270,6 +239,37 @@ func (_LiquidityPools *LiquidityPoolsSession) CollectedFees(arg0 common.Address)
 // Solidity: function collectedFees(address ) view returns(uint256)
 func (_LiquidityPools *LiquidityPoolsCallerSession) CollectedFees(arg0 common.Address) (*big.Int, error) {
 	return _LiquidityPools.Contract.CollectedFees(&_LiquidityPools.CallOpts, arg0)
+}
+
+// Erc20Bridge is a free data retrieval call binding the contract method 0xf8ffea7e.
+//
+// Solidity: function erc20Bridge() view returns(address)
+func (_LiquidityPools *LiquidityPoolsCaller) Erc20Bridge(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _LiquidityPools.contract.Call(opts, &out, "erc20Bridge")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// Erc20Bridge is a free data retrieval call binding the contract method 0xf8ffea7e.
+//
+// Solidity: function erc20Bridge() view returns(address)
+func (_LiquidityPools *LiquidityPoolsSession) Erc20Bridge() (common.Address, error) {
+	return _LiquidityPools.Contract.Erc20Bridge(&_LiquidityPools.CallOpts)
+}
+
+// Erc20Bridge is a free data retrieval call binding the contract method 0xf8ffea7e.
+//
+// Solidity: function erc20Bridge() view returns(address)
+func (_LiquidityPools *LiquidityPoolsCallerSession) Erc20Bridge() (common.Address, error) {
+	return _LiquidityPools.Contract.Erc20Bridge(&_LiquidityPools.CallOpts)
 }
 
 // FeeManager is a free data retrieval call binding the contract method 0xd0fb0203.
@@ -620,23 +620,23 @@ func (_LiquidityPools *LiquidityPoolsTransactorSession) DistributeFee(_token com
 
 // Initialize is a paid mutator transaction binding the contract method 0xf7013ef6.
 //
-// Solidity: function initialize(address _signerStorage, address _tokenManager, address _bridge, address _feeManager, uint256 _feePercentage) returns()
-func (_LiquidityPools *LiquidityPoolsTransactor) Initialize(opts *bind.TransactOpts, _signerStorage common.Address, _tokenManager common.Address, _bridge common.Address, _feeManager common.Address, _feePercentage *big.Int) (*types.Transaction, error) {
-	return _LiquidityPools.contract.Transact(opts, "initialize", _signerStorage, _tokenManager, _bridge, _feeManager, _feePercentage)
+// Solidity: function initialize(address _signerStorage, address _tokenManager, address _erc20Bridge, address _feeManager, uint256 _feePercentage) returns()
+func (_LiquidityPools *LiquidityPoolsTransactor) Initialize(opts *bind.TransactOpts, _signerStorage common.Address, _tokenManager common.Address, _erc20Bridge common.Address, _feeManager common.Address, _feePercentage *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.contract.Transact(opts, "initialize", _signerStorage, _tokenManager, _erc20Bridge, _feeManager, _feePercentage)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0xf7013ef6.
 //
-// Solidity: function initialize(address _signerStorage, address _tokenManager, address _bridge, address _feeManager, uint256 _feePercentage) returns()
-func (_LiquidityPools *LiquidityPoolsSession) Initialize(_signerStorage common.Address, _tokenManager common.Address, _bridge common.Address, _feeManager common.Address, _feePercentage *big.Int) (*types.Transaction, error) {
-	return _LiquidityPools.Contract.Initialize(&_LiquidityPools.TransactOpts, _signerStorage, _tokenManager, _bridge, _feeManager, _feePercentage)
+// Solidity: function initialize(address _signerStorage, address _tokenManager, address _erc20Bridge, address _feeManager, uint256 _feePercentage) returns()
+func (_LiquidityPools *LiquidityPoolsSession) Initialize(_signerStorage common.Address, _tokenManager common.Address, _erc20Bridge common.Address, _feeManager common.Address, _feePercentage *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.Initialize(&_LiquidityPools.TransactOpts, _signerStorage, _tokenManager, _erc20Bridge, _feeManager, _feePercentage)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0xf7013ef6.
 //
-// Solidity: function initialize(address _signerStorage, address _tokenManager, address _bridge, address _feeManager, uint256 _feePercentage) returns()
-func (_LiquidityPools *LiquidityPoolsTransactorSession) Initialize(_signerStorage common.Address, _tokenManager common.Address, _bridge common.Address, _feeManager common.Address, _feePercentage *big.Int) (*types.Transaction, error) {
-	return _LiquidityPools.Contract.Initialize(&_LiquidityPools.TransactOpts, _signerStorage, _tokenManager, _bridge, _feeManager, _feePercentage)
+// Solidity: function initialize(address _signerStorage, address _tokenManager, address _erc20Bridge, address _feeManager, uint256 _feePercentage) returns()
+func (_LiquidityPools *LiquidityPoolsTransactorSession) Initialize(_signerStorage common.Address, _tokenManager common.Address, _erc20Bridge common.Address, _feeManager common.Address, _feePercentage *big.Int) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.Initialize(&_LiquidityPools.TransactOpts, _signerStorage, _tokenManager, _erc20Bridge, _feeManager, _feePercentage)
 }
 
 // RemoveLiquidity is a paid mutator transaction binding the contract method 0xa201ccf6.
@@ -660,25 +660,25 @@ func (_LiquidityPools *LiquidityPoolsTransactorSession) RemoveLiquidity(_token c
 	return _LiquidityPools.Contract.RemoveLiquidity(&_LiquidityPools.TransactOpts, _token, _amount)
 }
 
-// SetBridge is a paid mutator transaction binding the contract method 0x8dd14802.
+// SetERC20Bridge is a paid mutator transaction binding the contract method 0xe88866a5.
 //
-// Solidity: function setBridge(address _bridge) returns()
-func (_LiquidityPools *LiquidityPoolsTransactor) SetBridge(opts *bind.TransactOpts, _bridge common.Address) (*types.Transaction, error) {
-	return _LiquidityPools.contract.Transact(opts, "setBridge", _bridge)
+// Solidity: function setERC20Bridge(address _erc20Bridge) returns()
+func (_LiquidityPools *LiquidityPoolsTransactor) SetERC20Bridge(opts *bind.TransactOpts, _erc20Bridge common.Address) (*types.Transaction, error) {
+	return _LiquidityPools.contract.Transact(opts, "setERC20Bridge", _erc20Bridge)
 }
 
-// SetBridge is a paid mutator transaction binding the contract method 0x8dd14802.
+// SetERC20Bridge is a paid mutator transaction binding the contract method 0xe88866a5.
 //
-// Solidity: function setBridge(address _bridge) returns()
-func (_LiquidityPools *LiquidityPoolsSession) SetBridge(_bridge common.Address) (*types.Transaction, error) {
-	return _LiquidityPools.Contract.SetBridge(&_LiquidityPools.TransactOpts, _bridge)
+// Solidity: function setERC20Bridge(address _erc20Bridge) returns()
+func (_LiquidityPools *LiquidityPoolsSession) SetERC20Bridge(_erc20Bridge common.Address) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.SetERC20Bridge(&_LiquidityPools.TransactOpts, _erc20Bridge)
 }
 
-// SetBridge is a paid mutator transaction binding the contract method 0x8dd14802.
+// SetERC20Bridge is a paid mutator transaction binding the contract method 0xe88866a5.
 //
-// Solidity: function setBridge(address _bridge) returns()
-func (_LiquidityPools *LiquidityPoolsTransactorSession) SetBridge(_bridge common.Address) (*types.Transaction, error) {
-	return _LiquidityPools.Contract.SetBridge(&_LiquidityPools.TransactOpts, _bridge)
+// Solidity: function setERC20Bridge(address _erc20Bridge) returns()
+func (_LiquidityPools *LiquidityPoolsTransactorSession) SetERC20Bridge(_erc20Bridge common.Address) (*types.Transaction, error) {
+	return _LiquidityPools.Contract.SetERC20Bridge(&_LiquidityPools.TransactOpts, _erc20Bridge)
 }
 
 // SetFeeManager is a paid mutator transaction binding the contract method 0x472d35b9.
@@ -807,9 +807,9 @@ func (_LiquidityPools *LiquidityPoolsTransactorSession) Receive() (*types.Transa
 	return _LiquidityPools.Contract.Receive(&_LiquidityPools.TransactOpts)
 }
 
-// LiquidityPoolsBridgeUpdatedIterator is returned from FilterBridgeUpdated and is used to iterate over the raw logs and unpacked data for BridgeUpdated events raised by the LiquidityPools contract.
-type LiquidityPoolsBridgeUpdatedIterator struct {
-	Event *LiquidityPoolsBridgeUpdated // Event containing the contract specifics and raw log
+// LiquidityPoolsERC20BridgeUpdatedIterator is returned from FilterERC20BridgeUpdated and is used to iterate over the raw logs and unpacked data for ERC20BridgeUpdated events raised by the LiquidityPools contract.
+type LiquidityPoolsERC20BridgeUpdatedIterator struct {
+	Event *LiquidityPoolsERC20BridgeUpdated // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -823,7 +823,7 @@ type LiquidityPoolsBridgeUpdatedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *LiquidityPoolsBridgeUpdatedIterator) Next() bool {
+func (it *LiquidityPoolsERC20BridgeUpdatedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -832,7 +832,7 @@ func (it *LiquidityPoolsBridgeUpdatedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(LiquidityPoolsBridgeUpdated)
+			it.Event = new(LiquidityPoolsERC20BridgeUpdated)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -847,7 +847,7 @@ func (it *LiquidityPoolsBridgeUpdatedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(LiquidityPoolsBridgeUpdated)
+		it.Event = new(LiquidityPoolsERC20BridgeUpdated)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -863,41 +863,41 @@ func (it *LiquidityPoolsBridgeUpdatedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *LiquidityPoolsBridgeUpdatedIterator) Error() error {
+func (it *LiquidityPoolsERC20BridgeUpdatedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *LiquidityPoolsBridgeUpdatedIterator) Close() error {
+func (it *LiquidityPoolsERC20BridgeUpdatedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// LiquidityPoolsBridgeUpdated represents a BridgeUpdated event raised by the LiquidityPools contract.
-type LiquidityPoolsBridgeUpdated struct {
-	Bridge common.Address
-	Raw    types.Log // Blockchain specific contextual infos
+// LiquidityPoolsERC20BridgeUpdated represents a ERC20BridgeUpdated event raised by the LiquidityPools contract.
+type LiquidityPoolsERC20BridgeUpdated struct {
+	Erc20Bridge common.Address
+	Raw         types.Log // Blockchain specific contextual infos
 }
 
-// FilterBridgeUpdated is a free log retrieval operation binding the contract event 0xe1694c0b21fdceff6411daed547c7463c2341b9695387bc82595b5b9b1851d4a.
+// FilterERC20BridgeUpdated is a free log retrieval operation binding the contract event 0x4dcff21652c7d0d1d66be34beea4eeea84364a02f61ed804cfd084772324e63b.
 //
-// Solidity: event BridgeUpdated(address bridge)
-func (_LiquidityPools *LiquidityPoolsFilterer) FilterBridgeUpdated(opts *bind.FilterOpts) (*LiquidityPoolsBridgeUpdatedIterator, error) {
+// Solidity: event ERC20BridgeUpdated(address erc20Bridge)
+func (_LiquidityPools *LiquidityPoolsFilterer) FilterERC20BridgeUpdated(opts *bind.FilterOpts) (*LiquidityPoolsERC20BridgeUpdatedIterator, error) {
 
-	logs, sub, err := _LiquidityPools.contract.FilterLogs(opts, "BridgeUpdated")
+	logs, sub, err := _LiquidityPools.contract.FilterLogs(opts, "ERC20BridgeUpdated")
 	if err != nil {
 		return nil, err
 	}
-	return &LiquidityPoolsBridgeUpdatedIterator{contract: _LiquidityPools.contract, event: "BridgeUpdated", logs: logs, sub: sub}, nil
+	return &LiquidityPoolsERC20BridgeUpdatedIterator{contract: _LiquidityPools.contract, event: "ERC20BridgeUpdated", logs: logs, sub: sub}, nil
 }
 
-// WatchBridgeUpdated is a free log subscription operation binding the contract event 0xe1694c0b21fdceff6411daed547c7463c2341b9695387bc82595b5b9b1851d4a.
+// WatchERC20BridgeUpdated is a free log subscription operation binding the contract event 0x4dcff21652c7d0d1d66be34beea4eeea84364a02f61ed804cfd084772324e63b.
 //
-// Solidity: event BridgeUpdated(address bridge)
-func (_LiquidityPools *LiquidityPoolsFilterer) WatchBridgeUpdated(opts *bind.WatchOpts, sink chan<- *LiquidityPoolsBridgeUpdated) (event.Subscription, error) {
+// Solidity: event ERC20BridgeUpdated(address erc20Bridge)
+func (_LiquidityPools *LiquidityPoolsFilterer) WatchERC20BridgeUpdated(opts *bind.WatchOpts, sink chan<- *LiquidityPoolsERC20BridgeUpdated) (event.Subscription, error) {
 
-	logs, sub, err := _LiquidityPools.contract.WatchLogs(opts, "BridgeUpdated")
+	logs, sub, err := _LiquidityPools.contract.WatchLogs(opts, "ERC20BridgeUpdated")
 	if err != nil {
 		return nil, err
 	}
@@ -907,8 +907,8 @@ func (_LiquidityPools *LiquidityPoolsFilterer) WatchBridgeUpdated(opts *bind.Wat
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(LiquidityPoolsBridgeUpdated)
-				if err := _LiquidityPools.contract.UnpackLog(event, "BridgeUpdated", log); err != nil {
+				event := new(LiquidityPoolsERC20BridgeUpdated)
+				if err := _LiquidityPools.contract.UnpackLog(event, "ERC20BridgeUpdated", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -929,12 +929,12 @@ func (_LiquidityPools *LiquidityPoolsFilterer) WatchBridgeUpdated(opts *bind.Wat
 	}), nil
 }
 
-// ParseBridgeUpdated is a log parse operation binding the contract event 0xe1694c0b21fdceff6411daed547c7463c2341b9695387bc82595b5b9b1851d4a.
+// ParseERC20BridgeUpdated is a log parse operation binding the contract event 0x4dcff21652c7d0d1d66be34beea4eeea84364a02f61ed804cfd084772324e63b.
 //
-// Solidity: event BridgeUpdated(address bridge)
-func (_LiquidityPools *LiquidityPoolsFilterer) ParseBridgeUpdated(log types.Log) (*LiquidityPoolsBridgeUpdated, error) {
-	event := new(LiquidityPoolsBridgeUpdated)
-	if err := _LiquidityPools.contract.UnpackLog(event, "BridgeUpdated", log); err != nil {
+// Solidity: event ERC20BridgeUpdated(address erc20Bridge)
+func (_LiquidityPools *LiquidityPoolsFilterer) ParseERC20BridgeUpdated(log types.Log) (*LiquidityPoolsERC20BridgeUpdated, error) {
+	event := new(LiquidityPoolsERC20BridgeUpdated)
+	if err := _LiquidityPools.contract.UnpackLog(event, "ERC20BridgeUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
