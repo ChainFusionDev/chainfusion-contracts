@@ -20,4 +20,5 @@ RUN abigen --abi artifacts/abi/system/Staking.sol/Staking.json --pkg system --ty
 RUN abigen --abi artifacts/abi/system/EventRegistry.sol/EventRegistry.json --pkg system --type EventRegistry --out system/event-registry.go
 RUN abigen --abi artifacts/abi/system/ContractRegistry.sol/ContractRegistry.json --pkg system --type ContractRegistry --out system/contract-registry.go
 RUN abigen --abi artifacts/abi/system/SlashingVoting.sol/SlashingVoting.json --pkg system --type SlashingVoting --out system/slashing-voting.go
-RUN abigen --abi artifacts/abi/system/BridgeApp.sol/BridgeApp.json --pkg system --type BridgeApp --out system/bridgeApp.go
+RUN abigen --abi artifacts/abi/system/BridgeApp.sol/BridgeApp.json --pkg system --type BridgeApp --out system/bridgeapp.go
+RUN abigen --abi artifacts/abi/system/ERC20BridgeMediator.sol/ERC20BridgeMediator.json --pkg system --type BridgeMediator --out system/bridge-mediator.go
