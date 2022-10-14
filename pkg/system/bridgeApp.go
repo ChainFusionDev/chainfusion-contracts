@@ -30,7 +30,7 @@ var (
 
 // BridgeAppMetaData contains all meta data concerning the BridgeApp contract.
 var BridgeAppMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"}],\"name\":\"ContractAddressUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"mediatorAddress\",\"type\":\"address\"}],\"name\":\"MediatorAddress\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"contractAddresses\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mediatorAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"}],\"name\":\"setContractAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_mediatorAddress\",\"type\":\"address\"}],\"name\":\"setMediator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"}],\"name\":\"ContractAddressUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"mediatorAddress\",\"type\":\"address\"}],\"name\":\"UpdatedMediatorAddress\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"contractAddresses\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mediatorAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"}],\"name\":\"setContractAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_mediatorAddress\",\"type\":\"address\"}],\"name\":\"setMediator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // BridgeAppABI is the input ABI used to generate the binding from.
@@ -491,140 +491,6 @@ func (_BridgeApp *BridgeAppFilterer) ParseContractAddressUpdated(log types.Log) 
 	return event, nil
 }
 
-// BridgeAppMediatorAddressIterator is returned from FilterMediatorAddress and is used to iterate over the raw logs and unpacked data for MediatorAddress events raised by the BridgeApp contract.
-type BridgeAppMediatorAddressIterator struct {
-	Event *BridgeAppMediatorAddress // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *BridgeAppMediatorAddressIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(BridgeAppMediatorAddress)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(BridgeAppMediatorAddress)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *BridgeAppMediatorAddressIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *BridgeAppMediatorAddressIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// BridgeAppMediatorAddress represents a MediatorAddress event raised by the BridgeApp contract.
-type BridgeAppMediatorAddress struct {
-	MediatorAddress common.Address
-	Raw             types.Log // Blockchain specific contextual infos
-}
-
-// FilterMediatorAddress is a free log retrieval operation binding the contract event 0xbb7882191c73e87a43b5ce5731ce01aceb048e6cafc123d2122cc3d365ad7c31.
-//
-// Solidity: event MediatorAddress(address mediatorAddress)
-func (_BridgeApp *BridgeAppFilterer) FilterMediatorAddress(opts *bind.FilterOpts) (*BridgeAppMediatorAddressIterator, error) {
-
-	logs, sub, err := _BridgeApp.contract.FilterLogs(opts, "MediatorAddress")
-	if err != nil {
-		return nil, err
-	}
-	return &BridgeAppMediatorAddressIterator{contract: _BridgeApp.contract, event: "MediatorAddress", logs: logs, sub: sub}, nil
-}
-
-// WatchMediatorAddress is a free log subscription operation binding the contract event 0xbb7882191c73e87a43b5ce5731ce01aceb048e6cafc123d2122cc3d365ad7c31.
-//
-// Solidity: event MediatorAddress(address mediatorAddress)
-func (_BridgeApp *BridgeAppFilterer) WatchMediatorAddress(opts *bind.WatchOpts, sink chan<- *BridgeAppMediatorAddress) (event.Subscription, error) {
-
-	logs, sub, err := _BridgeApp.contract.WatchLogs(opts, "MediatorAddress")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(BridgeAppMediatorAddress)
-				if err := _BridgeApp.contract.UnpackLog(event, "MediatorAddress", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseMediatorAddress is a log parse operation binding the contract event 0xbb7882191c73e87a43b5ce5731ce01aceb048e6cafc123d2122cc3d365ad7c31.
-//
-// Solidity: event MediatorAddress(address mediatorAddress)
-func (_BridgeApp *BridgeAppFilterer) ParseMediatorAddress(log types.Log) (*BridgeAppMediatorAddress, error) {
-	event := new(BridgeAppMediatorAddress)
-	if err := _BridgeApp.contract.UnpackLog(event, "MediatorAddress", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
 // BridgeAppOwnershipTransferredIterator is returned from FilterOwnershipTransferred and is used to iterate over the raw logs and unpacked data for OwnershipTransferred events raised by the BridgeApp contract.
 type BridgeAppOwnershipTransferredIterator struct {
 	Event *BridgeAppOwnershipTransferred // Event containing the contract specifics and raw log
@@ -772,6 +638,140 @@ func (_BridgeApp *BridgeAppFilterer) WatchOwnershipTransferred(opts *bind.WatchO
 func (_BridgeApp *BridgeAppFilterer) ParseOwnershipTransferred(log types.Log) (*BridgeAppOwnershipTransferred, error) {
 	event := new(BridgeAppOwnershipTransferred)
 	if err := _BridgeApp.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// BridgeAppUpdatedMediatorAddressIterator is returned from FilterUpdatedMediatorAddress and is used to iterate over the raw logs and unpacked data for UpdatedMediatorAddress events raised by the BridgeApp contract.
+type BridgeAppUpdatedMediatorAddressIterator struct {
+	Event *BridgeAppUpdatedMediatorAddress // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *BridgeAppUpdatedMediatorAddressIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(BridgeAppUpdatedMediatorAddress)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(BridgeAppUpdatedMediatorAddress)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *BridgeAppUpdatedMediatorAddressIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *BridgeAppUpdatedMediatorAddressIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// BridgeAppUpdatedMediatorAddress represents a UpdatedMediatorAddress event raised by the BridgeApp contract.
+type BridgeAppUpdatedMediatorAddress struct {
+	MediatorAddress common.Address
+	Raw             types.Log // Blockchain specific contextual infos
+}
+
+// FilterUpdatedMediatorAddress is a free log retrieval operation binding the contract event 0xfffe8850461024d4daf3f0dcafc0a3194b70441f38d49592a768132fc11c21c4.
+//
+// Solidity: event UpdatedMediatorAddress(address mediatorAddress)
+func (_BridgeApp *BridgeAppFilterer) FilterUpdatedMediatorAddress(opts *bind.FilterOpts) (*BridgeAppUpdatedMediatorAddressIterator, error) {
+
+	logs, sub, err := _BridgeApp.contract.FilterLogs(opts, "UpdatedMediatorAddress")
+	if err != nil {
+		return nil, err
+	}
+	return &BridgeAppUpdatedMediatorAddressIterator{contract: _BridgeApp.contract, event: "UpdatedMediatorAddress", logs: logs, sub: sub}, nil
+}
+
+// WatchUpdatedMediatorAddress is a free log subscription operation binding the contract event 0xfffe8850461024d4daf3f0dcafc0a3194b70441f38d49592a768132fc11c21c4.
+//
+// Solidity: event UpdatedMediatorAddress(address mediatorAddress)
+func (_BridgeApp *BridgeAppFilterer) WatchUpdatedMediatorAddress(opts *bind.WatchOpts, sink chan<- *BridgeAppUpdatedMediatorAddress) (event.Subscription, error) {
+
+	logs, sub, err := _BridgeApp.contract.WatchLogs(opts, "UpdatedMediatorAddress")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(BridgeAppUpdatedMediatorAddress)
+				if err := _BridgeApp.contract.UnpackLog(event, "UpdatedMediatorAddress", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseUpdatedMediatorAddress is a log parse operation binding the contract event 0xfffe8850461024d4daf3f0dcafc0a3194b70441f38d49592a768132fc11c21c4.
+//
+// Solidity: event UpdatedMediatorAddress(address mediatorAddress)
+func (_BridgeApp *BridgeAppFilterer) ParseUpdatedMediatorAddress(log types.Log) (*BridgeAppUpdatedMediatorAddress, error) {
+	event := new(BridgeAppUpdatedMediatorAddress)
+	if err := _BridgeApp.contract.UnpackLog(event, "UpdatedMediatorAddress", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

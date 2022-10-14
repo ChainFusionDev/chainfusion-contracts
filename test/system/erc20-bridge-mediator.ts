@@ -98,7 +98,6 @@ describe('ERC20BridgeMediator', function () {
 
     await erc20BridgeMediator.addToken(symbol, destinationChain, destinationToken);
 
-    expect(await erc20BridgeMediator.mediate(sourceChain, destinationChain, sourceData))
-      .to.be.equal(destinationData)
+    expect(await erc20BridgeMediator.mediate(sourceChain, destinationChain, sourceData)).to.be.equal(destinationData);
   });
 });

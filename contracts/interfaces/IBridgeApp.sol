@@ -7,5 +7,6 @@ interface IBridgeApp {
 
     function revertSend(uint256 destinationChain, bytes memory data) external;
 
+    // address of BridgeApp in CFN blockchain
     function bridgeAppAddress() external view returns (address);
 }

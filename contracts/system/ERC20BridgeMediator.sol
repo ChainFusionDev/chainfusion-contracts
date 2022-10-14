@@ -10,11 +10,11 @@ contract ERC20BridgeMediator is Ownable {
     event AddedToken(string symbol, uint256 chainId, address token);
     event RemovedToken(string symbol, uint256 chainId, address token);
 
-    function mediate (
+    function mediate(
         uint256 sourceChain,
         uint256 destinationChain,
         bytes memory sourceData
-    ) external view onlyOwner returns (bytes memory) {
+    ) external view returns (bytes memory) {
         (address _sender, address _sourceToken, uint256 _chainId, address _receiver, uint256 _transferAmount) = abi
             .decode(sourceData, (address, address, uint256, address, uint256));
 

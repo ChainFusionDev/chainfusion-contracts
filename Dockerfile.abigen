@@ -6,6 +6,7 @@ COPY artifacts/ artifacts/
 
 RUN mkdir bridge
 RUN mkdir system
+RUN mkdir interfaces
 
 # Bridge contracts
 RUN abigen --abi artifacts/abi/bridge/ERC20Bridge.sol/ERC20Bridge.json --pkg bridge --type Bridge --out bridge/bridge.go
@@ -21,4 +22,7 @@ RUN abigen --abi artifacts/abi/system/EventRegistry.sol/EventRegistry.json --pkg
 RUN abigen --abi artifacts/abi/system/ContractRegistry.sol/ContractRegistry.json --pkg system --type ContractRegistry --out system/contract-registry.go
 RUN abigen --abi artifacts/abi/system/SlashingVoting.sol/SlashingVoting.json --pkg system --type SlashingVoting --out system/slashing-voting.go
 RUN abigen --abi artifacts/abi/system/BridgeApp.sol/BridgeApp.json --pkg system --type BridgeApp --out system/bridgeapp.go
-RUN abigen --abi artifacts/abi/system/ERC20BridgeMediator.sol/ERC20BridgeMediator.json --pkg system --type BridgeMediator --out system/bridge-mediator.go
+
+# Interfaces
+RUN abigen --abi artifacts/abi/interfaces/IBridgeApp.sol/IBridgeApp.json --pkg interfaces --type IBridgeApp --out interfaces/ibridgeapp.go
+RUN abigen --abi artifacts/abi/interfaces/IBridgeMediator.sol/IBridgeMediator.json --pkg interfaces --type IBridgeMediator --out interfaces/ibridgemediator.go
