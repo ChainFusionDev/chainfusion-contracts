@@ -9,13 +9,12 @@ contract ERC20BridgeMediator is Ownable {
 
     event AddedToken(string symbol, uint256 chainId, address token);
     event RemovedToken(string symbol, uint256 chainId, address token);
-    event MediatorAddress(address mediatorAddress);
 
-    function mediate(
+    function mediate (
         uint256 sourceChain,
         uint256 destinationChain,
         bytes memory sourceData
-    ) external onlyOwner returns (bytes memory) {
+    ) external view onlyOwner returns (bytes memory) {
         (address _sender, address _sourceToken, uint256 _chainId, address _receiver, uint256 _transferAmount) = abi
             .decode(sourceData, (address, address, uint256, address, uint256));
 
@@ -26,8 +25,6 @@ contract ERC20BridgeMediator is Ownable {
         require(destinationToken != address(0), "ERC20BridgeMediator: can't find token by chain and symbol");
 
         bytes memory destinationData = abi.encode(_sender, destinationToken, _chainId, _receiver, _transferAmount);
-
-        emit MediatorAddress(address(this));
 
         return destinationData;
     }

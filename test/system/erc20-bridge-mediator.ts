@@ -76,25 +76,29 @@ describe('ERC20BridgeMediator', function () {
     const { mockChainId, mockToken } = await deployBridgeWithMocks();
 
     const abiCoder = ethers.utils.defaultAbiCoder;
-    const data = abiCoder.encode(
+    const sourceData = abiCoder.encode(
       ['address', 'address', 'uint256', 'address', 'uint256'],
       [sender.address, mockToken.address, mockChainId, receiver.address, transferAmount]
     );
 
-    await expect(erc20BridgeMediator.mediate(sourceChain, destinationChain, data)).to.be.revertedWith(
+    const destinationData = abiCoder.encode(
+      ['address', 'address', 'uint256', 'address', 'uint256'],
+      [sender.address, destinationToken, mockChainId, receiver.address, transferAmount]
+    );
+
+    await expect(erc20BridgeMediator.mediate(sourceChain, destinationChain, sourceData)).to.be.revertedWith(
       "ERC20BridgeMediator: can't find token symbol"
     );
 
     await erc20BridgeMediator.addToken(symbol, sourceChain, mockToken.address);
 
-    await expect(erc20BridgeMediator.mediate(sourceChain, destinationChain, data)).to.be.revertedWith(
+    await expect(erc20BridgeMediator.mediate(sourceChain, destinationChain, sourceData)).to.be.revertedWith(
       "ERC20BridgeMediator: can't find token by chain and symbol"
     );
 
     await erc20BridgeMediator.addToken(symbol, destinationChain, destinationToken);
 
-    await expect(await erc20BridgeMediator.mediate(sourceChain, destinationChain, data))
-      .to.emit(erc20BridgeMediator, 'MediatorAddress')
-      .withArgs(erc20BridgeMediator.address);
+    expect(await erc20BridgeMediator.mediate(sourceChain, destinationChain, sourceData))
+      .to.be.equal(destinationData)
   });
 });

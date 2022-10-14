@@ -30,7 +30,7 @@ var (
 
 // BridgeMediatorMetaData contains all meta data concerning the BridgeMediator contract.
 var BridgeMediatorMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"AddedToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"mediatorAddress\",\"type\":\"address\"}],\"name\":\"MediatorAddress\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"RemovedToken\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"addToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"sourceData\",\"type\":\"bytes\"}],\"name\":\"mediate\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"}],\"name\":\"removeToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"symbolToToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"tokenToSymbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"AddedToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"RemovedToken\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"addToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"sourceData\",\"type\":\"bytes\"}],\"name\":\"mediate\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"}],\"name\":\"removeToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"symbolToToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"tokenToSymbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // BridgeMediatorABI is the input ABI used to generate the binding from.
@@ -179,6 +179,37 @@ func (_BridgeMediator *BridgeMediatorTransactorRaw) Transact(opts *bind.Transact
 	return _BridgeMediator.Contract.contract.Transact(opts, method, params...)
 }
 
+// Mediate is a free data retrieval call binding the contract method 0x8b68e0f7.
+//
+// Solidity: function mediate(uint256 sourceChain, uint256 destinationChain, bytes sourceData) view returns(bytes)
+func (_BridgeMediator *BridgeMediatorCaller) Mediate(opts *bind.CallOpts, sourceChain *big.Int, destinationChain *big.Int, sourceData []byte) ([]byte, error) {
+	var out []interface{}
+	err := _BridgeMediator.contract.Call(opts, &out, "mediate", sourceChain, destinationChain, sourceData)
+
+	if err != nil {
+		return *new([]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([]byte)).(*[]byte)
+
+	return out0, err
+
+}
+
+// Mediate is a free data retrieval call binding the contract method 0x8b68e0f7.
+//
+// Solidity: function mediate(uint256 sourceChain, uint256 destinationChain, bytes sourceData) view returns(bytes)
+func (_BridgeMediator *BridgeMediatorSession) Mediate(sourceChain *big.Int, destinationChain *big.Int, sourceData []byte) ([]byte, error) {
+	return _BridgeMediator.Contract.Mediate(&_BridgeMediator.CallOpts, sourceChain, destinationChain, sourceData)
+}
+
+// Mediate is a free data retrieval call binding the contract method 0x8b68e0f7.
+//
+// Solidity: function mediate(uint256 sourceChain, uint256 destinationChain, bytes sourceData) view returns(bytes)
+func (_BridgeMediator *BridgeMediatorCallerSession) Mediate(sourceChain *big.Int, destinationChain *big.Int, sourceData []byte) ([]byte, error) {
+	return _BridgeMediator.Contract.Mediate(&_BridgeMediator.CallOpts, sourceChain, destinationChain, sourceData)
+}
+
 // Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
 // Solidity: function owner() view returns(address)
@@ -291,27 +322,6 @@ func (_BridgeMediator *BridgeMediatorSession) AddToken(symbol string, chainId *b
 // Solidity: function addToken(string symbol, uint256 chainId, address token) returns()
 func (_BridgeMediator *BridgeMediatorTransactorSession) AddToken(symbol string, chainId *big.Int, token common.Address) (*types.Transaction, error) {
 	return _BridgeMediator.Contract.AddToken(&_BridgeMediator.TransactOpts, symbol, chainId, token)
-}
-
-// Mediate is a paid mutator transaction binding the contract method 0x8b68e0f7.
-//
-// Solidity: function mediate(uint256 sourceChain, uint256 destinationChain, bytes sourceData) returns(bytes)
-func (_BridgeMediator *BridgeMediatorTransactor) Mediate(opts *bind.TransactOpts, sourceChain *big.Int, destinationChain *big.Int, sourceData []byte) (*types.Transaction, error) {
-	return _BridgeMediator.contract.Transact(opts, "mediate", sourceChain, destinationChain, sourceData)
-}
-
-// Mediate is a paid mutator transaction binding the contract method 0x8b68e0f7.
-//
-// Solidity: function mediate(uint256 sourceChain, uint256 destinationChain, bytes sourceData) returns(bytes)
-func (_BridgeMediator *BridgeMediatorSession) Mediate(sourceChain *big.Int, destinationChain *big.Int, sourceData []byte) (*types.Transaction, error) {
-	return _BridgeMediator.Contract.Mediate(&_BridgeMediator.TransactOpts, sourceChain, destinationChain, sourceData)
-}
-
-// Mediate is a paid mutator transaction binding the contract method 0x8b68e0f7.
-//
-// Solidity: function mediate(uint256 sourceChain, uint256 destinationChain, bytes sourceData) returns(bytes)
-func (_BridgeMediator *BridgeMediatorTransactorSession) Mediate(sourceChain *big.Int, destinationChain *big.Int, sourceData []byte) (*types.Transaction, error) {
-	return _BridgeMediator.Contract.Mediate(&_BridgeMediator.TransactOpts, sourceChain, destinationChain, sourceData)
 }
 
 // RemoveToken is a paid mutator transaction binding the contract method 0xe409ed98.
@@ -507,140 +517,6 @@ func (_BridgeMediator *BridgeMediatorFilterer) WatchAddedToken(opts *bind.WatchO
 func (_BridgeMediator *BridgeMediatorFilterer) ParseAddedToken(log types.Log) (*BridgeMediatorAddedToken, error) {
 	event := new(BridgeMediatorAddedToken)
 	if err := _BridgeMediator.contract.UnpackLog(event, "AddedToken", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// BridgeMediatorMediatorAddressIterator is returned from FilterMediatorAddress and is used to iterate over the raw logs and unpacked data for MediatorAddress events raised by the BridgeMediator contract.
-type BridgeMediatorMediatorAddressIterator struct {
-	Event *BridgeMediatorMediatorAddress // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *BridgeMediatorMediatorAddressIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(BridgeMediatorMediatorAddress)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(BridgeMediatorMediatorAddress)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *BridgeMediatorMediatorAddressIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *BridgeMediatorMediatorAddressIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// BridgeMediatorMediatorAddress represents a MediatorAddress event raised by the BridgeMediator contract.
-type BridgeMediatorMediatorAddress struct {
-	MediatorAddress common.Address
-	Raw             types.Log // Blockchain specific contextual infos
-}
-
-// FilterMediatorAddress is a free log retrieval operation binding the contract event 0xbb7882191c73e87a43b5ce5731ce01aceb048e6cafc123d2122cc3d365ad7c31.
-//
-// Solidity: event MediatorAddress(address mediatorAddress)
-func (_BridgeMediator *BridgeMediatorFilterer) FilterMediatorAddress(opts *bind.FilterOpts) (*BridgeMediatorMediatorAddressIterator, error) {
-
-	logs, sub, err := _BridgeMediator.contract.FilterLogs(opts, "MediatorAddress")
-	if err != nil {
-		return nil, err
-	}
-	return &BridgeMediatorMediatorAddressIterator{contract: _BridgeMediator.contract, event: "MediatorAddress", logs: logs, sub: sub}, nil
-}
-
-// WatchMediatorAddress is a free log subscription operation binding the contract event 0xbb7882191c73e87a43b5ce5731ce01aceb048e6cafc123d2122cc3d365ad7c31.
-//
-// Solidity: event MediatorAddress(address mediatorAddress)
-func (_BridgeMediator *BridgeMediatorFilterer) WatchMediatorAddress(opts *bind.WatchOpts, sink chan<- *BridgeMediatorMediatorAddress) (event.Subscription, error) {
-
-	logs, sub, err := _BridgeMediator.contract.WatchLogs(opts, "MediatorAddress")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(BridgeMediatorMediatorAddress)
-				if err := _BridgeMediator.contract.UnpackLog(event, "MediatorAddress", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseMediatorAddress is a log parse operation binding the contract event 0xbb7882191c73e87a43b5ce5731ce01aceb048e6cafc123d2122cc3d365ad7c31.
-//
-// Solidity: event MediatorAddress(address mediatorAddress)
-func (_BridgeMediator *BridgeMediatorFilterer) ParseMediatorAddress(log types.Log) (*BridgeMediatorMediatorAddress, error) {
-	event := new(BridgeMediatorMediatorAddress)
-	if err := _BridgeMediator.contract.UnpackLog(event, "MediatorAddress", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
