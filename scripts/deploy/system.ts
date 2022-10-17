@@ -109,7 +109,7 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
   );
   await deployer.sendTransaction(
     res.erc20BridgeMediator.addToken(tockenSymbol, tockenChainId, tockenAddress),
-    'adde token to BridgeMediator'
+    'Aded token to BridgeMediator'
   );
 
   await res.contractRegistry.setContract(await res.slashingVoting.SLASHING_VOTING_KEY(), res.slashingVoting.address);
