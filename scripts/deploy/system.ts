@@ -61,10 +61,6 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
     'Transferring ownership of AddressStorage'
   );
 
-  await deployer.sendTransaction(res.bridgeAppFactory.createApp());
-  const bridgeApp = await ethers.getContractAt('BridgeApp', await res.bridgeAppFactory.apps(0));
-  deployer.sendTransaction(bridgeApp.setMediator(res.erc20BridgeMediator.address));
-
   await deployer.sendTransaction(
     res.dkg.initialize(res.contractRegistry.address, params.dkgDeadlinePeriod),
     'Initializing DKG'
@@ -100,6 +96,14 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
     res.validatorRewardDistributionPool.initialize(res.contractRegistry.address, params.router, res.dkg.address),
     'Initializing ValidatorRewardDistributionPool'
   );
+
+  await deployer.sendTransaction(res.bridgeAppFactory.createApp(), 'Creating BridgeApp');
+  const bridgeApp = await ethers.getContractAt('BridgeApp', await res.bridgeAppFactory.apps(0));
+  await deployer.sendTransaction(
+    bridgeApp.setMediator(res.erc20BridgeMediator.address),
+    'Seting Mediator to BridgeApp'
+  );
+  deployer.log('bridgeApp', bridgeApp.address);
 
   await res.contractRegistry.setContract(await res.slashingVoting.SLASHING_VOTING_KEY(), res.slashingVoting.address);
   await res.contractRegistry.setContract(await res.staking.STAKING_KEY(), res.staking.address);

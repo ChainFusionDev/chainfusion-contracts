@@ -2,8 +2,9 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "../interfaces/IBridgeMediator.sol";
 
-contract ERC20BridgeMediator is Ownable {
+contract ERC20BridgeMediator is Ownable, IBridgeMediator {
     mapping(uint256 => mapping(address => string)) public tokenToSymbol;
     mapping(uint256 => mapping(string => address)) public symbolToToken;
 
