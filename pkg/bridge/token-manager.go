@@ -30,7 +30,7 @@ var (
 
 // TokenManagerMetaData contains all meta data concerning the TokenManager contract.
 var TokenManagerMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"}],\"name\":\"getDestinationToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"isTokenEnabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"isTokenMintable\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_destinationToken\",\"type\":\"address\"}],\"name\":\"setDestinationToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_isEnabled\",\"type\":\"bool\"}],\"name\":\"setEnabled\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_isMintable\",\"type\":\"bool\"}],\"name\":\"setMintable\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"supportedTokens\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isEnabled\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"isMintable\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"}],\"name\":\"deployToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"getType\",\"outputs\":[{\"internalType\":\"enumTokenType\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"enumTokenType\",\"name\":\"_tokenType\",\"type\":\"uint8\"}],\"name\":\"setToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"supportedTokens\",\"outputs\":[{\"internalType\":\"enumTokenType\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // TokenManagerABI is the input ABI used to generate the binding from.
@@ -179,97 +179,35 @@ func (_TokenManager *TokenManagerTransactorRaw) Transact(opts *bind.TransactOpts
 	return _TokenManager.Contract.contract.Transact(opts, method, params...)
 }
 
-// GetDestinationToken is a free data retrieval call binding the contract method 0xabf1535f.
+// GetType is a free data retrieval call binding the contract method 0xf429f19b.
 //
-// Solidity: function getDestinationToken(address _token, uint256 _chainId) view returns(address)
-func (_TokenManager *TokenManagerCaller) GetDestinationToken(opts *bind.CallOpts, _token common.Address, _chainId *big.Int) (common.Address, error) {
+// Solidity: function getType(address _token) view returns(uint8)
+func (_TokenManager *TokenManagerCaller) GetType(opts *bind.CallOpts, _token common.Address) (uint8, error) {
 	var out []interface{}
-	err := _TokenManager.contract.Call(opts, &out, "getDestinationToken", _token, _chainId)
+	err := _TokenManager.contract.Call(opts, &out, "getType", _token)
 
 	if err != nil {
-		return *new(common.Address), err
+		return *new(uint8), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+	out0 := *abi.ConvertType(out[0], new(uint8)).(*uint8)
 
 	return out0, err
 
 }
 
-// GetDestinationToken is a free data retrieval call binding the contract method 0xabf1535f.
+// GetType is a free data retrieval call binding the contract method 0xf429f19b.
 //
-// Solidity: function getDestinationToken(address _token, uint256 _chainId) view returns(address)
-func (_TokenManager *TokenManagerSession) GetDestinationToken(_token common.Address, _chainId *big.Int) (common.Address, error) {
-	return _TokenManager.Contract.GetDestinationToken(&_TokenManager.CallOpts, _token, _chainId)
+// Solidity: function getType(address _token) view returns(uint8)
+func (_TokenManager *TokenManagerSession) GetType(_token common.Address) (uint8, error) {
+	return _TokenManager.Contract.GetType(&_TokenManager.CallOpts, _token)
 }
 
-// GetDestinationToken is a free data retrieval call binding the contract method 0xabf1535f.
+// GetType is a free data retrieval call binding the contract method 0xf429f19b.
 //
-// Solidity: function getDestinationToken(address _token, uint256 _chainId) view returns(address)
-func (_TokenManager *TokenManagerCallerSession) GetDestinationToken(_token common.Address, _chainId *big.Int) (common.Address, error) {
-	return _TokenManager.Contract.GetDestinationToken(&_TokenManager.CallOpts, _token, _chainId)
-}
-
-// IsTokenEnabled is a free data retrieval call binding the contract method 0x748538d9.
-//
-// Solidity: function isTokenEnabled(address _token) view returns(bool)
-func (_TokenManager *TokenManagerCaller) IsTokenEnabled(opts *bind.CallOpts, _token common.Address) (bool, error) {
-	var out []interface{}
-	err := _TokenManager.contract.Call(opts, &out, "isTokenEnabled", _token)
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// IsTokenEnabled is a free data retrieval call binding the contract method 0x748538d9.
-//
-// Solidity: function isTokenEnabled(address _token) view returns(bool)
-func (_TokenManager *TokenManagerSession) IsTokenEnabled(_token common.Address) (bool, error) {
-	return _TokenManager.Contract.IsTokenEnabled(&_TokenManager.CallOpts, _token)
-}
-
-// IsTokenEnabled is a free data retrieval call binding the contract method 0x748538d9.
-//
-// Solidity: function isTokenEnabled(address _token) view returns(bool)
-func (_TokenManager *TokenManagerCallerSession) IsTokenEnabled(_token common.Address) (bool, error) {
-	return _TokenManager.Contract.IsTokenEnabled(&_TokenManager.CallOpts, _token)
-}
-
-// IsTokenMintable is a free data retrieval call binding the contract method 0x5da619a9.
-//
-// Solidity: function isTokenMintable(address _token) view returns(bool)
-func (_TokenManager *TokenManagerCaller) IsTokenMintable(opts *bind.CallOpts, _token common.Address) (bool, error) {
-	var out []interface{}
-	err := _TokenManager.contract.Call(opts, &out, "isTokenMintable", _token)
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// IsTokenMintable is a free data retrieval call binding the contract method 0x5da619a9.
-//
-// Solidity: function isTokenMintable(address _token) view returns(bool)
-func (_TokenManager *TokenManagerSession) IsTokenMintable(_token common.Address) (bool, error) {
-	return _TokenManager.Contract.IsTokenMintable(&_TokenManager.CallOpts, _token)
-}
-
-// IsTokenMintable is a free data retrieval call binding the contract method 0x5da619a9.
-//
-// Solidity: function isTokenMintable(address _token) view returns(bool)
-func (_TokenManager *TokenManagerCallerSession) IsTokenMintable(_token common.Address) (bool, error) {
-	return _TokenManager.Contract.IsTokenMintable(&_TokenManager.CallOpts, _token)
+// Solidity: function getType(address _token) view returns(uint8)
+func (_TokenManager *TokenManagerCallerSession) GetType(_token common.Address) (uint8, error) {
+	return _TokenManager.Contract.GetType(&_TokenManager.CallOpts, _token)
 }
 
 // SignerStorage is a free data retrieval call binding the contract method 0x449a23c7.
@@ -305,47 +243,54 @@ func (_TokenManager *TokenManagerCallerSession) SignerStorage() (common.Address,
 
 // SupportedTokens is a free data retrieval call binding the contract method 0x68c4ac26.
 //
-// Solidity: function supportedTokens(address ) view returns(bool isEnabled, bool isMintable)
-func (_TokenManager *TokenManagerCaller) SupportedTokens(opts *bind.CallOpts, arg0 common.Address) (struct {
-	IsEnabled  bool
-	IsMintable bool
-}, error) {
+// Solidity: function supportedTokens(address ) view returns(uint8)
+func (_TokenManager *TokenManagerCaller) SupportedTokens(opts *bind.CallOpts, arg0 common.Address) (uint8, error) {
 	var out []interface{}
 	err := _TokenManager.contract.Call(opts, &out, "supportedTokens", arg0)
 
-	outstruct := new(struct {
-		IsEnabled  bool
-		IsMintable bool
-	})
 	if err != nil {
-		return *outstruct, err
+		return *new(uint8), err
 	}
 
-	outstruct.IsEnabled = *abi.ConvertType(out[0], new(bool)).(*bool)
-	outstruct.IsMintable = *abi.ConvertType(out[1], new(bool)).(*bool)
+	out0 := *abi.ConvertType(out[0], new(uint8)).(*uint8)
 
-	return *outstruct, err
+	return out0, err
 
 }
 
 // SupportedTokens is a free data retrieval call binding the contract method 0x68c4ac26.
 //
-// Solidity: function supportedTokens(address ) view returns(bool isEnabled, bool isMintable)
-func (_TokenManager *TokenManagerSession) SupportedTokens(arg0 common.Address) (struct {
-	IsEnabled  bool
-	IsMintable bool
-}, error) {
+// Solidity: function supportedTokens(address ) view returns(uint8)
+func (_TokenManager *TokenManagerSession) SupportedTokens(arg0 common.Address) (uint8, error) {
 	return _TokenManager.Contract.SupportedTokens(&_TokenManager.CallOpts, arg0)
 }
 
 // SupportedTokens is a free data retrieval call binding the contract method 0x68c4ac26.
 //
-// Solidity: function supportedTokens(address ) view returns(bool isEnabled, bool isMintable)
-func (_TokenManager *TokenManagerCallerSession) SupportedTokens(arg0 common.Address) (struct {
-	IsEnabled  bool
-	IsMintable bool
-}, error) {
+// Solidity: function supportedTokens(address ) view returns(uint8)
+func (_TokenManager *TokenManagerCallerSession) SupportedTokens(arg0 common.Address) (uint8, error) {
 	return _TokenManager.Contract.SupportedTokens(&_TokenManager.CallOpts, arg0)
+}
+
+// DeployToken is a paid mutator transaction binding the contract method 0x1d12b938.
+//
+// Solidity: function deployToken(string name, string symbol) returns(address)
+func (_TokenManager *TokenManagerTransactor) DeployToken(opts *bind.TransactOpts, name string, symbol string) (*types.Transaction, error) {
+	return _TokenManager.contract.Transact(opts, "deployToken", name, symbol)
+}
+
+// DeployToken is a paid mutator transaction binding the contract method 0x1d12b938.
+//
+// Solidity: function deployToken(string name, string symbol) returns(address)
+func (_TokenManager *TokenManagerSession) DeployToken(name string, symbol string) (*types.Transaction, error) {
+	return _TokenManager.Contract.DeployToken(&_TokenManager.TransactOpts, name, symbol)
+}
+
+// DeployToken is a paid mutator transaction binding the contract method 0x1d12b938.
+//
+// Solidity: function deployToken(string name, string symbol) returns(address)
+func (_TokenManager *TokenManagerTransactorSession) DeployToken(name string, symbol string) (*types.Transaction, error) {
+	return _TokenManager.Contract.DeployToken(&_TokenManager.TransactOpts, name, symbol)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
@@ -369,67 +314,25 @@ func (_TokenManager *TokenManagerTransactorSession) Initialize(_signerStorage co
 	return _TokenManager.Contract.Initialize(&_TokenManager.TransactOpts, _signerStorage)
 }
 
-// SetDestinationToken is a paid mutator transaction binding the contract method 0xff1b14be.
+// SetToken is a paid mutator transaction binding the contract method 0xc4767b95.
 //
-// Solidity: function setDestinationToken(uint256 _chainId, address _token, address _destinationToken) returns()
-func (_TokenManager *TokenManagerTransactor) SetDestinationToken(opts *bind.TransactOpts, _chainId *big.Int, _token common.Address, _destinationToken common.Address) (*types.Transaction, error) {
-	return _TokenManager.contract.Transact(opts, "setDestinationToken", _chainId, _token, _destinationToken)
+// Solidity: function setToken(address _token, uint8 _tokenType) returns()
+func (_TokenManager *TokenManagerTransactor) SetToken(opts *bind.TransactOpts, _token common.Address, _tokenType uint8) (*types.Transaction, error) {
+	return _TokenManager.contract.Transact(opts, "setToken", _token, _tokenType)
 }
 
-// SetDestinationToken is a paid mutator transaction binding the contract method 0xff1b14be.
+// SetToken is a paid mutator transaction binding the contract method 0xc4767b95.
 //
-// Solidity: function setDestinationToken(uint256 _chainId, address _token, address _destinationToken) returns()
-func (_TokenManager *TokenManagerSession) SetDestinationToken(_chainId *big.Int, _token common.Address, _destinationToken common.Address) (*types.Transaction, error) {
-	return _TokenManager.Contract.SetDestinationToken(&_TokenManager.TransactOpts, _chainId, _token, _destinationToken)
+// Solidity: function setToken(address _token, uint8 _tokenType) returns()
+func (_TokenManager *TokenManagerSession) SetToken(_token common.Address, _tokenType uint8) (*types.Transaction, error) {
+	return _TokenManager.Contract.SetToken(&_TokenManager.TransactOpts, _token, _tokenType)
 }
 
-// SetDestinationToken is a paid mutator transaction binding the contract method 0xff1b14be.
+// SetToken is a paid mutator transaction binding the contract method 0xc4767b95.
 //
-// Solidity: function setDestinationToken(uint256 _chainId, address _token, address _destinationToken) returns()
-func (_TokenManager *TokenManagerTransactorSession) SetDestinationToken(_chainId *big.Int, _token common.Address, _destinationToken common.Address) (*types.Transaction, error) {
-	return _TokenManager.Contract.SetDestinationToken(&_TokenManager.TransactOpts, _chainId, _token, _destinationToken)
-}
-
-// SetEnabled is a paid mutator transaction binding the contract method 0x17fe72bb.
-//
-// Solidity: function setEnabled(address _token, bool _isEnabled) returns()
-func (_TokenManager *TokenManagerTransactor) SetEnabled(opts *bind.TransactOpts, _token common.Address, _isEnabled bool) (*types.Transaction, error) {
-	return _TokenManager.contract.Transact(opts, "setEnabled", _token, _isEnabled)
-}
-
-// SetEnabled is a paid mutator transaction binding the contract method 0x17fe72bb.
-//
-// Solidity: function setEnabled(address _token, bool _isEnabled) returns()
-func (_TokenManager *TokenManagerSession) SetEnabled(_token common.Address, _isEnabled bool) (*types.Transaction, error) {
-	return _TokenManager.Contract.SetEnabled(&_TokenManager.TransactOpts, _token, _isEnabled)
-}
-
-// SetEnabled is a paid mutator transaction binding the contract method 0x17fe72bb.
-//
-// Solidity: function setEnabled(address _token, bool _isEnabled) returns()
-func (_TokenManager *TokenManagerTransactorSession) SetEnabled(_token common.Address, _isEnabled bool) (*types.Transaction, error) {
-	return _TokenManager.Contract.SetEnabled(&_TokenManager.TransactOpts, _token, _isEnabled)
-}
-
-// SetMintable is a paid mutator transaction binding the contract method 0xf7eb06c4.
-//
-// Solidity: function setMintable(address _token, bool _isMintable) returns()
-func (_TokenManager *TokenManagerTransactor) SetMintable(opts *bind.TransactOpts, _token common.Address, _isMintable bool) (*types.Transaction, error) {
-	return _TokenManager.contract.Transact(opts, "setMintable", _token, _isMintable)
-}
-
-// SetMintable is a paid mutator transaction binding the contract method 0xf7eb06c4.
-//
-// Solidity: function setMintable(address _token, bool _isMintable) returns()
-func (_TokenManager *TokenManagerSession) SetMintable(_token common.Address, _isMintable bool) (*types.Transaction, error) {
-	return _TokenManager.Contract.SetMintable(&_TokenManager.TransactOpts, _token, _isMintable)
-}
-
-// SetMintable is a paid mutator transaction binding the contract method 0xf7eb06c4.
-//
-// Solidity: function setMintable(address _token, bool _isMintable) returns()
-func (_TokenManager *TokenManagerTransactorSession) SetMintable(_token common.Address, _isMintable bool) (*types.Transaction, error) {
-	return _TokenManager.Contract.SetMintable(&_TokenManager.TransactOpts, _token, _isMintable)
+// Solidity: function setToken(address _token, uint8 _tokenType) returns()
+func (_TokenManager *TokenManagerTransactorSession) SetToken(_token common.Address, _tokenType uint8) (*types.Transaction, error) {
+	return _TokenManager.Contract.SetToken(&_TokenManager.TransactOpts, _token, _tokenType)
 }
 
 // TokenManagerInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the TokenManager contract.
