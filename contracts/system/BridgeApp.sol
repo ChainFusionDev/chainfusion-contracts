@@ -6,10 +6,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract BridgeApp is Ownable {
     mapping(uint256 => address) public contractAddresses;
 
+    // mediator address, if 0x000 - no mediator
     address public mediatorAddress;
 
     event ContractAddressUpdated(uint256 chainId, address contractAddress);
-    event MediatorAddress(address mediatorAddress);
+    event UpdatedMediatorAddress(address mediatorAddress);
 
     constructor(address _owner) {
         _transferOwnership(_owner);
@@ -22,6 +23,6 @@ contract BridgeApp is Ownable {
 
     function setMediator(address _mediatorAddress) public onlyOwner {
         mediatorAddress = _mediatorAddress;
-        emit MediatorAddress(mediatorAddress);
+        emit UpdatedMediatorAddress(mediatorAddress);
     }
 }

@@ -15,7 +15,7 @@ const defaultBridgeDeploymentParameters: BridgeDeploymentParameters = {
   feePercentage: BigNumber.from('10000000000000000'),
   validatorRefundFee: BigNumber.from('10000000000000000'),
   foundationAddress: '0xd13F66863ED91704e386C57501F00b5307CAbA18',
-  bridgeAppAddress: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+  bridgeAppAddress: '0x3B02fF1e626Ed7a8fd6eC5299e2C54e1421B626B',
   displayLogs: false,
   verify: false,
 };

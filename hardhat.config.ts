@@ -28,7 +28,7 @@ const config: HardhatUserConfig = {
       accounts: {
         mnemonic: 'test test test test test test test test test test test junk'
       },
-      gasPrice: 10000000000,
+      gasPrice: 100000000000,
     },
     ternopil: {
       chainId: 953842,

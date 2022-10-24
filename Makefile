@@ -12,4 +12,5 @@ abigen: # Generate go files
 	CONTAINER=`docker create extract-abi --name extract-abi`; \
 	docker cp $$CONTAINER:/bridge pkg/bridge; \
 	docker cp $$CONTAINER:/system pkg/system; \
+	docker cp $$CONTAINER:/interfaces pkg/interfaces; \
 	docker rm -v $$CONTAINER

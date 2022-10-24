@@ -7,7 +7,6 @@ import {
   AddressStorage,
   DKG,
   SlashingVoting,
-  SupportedTokens,
   ContractRegistry,
   EventRegistry,
   BridgeAppFactory,
@@ -34,6 +33,10 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
   const params = resolveParameters(options);
   const deployer = new Deployer(params.displayLogs);
 
+  const tockenSymbol = 'NFT';
+  const tockenChainId = 5;
+  const tockenAddress = '0x7f4C3165388a79a35DE397f88b89b59de0934bcd';
+
   deployer.log('Deploying contracts\n');
 
   const res: SystemDeployment = {
@@ -42,7 +45,6 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
     addressStorage: await deployer.deploy(ethers.getContractFactory('AddressStorage'), 'AddressStorage'),
     staking: await deployer.deploy(ethers.getContractFactory('Staking'), 'Staking'),
     dkg: await deployer.deploy(ethers.getContractFactory('DKG'), 'DKG'),
-    supportedTokens: await deployer.deploy(ethers.getContractFactory('SupportedTokens'), 'SupportedTokens'),
     slashingVoting: await deployer.deploy(ethers.getContractFactory('SlashingVoting'), 'SlashingVoting'),
     bridgeAppFactory: await deployer.deploy(ethers.getContractFactory('BridgeAppFactory'), 'BridgeAppFactory'),
     erc20BridgeMediator: await deployer.deploy(ethers.getContractFactory('ERC20BridgeMediator'), 'ERC20BridgeMediator'),
@@ -69,8 +71,6 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
   );
 
   await deployer.sendTransaction(res.contractRegistry.initialize(res.dkg.address), 'Initializing ContractRegistry');
-
-  await deployer.sendTransaction(res.supportedTokens.initialize(res.dkg.address), 'Initializing SupportedTokens');
 
   await deployer.sendTransaction(
     res.staking.initialize(
@@ -101,10 +101,20 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
     'Initializing ValidatorRewardDistributionPool'
   );
 
+  await deployer.sendTransaction(res.bridgeAppFactory.createApp(), 'Creating BridgeApp');
+  const bridgeApp = await ethers.getContractAt('BridgeApp', await res.bridgeAppFactory.apps(0));
+  await deployer.sendTransaction(
+    bridgeApp.setMediator(res.erc20BridgeMediator.address),
+    'Seting BridgeMediator to BridgeApp'
+  );
+  await deployer.sendTransaction(
+    res.erc20BridgeMediator.addToken(tockenSymbol, tockenChainId, tockenAddress),
+    'Aded token to BridgeMediator'
+  );
+
   await res.contractRegistry.setContract(await res.slashingVoting.SLASHING_VOTING_KEY(), res.slashingVoting.address);
   await res.contractRegistry.setContract(await res.staking.STAKING_KEY(), res.staking.address);
   await res.contractRegistry.setContract(await res.dkg.DKG_KEY(), res.dkg.address);
-  await res.contractRegistry.setContract(await res.supportedTokens.SUPPORTED_TOKENS_KEY(), res.supportedTokens.address);
   await res.contractRegistry.setContract(await res.eventRegistry.EVENT_REGISTRY_KEY(), res.eventRegistry.address);
   await res.contractRegistry.setContract(
     await res.validatorRewardDistributionPool.VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY(),
@@ -193,7 +203,6 @@ export interface SystemDeployment {
   addressStorage: AddressStorage;
   dkg: DKG;
   slashingVoting: SlashingVoting;
-  supportedTokens: SupportedTokens;
   contractRegistry: ContractRegistry;
   eventRegistry: EventRegistry;
   bridgeAppFactory: BridgeAppFactory;
