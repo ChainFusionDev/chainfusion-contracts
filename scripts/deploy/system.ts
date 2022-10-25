@@ -33,10 +33,6 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
   const params = resolveParameters(options);
   const deployer = new Deployer(params.displayLogs);
 
-  const tockenSymbol = 'NFT';
-  const tockenChainId = 5;
-  const tockenAddress = '0x7f4C3165388a79a35DE397f88b89b59de0934bcd';
-
   deployer.log('Deploying contracts\n');
 
   const res: SystemDeployment = {
@@ -106,10 +102,6 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
   await deployer.sendTransaction(
     bridgeApp.setMediator(res.erc20BridgeMediator.address),
     'Seting BridgeMediator to BridgeApp'
-  );
-  await deployer.sendTransaction(
-    res.erc20BridgeMediator.addToken(tockenSymbol, tockenChainId, tockenAddress),
-    'Aded token to BridgeMediator'
   );
 
   await res.contractRegistry.setContract(await res.slashingVoting.SLASHING_VOTING_KEY(), res.slashingVoting.address);
