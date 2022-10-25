@@ -20,10 +20,14 @@ contract ERC20BridgeMediator is Ownable, IBridgeMediator {
             .decode(sourceData, (address, address, uint256, address, uint256));
 
         string memory symbol = tokenToSymbol[sourceChain][_sourceToken];
-        require(bytes(symbol).length > 0, "ERC20BridgeMediator: can't find token symbol");
+        if (bytes(symbol).length == 0) {
+            return sourceData;
+        }
 
         address destinationToken = symbolToToken[destinationChain][symbol];
-        require(destinationToken != address(0), "ERC20BridgeMediator: can't find token by chain and symbol");
+        if (destinationToken == address(0)) {
+            return sourceData;
+        }
 
         bytes memory destinationData = abi.encode(_sender, destinationToken, _chainId, _receiver, _transferAmount);
 
