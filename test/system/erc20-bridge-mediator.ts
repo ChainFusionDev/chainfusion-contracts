@@ -86,9 +86,7 @@ describe('ERC20BridgeMediator', function () {
       [sender.address, destinationToken, mockChainId, receiver.address, transferAmount]
     );
 
-    await expect(erc20BridgeMediator.mediate(sourceChain, destinationChain, sourceData)).to.be.revertedWith(
-      "ERC20BridgeMediator: can't find token symbol"
-    );
+    expect(await erc20BridgeMediator.mediate(sourceChain, destinationChain, sourceData)).to.equal(sourceData);
 
     await erc20BridgeMediator.addToken(symbol, sourceChain, mockToken.address);
 
