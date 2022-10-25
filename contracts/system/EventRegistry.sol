@@ -10,7 +10,6 @@ contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
 
     event EventRegistered(
         bytes32 _hash,
-        uint256 _generation,
         address _appContract,
         uint256 _sourceChain,
         uint256 _destinationChain,
@@ -25,7 +24,6 @@ contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
 
     function registerEvent(
         bytes32 _hash,
-        uint256 _generation,
         address _appContract,
         uint256 _sourceChain,
         uint256 _destinationChain,
@@ -33,34 +31,15 @@ contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
         uint256 _gasLimit,
         uint256 _nonce
     ) external onlyValidator {
-        bytes32 key = this.eventKey(
-            _hash,
-            _generation,
-            _appContract,
-            _sourceChain,
-            _destinationChain,
-            _data,
-            _gasLimit,
-            _nonce
-        );
+        bytes32 key = this.eventKey(_hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce);
         require(registeredEvents[key] == false, "EventRegistry: event is already registered");
 
         registeredEvents[key] = true;
-        emit EventRegistered(
-            _hash,
-            _generation,
-            _appContract,
-            _sourceChain,
-            _destinationChain,
-            _data,
-            _gasLimit,
-            _nonce
-        );
+        emit EventRegistered(_hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce);
     }
 
     function eventKey(
         bytes32 _hash,
-        uint256 _generation,
         address _appContract,
         uint256 _sourceChain,
         uint256 _destinationChain,
@@ -69,17 +48,6 @@ contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
         uint256 _nonce
     ) external pure returns (bytes32) {
         return
-            keccak256(
-                abi.encodePacked(
-                    _hash,
-                    _generation,
-                    _appContract,
-                    _sourceChain,
-                    _destinationChain,
-                    _data,
-                    _gasLimit,
-                    _nonce
-                )
-            );
+            keccak256(abi.encodePacked(_hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce));
     }
 }
