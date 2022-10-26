@@ -27,8 +27,8 @@ describe('EventRegistry', function () {
     await staking1.stake({ value: minimalStake });
     await staking2.stake({ value: minimalStake });
 
-    await eventRegistry1.registerEvent(eventHash1, appContract.address, 1, 2, data, 1, 1);
-    await expect(eventRegistry1.registerEvent(eventHash1, appContract.address, 1, 2, data, 1, 1)).to.be.revertedWith(
+    await eventRegistry1.registerEvent(eventHash1, appContract.address, 1, 2, data, 1, 1, 1);
+    await expect(eventRegistry1.registerEvent(eventHash1, appContract.address, 1, 2, data, 1, 1, 1)).to.be.revertedWith(
       'EventRegistry: event is already registered'
     );
     expect(
@@ -37,15 +37,25 @@ describe('EventRegistry', function () {
       )
     ).to.equal(true);
 
-    await eventRegistry1.registerEvent(eventHash1, appContract.address, 3, 4, data, 5, 1);
+    expect(
+      await eventRegistry1.getEventType(
+        await eventRegistry1.eventKey(eventHash1, appContract.address, 1, 2, data, 1, 1)
+      )
+    ).to.equal(1);
 
-    await eventRegistry2.registerEvent(eventHash2, appContract.address, 3, 4, data, 5, 1);
-    await expect(eventRegistry2.registerEvent(eventHash2, appContract.address, 3, 4, data, 5, 1)).to.be.revertedWith(
+    await expect(
+      eventRegistry1.getEventType(await eventRegistry1.eventKey(eventHash1, appContract.address, 4, 3, data, 5, 1))
+    ).to.be.revertedWith('EventRegistry: event is not registered');
+
+    await eventRegistry1.registerEvent(eventHash1, appContract.address, 3, 4, data, 5, 1, 1);
+
+    await eventRegistry2.registerEvent(eventHash2, appContract.address, 3, 4, data, 5, 1, 1);
+    await expect(eventRegistry2.registerEvent(eventHash2, appContract.address, 3, 4, data, 5, 1, 1)).to.be.revertedWith(
       'EventRegistry: event is already registered'
     );
 
     await expect(
-      eventRegistryOther.registerEvent(eventHash2, appContract.address, 3, 4, data, 5, 1)
+      eventRegistryOther.registerEvent(eventHash2, appContract.address, 3, 4, data, 5, 1, 1)
     ).to.be.revertedWith('ValidatorOwnable: only validator');
     expect(
       await eventRegistry1.registeredEvents(
