@@ -6,7 +6,14 @@ import "./ValidatorOwnable.sol";
 import "./ContractKeys.sol";
 
 contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
+    enum EventType {
+        SEND,
+        REVERT_SEND,
+        SET_SIGNER
+    }
+
     mapping(bytes32 => bool) public registeredEvents;
+    mapping(bytes32 => EventType) public eventType;
 
     event EventRegistered(
         bytes32 _hash,
@@ -15,7 +22,8 @@ contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
         uint256 _destinationChain,
         bytes _data,
         uint256 _gasLimit,
-        uint256 _nonce
+        uint256 _nonce,
+        EventType _eventType
     );
 
     function initialize(address _validatorGetterAddress) external initializer {
@@ -29,13 +37,25 @@ contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
         uint256 _destinationChain,
         bytes memory _data,
         uint256 _gasLimit,
-        uint256 _nonce
+        uint256 _nonce,
+        EventType _eventType
     ) external onlyValidator {
         bytes32 key = this.eventKey(_hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce);
         require(registeredEvents[key] == false, "EventRegistry: event is already registered");
 
         registeredEvents[key] = true;
-        emit EventRegistered(_hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce);
+        eventType[key] = _eventType;
+
+        emit EventRegistered(
+            _hash,
+            _appContract,
+            _sourceChain,
+            _destinationChain,
+            _data,
+            _gasLimit,
+            _nonce,
+            _eventType
+        );
     }
 
     function eventKey(
@@ -49,5 +69,11 @@ contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
     ) external pure returns (bytes32) {
         return
             keccak256(abi.encodePacked(_hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce));
+    }
+
+    function getEventType(bytes32 _eventKey) public view returns (EventType) {
+        require(registeredEvents[_eventKey] == true, "EventRegistry: event is not registered");
+
+        return eventType[_eventKey];
     }
 }
