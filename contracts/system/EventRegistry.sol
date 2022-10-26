@@ -8,8 +8,8 @@ import "./ContractKeys.sol";
 contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
     enum EventType {
         SEND,
-        REVERTSEND,
-        SETSIGNER
+        REVERT_SEND,
+        SET_SIGNER
     }
 
     mapping(bytes32 => bool) public registeredEvents;
