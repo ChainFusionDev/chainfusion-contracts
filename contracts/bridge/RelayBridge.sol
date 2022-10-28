@@ -32,7 +32,7 @@ contract RelayBridge is Initializable, SignerOwnable {
         bytes data,
         uint256 gasLimit,
         uint256 nonce,
-        uint256 value
+        uint256 validatorFee
     );
     event Reverted(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
     event Executed(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
