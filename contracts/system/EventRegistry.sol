@@ -21,8 +21,7 @@ contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
         uint256 _sourceChain,
         uint256 _destinationChain,
         bytes _data,
-        uint256 _gasLimit,
-        uint256 _nonce,
+        uint256 _validatorFee,
         EventType _eventType
     );
 
@@ -36,26 +35,24 @@ contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
         uint256 _sourceChain,
         uint256 _destinationChain,
         bytes memory _data,
-        uint256 _gasLimit,
-        uint256 _nonce,
+        uint256 _validatorFee,
         EventType _eventType
     ) external onlyValidator {
-        bytes32 key = this.eventKey(_hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce);
-        require(registeredEvents[key] == false, "EventRegistry: event is already registered");
-
-        registeredEvents[key] = true;
-        eventType[key] = _eventType;
-
-        emit EventRegistered(
+        bytes32 key = this.eventKey(
             _hash,
             _appContract,
             _sourceChain,
             _destinationChain,
             _data,
-            _gasLimit,
-            _nonce,
+            _validatorFee,
             _eventType
         );
+        require(registeredEvents[key] == false, "EventRegistry: event is already registered");
+
+        registeredEvents[key] = true;
+        eventType[key] = _eventType;
+
+        emit EventRegistered(_hash, _appContract, _sourceChain, _destinationChain, _data, _validatorFee, _eventType);
     }
 
     function eventKey(
@@ -64,11 +61,13 @@ contract EventRegistry is ValidatorOwnable, Initializable, ContractKeys {
         uint256 _sourceChain,
         uint256 _destinationChain,
         bytes memory _data,
-        uint256 _gasLimit,
-        uint256 _nonce
+        uint256 _validatorFee,
+        EventType _eventType
     ) external pure returns (bytes32) {
         return
-            keccak256(abi.encodePacked(_hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce));
+            keccak256(
+                abi.encodePacked(_hash, _appContract, _sourceChain, _destinationChain, _data, _validatorFee, _eventType)
+            );
     }
 
     function getEventType(bytes32 _eventKey) public view returns (EventType) {

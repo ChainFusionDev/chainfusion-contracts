@@ -100,4 +100,36 @@ describe('RelayBridge', function () {
 
     expect(await mockBridgeApp.bridgeAppAddress()).to.equals('0x0000000000000000000000000000000000000000');
   });
+
+  it('should register failed events', async function () {
+    const [appContract, user] = await ethers.getSigners();
+
+    const sourceChain = ethers.provider.network.chainId;
+    const destinationChain = 1;
+    const gasLimit = 1;
+    const nonce = 0;
+
+    const abiCoder = ethers.utils.defaultAbiCoder;
+    const data = abiCoder.encode(['string'], ['dataforsend']);
+
+    const { relayBridge } = await deployBridge();
+
+    const newRelayBridge = await ethers.getContractAt('RelayBridge', relayBridge.address, user);
+
+    const hash = await relayBridge.dataHash(appContract.address, destinationChain, sourceChain, gasLimit, data, nonce);
+
+    await expect(
+      newRelayBridge.failedSend(appContract.address, sourceChain, destinationChain, data, gasLimit, nonce)
+    ).to.be.revertedWith('SignerOwnable: only signer');
+
+    await expect(relayBridge.failedSend(appContract.address, sourceChain, destinationChain, data, gasLimit, nonce))
+      .to.emit(relayBridge, 'FailedSend')
+      .withArgs(hash, appContract.address, destinationChain, sourceChain, data, gasLimit, nonce);
+
+    expect(await relayBridge.failed(hash)).to.equals(true);
+
+    await expect(
+      relayBridge.failedSend(appContract.address, sourceChain, destinationChain, data, gasLimit, nonce)
+    ).to.be.revertedWith('RelayBridge: data already failed');
+  });
 });
