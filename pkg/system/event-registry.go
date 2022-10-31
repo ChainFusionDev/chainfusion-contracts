@@ -30,7 +30,7 @@ var (
 
 // EventRegistryMetaData contains all meta data concerning the EventRegistry contract.
 var EventRegistryMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_appContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_gasLimit\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"enumEventRegistry.EventType\",\"name\":\"_eventType\",\"type\":\"uint8\"}],\"name\":\"EventRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DKG_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"EVENT_REGISTRY_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SLASHING_VOTING_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKING_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SUPPORTED_TOKENS_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"eventKey\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"eventType\",\"outputs\":[{\"internalType\":\"enumEventRegistry.EventType\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_eventKey\",\"type\":\"bytes32\"}],\"name\":\"getEventType\",\"outputs\":[{\"internalType\":\"enumEventRegistry.EventType\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validatorGetterAddress\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"enumEventRegistry.EventType\",\"name\":\"_eventType\",\"type\":\"uint8\"}],\"name\":\"registerEvent\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"registeredEvents\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorGetter\",\"outputs\":[{\"internalType\":\"contractValidatorGetter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_appContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_validatorFee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"enumEventRegistry.EventType\",\"name\":\"_eventType\",\"type\":\"uint8\"}],\"name\":\"EventRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DKG_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"EVENT_REGISTRY_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SLASHING_VOTING_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKING_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SUPPORTED_TOKENS_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_validatorFee\",\"type\":\"uint256\"},{\"internalType\":\"enumEventRegistry.EventType\",\"name\":\"_eventType\",\"type\":\"uint8\"}],\"name\":\"eventKey\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"eventType\",\"outputs\":[{\"internalType\":\"enumEventRegistry.EventType\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_eventKey\",\"type\":\"bytes32\"}],\"name\":\"getEventType\",\"outputs\":[{\"internalType\":\"enumEventRegistry.EventType\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validatorGetterAddress\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_validatorFee\",\"type\":\"uint256\"},{\"internalType\":\"enumEventRegistry.EventType\",\"name\":\"_eventType\",\"type\":\"uint8\"}],\"name\":\"registerEvent\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"registeredEvents\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorGetter\",\"outputs\":[{\"internalType\":\"contractValidatorGetter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // EventRegistryABI is the input ABI used to generate the binding from.
@@ -365,12 +365,12 @@ func (_EventRegistry *EventRegistryCallerSession) VALIDATORREWARDDISTRIBUTIONPOO
 	return _EventRegistry.Contract.VALIDATORREWARDDISTRIBUTIONPOOLKEY(&_EventRegistry.CallOpts)
 }
 
-// EventKey is a free data retrieval call binding the contract method 0xf4f0b164.
+// EventKey is a free data retrieval call binding the contract method 0x3a4f4e2b.
 //
-// Solidity: function eventKey(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _gasLimit, uint256 _nonce) pure returns(bytes32)
-func (_EventRegistry *EventRegistryCaller) EventKey(opts *bind.CallOpts, _hash [32]byte, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _gasLimit *big.Int, _nonce *big.Int) ([32]byte, error) {
+// Solidity: function eventKey(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _validatorFee, uint8 _eventType) pure returns(bytes32)
+func (_EventRegistry *EventRegistryCaller) EventKey(opts *bind.CallOpts, _hash [32]byte, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _validatorFee *big.Int, _eventType uint8) ([32]byte, error) {
 	var out []interface{}
-	err := _EventRegistry.contract.Call(opts, &out, "eventKey", _hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce)
+	err := _EventRegistry.contract.Call(opts, &out, "eventKey", _hash, _appContract, _sourceChain, _destinationChain, _data, _validatorFee, _eventType)
 
 	if err != nil {
 		return *new([32]byte), err
@@ -382,18 +382,18 @@ func (_EventRegistry *EventRegistryCaller) EventKey(opts *bind.CallOpts, _hash [
 
 }
 
-// EventKey is a free data retrieval call binding the contract method 0xf4f0b164.
+// EventKey is a free data retrieval call binding the contract method 0x3a4f4e2b.
 //
-// Solidity: function eventKey(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _gasLimit, uint256 _nonce) pure returns(bytes32)
-func (_EventRegistry *EventRegistrySession) EventKey(_hash [32]byte, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _gasLimit *big.Int, _nonce *big.Int) ([32]byte, error) {
-	return _EventRegistry.Contract.EventKey(&_EventRegistry.CallOpts, _hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce)
+// Solidity: function eventKey(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _validatorFee, uint8 _eventType) pure returns(bytes32)
+func (_EventRegistry *EventRegistrySession) EventKey(_hash [32]byte, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _validatorFee *big.Int, _eventType uint8) ([32]byte, error) {
+	return _EventRegistry.Contract.EventKey(&_EventRegistry.CallOpts, _hash, _appContract, _sourceChain, _destinationChain, _data, _validatorFee, _eventType)
 }
 
-// EventKey is a free data retrieval call binding the contract method 0xf4f0b164.
+// EventKey is a free data retrieval call binding the contract method 0x3a4f4e2b.
 //
-// Solidity: function eventKey(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _gasLimit, uint256 _nonce) pure returns(bytes32)
-func (_EventRegistry *EventRegistryCallerSession) EventKey(_hash [32]byte, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _gasLimit *big.Int, _nonce *big.Int) ([32]byte, error) {
-	return _EventRegistry.Contract.EventKey(&_EventRegistry.CallOpts, _hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce)
+// Solidity: function eventKey(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _validatorFee, uint8 _eventType) pure returns(bytes32)
+func (_EventRegistry *EventRegistryCallerSession) EventKey(_hash [32]byte, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _validatorFee *big.Int, _eventType uint8) ([32]byte, error) {
+	return _EventRegistry.Contract.EventKey(&_EventRegistry.CallOpts, _hash, _appContract, _sourceChain, _destinationChain, _data, _validatorFee, _eventType)
 }
 
 // EventType is a free data retrieval call binding the contract method 0x20eaf723.
@@ -541,25 +541,25 @@ func (_EventRegistry *EventRegistryTransactorSession) Initialize(_validatorGette
 	return _EventRegistry.Contract.Initialize(&_EventRegistry.TransactOpts, _validatorGetterAddress)
 }
 
-// RegisterEvent is a paid mutator transaction binding the contract method 0x27abde66.
+// RegisterEvent is a paid mutator transaction binding the contract method 0xdc69f79b.
 //
-// Solidity: function registerEvent(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _gasLimit, uint256 _nonce, uint8 _eventType) returns()
-func (_EventRegistry *EventRegistryTransactor) RegisterEvent(opts *bind.TransactOpts, _hash [32]byte, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _gasLimit *big.Int, _nonce *big.Int, _eventType uint8) (*types.Transaction, error) {
-	return _EventRegistry.contract.Transact(opts, "registerEvent", _hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce, _eventType)
+// Solidity: function registerEvent(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _validatorFee, uint8 _eventType) returns()
+func (_EventRegistry *EventRegistryTransactor) RegisterEvent(opts *bind.TransactOpts, _hash [32]byte, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _validatorFee *big.Int, _eventType uint8) (*types.Transaction, error) {
+	return _EventRegistry.contract.Transact(opts, "registerEvent", _hash, _appContract, _sourceChain, _destinationChain, _data, _validatorFee, _eventType)
 }
 
-// RegisterEvent is a paid mutator transaction binding the contract method 0x27abde66.
+// RegisterEvent is a paid mutator transaction binding the contract method 0xdc69f79b.
 //
-// Solidity: function registerEvent(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _gasLimit, uint256 _nonce, uint8 _eventType) returns()
-func (_EventRegistry *EventRegistrySession) RegisterEvent(_hash [32]byte, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _gasLimit *big.Int, _nonce *big.Int, _eventType uint8) (*types.Transaction, error) {
-	return _EventRegistry.Contract.RegisterEvent(&_EventRegistry.TransactOpts, _hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce, _eventType)
+// Solidity: function registerEvent(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _validatorFee, uint8 _eventType) returns()
+func (_EventRegistry *EventRegistrySession) RegisterEvent(_hash [32]byte, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _validatorFee *big.Int, _eventType uint8) (*types.Transaction, error) {
+	return _EventRegistry.Contract.RegisterEvent(&_EventRegistry.TransactOpts, _hash, _appContract, _sourceChain, _destinationChain, _data, _validatorFee, _eventType)
 }
 
-// RegisterEvent is a paid mutator transaction binding the contract method 0x27abde66.
+// RegisterEvent is a paid mutator transaction binding the contract method 0xdc69f79b.
 //
-// Solidity: function registerEvent(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _gasLimit, uint256 _nonce, uint8 _eventType) returns()
-func (_EventRegistry *EventRegistryTransactorSession) RegisterEvent(_hash [32]byte, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _gasLimit *big.Int, _nonce *big.Int, _eventType uint8) (*types.Transaction, error) {
-	return _EventRegistry.Contract.RegisterEvent(&_EventRegistry.TransactOpts, _hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce, _eventType)
+// Solidity: function registerEvent(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _validatorFee, uint8 _eventType) returns()
+func (_EventRegistry *EventRegistryTransactorSession) RegisterEvent(_hash [32]byte, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _validatorFee *big.Int, _eventType uint8) (*types.Transaction, error) {
+	return _EventRegistry.Contract.RegisterEvent(&_EventRegistry.TransactOpts, _hash, _appContract, _sourceChain, _destinationChain, _data, _validatorFee, _eventType)
 }
 
 // EventRegistryEventRegisteredIterator is returned from FilterEventRegistered and is used to iterate over the raw logs and unpacked data for EventRegistered events raised by the EventRegistry contract.
@@ -636,15 +636,14 @@ type EventRegistryEventRegistered struct {
 	SourceChain      *big.Int
 	DestinationChain *big.Int
 	Data             []byte
-	GasLimit         *big.Int
-	Nonce            *big.Int
+	ValidatorFee     *big.Int
 	EventType        uint8
 	Raw              types.Log // Blockchain specific contextual infos
 }
 
-// FilterEventRegistered is a free log retrieval operation binding the contract event 0x9204ecf7e4ac09837a64daf8772937f4f29db082f9bc1c20187210e46af5d1cf.
+// FilterEventRegistered is a free log retrieval operation binding the contract event 0x7d58b416fcb1356f139a3e315ebd453e89ad07fd73e28b5f5ff4b3bc3229ddc2.
 //
-// Solidity: event EventRegistered(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _gasLimit, uint256 _nonce, uint8 _eventType)
+// Solidity: event EventRegistered(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _validatorFee, uint8 _eventType)
 func (_EventRegistry *EventRegistryFilterer) FilterEventRegistered(opts *bind.FilterOpts) (*EventRegistryEventRegisteredIterator, error) {
 
 	logs, sub, err := _EventRegistry.contract.FilterLogs(opts, "EventRegistered")
@@ -654,9 +653,9 @@ func (_EventRegistry *EventRegistryFilterer) FilterEventRegistered(opts *bind.Fi
 	return &EventRegistryEventRegisteredIterator{contract: _EventRegistry.contract, event: "EventRegistered", logs: logs, sub: sub}, nil
 }
 
-// WatchEventRegistered is a free log subscription operation binding the contract event 0x9204ecf7e4ac09837a64daf8772937f4f29db082f9bc1c20187210e46af5d1cf.
+// WatchEventRegistered is a free log subscription operation binding the contract event 0x7d58b416fcb1356f139a3e315ebd453e89ad07fd73e28b5f5ff4b3bc3229ddc2.
 //
-// Solidity: event EventRegistered(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _gasLimit, uint256 _nonce, uint8 _eventType)
+// Solidity: event EventRegistered(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _validatorFee, uint8 _eventType)
 func (_EventRegistry *EventRegistryFilterer) WatchEventRegistered(opts *bind.WatchOpts, sink chan<- *EventRegistryEventRegistered) (event.Subscription, error) {
 
 	logs, sub, err := _EventRegistry.contract.WatchLogs(opts, "EventRegistered")
@@ -691,9 +690,9 @@ func (_EventRegistry *EventRegistryFilterer) WatchEventRegistered(opts *bind.Wat
 	}), nil
 }
 
-// ParseEventRegistered is a log parse operation binding the contract event 0x9204ecf7e4ac09837a64daf8772937f4f29db082f9bc1c20187210e46af5d1cf.
+// ParseEventRegistered is a log parse operation binding the contract event 0x7d58b416fcb1356f139a3e315ebd453e89ad07fd73e28b5f5ff4b3bc3229ddc2.
 //
-// Solidity: event EventRegistered(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _gasLimit, uint256 _nonce, uint8 _eventType)
+// Solidity: event EventRegistered(bytes32 _hash, address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _validatorFee, uint8 _eventType)
 func (_EventRegistry *EventRegistryFilterer) ParseEventRegistered(log types.Log) (*EventRegistryEventRegistered, error) {
 	event := new(EventRegistryEventRegistered)
 	if err := _EventRegistry.contract.UnpackLog(event, "EventRegistered", log); err != nil {
