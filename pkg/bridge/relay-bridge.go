@@ -30,7 +30,7 @@ var (
 
 // RelayBridgeMetaData contains all meta data concerning the RelayBridge contract.
 var RelayBridgeMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"}],\"name\":\"Executed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"}],\"name\":\"Reverted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"validatorFee\",\"type\":\"uint256\"}],\"name\":\"Sent\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"bridgeValidatorFeePool\",\"outputs\":[{\"internalType\":\"contractBridgeValidatorFeePool\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"dataHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"leader\",\"type\":\"address\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"executed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"},{\"internalType\":\"addresspayable\",\"name\":\"_bridgeValidatorFeePool\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"leaderHistory\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"leaderHistoryLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"leader\",\"type\":\"address\"}],\"name\":\"revertSend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"reverted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"send\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sent\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sentData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"}],\"name\":\"Executed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"name\":\"FailedSend\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"}],\"name\":\"Reverted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"validatorFee\",\"type\":\"uint256\"}],\"name\":\"Sent\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"bridgeValidatorFeePool\",\"outputs\":[{\"internalType\":\"contractBridgeValidatorFeePool\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"dataHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"leader\",\"type\":\"address\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"executed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"failed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"failedSend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerStorage\",\"type\":\"address\"},{\"internalType\":\"addresspayable\",\"name\":\"_bridgeValidatorFeePool\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"leaderHistory\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"leaderHistoryLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"appContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"leader\",\"type\":\"address\"}],\"name\":\"revertSend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"reverted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gasLimit\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"send\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sent\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"sentData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerStorage\",\"outputs\":[{\"internalType\":\"contractSignerStorage\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // RelayBridgeABI is the input ABI used to generate the binding from.
@@ -272,6 +272,37 @@ func (_RelayBridge *RelayBridgeCallerSession) Executed(arg0 [32]byte) (bool, err
 	return _RelayBridge.Contract.Executed(&_RelayBridge.CallOpts, arg0)
 }
 
+// Failed is a free data retrieval call binding the contract method 0xf183d06b.
+//
+// Solidity: function failed(bytes32 ) view returns(bool)
+func (_RelayBridge *RelayBridgeCaller) Failed(opts *bind.CallOpts, arg0 [32]byte) (bool, error) {
+	var out []interface{}
+	err := _RelayBridge.contract.Call(opts, &out, "failed", arg0)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// Failed is a free data retrieval call binding the contract method 0xf183d06b.
+//
+// Solidity: function failed(bytes32 ) view returns(bool)
+func (_RelayBridge *RelayBridgeSession) Failed(arg0 [32]byte) (bool, error) {
+	return _RelayBridge.Contract.Failed(&_RelayBridge.CallOpts, arg0)
+}
+
+// Failed is a free data retrieval call binding the contract method 0xf183d06b.
+//
+// Solidity: function failed(bytes32 ) view returns(bool)
+func (_RelayBridge *RelayBridgeCallerSession) Failed(arg0 [32]byte) (bool, error) {
+	return _RelayBridge.Contract.Failed(&_RelayBridge.CallOpts, arg0)
+}
+
 // LeaderHistory is a free data retrieval call binding the contract method 0xe10e62ca.
 //
 // Solidity: function leaderHistory(uint256 ) view returns(address)
@@ -510,6 +541,27 @@ func (_RelayBridge *RelayBridgeTransactorSession) Execute(appContract common.Add
 	return _RelayBridge.Contract.Execute(&_RelayBridge.TransactOpts, appContract, sourceChain, gasLimit, data, _nonce, leader)
 }
 
+// FailedSend is a paid mutator transaction binding the contract method 0xa695facb.
+//
+// Solidity: function failedSend(address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _gasLimit, uint256 _nonce) returns()
+func (_RelayBridge *RelayBridgeTransactor) FailedSend(opts *bind.TransactOpts, _appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _gasLimit *big.Int, _nonce *big.Int) (*types.Transaction, error) {
+	return _RelayBridge.contract.Transact(opts, "failedSend", _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce)
+}
+
+// FailedSend is a paid mutator transaction binding the contract method 0xa695facb.
+//
+// Solidity: function failedSend(address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _gasLimit, uint256 _nonce) returns()
+func (_RelayBridge *RelayBridgeSession) FailedSend(_appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _gasLimit *big.Int, _nonce *big.Int) (*types.Transaction, error) {
+	return _RelayBridge.Contract.FailedSend(&_RelayBridge.TransactOpts, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce)
+}
+
+// FailedSend is a paid mutator transaction binding the contract method 0xa695facb.
+//
+// Solidity: function failedSend(address _appContract, uint256 _sourceChain, uint256 _destinationChain, bytes _data, uint256 _gasLimit, uint256 _nonce) returns()
+func (_RelayBridge *RelayBridgeTransactorSession) FailedSend(_appContract common.Address, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte, _gasLimit *big.Int, _nonce *big.Int) (*types.Transaction, error) {
+	return _RelayBridge.Contract.FailedSend(&_RelayBridge.TransactOpts, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce)
+}
+
 // Initialize is a paid mutator transaction binding the contract method 0x485cc955.
 //
 // Solidity: function initialize(address _signerStorage, address _bridgeValidatorFeePool) returns()
@@ -703,6 +755,146 @@ func (_RelayBridge *RelayBridgeFilterer) WatchExecuted(opts *bind.WatchOpts, sin
 func (_RelayBridge *RelayBridgeFilterer) ParseExecuted(log types.Log) (*RelayBridgeExecuted, error) {
 	event := new(RelayBridgeExecuted)
 	if err := _RelayBridge.contract.UnpackLog(event, "Executed", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// RelayBridgeFailedSendIterator is returned from FilterFailedSend and is used to iterate over the raw logs and unpacked data for FailedSend events raised by the RelayBridge contract.
+type RelayBridgeFailedSendIterator struct {
+	Event *RelayBridgeFailedSend // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *RelayBridgeFailedSendIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(RelayBridgeFailedSend)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(RelayBridgeFailedSend)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *RelayBridgeFailedSendIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *RelayBridgeFailedSendIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// RelayBridgeFailedSend represents a FailedSend event raised by the RelayBridge contract.
+type RelayBridgeFailedSend struct {
+	Hash             [32]byte
+	AppContract      common.Address
+	SourceChain      *big.Int
+	DestinationChain *big.Int
+	Data             []byte
+	GasLimit         *big.Int
+	Nonce            *big.Int
+	Raw              types.Log // Blockchain specific contextual infos
+}
+
+// FilterFailedSend is a free log retrieval operation binding the contract event 0x55d327ebf593b92b042e62a62b3a521d9d84dc0e9314b3d132b75c1d3695d506.
+//
+// Solidity: event FailedSend(bytes32 hash, address appContract, uint256 sourceChain, uint256 destinationChain, bytes data, uint256 gasLimit, uint256 nonce)
+func (_RelayBridge *RelayBridgeFilterer) FilterFailedSend(opts *bind.FilterOpts) (*RelayBridgeFailedSendIterator, error) {
+
+	logs, sub, err := _RelayBridge.contract.FilterLogs(opts, "FailedSend")
+	if err != nil {
+		return nil, err
+	}
+	return &RelayBridgeFailedSendIterator{contract: _RelayBridge.contract, event: "FailedSend", logs: logs, sub: sub}, nil
+}
+
+// WatchFailedSend is a free log subscription operation binding the contract event 0x55d327ebf593b92b042e62a62b3a521d9d84dc0e9314b3d132b75c1d3695d506.
+//
+// Solidity: event FailedSend(bytes32 hash, address appContract, uint256 sourceChain, uint256 destinationChain, bytes data, uint256 gasLimit, uint256 nonce)
+func (_RelayBridge *RelayBridgeFilterer) WatchFailedSend(opts *bind.WatchOpts, sink chan<- *RelayBridgeFailedSend) (event.Subscription, error) {
+
+	logs, sub, err := _RelayBridge.contract.WatchLogs(opts, "FailedSend")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(RelayBridgeFailedSend)
+				if err := _RelayBridge.contract.UnpackLog(event, "FailedSend", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseFailedSend is a log parse operation binding the contract event 0x55d327ebf593b92b042e62a62b3a521d9d84dc0e9314b3d132b75c1d3695d506.
+//
+// Solidity: event FailedSend(bytes32 hash, address appContract, uint256 sourceChain, uint256 destinationChain, bytes data, uint256 gasLimit, uint256 nonce)
+func (_RelayBridge *RelayBridgeFilterer) ParseFailedSend(log types.Log) (*RelayBridgeFailedSend, error) {
+	event := new(RelayBridgeFailedSend)
+	if err := _RelayBridge.contract.UnpackLog(event, "FailedSend", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
