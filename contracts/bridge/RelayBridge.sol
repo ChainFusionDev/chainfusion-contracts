@@ -33,7 +33,7 @@ contract RelayBridge is Initializable, SignerOwnable {
         bytes data,
         uint256 gasLimit,
         uint256 nonce,
-        uint256 value
+        uint256 validatorFee
     );
 
     event FailedSend(
@@ -83,7 +83,7 @@ contract RelayBridge is Initializable, SignerOwnable {
         uint256 _nonce
     ) external onlySigner {
         bytes32 hash = dataHash(_appContract, _destinationChain, _sourceChain, _gasLimit, _data, _nonce);
-        require(sentData[hash].length == 0, "RelayBridge: data already failed");
+        require(!failed[hash], "RelayBridge: data already failed");
 
         failed[hash] = true;
         emit FailedSend(hash, _appContract, _destinationChain, _sourceChain, _data, _gasLimit, _nonce);
