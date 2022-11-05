@@ -36,6 +36,24 @@ const config: HardhatUserConfig = {
       gasPrice: 10000000000,
       accounts,
     },
+    bg1: {
+      chainId: 5001,
+      url: 'https://bg1-rpc.chainfusion.org',
+      gasPrice: 10000000000,
+      accounts,
+    },
+    bg2: {
+      chainId: 5002,
+      url: 'https://bg2-rpc.chainfusion.org',
+      gasPrice: 10000000000,
+      accounts,
+    },
+    bg3: {
+      chainId: 5003,
+      url: 'https://bg3-rpc.chainfusion.org',
+      gasPrice: 10000000000,
+      accounts,
+    },
     ropsten: {
       url: `https://ropsten.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
       accounts,
@@ -74,6 +92,30 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://explorer.chainfusion.org/api",
           browserURL: "https://explorer.chainfusion.org"
+        }
+      },
+      {
+        network: "bg1",
+        chainId: 5001,
+        urls: {
+          apiURL: "https://bg1-explorer.chainfusion.org/api",
+          browserURL: "https://bg1-explorer.chainfusion.org"
+        }
+      },
+      {
+        network: "bg2",
+        chainId: 5002,
+        urls: {
+          apiURL: "https://bg2-explorer.chainfusion.org/api",
+          browserURL: "https://bg2-explorer.chainfusion.org"
+        }
+      },
+      {
+        network: "bg3",
+        chainId: 5003,
+        urls: {
+          apiURL: "https://bg3-explorer.chainfusion.org/api",
+          browserURL: "https://bg3-explorer.chainfusion.org"
         }
       },
     ]
