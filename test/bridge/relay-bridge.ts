@@ -108,6 +108,7 @@ describe('RelayBridge', function () {
     const destinationChain = 1;
     const gasLimit = 1;
     const nonce = 0;
+    const validatorFee = 10000;
 
     const abiCoder = ethers.utils.defaultAbiCoder;
     const data = abiCoder.encode(['string'], ['dataforsend']);
@@ -119,17 +120,19 @@ describe('RelayBridge', function () {
     const hash = await relayBridge.dataHash(appContract.address, destinationChain, sourceChain, gasLimit, data, nonce);
 
     await expect(
-      newRelayBridge.failedSend(appContract.address, sourceChain, destinationChain, data, gasLimit, nonce)
+      newRelayBridge.failedSend(appContract.address, sourceChain, destinationChain, data, gasLimit, nonce, validatorFee)
     ).to.be.revertedWith('SignerOwnable: only signer');
 
-    await expect(relayBridge.failedSend(appContract.address, sourceChain, destinationChain, data, gasLimit, nonce))
+    await expect(
+      relayBridge.failedSend(appContract.address, sourceChain, destinationChain, data, gasLimit, nonce, validatorFee)
+    )
       .to.emit(relayBridge, 'FailedSend')
-      .withArgs(hash, appContract.address, destinationChain, sourceChain, data, gasLimit, nonce);
+      .withArgs(hash, appContract.address, destinationChain, sourceChain, data, gasLimit, nonce, validatorFee);
 
     expect(await relayBridge.failed(hash)).to.equals(true);
 
     await expect(
-      relayBridge.failedSend(appContract.address, sourceChain, destinationChain, data, gasLimit, nonce)
+      relayBridge.failedSend(appContract.address, sourceChain, destinationChain, data, gasLimit, nonce, validatorFee)
     ).to.be.revertedWith('RelayBridge: data already failed');
   });
 });
