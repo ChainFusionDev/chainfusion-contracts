@@ -82,32 +82,31 @@ contract RelayBridge is Initializable, SignerOwnable {
         uint256 _nonce,
         uint256 _validatorFee
     ) external onlySigner {
-        bytes32 hash = dataHash(_appContract, _destinationChain, _sourceChain, _gasLimit, _data, _nonce);
+        bytes32 hash = dataHash(_appContract, _sourceChain, _destinationChain, _gasLimit, _data, _nonce);
         require(!failed[hash], "RelayBridge: data already failed");
 
         failed[hash] = true;
-        emit FailedSend(hash, _appContract, _destinationChain, _sourceChain, _data, _gasLimit, _nonce, _validatorFee);
+        emit FailedSend(hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce, _validatorFee);
     }
 
     function revertSend(
-        address appContract,
-        uint256 destinationChain,
-        uint256 gasLimit,
-        bytes memory data,
+        address _appContract,
+        uint256 _destinationChain,
+        uint256 _gasLimit,
+        bytes memory _data,
         uint256 _nonce,
-        address leader
+        address _leader
     ) external onlySigner {
-        bytes32 sendedHash = dataHash(appContract, destinationChain, block.chainid, gasLimit, data, _nonce);
-        require(sent[sendedHash], "RelayBridge: data never sent");
-        bytes32 revertedHash = dataHash(appContract, block.chainid, destinationChain, gasLimit, data, _nonce);
-        require(!reverted[revertedHash], "RelayBridge: data already reverted");
+        bytes32 hash = dataHash(_appContract, block.chainid, _destinationChain, _gasLimit, _data, _nonce);
+        require(sent[hash], "RelayBridge: data never sent");
+        require(!reverted[hash], "RelayBridge: data already reverted");
 
-        reverted[revertedHash] = true;
-        leaderHistory.push(leader);
+        reverted[hash] = true;
+        leaderHistory.push(_leader);
 
-        IBridgeApp(appContract).revertSend(destinationChain, data);
+        IBridgeApp(_appContract).revertSend(_destinationChain, _data);
 
-        emit Reverted(revertedHash, block.chainid, destinationChain);
+        emit Reverted(hash, block.chainid, _destinationChain);
     }
 
     function execute(
