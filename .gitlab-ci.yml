@@ -46,6 +46,8 @@ publish:
   needs: []
   only: [tags]
   script:
+    - npm install
+    - npm version --no-git-tag-version $CI_COMMIT_TAG
     - npm run compile
     - npm run build
     - npm run copy-types
