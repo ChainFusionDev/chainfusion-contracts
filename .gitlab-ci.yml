@@ -2,6 +2,7 @@ image: node:16
 
 stages:
   - test
+  - publish
 
 test:
   stage: test
@@ -39,3 +40,13 @@ pages:
     expire_in: 7 days
   only:
     - main
+
+publish:
+  stage: publish
+  needs: []
+  only: [tags]
+  script:
+    - npm run compile
+    - npm run build
+    - npm run copy-types
+    - npm publish

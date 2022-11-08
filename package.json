@@ -1,9 +1,21 @@
 {
-  "name": "hardhat-project",
+  "name": "@chainfusion/chainfusion-contracts",
+  "version": "0.0.1-rc.1",
+  "author": "ChainFusion",
+  "license": "LGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/typechain/index.js",
+  "types": "dist/typechain/index.d.ts",
+  "files": [
+    "dist/typechain/**/*"
+  ],
   "engines": {
     "node": ">=12"
   },
   "scripts": {
+    "build": "tsc --build tsconfig.json",
     "compile": "hardhat compile",
     "test": "hardhat test",
     "node": "hardhat node",
@@ -16,7 +28,8 @@
     "eslint:fix": "eslint -c .eslintrc.js scripts/**/* test/**/* --fix",
     "prettier": "prettier --check scripts/**/* test/**/* contracts/**/*",
     "prettier:fix": "prettier --write scripts/**/* test/**/* contracts/**/*",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "copy-types": "cpy 'typechain/**/*.d.ts' 'dist/typechain/'"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.5",
@@ -54,6 +67,7 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.5.0"
+    "@openzeppelin/contracts": "^4.5.0",
+    "cpy-cli": "^4.2.0"
   }
 }
