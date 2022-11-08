@@ -97,16 +97,17 @@ contract RelayBridge is Initializable, SignerOwnable {
         uint256 _nonce,
         address leader
     ) external onlySigner {
-        bytes32 hash = dataHash(appContract, block.chainid, destinationChain, gasLimit, data, _nonce);
-        require(sent[hash], "RelayBridge: data never sent");
-        require(!reverted[hash], "RelayBridge: data already reverted");
+        bytes32 sendedHash = dataHash(appContract, destinationChain, block.chainid, gasLimit, data, _nonce);
+        require(sent[sendedHash], "RelayBridge: data never sent");
+        bytes32 revertedHash = dataHash(appContract, block.chainid, destinationChain, gasLimit, data, _nonce);
+        require(!reverted[revertedHash], "RelayBridge: data already reverted");
 
-        reverted[hash] = true;
+        reverted[revertedHash] = true;
         leaderHistory.push(leader);
 
         IBridgeApp(appContract).revertSend(destinationChain, data);
 
-        emit Reverted(hash, block.chainid, destinationChain);
+        emit Reverted(revertedHash, block.chainid, destinationChain);
     }
 
     function execute(
