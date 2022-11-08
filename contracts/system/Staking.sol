@@ -155,6 +155,20 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
         return addressStorage.getAddresses();
     }
 
+    function getValidatorsCount() public view returns (uint256) {
+        return addressStorage.size();
+    }
+
+    function listValidators(uint256 _offset, uint256 _limit) public view returns (ValidatorInfo[] memory) {
+        address[] memory validators = getValidators();
+        ValidatorInfo[] memory result = new ValidatorInfo[](_limit);
+        for (uint256 i = _offset; i < _offset + _limit; i++) {
+            result[i - _offset] = stakes[validators[i]];
+        }
+
+        return result;
+    }
+
     function getStake(address _validator) public view returns (uint256) {
         return stakes[_validator].stake;
     }

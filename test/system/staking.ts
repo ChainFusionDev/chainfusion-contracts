@@ -212,6 +212,14 @@ describe('Staking', function () {
     await staking2.stake({ value: minimalStake });
     await staking3.stake({ value: minimalStake });
 
+    expect(await staking.getValidatorsCount()).to.equal(3);
+    const validatorsStake = await staking.listValidators(0, 3);
+
+    expect(validatorsStake.length).to.equal(3);
+    expect(validatorsStake[0].stake).to.equal(minimalStake);
+    expect(validatorsStake[1].stake).to.equal(minimalStake);
+    expect(validatorsStake[2].stake).to.equal(minimalStake);
+
     await slashingVoting.voteWithReason(v3.address, firstreason, nonce);
     await slashingVoting2.voteWithReason(v3.address, firstreason, nonce);
 
