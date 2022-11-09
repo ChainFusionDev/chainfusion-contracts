@@ -1,7 +1,6 @@
 import { ethers } from 'hardhat';
 import { BigNumber } from 'ethers';
 import { deployBridgeContracts } from './deploy/bridge';
-import { DKG__factory} from '../typechain';
 
 async function main() {
     const initialSupply = BigNumber.from('10000000000000000000000000');
@@ -25,25 +24,6 @@ async function main() {
     await deployment.bridgeValidatorFeePool.setLimitPerToken(mockToken.address, tokenLimit);
 
     await deployment.liquidityPools.addLiquidity(mockToken.address, liquidityAmount);
-
-    const urlProvider = 'ws://localhost:8546';
-    const provider = new ethers.providers.WebSocketProvider(urlProvider);
-    
-    const dkgAddress = '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9';
-
-    const dkg = new ethers.Contract(dkgAddress, DKG__factory.abi, provider);
-
-    dkg.once("SignerAddressUpdated", (generation, signerAddress, event) => {
-      const signer = deployment.signerStorage.getAddress();
-
-      if (signerAddress != signer) {
-        // const signerBalance  = ethers.provider.getBalance(signer);
-        const signerBalance  = '2000000000000000000';
-
-        deployment.signerStorage.setAddress(signerAddress, {value: signerBalance})
-        console.log("New signer ",signerAddress);
-      }
-    });
 }
 
 main().catch((error) => {
