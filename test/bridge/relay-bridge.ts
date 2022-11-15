@@ -24,7 +24,7 @@ describe('RelayBridge', function () {
       .withArgs(hash, appContract.address, sourceChain, destinationChain, data, gasLimit, nonce, sendAmount);
 
     expect(await relayBridge.sentData(hash)).to.equals(data);
-    expect(await ethers.provider.getBalance(bridgeValidatorFeePool.address)).to.equals(sendAmount);
+    expect(await ethers.provider.getBalance(bridgeValidatorFeePool)).to.equals(sendAmount);
   });
 
   it('should emit event Reverted in appContract', async function () {
