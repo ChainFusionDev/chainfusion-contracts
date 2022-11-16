@@ -82,11 +82,11 @@ contract RelayBridge is Initializable, SignerOwnable {
         uint256 _nonce,
         uint256 _validatorFee
     ) external onlySigner {
-        bytes32 hash = dataHash(_appContract, _destinationChain, _sourceChain, _gasLimit, _data, _nonce);
+        bytes32 hash = dataHash(_appContract, _sourceChain, _destinationChain, _gasLimit, _data, _nonce);
         require(!failed[hash], "RelayBridge: data already failed");
 
         failed[hash] = true;
-        emit FailedSend(hash, _appContract, _destinationChain, _sourceChain, _data, _gasLimit, _nonce, _validatorFee);
+        emit FailedSend(hash, _appContract, _sourceChain, _destinationChain, _data, _gasLimit, _nonce, _validatorFee);
     }
 
     function revertSend(
