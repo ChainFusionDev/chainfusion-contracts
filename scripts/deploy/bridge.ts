@@ -9,6 +9,7 @@ const defaultBridgeDeploymentParameters: BridgeDeploymentParameters = {
   foundationAddress: '0x0A97ddbac3A97693a75C727D4D8D6Ab4F5a22d43',
   bridgeAppAddress: '0x3B02fF1e626Ed7a8fd6eC5299e2C54e1421B626B',
   bridgeValidatorFeePool: '0x0000000000000000000000000000000000000001',
+
   displayLogs: false,
   verify: false,
 };

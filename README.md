@@ -38,6 +38,9 @@ First of all, copy `.env.example` into `.env` and set up all required variables 
 
 In This example we are deploying to `goerli` testnet. To deploy to different chain, `--network` parameter should be changed to `ropsten`, etc.
 ```
+$ npx hardhat --network goerli deploy scripts/deploy-bridge.ts
+```
+```
 $ npx hardhat --network goerli deploy scripts/deploy-system.ts
 ```
 

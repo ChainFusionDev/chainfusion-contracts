@@ -100,7 +100,7 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
   const bridgeApp = await ethers.getContractAt('BridgeApp', await res.bridgeAppFactory.apps(0));
   await deployer.sendTransaction(
     bridgeApp.setMediator(params.erc20BridgeMediator),
-    'Seting BridgeMediator to BridgeApp'
+    'Setting BridgeMediator to BridgeApp'
   );
 
   await res.contractRegistry.setContract(await res.slashingVoting.SLASHING_VOTING_KEY(), res.slashingVoting.address);
