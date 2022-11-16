@@ -7,7 +7,7 @@ describe('RelayBridge', function () {
   it('should send data', async function () {
     const [appContract] = await ethers.getSigners();
 
-    const sourceChain = ethers.provider.network.chainId;
+    const sourceChain = ethers.provider.network.chainId ?? 31337;
     const destinationChain = 1;
     const gasLimit = 1;
     const nonce = 0;
