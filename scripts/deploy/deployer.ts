@@ -1,4 +1,5 @@
 import hre from 'hardhat';
+import { ethers } from 'hardhat';
 import { BaseContract, Contract, ContractTransaction } from 'ethers';
 
 export interface ContractsObject {
@@ -27,9 +28,11 @@ export class Deployer {
 
     const factory = await factoryPromise;
     const contract = await factory.deploy();
+    const chainId = ethers.provider.network.chainId;
 
     if (this.displayLogs) {
       console.log(`Deploying ${name} with address ${contract.address}`);
+      console.log(`Deploying ${name} with chainId ${chainId}`);
     }
 
     await contract.deployed();

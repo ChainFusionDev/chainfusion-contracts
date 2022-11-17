@@ -1,14 +1,6 @@
 import { BigNumber } from 'ethers';
 import { ethers } from 'hardhat';
-import {
-  ERC20Bridge,
-  FeeManager,
-  BridgeValidatorFeePool,
-  LiquidityPools,
-  RelayBridge,
-  SignerStorage,
-  TokenManager,
-} from '../../typechain';
+import { RelayBridge, SignerStorage } from '../../typechain';
 import { Deployer } from './deployer';
 
 const defaultBridgeDeploymentParameters: BridgeDeploymentParameters = {
@@ -16,6 +8,8 @@ const defaultBridgeDeploymentParameters: BridgeDeploymentParameters = {
   validatorRefundFee: BigNumber.from('10000000000000000'),
   foundationAddress: '0x0A97ddbac3A97693a75C727D4D8D6Ab4F5a22d43',
   bridgeAppAddress: '0x3B02fF1e626Ed7a8fd6eC5299e2C54e1421B626B',
+  bridgeValidatorFeePool: '0x0000000000000000000000000000000000000001',
+
   displayLogs: false,
   verify: false,
 };
@@ -24,20 +18,12 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
   const params = resolveParameters(options);
   const deployer = new Deployer(params.displayLogs);
 
-  const [validator] = await ethers.getSigners();
+  const [owner] = await ethers.getSigners();
 
   deployer.log('Deploying contracts\n');
 
   const res: BridgeDeployment = {
     signerStorage: await deployer.deploy(ethers.getContractFactory('SignerStorage'), 'SignerStorage'),
-    tokenManager: await deployer.deploy(ethers.getContractFactory('TokenManager'), 'TokenManager'),
-    feeManager: await deployer.deploy(ethers.getContractFactory('FeeManager'), 'FeeManager'),
-    bridgeValidatorFeePool: await deployer.deploy(
-      ethers.getContractFactory('BridgeValidatorFeePool'),
-      'BridgeValidatorFeePool'
-    ),
-    liquidityPools: await deployer.deploy(ethers.getContractFactory('LiquidityPools'), 'LiquidityPools'),
-    erc20Bridge: await deployer.deploy(ethers.getContractFactory('ERC20Bridge'), 'ERC20Bridge'),
     relayBridge: await deployer.deploy(ethers.getContractFactory('RelayBridge'), 'RelayBridge'),
   };
 
@@ -45,50 +31,11 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
 
   deployer.log('Initializing contracts\n');
 
-  await deployer.sendTransaction(res.signerStorage.initialize(validator.address), 'Initializing ValidatorStorage');
-  await deployer.sendTransaction(res.tokenManager.initialize(res.signerStorage.address), 'Initializing TokenManager');
+  await deployer.sendTransaction(res.signerStorage.initialize(owner.address), 'Initializing SignerStorage');
 
   await deployer.sendTransaction(
-    res.feeManager.initialize(
-      res.signerStorage.address,
-      res.liquidityPools.address,
-      params.foundationAddress,
-      res.bridgeValidatorFeePool.address,
-      params.validatorRefundFee
-    ),
-    'Initializing FeeManager'
-  );
-
-  await deployer.sendTransaction(
-    res.liquidityPools.initialize(
-      res.signerStorage.address,
-      res.tokenManager.address,
-      res.erc20Bridge.address,
-      res.feeManager.address,
-      params.feePercentage
-    ),
-    'Initializing LiquidityPools'
-  );
-
-  await deployer.sendTransaction(
-    res.erc20Bridge.initialize(
-      res.relayBridge.address,
-      res.signerStorage.address,
-      res.tokenManager.address,
-      res.liquidityPools.address,
-      res.feeManager.address,
-      params.bridgeAppAddress
-    ),
-    'Initializing ERC20Bridge'
-  );
-
-  await deployer.sendTransaction(
-    res.relayBridge.initialize(res.signerStorage.address, res.bridgeValidatorFeePool.address),
+    res.relayBridge.initialize(res.signerStorage.address, params.bridgeValidatorFeePool),
     'Initializing RelayBridge'
-  );
-  await deployer.sendTransaction(
-    res.bridgeValidatorFeePool.initialize(res.signerStorage.address, res.erc20Bridge.address, validator.address),
-    'Initializing BridgeValidatorFeePool'
   );
 
   deployer.log('Successfully initialized contracts\n');
@@ -134,6 +81,10 @@ function resolveParameters(options?: BridgeDeploymentOptions): BridgeDeploymentP
     parameters.bridgeAppAddress = options.bridgeAppAddress;
   }
 
+  if (options.bridgeValidatorFeePool !== undefined) {
+    parameters.bridgeValidatorFeePool = options.bridgeValidatorFeePool;
+  }
+
   return parameters;
 }
 
@@ -141,11 +92,6 @@ export interface BridgeDeploymentResult extends BridgeDeployment, BridgeDeployme
 
 export interface BridgeDeployment {
   signerStorage: SignerStorage;
-  tokenManager: TokenManager;
-  feeManager: FeeManager;
-  bridgeValidatorFeePool: BridgeValidatorFeePool;
-  liquidityPools: LiquidityPools;
-  erc20Bridge: ERC20Bridge;
   relayBridge: RelayBridge;
 }
 
@@ -154,6 +100,7 @@ export interface BridgeDeploymentParameters {
   validatorRefundFee: BigNumber;
   foundationAddress: string;
   bridgeAppAddress: string;
+  bridgeValidatorFeePool: string;
   displayLogs: boolean;
   verify: boolean;
 }
@@ -163,6 +110,7 @@ export interface BridgeDeploymentOptions {
   validatorRefundFee?: BigNumber;
   foundationAddress?: string;
   bridgeAppAddress?: string;
+  bridgeValidatorFeePool?: string;
   displayLogs?: boolean;
   verify?: boolean;
   deployMocks?: boolean;

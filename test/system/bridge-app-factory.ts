@@ -16,7 +16,7 @@ describe('BridgeAppFactory', function () {
     await expect(bridgeAppFactory.createApp())
       .to.emit(bridgeAppFactory, 'BridgeAppCreated')
       .withArgs(appAddress, owner.address);
-    expect(await bridgeAppFactory.apps(1)).to.equal(appAddress);
+    expect(await bridgeAppFactory.apps(0)).to.equal(appAddress);
   });
 
   it('should set contract address', async function () {

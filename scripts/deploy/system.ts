@@ -10,7 +10,6 @@ import {
   ContractRegistry,
   EventRegistry,
   BridgeAppFactory,
-  ERC20BridgeMediator,
   ValidatorRewardDistributionPool,
 } from '../../typechain';
 
@@ -18,6 +17,7 @@ const defaultSystemDeploymentParameters: SystemDeploymentParameters = {
   minimalStake: ethers.utils.parseEther('100'),
   stakeWithdrawalPeriod: BigNumber.from(60),
   router: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+  erc20BridgeMediator: '0x0000000000000000000000000000000000000001',
   slashingEpochs: BigNumber.from(3),
   slashingEpochPeriod: BigNumber.from(1000),
   slashingBansThresold: BigNumber.from(10),
@@ -43,7 +43,6 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
     dkg: await deployer.deploy(ethers.getContractFactory('DKG'), 'DKG'),
     slashingVoting: await deployer.deploy(ethers.getContractFactory('SlashingVoting'), 'SlashingVoting'),
     bridgeAppFactory: await deployer.deploy(ethers.getContractFactory('BridgeAppFactory'), 'BridgeAppFactory'),
-    erc20BridgeMediator: await deployer.deploy(ethers.getContractFactory('ERC20BridgeMediator'), 'ERC20BridgeMediator'),
     validatorRewardDistributionPool: await deployer.deploy(
       ethers.getContractFactory('ValidatorRewardDistributionPool'),
       'ValidatorRewardDistributionPool'
@@ -95,13 +94,6 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
   await deployer.sendTransaction(
     res.validatorRewardDistributionPool.initialize(res.contractRegistry.address, params.router, res.dkg.address),
     'Initializing ValidatorRewardDistributionPool'
-  );
-
-  await deployer.sendTransaction(res.bridgeAppFactory.createApp(), 'Creating BridgeApp');
-  const bridgeApp = await ethers.getContractAt('BridgeApp', await res.bridgeAppFactory.apps(0));
-  await deployer.sendTransaction(
-    bridgeApp.setMediator(res.erc20BridgeMediator.address),
-    'Seting BridgeMediator to BridgeApp'
   );
 
   await res.contractRegistry.setContract(await res.slashingVoting.SLASHING_VOTING_KEY(), res.slashingVoting.address);
@@ -185,6 +177,10 @@ function resolveParameters(options?: SystemDeploymentOptions): SystemDeploymentP
     parameters.router = options.router;
   }
 
+  if (options.erc20BridgeMediator !== undefined) {
+    parameters.erc20BridgeMediator = options.erc20BridgeMediator;
+  }
+
   return parameters;
 }
 
@@ -198,7 +194,6 @@ export interface SystemDeployment {
   contractRegistry: ContractRegistry;
   eventRegistry: EventRegistry;
   bridgeAppFactory: BridgeAppFactory;
-  erc20BridgeMediator: ERC20BridgeMediator;
   validatorRewardDistributionPool: ValidatorRewardDistributionPool;
 }
 
@@ -213,6 +208,7 @@ export interface SystemDeploymentParameters {
   dkgDeadlinePeriod: BigNumber;
 
   router: string;
+  erc20BridgeMediator: string;
 
   displayLogs: boolean;
   verify: boolean;
@@ -230,6 +226,7 @@ export interface SystemDeploymentOptions {
   dkgDeadlinePeriod?: BigNumber;
 
   router?: string;
+  erc20BridgeMediator?: string;
 
   displayLogs?: boolean;
   verify?: boolean;

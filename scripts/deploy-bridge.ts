@@ -1,8 +1,16 @@
+import { network } from 'hardhat';
 import { deployBridgeContracts } from './deploy/bridge';
+import { readChainContractsConfig, updateContractsConfig, writeChainContractsConfig } from './deploy/config';
 
 async function main() {
   const verify = (process.env.VERIFY || '').trim().toLowerCase() === 'true';
-  await deployBridgeContracts({ displayLogs: true, verify: verify });
+  const chainId = network.config.chainId ?? 1;
+
+  const contractsConfig = await readChainContractsConfig(chainId)
+  const res = await deployBridgeContracts({ displayLogs: true, verify: verify });
+
+  updateContractsConfig(contractsConfig, res);
+  await writeChainContractsConfig(chainId, contractsConfig);
 }
 
 main().catch((error) => {

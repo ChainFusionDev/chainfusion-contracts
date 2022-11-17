@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import { utils } from 'ethers';
-import { ethers } from 'hardhat';
+import { ethers, network } from 'hardhat';
 import { deployBridge, deployBridgeWithMocks } from '../utils/deploy';
 
 describe('RelayBridge', function () {
   it('should send data', async function () {
     const [appContract] = await ethers.getSigners();
 
-    const sourceChain = ethers.provider.network.chainId;
+    const sourceChain = network.config.chainId ?? 31337;
     const destinationChain = 1;
     const gasLimit = 1;
     const nonce = 0;
@@ -24,7 +24,7 @@ describe('RelayBridge', function () {
       .withArgs(hash, appContract.address, sourceChain, destinationChain, data, gasLimit, nonce, sendAmount);
 
     expect(await relayBridge.sentData(hash)).to.equals(data);
-    expect(await ethers.provider.getBalance(bridgeValidatorFeePool.address)).to.equals(sendAmount);
+    expect(await ethers.provider.getBalance(bridgeValidatorFeePool)).to.equals(sendAmount);
   });
 
   it('should emit event Reverted in appContract', async function () {
@@ -61,7 +61,7 @@ describe('RelayBridge', function () {
 
   it('should execute data', async function () {
     const sourceChain = 1;
-    const destinationChain = ethers.provider.network.chainId;
+    const destinationChain = network.config.chainId ?? 31337;
     const gasLimit = 1;
     const nonce = 1;
     const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
@@ -104,7 +104,7 @@ describe('RelayBridge', function () {
   it('should register failed events', async function () {
     const [appContract, user] = await ethers.getSigners();
 
-    const sourceChain = ethers.provider.network.chainId;
+    const sourceChain = network.config.chainId ?? 31337;
     const destinationChain = 1;
     const gasLimit = 1;
     const nonce = 0;

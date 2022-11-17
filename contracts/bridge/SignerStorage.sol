@@ -8,6 +8,11 @@ contract SignerStorage is Initializable {
 
     event SignerUpdated(address _signer);
 
+    modifier onlySigner() {
+        require(this.getAddress() == msg.sender, "SignerOwnable: only signer");
+        _;
+    }
+
     function initialize(address _signer) external initializer {
         signer = _signer;
     }
