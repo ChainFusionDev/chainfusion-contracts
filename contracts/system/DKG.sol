@@ -235,6 +235,10 @@ contract DKG is ContractKeys, Initializable {
         deadlinePeriod = _deadlinePeriod;
     }
 
+    function updateSigner(uint256 _generation, address _signerAddress) public {
+        emit SignerAddressUpdated(_generation, _signerAddress);
+    }
+
     function getStatus(uint256 _generation) public view returns (GenerationStatus) {
         if (generations[_generation].signer != address(0)) {
             return GenerationStatus.ACTIVE;
