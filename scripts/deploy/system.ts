@@ -96,13 +96,6 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
     'Initializing ValidatorRewardDistributionPool'
   );
 
-  await deployer.sendTransaction(res.bridgeAppFactory.createApp(), 'Creating BridgeApp');
-  const bridgeApp = await ethers.getContractAt('BridgeApp', await res.bridgeAppFactory.apps(0));
-  await deployer.sendTransaction(
-    bridgeApp.setMediator(params.erc20BridgeMediator),
-    'Setting BridgeMediator to BridgeApp'
-  );
-
   await res.contractRegistry.setContract(await res.slashingVoting.SLASHING_VOTING_KEY(), res.slashingVoting.address);
   await res.contractRegistry.setContract(await res.staking.STAKING_KEY(), res.staking.address);
   await res.contractRegistry.setContract(await res.dkg.DKG_KEY(), res.dkg.address);
