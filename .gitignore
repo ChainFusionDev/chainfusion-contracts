@@ -8,3 +8,9 @@ dist
 #Hardhat files
 cache
 artifacts
+
+
+.openzeppelin/.session
+
+/contracts.json
+/contracts-*.json

@@ -2,16 +2,13 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "./SignerOwnable.sol";
-import "./TokenManager.sol";
-import "./ERC20Bridge.sol";
-import "./FeeManager.sol";
 import "./Globals.sol";
-import "./BridgeValidatorFeePool.sol";
+import "./SignerStorage.sol";
 import "../interfaces/IBridgeApp.sol";
 import "../interfaces/IBridgeMediator.sol";
+import "../interfaces/IBridgeValidatorFeePool.sol";
 
-contract RelayBridge is Initializable, SignerOwnable {
+contract RelayBridge is Initializable {
     mapping(bytes32 => bytes) public sentData;
 
     mapping(bytes32 => bool) public sent;
@@ -21,7 +18,8 @@ contract RelayBridge is Initializable, SignerOwnable {
 
     address[] public leaderHistory;
 
-    BridgeValidatorFeePool public bridgeValidatorFeePool;
+    SignerStorage public signerStorage;
+    IBridgeValidatorFeePool public bridgeValidatorFeePool;
 
     uint256 public nonce;
 
@@ -48,9 +46,14 @@ contract RelayBridge is Initializable, SignerOwnable {
     event Reverted(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
     event Executed(bytes32 hash, uint256 sourceChain, uint256 destinationChain);
 
+    modifier onlySigner() {
+        require(signerStorage.getAddress() == msg.sender, "SignerOwnable: only signer");
+        _;
+    }
+
     function initialize(address _signerStorage, address payable _bridgeValidatorFeePool) external initializer {
-        _setSignerStorage(_signerStorage);
-        bridgeValidatorFeePool = BridgeValidatorFeePool(_bridgeValidatorFeePool);
+        signerStorage = SignerStorage(_signerStorage);
+        bridgeValidatorFeePool = IBridgeValidatorFeePool(_bridgeValidatorFeePool);
     }
 
     function send(
