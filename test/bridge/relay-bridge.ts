@@ -61,7 +61,7 @@ describe('RelayBridge', function () {
 
   it('should execute data', async function () {
     const sourceChain = 1;
-    const destinationChain = network.config.chainId;
+    const destinationChain = network.config.chainId ?? 31337;
     const gasLimit = 1;
     const nonce = 1;
     const leader = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
@@ -104,7 +104,7 @@ describe('RelayBridge', function () {
   it('should register failed events', async function () {
     const [appContract, user] = await ethers.getSigners();
 
-    const sourceChain = network.config.chainId;
+    const sourceChain = network.config.chainId ?? 31337;
     const destinationChain = 1;
     const gasLimit = 1;
     const nonce = 0;
