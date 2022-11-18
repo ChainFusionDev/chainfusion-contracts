@@ -1,13 +1,8 @@
-import { BigNumber } from 'ethers';
 import { ethers } from 'hardhat';
 import { RelayBridge, SignerStorage } from '../../typechain';
 import { Deployer } from './deployer';
 
 const defaultBridgeDeploymentParameters: BridgeDeploymentParameters = {
-  feePercentage: BigNumber.from('10000000000000000'),
-  validatorRefundFee: BigNumber.from('10000000000000000'),
-  foundationAddress: '0x0A97ddbac3A97693a75C727D4D8D6Ab4F5a22d43',
-  bridgeAppAddress: '0x3B02fF1e626Ed7a8fd6eC5299e2C54e1421B626B',
   bridgeValidatorFeePool: '0x0000000000000000000000000000000000000001',
 
   displayLogs: false,
@@ -57,28 +52,12 @@ function resolveParameters(options?: BridgeDeploymentOptions): BridgeDeploymentP
     return parameters;
   }
 
-  if (options.feePercentage !== undefined) {
-    parameters.feePercentage = options.feePercentage;
-  }
-
-  if (options.validatorRefundFee !== undefined) {
-    parameters.validatorRefundFee = options.validatorRefundFee;
-  }
-
-  if (options.foundationAddress !== undefined) {
-    parameters.foundationAddress = options.foundationAddress;
-  }
-
   if (options.displayLogs !== undefined) {
     parameters.displayLogs = options.displayLogs;
   }
 
   if (options.verify !== undefined) {
     parameters.verify = options.verify;
-  }
-
-  if (options.bridgeAppAddress !== undefined) {
-    parameters.bridgeAppAddress = options.bridgeAppAddress;
   }
 
   if (options.bridgeValidatorFeePool !== undefined) {
@@ -96,20 +75,12 @@ export interface BridgeDeployment {
 }
 
 export interface BridgeDeploymentParameters {
-  feePercentage: BigNumber;
-  validatorRefundFee: BigNumber;
-  foundationAddress: string;
-  bridgeAppAddress: string;
   bridgeValidatorFeePool: string;
   displayLogs: boolean;
   verify: boolean;
 }
 
 export interface BridgeDeploymentOptions {
-  feePercentage?: BigNumber;
-  validatorRefundFee?: BigNumber;
-  foundationAddress?: string;
-  bridgeAppAddress?: string;
   bridgeValidatorFeePool?: string;
   displayLogs?: boolean;
   verify?: boolean;
