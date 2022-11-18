@@ -84,5 +84,4 @@ export interface BridgeDeploymentOptions {
   bridgeValidatorFeePool?: string;
   displayLogs?: boolean;
   verify?: boolean;
-  deployMocks?: boolean;
 }
