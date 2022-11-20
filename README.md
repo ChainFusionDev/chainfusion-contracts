@@ -36,17 +36,18 @@ First of all, copy `.env.example` into `.env` and set up all required variables 
 
 ### Deploy Contracts
 
-In This example we are deploying to `goerli` testnet. To deploy to different chain, `--network` parameter should be changed to `ropsten`, etc.
+In this example we are deploying to `ternopil` testnet. To deploy to different chain, `--network` parameter should be changed.
 
-Deployment involves running two scripts in sequence. The first script is deployed once.
-
-```
-$ npx hardhat --network goerli deploy scripts/deploy-system.ts
-```
-The second script is deployed each time for a new chain.
+Deployment involves running two scripts in sequence. The first script is deployed once, on ChainFusion network.
 
 ```
-$ npx hardhat --network goerli deploy scripts/deploy-bridge.ts
+$ npx hardhat --network ternopil run scripts/deploy-system.ts
+```
+
+The second script is executed for each new chain to deploy chain contracts, like `bg1`.
+
+```
+$ npx hardhat --network bg1 run scripts/deploy-bridge.ts
 ```
 
 ### Verify Contracts
@@ -55,4 +56,10 @@ To verify contracts, you need to specify network, contract address and construct
 
 ```
 $ npx hardhat --network goerli verify <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
+```
+
+Or you can set `VERIFY` variable to `true` while deploying contracts to automatically verify them afterwards.
+
+```
+$ VERIFY=true npx hardhat --network ternopil run scripts/deploy-system.ts
 ```
