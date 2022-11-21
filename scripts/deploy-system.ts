@@ -1,5 +1,6 @@
 import { deploySystemContracts } from './deploy/system';
 import { readContractsConfig, updateContractsConfig, writeContractsConfig } from './deploy/config';
+import { network } from 'hardhat';
 
 async function main() {
   const verify = (process.env.VERIFY || '').trim().toLowerCase() === 'true';
@@ -10,6 +11,7 @@ async function main() {
 
   const res = await deploySystemContracts({ displayLogs: true, verify, stakingKeys, router });
 
+  contractsConfig.networkName = network.name;
   updateContractsConfig(contractsConfig, res);
   await writeContractsConfig(contractsConfig);
 }

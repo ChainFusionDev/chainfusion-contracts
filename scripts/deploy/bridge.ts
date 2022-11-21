@@ -1,5 +1,6 @@
-import { ethers } from 'hardhat';
-import { RelayBridge, SignerStorage } from '../../typechain';
+import { ethers, config } from 'hardhat';
+import { HttpNetworkConfig } from 'hardhat/types';
+import { DKG, RelayBridge, SignerStorage } from '../../typechain';
 import { Deployer } from './deployer';
 
 const defaultBridgeDeploymentParameters: BridgeDeploymentParameters = {
@@ -15,6 +16,32 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
 
   const [owner] = await ethers.getSigners();
 
+  let initialSignerAddress = owner.address;
+
+  if (options?.homeNetwork !== undefined && options?.homeDKGAddress !== undefined) {
+    deployer.log('Receiving DKG signer address\n');
+
+    const networkConfig = config.networks[options.homeNetwork] as HttpNetworkConfig;
+    const homeProvider = new ethers.providers.JsonRpcProvider(networkConfig.url, networkConfig.chainId);
+    const homeSigner = homeProvider.getSigner('0x0000000000000000000000000000000000000001');
+
+    const dkgFactory = await ethers.getContractFactory('DKG', homeSigner);
+    const dkg = dkgFactory.attach(options.homeDKGAddress);
+
+    deployer.log(`Using DKG address: ${options.homeDKGAddress}\n`);
+
+    const dkgSignerAddress = await dkg.getSignerAddress();
+
+    if (dkgSignerAddress === '0x0000000000000000000000000000000000000000') {
+      deployer.log(`Waiting for DKG to complete...\n`);
+      initialSignerAddress = await waitSignerAddressUpdated(dkg);
+    } else {
+      initialSignerAddress = dkgSignerAddress;
+    }
+
+    deployer.log(`Received signer address: ${initialSignerAddress}\n`);
+  }
+
   deployer.log('Deploying contracts\n');
 
   const res: BridgeDeployment = {
@@ -26,7 +53,7 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
 
   deployer.log('Initializing contracts\n');
 
-  await deployer.sendTransaction(res.signerStorage.initialize(owner.address), 'Initializing SignerStorage');
+  await deployer.sendTransaction(res.signerStorage.initialize(initialSignerAddress), 'Initializing SignerStorage');
 
   await deployer.sendTransaction(
     res.relayBridge.initialize(res.signerStorage.address, params.bridgeValidatorFeePool),
@@ -43,6 +70,14 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
     ...res,
     ...params,
   };
+}
+
+async function waitSignerAddressUpdated(dkg: DKG): Promise<string> {
+  return new Promise<string>((resolve) => {
+    dkg.once('SignerAddressUpdated', (generation, signerAddress: string) => {
+      resolve(signerAddress);
+    });
+  });
 }
 
 function resolveParameters(options?: BridgeDeploymentOptions): BridgeDeploymentParameters {
@@ -82,6 +117,8 @@ export interface BridgeDeploymentParameters {
 
 export interface BridgeDeploymentOptions {
   bridgeValidatorFeePool?: string;
+  homeDKGAddress?: string;
+  homeNetwork?: string;
   displayLogs?: boolean;
   verify?: boolean;
 }
