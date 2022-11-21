@@ -1,5 +1,5 @@
 import { network } from 'hardhat';
-import { deployBridgeContracts } from './deploy/bridge';
+import { deployBridgeContracts } from './deploy/chain';
 import { readChainContractsConfig, readContractsConfig, updateContractsConfig, writeChainContractsConfig } from './deploy/config';
 
 async function main() {
