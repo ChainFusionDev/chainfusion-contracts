@@ -1,7 +1,11 @@
 import { ethers } from 'hardhat';
 import { BigNumber } from 'ethers';
-import { deploySystemContracts, SystemDeploymentOptions, SystemDeploymentResult } from '../../scripts/deploy/system';
-import { BridgeDeploymentOptions, BridgeDeploymentResult, deployBridgeContracts } from '../../scripts/deploy/bridge';
+import {
+  deploySystemContracts,
+  SystemDeploymentOptions,
+  SystemDeploymentResult,
+} from '../../scripts/deploy/chainfusion';
+import { BridgeDeploymentOptions, BridgeDeploymentResult, deployBridgeContracts } from '../../scripts/deploy/chain';
 import { MockMintableBurnableToken, MockBridgeApp, MockToken, MockDEXRouter } from '../../typechain';
 
 export async function deploySystem(options?: SystemDeploymentOptions): Promise<SystemDeploymentResult> {

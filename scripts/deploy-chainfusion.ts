@@ -1,4 +1,4 @@
-import { deploySystemContracts } from './deploy/system';
+import { deploySystemContracts } from './deploy/chainfusion';
 import { readContractsConfig, updateContractsConfig, writeContractsConfig } from './deploy/config';
 import { network } from 'hardhat';
 
