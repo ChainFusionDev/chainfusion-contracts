@@ -169,7 +169,13 @@ contract DKG is ContractKeys, Initializable {
         uint256 _generation,
         address _signerAddress,
         bytes memory _signature
-    ) external onlyDKGValidator(_generation) roundIsFilled(_generation, 3) onlyPending(_generation) {
+    ) external onlyDKGValidator(_generation) roundIsFilled(_generation, 3) {
+        require(
+            generations[_generation].deadline <= block.number ||
+                generations[_generation].signerVoteCounts[_signerAddress] != generations[_generation].validators.length,
+            "DKG: voting is ended"
+        );
+
         address recoveredSigner = bytes("verify").toEthSignedMessageHash().recover(_signature);
         require(recoveredSigner == _signerAddress, "DKG: signature is invalid");
         require(generations[_generation].signerVotes[msg.sender] == address(0), "DKG: already voted");
@@ -180,7 +186,7 @@ contract DKG is ContractKeys, Initializable {
         emit SignerVoted(_generation, msg.sender, _signerAddress);
 
         bool enoughVotes = _enoughVotes(_generation, generations[_generation].signerVoteCounts[_signerAddress]);
-        if (enoughVotes) {
+        if (enoughVotes && generations[_generation].signer != _signerAddress) {
             generations[_generation].signer = _signerAddress;
             signerToGeneration[_signerAddress] = _generation;
             emit SignerAddressUpdated(_generation, _signerAddress);
