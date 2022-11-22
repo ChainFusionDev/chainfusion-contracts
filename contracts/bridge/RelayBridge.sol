@@ -57,21 +57,21 @@ contract RelayBridge is Initializable {
     }
 
     function send(
-        uint256 destinationChain,
-        uint256 gasLimit,
-        bytes memory data
+        uint256 _destinationChain,
+        uint256 _gasLimit,
+        bytes memory _data
     ) external payable {
-        bytes32 hash = dataHash(msg.sender, block.chainid, destinationChain, gasLimit, data, nonce);
+        bytes32 hash = dataHash(msg.sender, block.chainid, _destinationChain, _gasLimit, _data, nonce);
         require(sentData[hash].length == 0, "RelayBridge: data already send");
 
         sent[hash] = true;
-        sentData[hash] = data;
+        sentData[hash] = _data;
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = address(bridgeValidatorFeePool).call{value: msg.value, gas: 21000}("");
         require(success, "RelayBridge: transfer value failed");
 
-        emit Sent(hash, msg.sender, block.chainid, destinationChain, data, gasLimit, nonce, msg.value);
+        emit Sent(hash, msg.sender, block.chainid, _destinationChain, _data, _gasLimit, nonce, msg.value);
 
         nonce++;
     }
@@ -93,42 +93,42 @@ contract RelayBridge is Initializable {
     }
 
     function revertSend(
-        address appContract,
-        uint256 destinationChain,
-        uint256 gasLimit,
-        bytes memory data,
+        address _appContract,
+        uint256 _destinationChain,
+        uint256 _gasLimit,
+        bytes memory _data,
         uint256 _nonce,
-        address leader
+        address _leader
     ) external onlySigner {
-        bytes32 hash = dataHash(appContract, block.chainid, destinationChain, gasLimit, data, _nonce);
+        bytes32 hash = dataHash(_appContract, block.chainid, _destinationChain, _gasLimit, _data, _nonce);
         require(sent[hash], "RelayBridge: data never sent");
         require(!reverted[hash], "RelayBridge: data already reverted");
 
         reverted[hash] = true;
-        leaderHistory.push(leader);
+        leaderHistory.push(_leader);
 
-        IBridgeApp(appContract).revertSend(destinationChain, data);
+        IBridgeApp(_appContract).revertSend(_destinationChain, _data);
 
-        emit Reverted(hash, block.chainid, destinationChain);
+        emit Reverted(hash, block.chainid, _destinationChain);
     }
 
     function execute(
-        address appContract,
-        uint256 sourceChain,
-        uint256 gasLimit,
-        bytes memory data,
+        address _appContract,
+        uint256 _sourceChain,
+        uint256 _gasLimit,
+        bytes memory _data,
         uint256 _nonce,
-        address leader
+        address _leader
     ) external onlySigner {
-        bytes32 hash = dataHash(appContract, sourceChain, block.chainid, gasLimit, data, _nonce);
+        bytes32 hash = dataHash(_appContract, _sourceChain, block.chainid, _gasLimit, _data, _nonce);
         require(!executed[hash], "RelayBridge: data already executed");
 
         executed[hash] = true;
-        leaderHistory.push(leader);
+        leaderHistory.push(_leader);
 
-        IBridgeApp(appContract).execute(sourceChain, data);
+        IBridgeApp(_appContract).execute(_sourceChain, _data);
 
-        emit Executed(hash, sourceChain, block.chainid);
+        emit Executed(hash, _sourceChain, block.chainid);
     }
 
     function leaderHistoryLength() external view returns (uint256) {
@@ -136,13 +136,13 @@ contract RelayBridge is Initializable {
     }
 
     function dataHash(
-        address appContract,
-        uint256 sourceChain,
-        uint256 destinationChain,
-        uint256 gasLimit,
-        bytes memory data,
+        address _appContract,
+        uint256 _sourceChain,
+        uint256 _destinationChain,
+        uint256 _gasLimit,
+        bytes memory _data,
         uint256 _nonce
     ) public pure returns (bytes32) {
-        return keccak256(abi.encode(appContract, sourceChain, destinationChain, gasLimit, data, _nonce));
+        return keccak256(abi.encode(_appContract, _sourceChain, _destinationChain, _gasLimit, _data, _nonce));
     }
 }

@@ -16,9 +16,9 @@ contract BridgeApp is Ownable {
         _transferOwnership(_owner);
     }
 
-    function setContractAddress(uint256 chainId, address contractAddress) public onlyOwner {
-        contractAddresses[chainId] = contractAddress;
-        emit ContractAddressUpdated(chainId, contractAddress);
+    function setContractAddress(uint256 _chainId, address _contractAddress) public onlyOwner {
+        contractAddresses[_chainId] = _contractAddress;
+        emit ContractAddressUpdated(_chainId, _contractAddress);
     }
 
     function setMediator(address _mediatorAddress) public onlyOwner {

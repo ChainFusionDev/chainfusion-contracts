@@ -177,17 +177,17 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
         return totalStake;
     }
 
-    function _addValidator(address validator) private {
+    function _addValidator(address _validator) private {
         DKG dkg = _dkgContract();
 
-        addressStorage.mustAdd(validator);
+        addressStorage.mustAdd(_validator);
         dkg.updateGeneration();
     }
 
-    function _removeValidator(address validator) private {
+    function _removeValidator(address _validator) private {
         DKG dkg = _dkgContract();
 
-        addressStorage.mustRemove(validator);
+        addressStorage.mustRemove(_validator);
         dkg.updateGeneration();
     }
 

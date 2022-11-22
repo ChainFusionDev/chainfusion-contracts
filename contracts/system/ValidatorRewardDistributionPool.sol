@@ -25,8 +25,8 @@ contract ValidatorRewardDistributionPool is Initializable, ContractKeys, SignerO
 
     mapping(address => RewardPosition) public rewardPositions;
 
-    event CollectRewards(address _validator, uint256 amount);
-    event RouterUpdated(address _router);
+    event CollectRewards(address validator, uint256 amount);
+    event RouterUpdated(address router);
 
     // solhint-disable-next-line no-empty-blocks
     receive() external payable {}
@@ -126,10 +126,10 @@ contract ValidatorRewardDistributionPool is Initializable, ContractKeys, SignerO
         return Staking(payable(contractRegistry.getContract(STAKING_KEY)));
     }
 
-    function _createPath(address from, address to) private pure returns (address[] memory) {
+    function _createPath(address _from, address _to) private pure returns (address[] memory) {
         address[] memory path = new address[](2);
-        path[0] = from;
-        path[1] = to;
+        path[0] = _from;
+        path[1] = _to;
 
         return path;
     }

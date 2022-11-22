@@ -5,47 +5,47 @@ import "./IDEXV2Router01.sol";
 
 interface IDEXV2Router02 is IDEXV2Router01 {
     function removeLiquidityETHSupportingFeeOnTransferTokens(
-        address token,
-        uint256 liquidity,
-        uint256 amountTokenMin,
-        uint256 amountETHMin,
-        address to,
-        uint256 deadline
+        address _token,
+        uint256 _liquidity,
+        uint256 _amountTokenMin,
+        uint256 _amountETHMin,
+        address _to,
+        uint256 _deadline
     ) external returns (uint256 amountETH);
 
     function removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(
-        address token,
-        uint256 liquidity,
-        uint256 amountTokenMin,
-        uint256 amountETHMin,
-        address to,
-        uint256 deadline,
-        bool approveMax,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
+        address _token,
+        uint256 _liquidity,
+        uint256 _amountTokenMin,
+        uint256 _amountETHMin,
+        address _to,
+        uint256 _deadline,
+        bool _approveMax,
+        uint8 _v,
+        bytes32 _r,
+        bytes32 _s
     ) external returns (uint256 amountETH);
 
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
-        uint256 amountIn,
-        uint256 amountOutMin,
-        address[] calldata path,
-        address to,
-        uint256 deadline
+        uint256 _amountIn,
+        uint256 _amountOutMin,
+        address[] calldata _path,
+        address _to,
+        uint256 _deadline
     ) external;
 
     function swapExactETHForTokensSupportingFeeOnTransferTokens(
-        uint256 amountOutMin,
-        address[] calldata path,
-        address to,
-        uint256 deadline
+        uint256 _amountOutMin,
+        address[] calldata _path,
+        address _to,
+        uint256 _deadline
     ) external payable;
 
     function swapExactTokensForETHSupportingFeeOnTransferTokens(
-        uint256 amountIn,
-        uint256 amountOutMin,
-        address[] calldata path,
-        address to,
-        uint256 deadline
+        uint256 _amountIn,
+        uint256 _amountOutMin,
+        address[] calldata _path,
+        address _to,
+        uint256 _deadline
     ) external;
 }

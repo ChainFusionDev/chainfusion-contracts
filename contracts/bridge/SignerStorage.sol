@@ -6,7 +6,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 contract SignerStorage is Initializable {
     address public signer;
 
-    event SignerUpdated(address _signer);
+    event SignerUpdated(address signer);
 
     modifier onlySigner() {
         require(this.getAddress() == msg.sender, "SignerOwnable: only signer");
