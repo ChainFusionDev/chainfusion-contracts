@@ -16,19 +16,19 @@ contract MockBridgeApp is IBridgeApp, Initializable {
     }
 
     function send(
-        uint256 destinationChain,
-        uint256 gasLimit,
-        bytes memory data
+        uint256 _destinationChain,
+        uint256 _gasLimit,
+        bytes memory _data
     ) public {
-        relayBridge.send(destinationChain, gasLimit, data);
+        relayBridge.send(_destinationChain, _gasLimit, _data);
     }
 
-    function execute(uint256, bytes memory data) public {
-        value = abi.decode(data, (string));
+    function execute(uint256, bytes memory _data) public {
+        value = abi.decode(_data, (string));
     }
 
-    function revertSend(uint256, bytes memory data) public {
-        emit Reverted(keccak256(data));
+    function revertSend(uint256, bytes memory _data) public {
+        emit Reverted(keccak256(_data));
     }
 
     function bridgeAppAddress() public pure returns (address) {

@@ -7,7 +7,7 @@ import "./SignerOwnable.sol";
 contract ContractRegistry is SignerOwnable, Initializable {
     mapping(string => address) public contracts;
 
-    event ContractAddressUpdated(string _key, address _value);
+    event ContractAddressUpdated(string key, address value);
 
     function initialize(address _signerGetterAddress) external initializer {
         _setSignerGetter(_signerGetterAddress);
