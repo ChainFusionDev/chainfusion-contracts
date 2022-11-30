@@ -69,6 +69,7 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.5.0",
     "cpy-cli": "^4.2.0",
+    "glob": "^8.0.3",
     "yaml": "^2.1.3"
   }
 }

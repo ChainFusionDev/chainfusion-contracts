@@ -1,6 +1,6 @@
 import { ethers, network } from 'hardhat';
 import { deployBridgeContracts } from './deploy/chain';
-import { readChainContractsConfig, readContractsConfig, updateContractsConfig, writeChainContractsConfig, processBridgeConfig } from './deploy/config';
+import { readChainContractsConfig, readContractsConfig, updateContractsConfig, writeChainContractsConfig } from './deploy/config';
 
 async function main() {
   const verify = (process.env.VERIFY || '').trim().toLowerCase() === 'true';
@@ -20,10 +20,11 @@ async function main() {
     verify: verify,
   });
 
+  contractsConfig.networkName = network.name;
+  contractsConfig.startBlock = blockNumber.toString();
+
   updateContractsConfig(contractsConfig, res);
   await writeChainContractsConfig(chainId, contractsConfig);
-
-  await processBridgeConfig(res.relayBridge.address, res.signerStorage.address, blockNumber)
 }
 
 main().catch((error) => {
