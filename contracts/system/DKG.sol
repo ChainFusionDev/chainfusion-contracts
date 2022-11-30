@@ -171,9 +171,7 @@ contract DKG is ContractKeys, Initializable {
         bytes memory _signature
     ) external onlyDKGValidator(_generation) roundIsFilled(_generation, 3) {
         GenerationInfo storage generationInfo = generations[_generation];
-
-        bool signerChanged = generationInfo.signerVoteCounts[_signerAddress] < generationInfo.validators.length;
-        require(generationInfo.deadline <= block.number || signerChanged, "DKG: voting is ended");
+        require(generationInfo.deadline <= block.number, "DKG: voting is ended");
 
         address recoveredSigner = bytes("verify").toEthSignedMessageHash().recover(_signature);
         require(recoveredSigner == _signerAddress, "DKG: signature is invalid");
@@ -186,7 +184,8 @@ contract DKG is ContractKeys, Initializable {
         emit SignerVoted(_generation, msg.sender, _signerAddress);
 
         bool enoughVotes = _enoughVotes(_generation, generationInfo.signerVoteCounts[_signerAddress]);
-        if (enoughVotes && generationInfo.signer != _signerAddress) {
+        bool signerChanged = generationInfo.signer == _signerAddress;
+        if (enoughVotes && !signerChanged) {
             generationInfo.signer = _signerAddress;
             signerToGeneration[_signerAddress] = _generation;
             emit SignerAddressUpdated(_generation, _signerAddress);
