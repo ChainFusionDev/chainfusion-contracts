@@ -184,8 +184,8 @@ contract DKG is ContractKeys, Initializable {
         emit SignerVoted(_generation, msg.sender, _signerAddress);
 
         bool enoughVotes = _enoughVotes(_generation, generationInfo.signerVoteCounts[_signerAddress]);
-        bool signerChanged = generationInfo.signer == _signerAddress;
-        if (enoughVotes && !signerChanged) {
+        bool signerChanged = generationInfo.signer != _signerAddress;
+        if (enoughVotes && signerChanged) {
             generationInfo.signer = _signerAddress;
             signerToGeneration[_signerAddress] = _generation;
             emit SignerAddressUpdated(_generation, _signerAddress);
