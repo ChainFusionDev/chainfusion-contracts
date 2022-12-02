@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "../../interfaces/IBridgeApp.sol";
-import "../../bridge/RelayBridge.sol";
+import "../../chain/RelayBridge.sol";
 
 contract MockBridgeApp is IBridgeApp, Initializable {
     string public value;
