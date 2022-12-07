@@ -30,7 +30,7 @@ var (
 
 // IBridgeAppMetaData contains all meta data concerning the IBridgeApp contract.
 var IBridgeAppMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"name\":\"bridgeAppAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"revertSend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"name\":\"bridgeAppAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"revertSend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // IBridgeAppABI is the input ABI used to generate the binding from.
@@ -212,42 +212,42 @@ func (_IBridgeApp *IBridgeAppCallerSession) BridgeAppAddress() (common.Address, 
 
 // Execute is a paid mutator transaction binding the contract method 0x59efcb15.
 //
-// Solidity: function execute(uint256 sourceChain, bytes data) returns()
-func (_IBridgeApp *IBridgeAppTransactor) Execute(opts *bind.TransactOpts, sourceChain *big.Int, data []byte) (*types.Transaction, error) {
-	return _IBridgeApp.contract.Transact(opts, "execute", sourceChain, data)
+// Solidity: function execute(uint256 _sourceChain, bytes _data) returns()
+func (_IBridgeApp *IBridgeAppTransactor) Execute(opts *bind.TransactOpts, _sourceChain *big.Int, _data []byte) (*types.Transaction, error) {
+	return _IBridgeApp.contract.Transact(opts, "execute", _sourceChain, _data)
 }
 
 // Execute is a paid mutator transaction binding the contract method 0x59efcb15.
 //
-// Solidity: function execute(uint256 sourceChain, bytes data) returns()
-func (_IBridgeApp *IBridgeAppSession) Execute(sourceChain *big.Int, data []byte) (*types.Transaction, error) {
-	return _IBridgeApp.Contract.Execute(&_IBridgeApp.TransactOpts, sourceChain, data)
+// Solidity: function execute(uint256 _sourceChain, bytes _data) returns()
+func (_IBridgeApp *IBridgeAppSession) Execute(_sourceChain *big.Int, _data []byte) (*types.Transaction, error) {
+	return _IBridgeApp.Contract.Execute(&_IBridgeApp.TransactOpts, _sourceChain, _data)
 }
 
 // Execute is a paid mutator transaction binding the contract method 0x59efcb15.
 //
-// Solidity: function execute(uint256 sourceChain, bytes data) returns()
-func (_IBridgeApp *IBridgeAppTransactorSession) Execute(sourceChain *big.Int, data []byte) (*types.Transaction, error) {
-	return _IBridgeApp.Contract.Execute(&_IBridgeApp.TransactOpts, sourceChain, data)
+// Solidity: function execute(uint256 _sourceChain, bytes _data) returns()
+func (_IBridgeApp *IBridgeAppTransactorSession) Execute(_sourceChain *big.Int, _data []byte) (*types.Transaction, error) {
+	return _IBridgeApp.Contract.Execute(&_IBridgeApp.TransactOpts, _sourceChain, _data)
 }
 
 // RevertSend is a paid mutator transaction binding the contract method 0x0d788db0.
 //
-// Solidity: function revertSend(uint256 destinationChain, bytes data) returns()
-func (_IBridgeApp *IBridgeAppTransactor) RevertSend(opts *bind.TransactOpts, destinationChain *big.Int, data []byte) (*types.Transaction, error) {
-	return _IBridgeApp.contract.Transact(opts, "revertSend", destinationChain, data)
+// Solidity: function revertSend(uint256 _destinationChain, bytes _data) returns()
+func (_IBridgeApp *IBridgeAppTransactor) RevertSend(opts *bind.TransactOpts, _destinationChain *big.Int, _data []byte) (*types.Transaction, error) {
+	return _IBridgeApp.contract.Transact(opts, "revertSend", _destinationChain, _data)
 }
 
 // RevertSend is a paid mutator transaction binding the contract method 0x0d788db0.
 //
-// Solidity: function revertSend(uint256 destinationChain, bytes data) returns()
-func (_IBridgeApp *IBridgeAppSession) RevertSend(destinationChain *big.Int, data []byte) (*types.Transaction, error) {
-	return _IBridgeApp.Contract.RevertSend(&_IBridgeApp.TransactOpts, destinationChain, data)
+// Solidity: function revertSend(uint256 _destinationChain, bytes _data) returns()
+func (_IBridgeApp *IBridgeAppSession) RevertSend(_destinationChain *big.Int, _data []byte) (*types.Transaction, error) {
+	return _IBridgeApp.Contract.RevertSend(&_IBridgeApp.TransactOpts, _destinationChain, _data)
 }
 
 // RevertSend is a paid mutator transaction binding the contract method 0x0d788db0.
 //
-// Solidity: function revertSend(uint256 destinationChain, bytes data) returns()
-func (_IBridgeApp *IBridgeAppTransactorSession) RevertSend(destinationChain *big.Int, data []byte) (*types.Transaction, error) {
-	return _IBridgeApp.Contract.RevertSend(&_IBridgeApp.TransactOpts, destinationChain, data)
+// Solidity: function revertSend(uint256 _destinationChain, bytes _data) returns()
+func (_IBridgeApp *IBridgeAppTransactorSession) RevertSend(_destinationChain *big.Int, _data []byte) (*types.Transaction, error) {
+	return _IBridgeApp.Contract.RevertSend(&_IBridgeApp.TransactOpts, _destinationChain, _data)
 }

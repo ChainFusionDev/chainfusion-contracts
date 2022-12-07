@@ -30,7 +30,7 @@ var (
 
 // BridgeAppMetaData contains all meta data concerning the BridgeApp contract.
 var BridgeAppMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"}],\"name\":\"ContractAddressUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"mediatorAddress\",\"type\":\"address\"}],\"name\":\"UpdatedMediatorAddress\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"contractAddresses\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mediatorAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"}],\"name\":\"setContractAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_mediatorAddress\",\"type\":\"address\"}],\"name\":\"setMediator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"}],\"name\":\"ContractAddressUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"mediatorAddress\",\"type\":\"address\"}],\"name\":\"UpdatedMediatorAddress\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"contractAddresses\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mediatorAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_contractAddress\",\"type\":\"address\"}],\"name\":\"setContractAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_mediatorAddress\",\"type\":\"address\"}],\"name\":\"setMediator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // BridgeAppABI is the input ABI used to generate the binding from.
@@ -295,23 +295,23 @@ func (_BridgeApp *BridgeAppTransactorSession) RenounceOwnership() (*types.Transa
 
 // SetContractAddress is a paid mutator transaction binding the contract method 0xbb0165b1.
 //
-// Solidity: function setContractAddress(uint256 chainId, address contractAddress) returns()
-func (_BridgeApp *BridgeAppTransactor) SetContractAddress(opts *bind.TransactOpts, chainId *big.Int, contractAddress common.Address) (*types.Transaction, error) {
-	return _BridgeApp.contract.Transact(opts, "setContractAddress", chainId, contractAddress)
+// Solidity: function setContractAddress(uint256 _chainId, address _contractAddress) returns()
+func (_BridgeApp *BridgeAppTransactor) SetContractAddress(opts *bind.TransactOpts, _chainId *big.Int, _contractAddress common.Address) (*types.Transaction, error) {
+	return _BridgeApp.contract.Transact(opts, "setContractAddress", _chainId, _contractAddress)
 }
 
 // SetContractAddress is a paid mutator transaction binding the contract method 0xbb0165b1.
 //
-// Solidity: function setContractAddress(uint256 chainId, address contractAddress) returns()
-func (_BridgeApp *BridgeAppSession) SetContractAddress(chainId *big.Int, contractAddress common.Address) (*types.Transaction, error) {
-	return _BridgeApp.Contract.SetContractAddress(&_BridgeApp.TransactOpts, chainId, contractAddress)
+// Solidity: function setContractAddress(uint256 _chainId, address _contractAddress) returns()
+func (_BridgeApp *BridgeAppSession) SetContractAddress(_chainId *big.Int, _contractAddress common.Address) (*types.Transaction, error) {
+	return _BridgeApp.Contract.SetContractAddress(&_BridgeApp.TransactOpts, _chainId, _contractAddress)
 }
 
 // SetContractAddress is a paid mutator transaction binding the contract method 0xbb0165b1.
 //
-// Solidity: function setContractAddress(uint256 chainId, address contractAddress) returns()
-func (_BridgeApp *BridgeAppTransactorSession) SetContractAddress(chainId *big.Int, contractAddress common.Address) (*types.Transaction, error) {
-	return _BridgeApp.Contract.SetContractAddress(&_BridgeApp.TransactOpts, chainId, contractAddress)
+// Solidity: function setContractAddress(uint256 _chainId, address _contractAddress) returns()
+func (_BridgeApp *BridgeAppTransactorSession) SetContractAddress(_chainId *big.Int, _contractAddress common.Address) (*types.Transaction, error) {
+	return _BridgeApp.Contract.SetContractAddress(&_BridgeApp.TransactOpts, _chainId, _contractAddress)
 }
 
 // SetMediator is a paid mutator transaction binding the contract method 0x49e3ec5e.

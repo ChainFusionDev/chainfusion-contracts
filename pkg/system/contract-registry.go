@@ -30,7 +30,7 @@ var (
 
 // ContractRegistryMetaData contains all meta data concerning the ContractRegistry contract.
 var ContractRegistryMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_key\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_value\",\"type\":\"address\"}],\"name\":\"ContractAddressUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"contracts\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_key\",\"type\":\"string\"}],\"name\":\"getContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerGetterAddress\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_key\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_value\",\"type\":\"address\"}],\"name\":\"setContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerGetter\",\"outputs\":[{\"internalType\":\"contractSignerGetter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"key\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"value\",\"type\":\"address\"}],\"name\":\"ContractAddressUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"contracts\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_key\",\"type\":\"string\"}],\"name\":\"getContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerGetterAddress\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_key\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_value\",\"type\":\"address\"}],\"name\":\"setContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerGetter\",\"outputs\":[{\"internalType\":\"contractSignerGetter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // ContractRegistryABI is the input ABI used to generate the binding from.
@@ -390,7 +390,7 @@ type ContractRegistryContractAddressUpdated struct {
 
 // FilterContractAddressUpdated is a free log retrieval operation binding the contract event 0xa42de6429c1410f4470a8ff5afeeae27c734519ac1693e8eb58798a81715c947.
 //
-// Solidity: event ContractAddressUpdated(string _key, address _value)
+// Solidity: event ContractAddressUpdated(string key, address value)
 func (_ContractRegistry *ContractRegistryFilterer) FilterContractAddressUpdated(opts *bind.FilterOpts) (*ContractRegistryContractAddressUpdatedIterator, error) {
 
 	logs, sub, err := _ContractRegistry.contract.FilterLogs(opts, "ContractAddressUpdated")
@@ -402,7 +402,7 @@ func (_ContractRegistry *ContractRegistryFilterer) FilterContractAddressUpdated(
 
 // WatchContractAddressUpdated is a free log subscription operation binding the contract event 0xa42de6429c1410f4470a8ff5afeeae27c734519ac1693e8eb58798a81715c947.
 //
-// Solidity: event ContractAddressUpdated(string _key, address _value)
+// Solidity: event ContractAddressUpdated(string key, address value)
 func (_ContractRegistry *ContractRegistryFilterer) WatchContractAddressUpdated(opts *bind.WatchOpts, sink chan<- *ContractRegistryContractAddressUpdated) (event.Subscription, error) {
 
 	logs, sub, err := _ContractRegistry.contract.WatchLogs(opts, "ContractAddressUpdated")
@@ -439,7 +439,7 @@ func (_ContractRegistry *ContractRegistryFilterer) WatchContractAddressUpdated(o
 
 // ParseContractAddressUpdated is a log parse operation binding the contract event 0xa42de6429c1410f4470a8ff5afeeae27c734519ac1693e8eb58798a81715c947.
 //
-// Solidity: event ContractAddressUpdated(string _key, address _value)
+// Solidity: event ContractAddressUpdated(string key, address value)
 func (_ContractRegistry *ContractRegistryFilterer) ParseContractAddressUpdated(log types.Log) (*ContractRegistryContractAddressUpdated, error) {
 	event := new(ContractRegistryContractAddressUpdated)
 	if err := _ContractRegistry.contract.UnpackLog(event, "ContractAddressUpdated", log); err != nil {

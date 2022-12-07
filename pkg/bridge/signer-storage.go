@@ -30,7 +30,7 @@ var (
 
 // SignerStorageMetaData contains all meta data concerning the SignerStorage contract.
 var SignerStorageMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_signer\",\"type\":\"address\"}],\"name\":\"SignerUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signer\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newSigner\",\"type\":\"address\"}],\"name\":\"setAddress\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signer\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"signer\",\"type\":\"address\"}],\"name\":\"SignerUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signer\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newSigner\",\"type\":\"address\"}],\"name\":\"setAddress\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signer\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // SignerStorageABI is the input ABI used to generate the binding from.
@@ -492,7 +492,7 @@ type SignerStorageSignerUpdated struct {
 
 // FilterSignerUpdated is a free log retrieval operation binding the contract event 0x5553331329228fbd4123164423717a4a7539f6dfa1c3279a923b98fd681a6c73.
 //
-// Solidity: event SignerUpdated(address _signer)
+// Solidity: event SignerUpdated(address signer)
 func (_SignerStorage *SignerStorageFilterer) FilterSignerUpdated(opts *bind.FilterOpts) (*SignerStorageSignerUpdatedIterator, error) {
 
 	logs, sub, err := _SignerStorage.contract.FilterLogs(opts, "SignerUpdated")
@@ -504,7 +504,7 @@ func (_SignerStorage *SignerStorageFilterer) FilterSignerUpdated(opts *bind.Filt
 
 // WatchSignerUpdated is a free log subscription operation binding the contract event 0x5553331329228fbd4123164423717a4a7539f6dfa1c3279a923b98fd681a6c73.
 //
-// Solidity: event SignerUpdated(address _signer)
+// Solidity: event SignerUpdated(address signer)
 func (_SignerStorage *SignerStorageFilterer) WatchSignerUpdated(opts *bind.WatchOpts, sink chan<- *SignerStorageSignerUpdated) (event.Subscription, error) {
 
 	logs, sub, err := _SignerStorage.contract.WatchLogs(opts, "SignerUpdated")
@@ -541,7 +541,7 @@ func (_SignerStorage *SignerStorageFilterer) WatchSignerUpdated(opts *bind.Watch
 
 // ParseSignerUpdated is a log parse operation binding the contract event 0x5553331329228fbd4123164423717a4a7539f6dfa1c3279a923b98fd681a6c73.
 //
-// Solidity: event SignerUpdated(address _signer)
+// Solidity: event SignerUpdated(address signer)
 func (_SignerStorage *SignerStorageFilterer) ParseSignerUpdated(log types.Log) (*SignerStorageSignerUpdated, error) {
 	event := new(SignerStorageSignerUpdated)
 	if err := _SignerStorage.contract.UnpackLog(event, "SignerUpdated", log); err != nil {

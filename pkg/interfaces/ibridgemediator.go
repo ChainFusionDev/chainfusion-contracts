@@ -30,7 +30,7 @@ var (
 
 // IBridgeMediatorMetaData contains all meta data concerning the IBridgeMediator contract.
 var IBridgeMediatorMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"mediate\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sourceChain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_destinationChain\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"mediate\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // IBridgeMediatorABI is the input ABI used to generate the binding from.
@@ -181,10 +181,10 @@ func (_IBridgeMediator *IBridgeMediatorTransactorRaw) Transact(opts *bind.Transa
 
 // Mediate is a free data retrieval call binding the contract method 0x8b68e0f7.
 //
-// Solidity: function mediate(uint256 sourceChain, uint256 destinationChain, bytes data) view returns(bytes)
-func (_IBridgeMediator *IBridgeMediatorCaller) Mediate(opts *bind.CallOpts, sourceChain *big.Int, destinationChain *big.Int, data []byte) ([]byte, error) {
+// Solidity: function mediate(uint256 _sourceChain, uint256 _destinationChain, bytes _data) view returns(bytes)
+func (_IBridgeMediator *IBridgeMediatorCaller) Mediate(opts *bind.CallOpts, _sourceChain *big.Int, _destinationChain *big.Int, _data []byte) ([]byte, error) {
 	var out []interface{}
-	err := _IBridgeMediator.contract.Call(opts, &out, "mediate", sourceChain, destinationChain, data)
+	err := _IBridgeMediator.contract.Call(opts, &out, "mediate", _sourceChain, _destinationChain, _data)
 
 	if err != nil {
 		return *new([]byte), err
@@ -198,14 +198,14 @@ func (_IBridgeMediator *IBridgeMediatorCaller) Mediate(opts *bind.CallOpts, sour
 
 // Mediate is a free data retrieval call binding the contract method 0x8b68e0f7.
 //
-// Solidity: function mediate(uint256 sourceChain, uint256 destinationChain, bytes data) view returns(bytes)
-func (_IBridgeMediator *IBridgeMediatorSession) Mediate(sourceChain *big.Int, destinationChain *big.Int, data []byte) ([]byte, error) {
-	return _IBridgeMediator.Contract.Mediate(&_IBridgeMediator.CallOpts, sourceChain, destinationChain, data)
+// Solidity: function mediate(uint256 _sourceChain, uint256 _destinationChain, bytes _data) view returns(bytes)
+func (_IBridgeMediator *IBridgeMediatorSession) Mediate(_sourceChain *big.Int, _destinationChain *big.Int, _data []byte) ([]byte, error) {
+	return _IBridgeMediator.Contract.Mediate(&_IBridgeMediator.CallOpts, _sourceChain, _destinationChain, _data)
 }
 
 // Mediate is a free data retrieval call binding the contract method 0x8b68e0f7.
 //
-// Solidity: function mediate(uint256 sourceChain, uint256 destinationChain, bytes data) view returns(bytes)
-func (_IBridgeMediator *IBridgeMediatorCallerSession) Mediate(sourceChain *big.Int, destinationChain *big.Int, data []byte) ([]byte, error) {
-	return _IBridgeMediator.Contract.Mediate(&_IBridgeMediator.CallOpts, sourceChain, destinationChain, data)
+// Solidity: function mediate(uint256 _sourceChain, uint256 _destinationChain, bytes _data) view returns(bytes)
+func (_IBridgeMediator *IBridgeMediatorCallerSession) Mediate(_sourceChain *big.Int, _destinationChain *big.Int, _data []byte) ([]byte, error) {
+	return _IBridgeMediator.Contract.Mediate(&_IBridgeMediator.CallOpts, _sourceChain, _destinationChain, _data)
 }
