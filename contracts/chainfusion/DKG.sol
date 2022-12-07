@@ -169,19 +169,24 @@ contract DKG is ContractKeys, Initializable {
         uint256 _generation,
         address _signerAddress,
         bytes memory _signature
-    ) external onlyDKGValidator(_generation) roundIsFilled(_generation, 3) onlyPending(_generation) {
+    ) external onlyDKGValidator(_generation) roundIsFilled(_generation, 3) {
+        GenerationInfo storage generationInfo = generations[_generation];
+        require(generationInfo.deadline >= block.number, "DKG: voting is ended");
+
         address recoveredSigner = bytes("verify").toEthSignedMessageHash().recover(_signature);
         require(recoveredSigner == _signerAddress, "DKG: signature is invalid");
-        require(generations[_generation].signerVotes[msg.sender] == address(0), "DKG: already voted");
 
-        generations[_generation].signerVotes[msg.sender] = _signerAddress;
-        generations[_generation].signerVoteCounts[_signerAddress]++;
+        require(generationInfo.signerVotes[msg.sender] == address(0), "DKG: already voted");
+
+        generationInfo.signerVotes[msg.sender] = _signerAddress;
+        generationInfo.signerVoteCounts[_signerAddress]++;
 
         emit SignerVoted(_generation, msg.sender, _signerAddress);
 
-        bool enoughVotes = _enoughVotes(_generation, generations[_generation].signerVoteCounts[_signerAddress]);
-        if (enoughVotes) {
-            generations[_generation].signer = _signerAddress;
+        bool enoughVotes = _enoughVotes(_generation, generationInfo.signerVoteCounts[_signerAddress]);
+        bool signerChanged = generationInfo.signer != _signerAddress;
+        if (enoughVotes && signerChanged) {
+            generationInfo.signer = _signerAddress;
             signerToGeneration[_signerAddress] = _generation;
             emit SignerAddressUpdated(_generation, _signerAddress);
         }
