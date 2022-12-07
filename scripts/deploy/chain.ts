@@ -17,6 +17,7 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
   const [owner] = await ethers.getSigners();
 
   let initialSignerAddress = owner.address;
+  const initialSignerBalance = ethers.utils.parseEther('10');
 
   if (options?.homeNetwork !== undefined && options?.homeDKGAddress !== undefined) {
     deployer.log('Receiving DKG signer address\n');
@@ -40,6 +41,19 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
     }
 
     deployer.log(`Received signer address: ${initialSignerAddress}\n`);
+
+    if ((await ethers.provider.getBalance(initialSignerAddress)).lt(initialSignerBalance)) {
+      deployer.log('Depositing initial signer balance\n');
+
+      await (
+        await owner.sendTransaction({
+          to: initialSignerAddress,
+          value: initialSignerBalance,
+        })
+      ).wait();
+
+      deployer.log('Deposited initial signer balance\n');
+    }
   }
 
   deployer.log('Deploying contracts\n');
