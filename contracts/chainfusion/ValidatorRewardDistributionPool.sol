@@ -8,7 +8,7 @@ import "./ContractRegistry.sol";
 import "./Staking.sol";
 import "./ContractKeys.sol";
 import "./SignerOwnable.sol";
-import "../bridge/Globals.sol";
+import "../chain/Globals.sol";
 
 contract ValidatorRewardDistributionPool is Initializable, ContractKeys, SignerOwnable {
     struct RewardPosition {

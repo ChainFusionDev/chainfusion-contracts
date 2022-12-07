@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "../../bridge/RelayBridge.sol";
+import "../../chain/RelayBridge.sol";
 
 contract MockDEXRouter is Initializable {
     // solhint-disable-next-line no-empty-blocks
