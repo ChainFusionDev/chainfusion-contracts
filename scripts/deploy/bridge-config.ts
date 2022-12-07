@@ -26,6 +26,9 @@ export async function createBridgeConfig(contractConfigs: ContractsConfig[]): Pr
       contractConfig.networkName !== undefined
     ) {
       const networkConfig = config.networks[contractConfig.networkName] as HttpNetworkConfig;
+      if (networkConfig === undefined) {
+        return;
+      }
 
       const rpcURL = networkConfig.url;
       const chainId = networkConfig.chainId ?? 1;

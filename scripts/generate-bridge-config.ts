@@ -3,24 +3,30 @@ import { ContractsConfig } from './deploy/config';
 import glob from 'glob';
 
 async function main() {
-  glob('contracts-*.json', async function (err, files) {
-    var configs: ContractsConfig[] = [];
+  const files = await getContractsFiles();
 
-    if (err) {
-      console.log(err);
-      return err
-    } else {
-      for (const path of files) {
-        const config = await readContractsConfig(path);
+  var configs: ContractsConfig[] = [];
+  for (const path of files) {
+    const config = await readContractsConfig(path);
 
-        configs.push(config);
+    configs.push(config);
+  }
+
+  const bConfig = await createBridgeConfig(configs)
+
+  await writeBridgeConfig(bConfig)
+}
+
+async function getContractsFiles(): Promise<string[]> {
+  return new Promise((resolve, reject) => {
+    glob('contracts-*.json', async function (err, files) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(files);
       }
-
-      const bConfig = await createBridgeConfig(configs)
-
-      await writeBridgeConfig(bConfig)
-    }
-  });
+    });
+  })
 }
 
 main().catch((error) => {
