@@ -3,7 +3,7 @@ import { ContractsConfig } from './deploy/config';
 import glob from 'glob';
 
 async function main() {
-   glob('contracts-*.json', async function (err, files) {
+  glob('contracts-*.json', async function (err, files) {
     var configs: ContractsConfig[] = [];
 
     if (err) {
@@ -16,14 +16,14 @@ async function main() {
         configs.push(config);
       }
 
-    const bConfig = await createBridgeConfig(configs)
+      const bConfig = await createBridgeConfig(configs)
 
-    await writeBridgeConfig(bConfig)
+      await writeBridgeConfig(bConfig)
     }
   });
 }
-  
-  main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-  });
+
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
