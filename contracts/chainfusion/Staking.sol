@@ -139,9 +139,12 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
     }
 
     function stake() public payable onlyNotSlashed {
-        require(msg.value + stakes[msg.sender].stake >= minimalStake, "Staking: insufficient stake provided");
+        require(msg.value > 0, "Staking: amount must be greater than zero");
 
-        if (stakes[msg.sender].status == ValidatorStatus.INACTIVE) {
+        if (
+            stakes[msg.sender].status == ValidatorStatus.INACTIVE &&
+            msg.value + stakes[msg.sender].stake >= minimalStake
+        ) {
             stakes[msg.sender].validator = msg.sender;
             stakes[msg.sender].status = ValidatorStatus.ACTIVE;
             _addValidator(msg.sender);

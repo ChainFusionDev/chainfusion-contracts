@@ -1,7 +1,7 @@
 import hre from 'hardhat';
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
-import { ValidatorStatusActive } from '../utils/helpers';
+import { ValidatorStatusActive, ValidatorStatusInactive } from '../utils/helpers';
 import { deploySystem } from '../utils/deploy';
 import { hexValue } from 'ethers/lib/utils';
 
@@ -28,10 +28,10 @@ describe('Staking', function () {
     expect(await staking.withdrawalPeriod()).to.equal(newWithdrawalPeriod);
   });
 
-  it('should verify error on staking less than minimal stake', async function () {
-    const { staking, minimalStake } = await deploySystem();
+  it('should verify error at zero stake amount', async function () {
+    const { staking } = await deploySystem();
 
-    await expect(staking.stake({ value: minimalStake.sub(1) })).to.be.revertedWith('insufficient stake provided');
+    await expect(staking.stake({ value: 0 })).to.be.revertedWith('Staking: amount must be greater than zero');
   });
 
   it('should verify staking more than minimal stake', async function () {
@@ -57,6 +57,24 @@ describe('Staking', function () {
     expect(validator).to.equal(owner.address);
     expect(stake).to.equal(minimalStake.mul(2));
     expect(status).to.equal(ValidatorStatusActive);
+  });
+
+  it('should check make validator active if new stake is more than minimum amount', async function () {
+    const [owner] = await ethers.getSigners();
+    let { staking, minimalStake } = await deploySystem();
+
+    await staking.stake({ value: minimalStake.div(2) });
+    var stake1 = await staking.stakes(owner.address);
+
+    expect(stake1.status).to.equal(ValidatorStatusInactive);
+    expect(stake1.stake).to.equal(minimalStake.div(2));
+
+    await staking.stake({ value: minimalStake.div(2) });
+    let stake2 = await staking.stakes(owner.address);
+
+    expect(stake2.stake).to.equal(minimalStake);
+    expect(stake2.validator).to.equal(owner.address);
+    expect(stake2.status).to.equal(ValidatorStatusActive);
   });
 
   it('should check if only slashing voting can slash', async function () {
