@@ -26,26 +26,31 @@ const config: HardhatUserConfig = {
     localhost: {
       chainId: 1337,
       accounts,
+      gasPrice: 10000000000,
     },
     ternopil: {
       chainId: 953842,
       url: 'https://rpc.chainfusion.org',
       accounts,
+      gasPrice: 10000000000,
     },
     bg1: {
       chainId: 5001,
       url: 'https://bg1-rpc.chainfusion.org',
       accounts,
+      gasPrice: 10000000000,
     },
     bg2: {
       chainId: 5002,
       url: 'https://bg2-rpc.chainfusion.org',
       accounts,
+      gasPrice: 10000000000,
     },
     bg3: {
       chainId: 5003,
       url: 'https://bg3-rpc.chainfusion.org',
       accounts,
+      gasPrice: 10000000000,
     },
     sepolia: {
       chainId: 11155111,
