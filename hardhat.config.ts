@@ -54,20 +54,29 @@ const config: HardhatUserConfig = {
       gasPrice: 10000000000,
       accounts,
     },
-    ropsten: {
-      url: `https://ropsten.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
-      accounts,
-    },
-    kovan: {
-      url: `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
-      accounts,
-    },
-    rinkeby: {
-      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
-      accounts,
-    },
     goerli: {
+      chainId: 5,
       url: `https://goerli.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+      accounts,
+    },
+    'bsc-testnet': {
+      chainId: 97,
+      url: 'https://data-seed-prebsc-1-s1.binance.org:8545',
+      accounts,
+    },
+    mumbai: {
+      chainId: 80001,
+      url: 'https://rpc-mumbai.maticvigil.com',
+      accounts,
+    },
+    fuji: {
+      chainId: 43113,
+      url: 'https://api.avax-test.network/ext/bc/C/rpc',
+      accounts,
+    },
+    q: {
+      chainId: 35443,
+      url: 'https://rpc.qtestnet.org',
       accounts,
     },
   },
@@ -116,6 +125,30 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://bg3-explorer.chainfusion.org/api",
           browserURL: "https://bg3-explorer.chainfusion.org"
+        }
+      },
+      {
+        network: "mumbai",
+        chainId: 80001,
+        urls: {
+          apiURL: "https://mumbai.polygonscan.com/api",
+          browserURL: "https://mumbai.polygonscan.com"
+        }
+      },
+      {
+        network: 'fuji',
+        chainId: 43113,
+        urls: {
+          apiURL: "https://testnet.snowtrace.io/api",
+          browserURL: "https://testnet.snowtrace.io"
+        }
+      },
+      {
+        network: "q",
+        chainId: 35443,
+        urls: {
+          apiURL: "https://explorer.qtestnet.org/api",
+          browserURL: "https://explorer.qtestnet.org"
         }
       },
     ]
