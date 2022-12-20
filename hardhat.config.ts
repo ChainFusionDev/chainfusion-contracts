@@ -151,7 +151,7 @@ const config: HardhatUserConfig = {
         chainId: 97,
         urls: {
           apiURL: "https://bscscan.com/api",
-          browserURL: "https://bscscan.com"
+          browserURL: "https://testnet.bscscan.com"
         }
       },
       {
