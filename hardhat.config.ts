@@ -25,33 +25,31 @@ const config: HardhatUserConfig = {
   networks: {
     localhost: {
       chainId: 1337,
-      accounts: {
-        mnemonic: 'test test test test test test test test test test test junk'
-      },
-      gasPrice: 100000000000,
+      accounts,
     },
     ternopil: {
       chainId: 953842,
       url: 'https://rpc.chainfusion.org',
-      gasPrice: 10000000000,
       accounts,
     },
     bg1: {
       chainId: 5001,
       url: 'https://bg1-rpc.chainfusion.org',
-      gasPrice: 10000000000,
       accounts,
     },
     bg2: {
       chainId: 5002,
       url: 'https://bg2-rpc.chainfusion.org',
-      gasPrice: 10000000000,
       accounts,
     },
     bg3: {
       chainId: 5003,
       url: 'https://bg3-rpc.chainfusion.org',
-      gasPrice: 10000000000,
+      accounts,
+    },
+    sepolia: {
+      chainId: 11155111,
+      url: 'https://rpc.sepolia.org',
       accounts,
     },
     goerli: {
@@ -74,7 +72,7 @@ const config: HardhatUserConfig = {
       url: 'https://api.avax-test.network/ext/bc/C/rpc',
       accounts,
     },
-    q: {
+    'q-testnet': {
       chainId: 35443,
       url: 'https://rpc.qtestnet.org',
       accounts,
@@ -128,6 +126,30 @@ const config: HardhatUserConfig = {
         }
       },
       {
+        network: "sepolia",
+        chainId: 11155111,
+        urls: {
+          apiURL: "https://sepolia.etherscan.io/api",
+          browserURL: "https://sepolia.etherscan.io"
+        }
+      },
+      {
+        network: "goerli",
+        chainId: 5,
+        urls: {
+          apiURL: "https://goerli.etherscan.io/api",
+          browserURL: "https://goerli.etherscan.io"
+        }
+      },
+      {
+        network: "bsc-testnet",
+        chainId: 97,
+        urls: {
+          apiURL: "https://bscscan.com/api",
+          browserURL: "https://bscscan.com"
+        }
+      },
+      {
         network: "mumbai",
         chainId: 80001,
         urls: {
@@ -144,7 +166,7 @@ const config: HardhatUserConfig = {
         }
       },
       {
-        network: "q",
+        network: "q-testnet",
         chainId: 35443,
         urls: {
           apiURL: "https://explorer.qtestnet.org/api",
