@@ -82,6 +82,11 @@ const config: HardhatUserConfig = {
       url: 'https://rpc.qtestnet.org',
       accounts,
     },
+    'fantom-testnet': {
+      chainId: 4002,
+      url: 'https://rpc.testnet.fantom.network',
+      accounts,
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
@@ -176,6 +181,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://explorer.qtestnet.org/api",
           browserURL: "https://explorer.qtestnet.org"
+        }
+      },
+      {
+        network: "fantom-testnet",
+        chainId: 4002,
+        urls: {
+          apiURL: "https://testnet.ftmscan.com/api",
+          browserURL: "https://testnet.ftmscan.com"
         }
       },
     ]
