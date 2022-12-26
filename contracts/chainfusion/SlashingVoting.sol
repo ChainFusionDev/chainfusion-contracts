@@ -30,6 +30,7 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
         string reason;
         mapping(address => bool) slashingProposalVotes;
         uint256 slashingProposalVoteCounts;
+        uint256 expiryTime;
     }
 
     SlashingProposal[] public proposals;
@@ -37,8 +38,11 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
     ContractRegistry public contractRegistry;
 
     uint256 public epochPeriod;
+    uint256 public expiryPeriod;
     uint256 public slashingThresold;
     uint256 public slashingEpochs;
+
+    mapping(bytes32 => uint256) public expiryTimes;
 
     // Votes
     mapping(bytes32 => mapping(address => bool)) public votes;
@@ -63,14 +67,16 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
         address _validatorGetterAddress,
         uint256 _epochPeriod,
         uint256 _slashingThresold,
-        uint256 _lashingEpochs,
+        uint256 _slashingEpochs,
+        uint256 _expiryPeriod,
         address _contractRegistry
     ) external initializer {
         _setSignerGetter(_signerGetterAddress);
         _setValidatorGetter(_validatorGetterAddress);
         setEpochPeriod(_epochPeriod);
         setSlashingThresold(_slashingThresold);
-        setSlashingEpochs(_lashingEpochs);
+        setSlashingEpochs(_slashingEpochs);
+        setExpiryPeriod(_expiryPeriod);
         contractRegistry = ContractRegistry(_contractRegistry);
     }
 
@@ -84,6 +90,11 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
 
         bytes32 voteHash = votingHashWithReason(_validator, _reason, _nonce);
 
+        if (expiryTimes[voteHash] == 0) {
+            expiryTimes[voteHash] = block.number + expiryPeriod;
+        }
+
+        require(expiryTimes[voteHash] > block.number, "SlashingVoting: voting is end");
         require(staking.isValidatorActive(_validator) == true, "SlashingVoting: target is not active validator");
         require(bans[voteHash] == false, "SlashingVoting: validator is already banned");
         require(votes[voteHash][msg.sender] == false, "SlashingVoting: voter is already voted against given validator");
@@ -117,6 +128,7 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
 
         newProposal.validator = _validator;
         newProposal.reason = _reason;
+        newProposal.expiryTime = block.number + expiryPeriod;
 
         uint256 proposalId = proposals.length - 1;
         emit ProposalCreated(proposalId, _validator);
@@ -131,6 +143,7 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
 
         SlashingProposal storage proposal = proposals[_proposalId];
 
+        require(proposal.expiryTime > block.number, "SlashingVoting: voting is end");
         require(
             staking.isValidatorActive(proposal.validator) == true,
             "SlashingVoting: target is not active validator"
@@ -161,6 +174,10 @@ contract SlashingVoting is ContractKeys, ValidatorOwnable, SignerOwnable, Initia
 
     function setSlashingEpochs(uint256 _slashingEpochs) public onlySigner {
         slashingEpochs = _slashingEpochs;
+    }
+
+    function setExpiryPeriod(uint256 _expiryPeriod) public onlySigner {
+        expiryPeriod = _expiryPeriod;
     }
 
     function isBannedByReason(address _validator, SlashingReason _reason) public view returns (bool) {

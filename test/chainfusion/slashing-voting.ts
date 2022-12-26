@@ -2,6 +2,7 @@ import { ethers } from 'hardhat';
 import { expect } from 'chai';
 import { deploySystem } from '../utils/deploy';
 import { BigNumber } from 'ethers';
+import { hexValue } from 'ethers/lib/utils';
 
 describe('SlashingVoting', function () {
   it('should vote only by validator', async function () {
@@ -205,5 +206,40 @@ describe('SlashingVoting', function () {
     await slashingVoting.createProposal(v3.address, reasonProposal);
 
     await expect(slashingVoting2.voteProposal(0)).to.emit(slashingVoting, 'ProposalExecuted').withArgs(0, v3.address);
+  });
+
+  it('should validators can not vote for ban if vote time is over', async function () {
+    const [, v1, v2, v3] = await ethers.getSigners();
+    const reason: number = 0;
+    const hre = require('hardhat');
+
+    const slashingEpochs = 3;
+    const slashingThreshold = 4;
+
+    const banNonce = ethers.utils.randomBytes(32);
+
+    const { slashingVoting, staking, minimalStake, slashingExpiryPeriod } = await deploySystem({
+      slashingEpochs: BigNumber.from(slashingEpochs),
+      slashingBansThresold: BigNumber.from(slashingThreshold),
+    });
+
+    const slashingVoting1 = await ethers.getContractAt('SlashingVoting', slashingVoting.address, v1);
+    const slashingVoting2 = await ethers.getContractAt('SlashingVoting', slashingVoting.address, v2);
+
+    const staking1 = await ethers.getContractAt('Staking', staking.address, v1);
+    const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
+    const staking3 = await ethers.getContractAt('Staking', staking.address, v3);
+
+    await staking1.stake({ value: minimalStake });
+    await staking2.stake({ value: minimalStake });
+    await staking3.stake({ value: minimalStake });
+
+    await slashingVoting1.voteWithReason(v3.address, reason, banNonce);
+
+    await hre.network.provider.send('hardhat_mine', [hexValue(slashingExpiryPeriod), '0x1']);
+
+    await expect(slashingVoting2.voteWithReason(v3.address, reason, banNonce)).to.be.revertedWith(
+      'SlashingVoting: voting is end'
+    );
   });
 });

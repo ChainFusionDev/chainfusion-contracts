@@ -93,7 +93,7 @@ describe('Staking', function () {
   it('should check if validatorCount is decremented after slashing', async function () {
     const [, v2, v3] = await ethers.getSigners();
     const nonce = ethers.utils.arrayify(0);
-    const reason: number = 0;
+    const firstReason: number = 0;
     const secondReason: number = 1;
     const hre = require('hardhat');
 
@@ -109,8 +109,8 @@ describe('Staking', function () {
     await staking2.stake({ value: minimalStake });
     await staking3.stake({ value: minimalStake });
 
-    await slashingVoting.voteWithReason(v3.address, reason, nonce);
-    await slashingVoting2.voteWithReason(v3.address, reason, nonce);
+    await slashingVoting.voteWithReason(v3.address, firstReason, nonce);
+    await slashingVoting2.voteWithReason(v3.address, firstReason, nonce);
 
     var blocksStep = (await slashingVoting.currentEpoch())
       .add(1)
@@ -120,12 +120,6 @@ describe('Staking', function () {
 
     await slashingVoting.voteWithReason(v3.address, secondReason, nonce);
     await slashingVoting2.voteWithReason(v3.address, secondReason, nonce);
-
-    blocksStep = (await slashingVoting.currentEpoch())
-      .add(1)
-      .mul(await slashingVoting.epochPeriod())
-      .sub(await ethers.provider.getBlockNumber());
-    await hre.network.provider.send('hardhat_mine', [hexValue(blocksStep)]);
 
     expect(await staking.isValidatorSlashed(v3.address)).to.equal(true);
     expect(await addressStorage.size()).to.be.equal(2);
@@ -168,10 +162,9 @@ describe('Staking', function () {
     const { staking, minimalStake, stakeWithdrawalPeriod } = await deploySystem();
 
     const staking2 = await ethers.getContractAt('Staking', staking.address, v2);
-
     await staking.stake({ value: minimalStake });
     await staking.announceWithdrawal(minimalStake);
-    await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
+    await hre.network.provider.send('hardhat_mine', [hexValue(stakeWithdrawalPeriod), '0x1']);
 
     await expect(staking2.withdraw()).to.be.revertedWith('Staking: amount must be greater than zero');
   });
@@ -266,11 +259,11 @@ describe('Staking', function () {
     await staking.stake({ value: value });
 
     await staking.announceWithdrawal(firstWithdrawal);
-    await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
+    await hre.network.provider.send('hardhat_mine', [hexValue(stakeWithdrawalPeriod), '0x1']);
     await staking.withdraw();
 
     await staking.announceWithdrawal(secondWithdrawal);
-    await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
+    await hre.network.provider.send('hardhat_mine', [hexValue(stakeWithdrawalPeriod), '0x1']);
     await staking.withdraw();
 
     const { stake } = await staking.stakes(owner.address);
@@ -293,7 +286,7 @@ describe('Staking', function () {
 
     await staking.stake({ value: minimalStake });
     await staking.announceWithdrawal(minimalStake);
-    await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
+    await hre.network.provider.send('hardhat_mine', [hexValue(stakeWithdrawalPeriod), '0x1']);
     await staking.withdraw();
 
     const { amount, time } = await staking.withdrawalAnnouncements(owner.address);
@@ -322,7 +315,7 @@ describe('Staking', function () {
 
     expect((await dkg.getCurrentValidators()).length).to.equal(3);
     await staking1.announceWithdrawal(withdrawStake);
-    await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
+    await hre.network.provider.send('hardhat_mine', [hexValue(stakeWithdrawalPeriod), '0x1']);
     await staking1.withdraw();
     expect((await dkg.getCurrentValidators()).length).to.equal(2);
 
@@ -343,7 +336,7 @@ describe('Staking', function () {
 
     await staking.stake({ value: value });
     await staking.announceWithdrawal(withdrawal);
-    await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
+    await hre.network.provider.send('hardhat_mine', [hexValue(stakeWithdrawalPeriod), '0x1']);
     await staking.withdraw();
     await staking.stake({ value: secondStake });
 

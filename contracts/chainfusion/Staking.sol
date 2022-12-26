@@ -107,14 +107,14 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
         require(_amount <= stakes[msg.sender].stake, "Staking: amount must be <= to stake");
         withdrawalAnnouncements[msg.sender].amount = _amount;
         // solhint-disable-next-line not-rely-on-time
-        withdrawalAnnouncements[msg.sender].time = block.timestamp;
+        withdrawalAnnouncements[msg.sender].time = block.number;
     }
 
     function withdraw() public onlyNotSlashed {
         require(withdrawalAnnouncements[msg.sender].amount > 0, "Staking: amount must be greater than zero");
         require(
             // solhint-disable-next-line not-rely-on-time
-            withdrawalAnnouncements[msg.sender].time + withdrawalPeriod <= block.timestamp,
+            withdrawalAnnouncements[msg.sender].time + withdrawalPeriod <= block.number,
             "Staking: withdrawal period not passed"
         );
 

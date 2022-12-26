@@ -15,11 +15,12 @@ import {
 
 const defaultSystemDeploymentParameters: SystemDeploymentParameters = {
   minimalStake: ethers.utils.parseEther('100'),
-  stakeWithdrawalPeriod: BigNumber.from(60),
+  stakeWithdrawalPeriod: BigNumber.from(12),
   router: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
   erc20BridgeMediator: '0x0000000000000000000000000000000000000001',
   slashingEpochs: BigNumber.from(3),
   slashingEpochPeriod: BigNumber.from(1000),
+  slashingExpiryPeriod: BigNumber.from(120),
   slashingBansThresold: BigNumber.from(10),
 
   dkgDeadlinePeriod: BigNumber.from(100),
@@ -85,6 +86,7 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
       params.slashingEpochPeriod,
       params.slashingBansThresold,
       params.slashingEpochs,
+      params.slashingExpiryPeriod,
       res.contractRegistry.address
     ),
     'Initializing SlashingVoting'
@@ -153,6 +155,10 @@ function resolveParameters(options?: SystemDeploymentOptions): SystemDeploymentP
     parameters.slashingEpochPeriod = options.slashingEpochPeriod;
   }
 
+  if (options.slashingExpiryPeriod !== undefined) {
+    parameters.slashingExpiryPeriod = options.slashingExpiryPeriod;
+  }
+
   if (options.slashingBansThresold !== undefined) {
     parameters.slashingBansThresold = options.slashingBansThresold;
   }
@@ -203,6 +209,7 @@ export interface SystemDeploymentParameters {
 
   slashingEpochs: BigNumber;
   slashingEpochPeriod: BigNumber;
+  slashingExpiryPeriod: BigNumber;
   slashingBansThresold: BigNumber;
 
   dkgDeadlinePeriod: BigNumber;
@@ -221,6 +228,7 @@ export interface SystemDeploymentOptions {
 
   slashingEpochs?: BigNumber;
   slashingEpochPeriod?: BigNumber;
+  slashingExpiryPeriod?: BigNumber;
   slashingBansThresold?: BigNumber;
 
   dkgDeadlinePeriod?: BigNumber;

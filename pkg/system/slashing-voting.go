@@ -30,7 +30,7 @@ var (
 
 // SlashingVotingMetaData contains all meta data concerning the SlashingVoting contract.
 var SlashingVotingMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"enumSlashingReason\",\"name\":\"reason\",\"type\":\"uint8\"}],\"name\":\"BannedWithReason\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"proposalId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"ProposalCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"proposalId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"ProposalExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"proposalId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"}],\"name\":\"ProposalVoted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"SlashedWithReason\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"enumSlashingReason\",\"name\":\"reason\",\"type\":\"uint8\"}],\"name\":\"VotedWithReason\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DKG_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"EVENT_REGISTRY_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SLASHING_VOTING_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKING_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SUPPORTED_TOKENS_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"enumSlashingReason\",\"name\":\"\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"bannedValidators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"bans\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"bansByEpoch\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"enumSlashingReason\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"bansByReason\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractRegistry\",\"outputs\":[{\"internalType\":\"contractContractRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_reason\",\"type\":\"string\"}],\"name\":\"createProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"currentEpoch\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_blockNumber\",\"type\":\"uint256\"}],\"name\":\"epochByBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"epochPeriod\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"enumSlashingReason\",\"name\":\"_reason\",\"type\":\"uint8\"}],\"name\":\"getBannedValidatorsByReason\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_epoch\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getBansByEpoch\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerGetterAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_validatorGetterAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_epochPeriod\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_slashingThresold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_lashingEpochs\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_contractRegistry\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"},{\"internalType\":\"enumSlashingReason\",\"name\":\"_reason\",\"type\":\"uint8\"}],\"name\":\"isBannedByReason\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"proposals\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"reason\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"slashingProposalVoteCounts\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_epochPeriod\",\"type\":\"uint256\"}],\"name\":\"setEpochPeriod\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_slashingEpochs\",\"type\":\"uint256\"}],\"name\":\"setSlashingEpochs\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_slashingThresold\",\"type\":\"uint256\"}],\"name\":\"setSlashingThresold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_epoch\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"shouldShash\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerGetter\",\"outputs\":[{\"internalType\":\"contractSignerGetter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"slashingEpochs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"slashingThresold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorGetter\",\"outputs\":[{\"internalType\":\"contractValidatorGetter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"voteCounts\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_proposalId\",\"type\":\"uint256\"}],\"name\":\"voteProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"},{\"internalType\":\"enumSlashingReason\",\"name\":\"_reason\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"_nonce\",\"type\":\"bytes\"}],\"name\":\"voteWithReason\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"votes\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"},{\"internalType\":\"enumSlashingReason\",\"name\":\"_reason\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"_nonce\",\"type\":\"bytes\"}],\"name\":\"votingHashWithReason\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"enumSlashingReason\",\"name\":\"reason\",\"type\":\"uint8\"}],\"name\":\"BannedWithReason\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"proposalId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"ProposalCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"proposalId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"ProposalExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"proposalId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"}],\"name\":\"ProposalVoted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"}],\"name\":\"SlashedWithReason\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"enumSlashingReason\",\"name\":\"reason\",\"type\":\"uint8\"}],\"name\":\"VotedWithReason\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DKG_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"EVENT_REGISTRY_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SLASHING_VOTING_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKING_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SUPPORTED_TOKENS_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"enumSlashingReason\",\"name\":\"\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"bannedValidators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"bans\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"bansByEpoch\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"enumSlashingReason\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"bansByReason\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractRegistry\",\"outputs\":[{\"internalType\":\"contractContractRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_reason\",\"type\":\"string\"}],\"name\":\"createProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"currentEpoch\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_blockNumber\",\"type\":\"uint256\"}],\"name\":\"epochByBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"epochPeriod\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"expiryPeriod\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"expiryTimes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"enumSlashingReason\",\"name\":\"_reason\",\"type\":\"uint8\"}],\"name\":\"getBannedValidatorsByReason\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_epoch\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"getBansByEpoch\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_signerGetterAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_validatorGetterAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_epochPeriod\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_slashingThresold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_slashingEpochs\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_expiryPeriod\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_contractRegistry\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"},{\"internalType\":\"enumSlashingReason\",\"name\":\"_reason\",\"type\":\"uint8\"}],\"name\":\"isBannedByReason\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"proposals\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"validator\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"reason\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"slashingProposalVoteCounts\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"expiryTime\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_epochPeriod\",\"type\":\"uint256\"}],\"name\":\"setEpochPeriod\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_expiryPeriod\",\"type\":\"uint256\"}],\"name\":\"setExpiryPeriod\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_slashingEpochs\",\"type\":\"uint256\"}],\"name\":\"setSlashingEpochs\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_slashingThresold\",\"type\":\"uint256\"}],\"name\":\"setSlashingThresold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_epoch\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"}],\"name\":\"shouldShash\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"signerGetter\",\"outputs\":[{\"internalType\":\"contractSignerGetter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"slashingEpochs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"slashingThresold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorGetter\",\"outputs\":[{\"internalType\":\"contractValidatorGetter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"voteCounts\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_proposalId\",\"type\":\"uint256\"}],\"name\":\"voteProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"},{\"internalType\":\"enumSlashingReason\",\"name\":\"_reason\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"_nonce\",\"type\":\"bytes\"}],\"name\":\"voteWithReason\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"votes\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validator\",\"type\":\"address\"},{\"internalType\":\"enumSlashingReason\",\"name\":\"_reason\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"_nonce\",\"type\":\"bytes\"}],\"name\":\"votingHashWithReason\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}]",
 }
 
 // SlashingVotingABI is the input ABI used to generate the binding from.
@@ -613,6 +613,68 @@ func (_SlashingVoting *SlashingVotingCallerSession) EpochPeriod() (*big.Int, err
 	return _SlashingVoting.Contract.EpochPeriod(&_SlashingVoting.CallOpts)
 }
 
+// ExpiryPeriod is a free data retrieval call binding the contract method 0x3d2cf8b2.
+//
+// Solidity: function expiryPeriod() view returns(uint256)
+func (_SlashingVoting *SlashingVotingCaller) ExpiryPeriod(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SlashingVoting.contract.Call(opts, &out, "expiryPeriod")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// ExpiryPeriod is a free data retrieval call binding the contract method 0x3d2cf8b2.
+//
+// Solidity: function expiryPeriod() view returns(uint256)
+func (_SlashingVoting *SlashingVotingSession) ExpiryPeriod() (*big.Int, error) {
+	return _SlashingVoting.Contract.ExpiryPeriod(&_SlashingVoting.CallOpts)
+}
+
+// ExpiryPeriod is a free data retrieval call binding the contract method 0x3d2cf8b2.
+//
+// Solidity: function expiryPeriod() view returns(uint256)
+func (_SlashingVoting *SlashingVotingCallerSession) ExpiryPeriod() (*big.Int, error) {
+	return _SlashingVoting.Contract.ExpiryPeriod(&_SlashingVoting.CallOpts)
+}
+
+// ExpiryTimes is a free data retrieval call binding the contract method 0xaf9f26e4.
+//
+// Solidity: function expiryTimes(bytes32 ) view returns(uint256)
+func (_SlashingVoting *SlashingVotingCaller) ExpiryTimes(opts *bind.CallOpts, arg0 [32]byte) (*big.Int, error) {
+	var out []interface{}
+	err := _SlashingVoting.contract.Call(opts, &out, "expiryTimes", arg0)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// ExpiryTimes is a free data retrieval call binding the contract method 0xaf9f26e4.
+//
+// Solidity: function expiryTimes(bytes32 ) view returns(uint256)
+func (_SlashingVoting *SlashingVotingSession) ExpiryTimes(arg0 [32]byte) (*big.Int, error) {
+	return _SlashingVoting.Contract.ExpiryTimes(&_SlashingVoting.CallOpts, arg0)
+}
+
+// ExpiryTimes is a free data retrieval call binding the contract method 0xaf9f26e4.
+//
+// Solidity: function expiryTimes(bytes32 ) view returns(uint256)
+func (_SlashingVoting *SlashingVotingCallerSession) ExpiryTimes(arg0 [32]byte) (*big.Int, error) {
+	return _SlashingVoting.Contract.ExpiryTimes(&_SlashingVoting.CallOpts, arg0)
+}
+
 // GetBannedValidatorsByReason is a free data retrieval call binding the contract method 0x6e6bb97c.
 //
 // Solidity: function getBannedValidatorsByReason(uint8 _reason) view returns(address[])
@@ -708,11 +770,12 @@ func (_SlashingVoting *SlashingVotingCallerSession) IsBannedByReason(_validator 
 
 // Proposals is a free data retrieval call binding the contract method 0x013cf08b.
 //
-// Solidity: function proposals(uint256 ) view returns(address validator, string reason, uint256 slashingProposalVoteCounts)
+// Solidity: function proposals(uint256 ) view returns(address validator, string reason, uint256 slashingProposalVoteCounts, uint256 expiryTime)
 func (_SlashingVoting *SlashingVotingCaller) Proposals(opts *bind.CallOpts, arg0 *big.Int) (struct {
 	Validator                  common.Address
 	Reason                     string
 	SlashingProposalVoteCounts *big.Int
+	ExpiryTime                 *big.Int
 }, error) {
 	var out []interface{}
 	err := _SlashingVoting.contract.Call(opts, &out, "proposals", arg0)
@@ -721,6 +784,7 @@ func (_SlashingVoting *SlashingVotingCaller) Proposals(opts *bind.CallOpts, arg0
 		Validator                  common.Address
 		Reason                     string
 		SlashingProposalVoteCounts *big.Int
+		ExpiryTime                 *big.Int
 	})
 	if err != nil {
 		return *outstruct, err
@@ -729,6 +793,7 @@ func (_SlashingVoting *SlashingVotingCaller) Proposals(opts *bind.CallOpts, arg0
 	outstruct.Validator = *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
 	outstruct.Reason = *abi.ConvertType(out[1], new(string)).(*string)
 	outstruct.SlashingProposalVoteCounts = *abi.ConvertType(out[2], new(*big.Int)).(**big.Int)
+	outstruct.ExpiryTime = *abi.ConvertType(out[3], new(*big.Int)).(**big.Int)
 
 	return *outstruct, err
 
@@ -736,22 +801,24 @@ func (_SlashingVoting *SlashingVotingCaller) Proposals(opts *bind.CallOpts, arg0
 
 // Proposals is a free data retrieval call binding the contract method 0x013cf08b.
 //
-// Solidity: function proposals(uint256 ) view returns(address validator, string reason, uint256 slashingProposalVoteCounts)
+// Solidity: function proposals(uint256 ) view returns(address validator, string reason, uint256 slashingProposalVoteCounts, uint256 expiryTime)
 func (_SlashingVoting *SlashingVotingSession) Proposals(arg0 *big.Int) (struct {
 	Validator                  common.Address
 	Reason                     string
 	SlashingProposalVoteCounts *big.Int
+	ExpiryTime                 *big.Int
 }, error) {
 	return _SlashingVoting.Contract.Proposals(&_SlashingVoting.CallOpts, arg0)
 }
 
 // Proposals is a free data retrieval call binding the contract method 0x013cf08b.
 //
-// Solidity: function proposals(uint256 ) view returns(address validator, string reason, uint256 slashingProposalVoteCounts)
+// Solidity: function proposals(uint256 ) view returns(address validator, string reason, uint256 slashingProposalVoteCounts, uint256 expiryTime)
 func (_SlashingVoting *SlashingVotingCallerSession) Proposals(arg0 *big.Int) (struct {
 	Validator                  common.Address
 	Reason                     string
 	SlashingProposalVoteCounts *big.Int
+	ExpiryTime                 *big.Int
 }, error) {
 	return _SlashingVoting.Contract.Proposals(&_SlashingVoting.CallOpts, arg0)
 }
@@ -1025,25 +1092,25 @@ func (_SlashingVoting *SlashingVotingTransactorSession) CreateProposal(_validato
 	return _SlashingVoting.Contract.CreateProposal(&_SlashingVoting.TransactOpts, _validator, _reason)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xb1a5d12d.
+// Initialize is a paid mutator transaction binding the contract method 0x83a5041c.
 //
-// Solidity: function initialize(address _signerGetterAddress, address _validatorGetterAddress, uint256 _epochPeriod, uint256 _slashingThresold, uint256 _lashingEpochs, address _contractRegistry) returns()
-func (_SlashingVoting *SlashingVotingTransactor) Initialize(opts *bind.TransactOpts, _signerGetterAddress common.Address, _validatorGetterAddress common.Address, _epochPeriod *big.Int, _slashingThresold *big.Int, _lashingEpochs *big.Int, _contractRegistry common.Address) (*types.Transaction, error) {
-	return _SlashingVoting.contract.Transact(opts, "initialize", _signerGetterAddress, _validatorGetterAddress, _epochPeriod, _slashingThresold, _lashingEpochs, _contractRegistry)
+// Solidity: function initialize(address _signerGetterAddress, address _validatorGetterAddress, uint256 _epochPeriod, uint256 _slashingThresold, uint256 _slashingEpochs, uint256 _expiryPeriod, address _contractRegistry) returns()
+func (_SlashingVoting *SlashingVotingTransactor) Initialize(opts *bind.TransactOpts, _signerGetterAddress common.Address, _validatorGetterAddress common.Address, _epochPeriod *big.Int, _slashingThresold *big.Int, _slashingEpochs *big.Int, _expiryPeriod *big.Int, _contractRegistry common.Address) (*types.Transaction, error) {
+	return _SlashingVoting.contract.Transact(opts, "initialize", _signerGetterAddress, _validatorGetterAddress, _epochPeriod, _slashingThresold, _slashingEpochs, _expiryPeriod, _contractRegistry)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xb1a5d12d.
+// Initialize is a paid mutator transaction binding the contract method 0x83a5041c.
 //
-// Solidity: function initialize(address _signerGetterAddress, address _validatorGetterAddress, uint256 _epochPeriod, uint256 _slashingThresold, uint256 _lashingEpochs, address _contractRegistry) returns()
-func (_SlashingVoting *SlashingVotingSession) Initialize(_signerGetterAddress common.Address, _validatorGetterAddress common.Address, _epochPeriod *big.Int, _slashingThresold *big.Int, _lashingEpochs *big.Int, _contractRegistry common.Address) (*types.Transaction, error) {
-	return _SlashingVoting.Contract.Initialize(&_SlashingVoting.TransactOpts, _signerGetterAddress, _validatorGetterAddress, _epochPeriod, _slashingThresold, _lashingEpochs, _contractRegistry)
+// Solidity: function initialize(address _signerGetterAddress, address _validatorGetterAddress, uint256 _epochPeriod, uint256 _slashingThresold, uint256 _slashingEpochs, uint256 _expiryPeriod, address _contractRegistry) returns()
+func (_SlashingVoting *SlashingVotingSession) Initialize(_signerGetterAddress common.Address, _validatorGetterAddress common.Address, _epochPeriod *big.Int, _slashingThresold *big.Int, _slashingEpochs *big.Int, _expiryPeriod *big.Int, _contractRegistry common.Address) (*types.Transaction, error) {
+	return _SlashingVoting.Contract.Initialize(&_SlashingVoting.TransactOpts, _signerGetterAddress, _validatorGetterAddress, _epochPeriod, _slashingThresold, _slashingEpochs, _expiryPeriod, _contractRegistry)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xb1a5d12d.
+// Initialize is a paid mutator transaction binding the contract method 0x83a5041c.
 //
-// Solidity: function initialize(address _signerGetterAddress, address _validatorGetterAddress, uint256 _epochPeriod, uint256 _slashingThresold, uint256 _lashingEpochs, address _contractRegistry) returns()
-func (_SlashingVoting *SlashingVotingTransactorSession) Initialize(_signerGetterAddress common.Address, _validatorGetterAddress common.Address, _epochPeriod *big.Int, _slashingThresold *big.Int, _lashingEpochs *big.Int, _contractRegistry common.Address) (*types.Transaction, error) {
-	return _SlashingVoting.Contract.Initialize(&_SlashingVoting.TransactOpts, _signerGetterAddress, _validatorGetterAddress, _epochPeriod, _slashingThresold, _lashingEpochs, _contractRegistry)
+// Solidity: function initialize(address _signerGetterAddress, address _validatorGetterAddress, uint256 _epochPeriod, uint256 _slashingThresold, uint256 _slashingEpochs, uint256 _expiryPeriod, address _contractRegistry) returns()
+func (_SlashingVoting *SlashingVotingTransactorSession) Initialize(_signerGetterAddress common.Address, _validatorGetterAddress common.Address, _epochPeriod *big.Int, _slashingThresold *big.Int, _slashingEpochs *big.Int, _expiryPeriod *big.Int, _contractRegistry common.Address) (*types.Transaction, error) {
+	return _SlashingVoting.Contract.Initialize(&_SlashingVoting.TransactOpts, _signerGetterAddress, _validatorGetterAddress, _epochPeriod, _slashingThresold, _slashingEpochs, _expiryPeriod, _contractRegistry)
 }
 
 // SetEpochPeriod is a paid mutator transaction binding the contract method 0x6b5f444c.
@@ -1065,6 +1132,27 @@ func (_SlashingVoting *SlashingVotingSession) SetEpochPeriod(_epochPeriod *big.I
 // Solidity: function setEpochPeriod(uint256 _epochPeriod) returns()
 func (_SlashingVoting *SlashingVotingTransactorSession) SetEpochPeriod(_epochPeriod *big.Int) (*types.Transaction, error) {
 	return _SlashingVoting.Contract.SetEpochPeriod(&_SlashingVoting.TransactOpts, _epochPeriod)
+}
+
+// SetExpiryPeriod is a paid mutator transaction binding the contract method 0xacd7ae40.
+//
+// Solidity: function setExpiryPeriod(uint256 _expiryPeriod) returns()
+func (_SlashingVoting *SlashingVotingTransactor) SetExpiryPeriod(opts *bind.TransactOpts, _expiryPeriod *big.Int) (*types.Transaction, error) {
+	return _SlashingVoting.contract.Transact(opts, "setExpiryPeriod", _expiryPeriod)
+}
+
+// SetExpiryPeriod is a paid mutator transaction binding the contract method 0xacd7ae40.
+//
+// Solidity: function setExpiryPeriod(uint256 _expiryPeriod) returns()
+func (_SlashingVoting *SlashingVotingSession) SetExpiryPeriod(_expiryPeriod *big.Int) (*types.Transaction, error) {
+	return _SlashingVoting.Contract.SetExpiryPeriod(&_SlashingVoting.TransactOpts, _expiryPeriod)
+}
+
+// SetExpiryPeriod is a paid mutator transaction binding the contract method 0xacd7ae40.
+//
+// Solidity: function setExpiryPeriod(uint256 _expiryPeriod) returns()
+func (_SlashingVoting *SlashingVotingTransactorSession) SetExpiryPeriod(_expiryPeriod *big.Int) (*types.Transaction, error) {
+	return _SlashingVoting.Contract.SetExpiryPeriod(&_SlashingVoting.TransactOpts, _expiryPeriod)
 }
 
 // SetSlashingEpochs is a paid mutator transaction binding the contract method 0x8aaf0dae.
