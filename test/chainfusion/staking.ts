@@ -289,12 +289,35 @@ describe('Staking', function () {
 
   it('should withdraw', async function () {
     const [owner] = await ethers.getSigners();
-    const { staking, minimalStake, stakeWithdrawalPeriod } = await deploySystem();
+    const { staking, minimalStake, stakeWithdrawalPeriod, addressStorage } = await deploySystem();
 
     await staking.stake({ value: minimalStake });
+    expect(await addressStorage.contains(owner.address)).to.equal(true);
+
     await staking.announceWithdrawal(minimalStake);
+
+    expect(await addressStorage.contains(owner.address)).to.equal(false);
+
     await hre.network.provider.send('hardhat_mine', [stakeWithdrawalPeriod.toHexString(), '0x1']);
     await staking.withdraw();
+
+    const { amount, time } = await staking.withdrawalAnnouncements(owner.address);
+
+    expect(amount).to.equal(0);
+    expect(time).to.equal(0);
+  });
+
+  it('should reject announce withdraw', async function () {
+    const [owner] = await ethers.getSigners();
+    const { staking, minimalStake, addressStorage } = await deploySystem();
+
+    await staking.stake({ value: minimalStake });
+
+    await staking.announceWithdrawal(minimalStake);
+    expect(await addressStorage.contains(owner.address)).to.equal(false);
+
+    await staking.rejectAnnounceWithdrawal(minimalStake);
+    expect(await addressStorage.contains(owner.address)).to.equal(true);
 
     const { amount, time } = await staking.withdrawalAnnouncements(owner.address);
 

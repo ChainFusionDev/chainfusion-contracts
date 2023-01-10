@@ -108,6 +108,31 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
         withdrawalAnnouncements[msg.sender].amount = _amount;
         // solhint-disable-next-line not-rely-on-time
         withdrawalAnnouncements[msg.sender].time = block.timestamp;
+
+        if (stakes[msg.sender].stake - _amount < minimalStake && addressStorage.contains(msg.sender)) {
+            stakes[msg.sender].status = ValidatorStatus.INACTIVE;
+            _removeValidator(msg.sender);
+        }
+    }
+
+    function rejectAnnounceWithdrawal(uint256 _amount) public onlyNotSlashed {
+        require(
+            _amount <= withdrawalAnnouncements[msg.sender].amount,
+            "Staking: amount must be <= to withdrawalAnnouncements"
+        );
+        withdrawalAnnouncements[msg.sender].amount -= _amount;
+
+        if (withdrawalAnnouncements[msg.sender].amount == 0) {
+            withdrawalAnnouncements[msg.sender].time = 0;
+        }
+
+        if (
+            stakes[msg.sender].status == ValidatorStatus.INACTIVE && _amount + stakes[msg.sender].stake >= minimalStake
+        ) {
+            stakes[msg.sender].validator = msg.sender;
+            stakes[msg.sender].status = ValidatorStatus.ACTIVE;
+            _addValidator(msg.sender);
+        }
     }
 
     function withdraw() public onlyNotSlashed {
@@ -127,11 +152,6 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
 
         withdrawalAnnouncements[msg.sender].amount = 0;
         withdrawalAnnouncements[msg.sender].time = 0;
-
-        if (stakes[msg.sender].stake < minimalStake && addressStorage.contains(msg.sender)) {
-            stakes[msg.sender].status = ValidatorStatus.INACTIVE;
-            _removeValidator(msg.sender);
-        }
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = msg.sender.call{value: withdrawalAmount, gas: 21000}("");
