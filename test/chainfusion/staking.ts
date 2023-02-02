@@ -307,7 +307,7 @@ describe('Staking', function () {
     expect(time).to.equal(0);
   });
 
-  it('should reject announce withdraw', async function () {
+  it('should revoke withdrawal', async function () {
     const [owner] = await ethers.getSigners();
     const { staking, minimalStake, addressStorage } = await deploySystem();
 
@@ -316,7 +316,7 @@ describe('Staking', function () {
     await staking.announceWithdrawal(minimalStake);
     expect(await addressStorage.contains(owner.address)).to.equal(false);
 
-    await staking.rejectAnnounceWithdrawal(minimalStake);
+    await staking.revokeWithdrawal();
     expect(await addressStorage.contains(owner.address)).to.equal(true);
 
     const { amount, time } = await staking.withdrawalAnnouncements(owner.address);

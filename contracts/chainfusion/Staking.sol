@@ -115,19 +115,16 @@ contract Staking is ContractKeys, SignerOwnable, Initializable {
         }
     }
 
-    function rejectAnnounceWithdrawal(uint256 _amount) public onlyNotSlashed {
-        require(
-            _amount <= withdrawalAnnouncements[msg.sender].amount,
-            "Staking: amount must be <= to withdrawalAnnouncements"
-        );
-        withdrawalAnnouncements[msg.sender].amount -= _amount;
+    function revokeWithdrawal() public onlyNotSlashed {
+        require(withdrawalAnnouncements[msg.sender].amount > 0, "Staking: not announced");
 
-        if (withdrawalAnnouncements[msg.sender].amount == 0) {
-            withdrawalAnnouncements[msg.sender].time = 0;
-        }
+        uint256 amount = withdrawalAnnouncements[msg.sender].amount;
+
+        withdrawalAnnouncements[msg.sender].amount = 0;
+        withdrawalAnnouncements[msg.sender].time = 0;
 
         if (
-            stakes[msg.sender].status == ValidatorStatus.INACTIVE && _amount + stakes[msg.sender].stake >= minimalStake
+            stakes[msg.sender].status == ValidatorStatus.INACTIVE && amount + stakes[msg.sender].stake >= minimalStake
         ) {
             stakes[msg.sender].validator = msg.sender;
             stakes[msg.sender].status = ValidatorStatus.ACTIVE;
