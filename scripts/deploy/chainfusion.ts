@@ -108,7 +108,7 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
   deployer.log('Successfully initialized contracts\n');
 
   if (params.stakingKeys.length > 0) {
-    console.log('Staking for initial validators\n');
+    deployer.log('Staking for initial validators\n');
 
     for (const privateKey of params.stakingKeys) {
       const signer = new ethers.Wallet(privateKey, ethers.provider);
@@ -117,7 +117,12 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
       await deployer.sendTransaction(signerStaking.stake({ value: params.minimalStake }), msg);
     }
 
+    const targetGeneration = BigNumber.from(params.stakingKeys.length - 1);
     deployer.log('Successfully staked\n');
+
+    deployer.log(`Waiting for ${targetGeneration.toString()} generation\n`);
+    await waitSignerAddressUpdated(res.dkg, targetGeneration);
+    deployer.log(`Generation ${targetGeneration.toString()} complete\n`);
   }
 
   if (params.verify) {
@@ -128,6 +133,22 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
     ...res,
     ...params,
   };
+}
+
+async function waitSignerAddressUpdated(dkg: DKG, generation: BigNumber): Promise<string> {
+  return new Promise<string>((resolve) => {
+    const eventName = 'SignerAddressUpdated';
+    const listener = (gen: BigNumber, signerAddress: string) => {
+      console.log(`Got gen: ${gen.toString()}`);
+      if (gen.eq(generation)) {
+        dkg.off(eventName, listener);
+        resolve(signerAddress);
+        return false;
+      }
+    };
+
+    dkg.on(eventName, listener);
+  });
 }
 
 function resolveParameters(options?: SystemDeploymentOptions): SystemDeploymentParameters {

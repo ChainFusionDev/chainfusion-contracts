@@ -1,6 +1,6 @@
 import { ethers, config } from 'hardhat';
 import { HttpNetworkConfig } from 'hardhat/types';
-import { DKG, RelayBridge, SignerStorage } from '../../typechain';
+import { RelayBridge, SignerStorage } from '../../typechain';
 import { Deployer } from './deployer';
 
 const defaultBridgeDeploymentParameters: BridgeDeploymentParameters = {
@@ -34,8 +34,7 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
     const dkgSignerAddress = await dkg.getSignerAddress();
 
     if (dkgSignerAddress === '0x0000000000000000000000000000000000000000') {
-      deployer.log(`Waiting for DKG to complete...\n`);
-      initialSignerAddress = await waitSignerAddressUpdated(dkg);
+      throw new Error('DKG signer address it not awailable');
     } else {
       initialSignerAddress = dkgSignerAddress;
     }
@@ -84,14 +83,6 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
     ...res,
     ...params,
   };
-}
-
-async function waitSignerAddressUpdated(dkg: DKG): Promise<string> {
-  return new Promise<string>((resolve) => {
-    dkg.once('SignerAddressUpdated', (generation, signerAddress: string) => {
-      resolve(signerAddress);
-    });
-  });
 }
 
 function resolveParameters(options?: BridgeDeploymentOptions): BridgeDeploymentParameters {
