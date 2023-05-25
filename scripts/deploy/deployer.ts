@@ -1,20 +1,43 @@
 import hre from 'hardhat';
-import { ethers } from 'hardhat';
-import { BaseContract, Contract, ContractTransaction } from 'ethers';
+import { BaseContract, Contract, ContractTransaction, Overrides } from 'ethers';
 
 export interface ContractsObject {
   [key: string]: Contract;
 }
 
 export interface ContractFactory<C extends Contract> {
-  deploy(): Promise<C>;
+  // eslint-disable-next-line no-unused-vars
+  deploy(overrides?: Overrides & { from?: string | Promise<string> }): Promise<C>;
 }
 
 export class Deployer {
   readonly displayLogs: boolean;
+  readonly parallelDeployment: boolean;
+  private nonce: number;
 
-  constructor(displayLogs: boolean) {
+  constructor(displayLogs: boolean, parallelDeployment: boolean) {
     this.displayLogs = displayLogs;
+    this.parallelDeployment = parallelDeployment;
+    this.nonce = 0;
+  }
+
+  public setNonce(nonce: number) {
+    this.nonce = nonce;
+  }
+
+  public nextNonce(): number {
+    return this.nonce++;
+  }
+
+  public getOverrides(): Overrides {
+    if (this.parallelDeployment) {
+      return {
+        nonce: this.nextNonce(),
+        gasLimit: 1000000,
+      };
+    }
+
+    return {};
   }
 
   public async deploy<C extends Contract>(factoryPromise: Promise<ContractFactory<C>>, name?: String): Promise<C> {
@@ -22,43 +45,35 @@ export class Deployer {
       name = 'Contract';
     }
 
-    if (this.displayLogs) {
-      console.log(`Deploying ${name}`);
-    }
-
     const factory = await factoryPromise;
-    const contract = await factory.deploy();
-    const chainId = ethers.provider.network.chainId;
+    const contract = this.parallelDeployment
+      ? await factory.deploy({ nonce: this.nextNonce() })
+      : await factory.deploy();
 
     if (this.displayLogs) {
-      console.log(`Deploying ${name} with address ${contract.address}`);
-      console.log(`Deploying ${name} with chainId ${chainId}`);
+      console.log(`Deploying ${name} ${contract.address}`);
     }
 
     await contract.deployed();
 
     if (this.displayLogs) {
-      console.log(`Deployed\n`);
+      console.log(`Deployed ${name} ${contract.address}`);
     }
 
     return contract;
   }
 
   public async sendTransaction(txPromise: Promise<ContractTransaction>, message?: String): Promise<void> {
-    if (this.displayLogs) {
-      console.log(message);
-    }
-
     const tx = await txPromise;
 
     if (this.displayLogs) {
-      console.log(`Sending transaction ${tx.hash}`);
+      console.log(`${message} ${tx.hash}`);
     }
 
     await tx.wait();
 
     if (this.displayLogs) {
-      console.log(`Confirmed\n`);
+      console.log(`Confirmed transaction ${tx.hash}`);
     }
 
     return;
@@ -87,6 +102,19 @@ export class Deployer {
     }
 
     this.log('Successfully verified contracts\n');
+  }
+
+  public async waitTransactions(txs: Promise<ContractTransaction>[]): Promise<void> {
+    for (const tx of txs) {
+      const res = await tx;
+      await res.wait();
+    }
+  }
+
+  public async waitPromises(txs: Promise<void>[]): Promise<void> {
+    for (const tx of txs) {
+      await tx;
+    }
   }
 
   public log(message?: any, ...optionalParams: any[]): void {

@@ -15,11 +15,7 @@ contract MockBridgeApp is IBridgeApp, Initializable {
         relayBridge = RelayBridge(_relayBridgeAddress);
     }
 
-    function send(
-        uint256 _destinationChain,
-        uint256 _gasLimit,
-        bytes memory _data
-    ) public {
+    function send(uint256 _destinationChain, uint256 _gasLimit, bytes memory _data) public {
         relayBridge.send(_destinationChain, _gasLimit, _data);
     }
 

@@ -1,4 +1,4 @@
-import { ethers } from 'hardhat';
+import { ethers, network } from 'hardhat';
 import { BigNumber } from 'ethers';
 import { Deployer } from './deployer';
 
@@ -15,6 +15,7 @@ import {
 
 const defaultSystemDeploymentParameters: SystemDeploymentParameters = {
   minimalStake: ethers.utils.parseEther('100'),
+  minimalValidators: BigNumber.from(2),
   stakeWithdrawalPeriod: BigNumber.from(60),
   router: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
   erc20BridgeMediator: '0x0000000000000000000000000000000000000001',
@@ -25,104 +26,154 @@ const defaultSystemDeploymentParameters: SystemDeploymentParameters = {
   dkgDeadlinePeriod: BigNumber.from(100),
 
   displayLogs: false,
+  parallelDeployment: false,
   verify: false,
   stakingKeys: [],
 };
 
 export async function deploySystemContracts(options?: SystemDeploymentOptions): Promise<SystemDeploymentResult> {
   const params = resolveParameters(options);
-  const deployer = new Deployer(params.displayLogs);
+  const deployer = new Deployer(params.displayLogs, params.parallelDeployment);
 
-  deployer.log('Deploying contracts\n');
+  deployer.log(`🧾 Deploying ChainFusion contracts (${network.name} chain)\n`);
+
+  const [deployerSigner] = await ethers.getSigners();
+  const deployerAddress = await deployerSigner.getAddress();
+  deployer.setNonce(await ethers.provider.getTransactionCount(deployerAddress));
+
+  const contractRegistryPromise = deployer.deploy(ethers.getContractFactory('ContractRegistry'), 'ContractRegistry');
+  const eventRegistryPromise = deployer.deploy(ethers.getContractFactory('EventRegistry'), 'EventRegistry');
+  const addressStoragePromise = deployer.deploy(ethers.getContractFactory('AddressStorage'), 'AddressStorage');
+  const stakingPromise = deployer.deploy(ethers.getContractFactory('Staking'), 'Staking');
+  const dkgPromise = deployer.deploy(ethers.getContractFactory('DKG'), 'DKG');
+  const stakingVotingPromise = deployer.deploy(ethers.getContractFactory('SlashingVoting'), 'SlashingVoting');
+  const bridgeAppFactoryPromise = deployer.deploy(ethers.getContractFactory('BridgeAppFactory'), 'BridgeAppFactory');
+  const validatorRewardDistributionPoolPromise = deployer.deploy(
+    ethers.getContractFactory('ValidatorRewardDistributionPool'),
+    'ValidatorRewardDistributionPool'
+  );
 
   const res: SystemDeployment = {
-    contractRegistry: await deployer.deploy(ethers.getContractFactory('ContractRegistry'), 'ContractRegistry'),
-    eventRegistry: await deployer.deploy(ethers.getContractFactory('EventRegistry'), 'EventRegistry'),
-    addressStorage: await deployer.deploy(ethers.getContractFactory('AddressStorage'), 'AddressStorage'),
-    staking: await deployer.deploy(ethers.getContractFactory('Staking'), 'Staking'),
-    dkg: await deployer.deploy(ethers.getContractFactory('DKG'), 'DKG'),
-    slashingVoting: await deployer.deploy(ethers.getContractFactory('SlashingVoting'), 'SlashingVoting'),
-    bridgeAppFactory: await deployer.deploy(ethers.getContractFactory('BridgeAppFactory'), 'BridgeAppFactory'),
-    validatorRewardDistributionPool: await deployer.deploy(
-      ethers.getContractFactory('ValidatorRewardDistributionPool'),
-      'ValidatorRewardDistributionPool'
-    ),
+    contractRegistry: await contractRegistryPromise,
+    eventRegistry: await eventRegistryPromise,
+    addressStorage: await addressStoragePromise,
+    staking: await stakingPromise,
+    dkg: await dkgPromise,
+    slashingVoting: await stakingVotingPromise,
+    bridgeAppFactory: await bridgeAppFactoryPromise,
+    validatorRewardDistributionPool: await validatorRewardDistributionPoolPromise,
   };
 
-  deployer.log('Successfully deployed contracts\n');
+  deployer.log('Successfully deployed ChainFusion contracts\n');
 
-  deployer.log('Initializing contracts\n');
+  deployer.log(`🔄 Initializing ChainFusion contracts (${network.name} chain)\n`);
 
-  await deployer.sendTransaction(res.addressStorage.initialize([]), 'Initializing AddressStorage');
+  await deployer.waitPromises([
+    deployer.sendTransaction(res.addressStorage.initialize([], deployer.getOverrides()), 'Initializing AddressStorage'),
+    deployer.sendTransaction(
+      res.dkg.initialize(
+        res.contractRegistry.address,
+        params.dkgDeadlinePeriod,
+        params.minimalValidators,
+        deployer.getOverrides()
+      ),
+      'Initializing DKG'
+    ),
+    deployer.sendTransaction(
+      res.contractRegistry.initialize(res.dkg.address, deployer.getOverrides()),
+      'Initializing ContractRegistry'
+    ),
+    deployer.sendTransaction(
+      res.staking.initialize(
+        res.dkg.address,
+        params.minimalStake,
+        params.stakeWithdrawalPeriod,
+        res.contractRegistry.address,
+        res.addressStorage.address,
+        deployer.getOverrides()
+      ),
+      'Initializing Staking'
+    ),
+    deployer.sendTransaction(
+      res.slashingVoting.initialize(
+        res.dkg.address,
+        res.staking.address,
+        params.slashingEpochPeriod,
+        params.slashingBansThresold,
+        params.slashingEpochs,
+        res.contractRegistry.address,
+        deployer.getOverrides()
+      ),
+      'Initializing SlashingVoting'
+    ),
+    deployer.sendTransaction(
+      res.eventRegistry.initialize(res.staking.address, deployer.getOverrides()),
+      'Initializing EventRegistry'
+    ),
+    deployer.sendTransaction(
+      res.validatorRewardDistributionPool.initialize(
+        res.contractRegistry.address,
+        params.router,
+        res.dkg.address,
+        deployer.getOverrides()
+      ),
+      'Initializing ValidatorRewardDistributionPool'
+    ),
+  ]);
 
   await deployer.sendTransaction(
     res.addressStorage.transferOwnership(res.staking.address),
     'Transferring ownership of AddressStorage'
   );
 
-  await deployer.sendTransaction(
-    res.dkg.initialize(res.contractRegistry.address, params.dkgDeadlinePeriod),
-    'Initializing DKG'
-  );
+  deployer.setNonce(await ethers.provider.getTransactionCount(deployerAddress));
 
-  await deployer.sendTransaction(res.contractRegistry.initialize(res.dkg.address), 'Initializing ContractRegistry');
-
-  await deployer.sendTransaction(
-    res.staking.initialize(
-      res.dkg.address,
-      params.minimalStake,
-      params.stakeWithdrawalPeriod,
-      res.contractRegistry.address,
-      res.addressStorage.address
+  const registryTxs = [
+    res.contractRegistry.setContract(
+      await res.slashingVoting.SLASHING_VOTING_KEY(),
+      res.slashingVoting.address,
+      deployer.getOverrides()
     ),
-    'Initializing Staking'
-  );
-
-  await deployer.sendTransaction(
-    res.slashingVoting.initialize(
-      res.dkg.address,
-      res.staking.address,
-      params.slashingEpochPeriod,
-      params.slashingBansThresold,
-      params.slashingEpochs,
-      res.contractRegistry.address
+    res.contractRegistry.setContract(await res.staking.STAKING_KEY(), res.staking.address, deployer.getOverrides()),
+    res.contractRegistry.setContract(await res.dkg.DKG_KEY(), res.dkg.address, deployer.getOverrides()),
+    res.contractRegistry.setContract(
+      await res.eventRegistry.EVENT_REGISTRY_KEY(),
+      res.eventRegistry.address,
+      deployer.getOverrides()
     ),
-    'Initializing SlashingVoting'
-  );
+    res.contractRegistry.setContract(
+      await res.validatorRewardDistributionPool.VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY(),
+      res.validatorRewardDistributionPool.address,
+      deployer.getOverrides()
+    ),
+  ];
 
-  await deployer.sendTransaction(res.eventRegistry.initialize(res.staking.address), 'Initializing EventRegistry');
-  await deployer.sendTransaction(
-    res.validatorRewardDistributionPool.initialize(res.contractRegistry.address, params.router, res.dkg.address),
-    'Initializing ValidatorRewardDistributionPool'
-  );
+  await deployer.waitTransactions(registryTxs);
 
-  await res.contractRegistry.setContract(await res.slashingVoting.SLASHING_VOTING_KEY(), res.slashingVoting.address);
-  await res.contractRegistry.setContract(await res.staking.STAKING_KEY(), res.staking.address);
-  await res.contractRegistry.setContract(await res.dkg.DKG_KEY(), res.dkg.address);
-  await res.contractRegistry.setContract(await res.eventRegistry.EVENT_REGISTRY_KEY(), res.eventRegistry.address);
-  await res.contractRegistry.setContract(
-    await res.validatorRewardDistributionPool.VALIDATOR_REWARD_DISTRIBUTION_POOL_KEY(),
-    res.validatorRewardDistributionPool.address
-  );
-
-  deployer.log('Successfully initialized contracts\n');
+  deployer.log('Successfully initialized ChainFusion contracts\n');
 
   if (params.stakingKeys.length > 0) {
-    deployer.log('Staking for initial validators\n');
+    deployer.log(`👤 Staking for initial validators (${network.name} chain)\n`);
 
+    let validatorId: number = 1;
+    let stakeTxs: Promise<void>[] = [];
     for (const privateKey of params.stakingKeys) {
       const signer = new ethers.Wallet(privateKey, ethers.provider);
       const signerStaking = await ethers.getContractAt('Staking', res.staking.address, signer);
-      const msg = `Staking ${ethers.utils.formatEther(params.minimalStake)} CFN for: ${signer.address}`;
-      await deployer.sendTransaction(signerStaking.stake({ value: params.minimalStake }), msg);
+      const msg = `Staking ${ethers.utils.formatEther(params.minimalStake)} CFN for validator ${validatorId++}`;
+      stakeTxs.push(
+        deployer.sendTransaction(signerStaking.stake({ value: params.minimalStake, gasLimit: 1000000 }), msg)
+      );
     }
 
-    const targetGeneration = BigNumber.from(params.stakingKeys.length - 1);
+    await deployer.waitPromises(stakeTxs);
+
+    const targetGeneration = BigNumber.from(params.stakingKeys.length - 2);
     deployer.log('Successfully staked\n');
 
-    deployer.log(`Waiting for ${targetGeneration.toString()} generation\n`);
+    deployer.log(`⏳ Waiting for distributed key generation to complete, this could take a while\n`);
     await waitSignerAddressUpdated(res.dkg, targetGeneration);
-    deployer.log(`Generation ${targetGeneration.toString()} complete\n`);
+    deployer.log(`✅ Distributed key generation complete\n`);
   }
 
   if (params.verify) {
@@ -139,7 +190,6 @@ async function waitSignerAddressUpdated(dkg: DKG, generation: BigNumber): Promis
   return new Promise<string>((resolve) => {
     const eventName = 'SignerAddressUpdated';
     const listener = (gen: BigNumber, signerAddress: string) => {
-      console.log(`Got gen: ${gen.toString()}`);
       if (gen.eq(generation)) {
         dkg.off(eventName, listener);
         resolve(signerAddress);
@@ -160,6 +210,10 @@ function resolveParameters(options?: SystemDeploymentOptions): SystemDeploymentP
 
   if (options.minimalStake !== undefined) {
     parameters.minimalStake = options.minimalStake;
+  }
+
+  if (options.minimalValidators !== undefined) {
+    parameters.minimalValidators = options.minimalValidators;
   }
 
   if (options.stakeWithdrawalPeriod !== undefined) {
@@ -184,6 +238,10 @@ function resolveParameters(options?: SystemDeploymentOptions): SystemDeploymentP
 
   if (options.displayLogs !== undefined) {
     parameters.displayLogs = options.displayLogs;
+  }
+
+  if (options.parallelDeployment !== undefined) {
+    parameters.parallelDeployment = options.parallelDeployment;
   }
 
   if (options.verify !== undefined) {
@@ -220,6 +278,7 @@ export interface SystemDeployment {
 
 export interface SystemDeploymentParameters {
   minimalStake: BigNumber;
+  minimalValidators: BigNumber;
   stakeWithdrawalPeriod: BigNumber;
 
   slashingEpochs: BigNumber;
@@ -232,12 +291,14 @@ export interface SystemDeploymentParameters {
   erc20BridgeMediator: string;
 
   displayLogs: boolean;
+  parallelDeployment: boolean;
   verify: boolean;
   stakingKeys: string[];
 }
 
 export interface SystemDeploymentOptions {
   minimalStake?: BigNumber;
+  minimalValidators?: BigNumber;
   stakeWithdrawalPeriod?: BigNumber;
 
   slashingEpochs?: BigNumber;
@@ -250,6 +311,7 @@ export interface SystemDeploymentOptions {
   erc20BridgeMediator?: string;
 
   displayLogs?: boolean;
+  parallelDeployment?: boolean;
   verify?: boolean;
   stakingKeys?: string[];
 }

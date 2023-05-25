@@ -41,6 +41,7 @@ contract DKG is ContractKeys, Initializable {
     GenerationInfo[] public generations;
     uint256 public lastActiveGeneration;
     uint256 public deadlinePeriod;
+    uint256 public minValidators;
 
     event RoundDataProvided(uint256 generation, uint256 round, address validator);
     event RoundDataFilled(uint256 generation, uint256 round);
@@ -86,12 +87,17 @@ contract DKG is ContractKeys, Initializable {
         _;
     }
 
-    function initialize(address _contractRegistry, uint256 _deadlinePeriod) external initializer {
+    function initialize(
+        address _contractRegistry,
+        uint256 _deadlinePeriod,
+        uint256 _minValidators
+    ) external initializer {
         generations.push();
         generations[0].signer = msg.sender;
         signerToGeneration[msg.sender] = 0;
         contractRegistry = ContractRegistry(_contractRegistry);
         deadlinePeriod = _deadlinePeriod;
+        minValidators = _minValidators;
     }
 
     function updateGeneration() external {
@@ -124,8 +130,7 @@ contract DKG is ContractKeys, Initializable {
 
         uint256 oldValidatorsCount = oldGenerationInfo.validators.length;
         if (
-            // Distributed key generation algorithm requires at least 2 participants
-            validatorsCount < 2 ||
+            validatorsCount < minValidators ||
             // Validator count same as previous and there is no new validators,
             // meaning both arrays the same, no need to create new DKG generation
             (validatorsCount == oldValidatorsCount && !newValidatorsAdded)

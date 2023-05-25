@@ -35,11 +35,10 @@ contract MockDEXRouter is Initializable {
         return address(0);
     }
 
-    function getAmountsOut(uint256 _amountIn, address[] calldata path)
-        external
-        pure
-        returns (uint256[] memory amounts)
-    {
+    function getAmountsOut(
+        uint256 _amountIn,
+        address[] calldata path
+    ) external pure returns (uint256[] memory amounts) {
         amounts = new uint256[](2);
         amounts[0] = _amountIn;
         amounts[1] = path.length;
