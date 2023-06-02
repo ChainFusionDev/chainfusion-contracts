@@ -152,7 +152,7 @@ export async function deploySystemContracts(options?: SystemDeploymentOptions): 
 
   deployer.log('Successfully initialized ChainFusion contracts\n');
 
-  if (params.stakingKeys.length > 0) {
+  if (params.stakingKeys.length > 0 && network.name !== 'hardhat') {
     deployer.log(`👤 Staking for initial validators (${network.name} chain)\n`);
 
     let validatorId: number = 1;

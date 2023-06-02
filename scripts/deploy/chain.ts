@@ -20,7 +20,7 @@ export async function deployBridgeContracts(options?: BridgeDeploymentOptions): 
   let initialSignerAddress = owner.address;
   const initialSignerBalance = ethers.utils.parseEther('0.05');
 
-  if (options?.homeNetwork !== undefined && options?.homeDKGAddress !== undefined) {
+  if (options?.homeNetwork !== undefined && options?.homeDKGAddress !== undefined && network.name !== 'hardhat') {
     deployer.log('Receiving DKG signer address\n');
 
     const networkConfig = config.networks[options.homeNetwork] as HttpNetworkConfig;
