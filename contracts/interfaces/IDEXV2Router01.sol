@@ -11,7 +11,13 @@ interface IDEXV2Router01 {
         uint256 _amountBMin,
         address _to,
         uint256 _deadline
-    ) external returns (uint256 amountA, uint256 amountB, uint256 liquidity);
+    )
+        external
+        returns (
+            uint256 amountA,
+            uint256 amountB,
+            uint256 liquidity
+        );
 
     function addLiquidityETH(
         address _token,
@@ -20,7 +26,14 @@ interface IDEXV2Router01 {
         uint256 _amountETHMin,
         address _to,
         uint256 _deadline
-    ) external payable returns (uint256 amountToken, uint256 amountETH, uint256 liquidity);
+    )
+        external
+        payable
+        returns (
+            uint256 amountToken,
+            uint256 amountETH,
+            uint256 liquidity
+        );
 
     function removeLiquidity(
         address _tokenA,
@@ -114,21 +127,25 @@ interface IDEXV2Router01 {
         uint256 _deadline
     ) external payable returns (uint256[] memory amounts);
 
-    function getAmountsOut(
-        uint256 _amountIn,
-        address[] calldata _path
-    ) external view returns (uint256[] memory amounts);
+    function getAmountsOut(uint256 _amountIn, address[] calldata _path)
+        external
+        view
+        returns (uint256[] memory amounts);
 
-    function getAmountsIn(
-        uint256 _amountOut,
-        address[] calldata _path
-    ) external view returns (uint256[] memory amounts);
+    function getAmountsIn(uint256 _amountOut, address[] calldata _path)
+        external
+        view
+        returns (uint256[] memory amounts);
 
     function factory() external view returns (address);
 
     function wcfn() external view returns (address);
 
-    function quote(uint256 _amountA, uint256 _reserveA, uint256 _reserveB) external pure returns (uint256 amountB);
+    function quote(
+        uint256 _amountA,
+        uint256 _reserveA,
+        uint256 _reserveB
+    ) external pure returns (uint256 amountB);
 
     function getAmountOut(
         uint256 _amountIn,

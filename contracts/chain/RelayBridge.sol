@@ -56,7 +56,11 @@ contract RelayBridge is Initializable {
         bridgeValidatorFeePool = IBridgeValidatorFeePool(_bridgeValidatorFeePool);
     }
 
-    function send(uint256 _destinationChain, uint256 _gasLimit, bytes memory _data) external payable {
+    function send(
+        uint256 _destinationChain,
+        uint256 _gasLimit,
+        bytes memory _data
+    ) external payable {
         bytes32 hash = dataHash(msg.sender, block.chainid, _destinationChain, _gasLimit, _data, nonce);
         require(sentData[hash].length == 0, "RelayBridge: data already send");
 

@@ -31,7 +31,11 @@ contract ValidatorRewardDistributionPool is Initializable, ContractKeys, SignerO
     // solhint-disable-next-line no-empty-blocks
     receive() external payable {}
 
-    function initialize(address _contractRegistry, address _router, address _signerGetterAddress) external initializer {
+    function initialize(
+        address _contractRegistry,
+        address _router,
+        address _signerGetterAddress
+    ) external initializer {
         _setSignerGetter(_signerGetterAddress);
         setRouter(_router);
         contractRegistry = ContractRegistry(_contractRegistry);

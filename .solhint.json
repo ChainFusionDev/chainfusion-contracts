@@ -21,7 +21,6 @@
     ],
     "ordering": "error",
     "no-unused-vars": "error",
-    "no-global-import": "off",
     "func-visibility": [
       "warn",
       {
