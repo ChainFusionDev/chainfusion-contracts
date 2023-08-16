@@ -17,7 +17,7 @@ async function main() {
     homeNetwork: homeNetwork,
     homeDKGAddress: dkgAddress,
     displayLogs: true,
-    parallelDeployment: false,
+    parallelDeployment: true,
     verify: verify,
   });
 
