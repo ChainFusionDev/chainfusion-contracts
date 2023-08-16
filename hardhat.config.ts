@@ -54,7 +54,7 @@ const config: HardhatUserConfig = {
     },
     sepolia: {
       chainId: 11155111,
-      url: 'https://rpc.sepolia.org',
+      url: 'https://rpc2.sepolia.org',
       accounts,
     },
     goerli: {
