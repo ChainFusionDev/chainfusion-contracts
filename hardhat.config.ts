@@ -34,57 +34,39 @@ const config: HardhatUserConfig = {
       accounts,
       gasPrice: 10000000000,
     },
-    bg1: {
-      chainId: 5001,
-      url: 'https://bg1-rpc.chainfusion.org',
-      accounts,
-      gasPrice: 10000000000,
-    },
-    bg2: {
-      chainId: 5002,
-      url: 'https://bg2-rpc.chainfusion.org',
-      accounts,
-      gasPrice: 10000000000,
-    },
-    bg3: {
-      chainId: 5003,
-      url: 'https://bg3-rpc.chainfusion.org',
-      accounts,
-      gasPrice: 10000000000,
-    },
     sepolia: {
       chainId: 11155111,
-      url: 'https://eth-sepolia.g.alchemy.com/v2/demo',
+      url: `https://rpc.ankr.com/eth_sepolia/${process.env.ANKR_API_KEY}`,
       accounts,
     },
     goerli: {
       chainId: 5,
-      url: `https://goerli.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+      url: `https://rpc.ankr.com/eth_goerli/${process.env.ANKR_API_KEY}`,
       accounts,
     },
     'bsc-testnet': {
       chainId: 97,
-      url: 'https://data-seed-prebsc-1-s1.binance.org:8545',
+      url: `https://rpc.ankr.com/bsc_testnet_chapel/${process.env.ANKR_API_KEY}`,
       accounts,
     },
     mumbai: {
       chainId: 80001,
-      url: 'https://rpc-mumbai.maticvigil.com',
+      url: `https://rpc.ankr.com/polygon_mumbai/${process.env.ANKR_API_KEY}`,
       accounts,
     },
     fuji: {
       chainId: 43113,
-      url: 'https://api.avax-test.network/ext/bc/C/rpc',
+      url: `https://rpc.ankr.com/avalanche_fuji/${process.env.ANKR_API_KEY}`,
+      accounts,
+    },
+    'fantom-testnet': {
+      chainId: 4002,
+      url: `https://rpc.ankr.com/fantom_testnet/${process.env.ANKR_API_KEY}`,
       accounts,
     },
     'q-testnet': {
       chainId: 35443,
       url: 'https://rpc.qtestnet.org',
-      accounts,
-    },
-    'fantom-testnet': {
-      chainId: 4002,
-      url: 'https://rpc.testnet.fantom.network',
       accounts,
     },
   },
@@ -109,30 +91,6 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://explorer.chainfusion.org/api",
           browserURL: "https://explorer.chainfusion.org"
-        }
-      },
-      {
-        network: "bg1",
-        chainId: 5001,
-        urls: {
-          apiURL: "https://bg1-explorer.chainfusion.org/api",
-          browserURL: "https://bg1-explorer.chainfusion.org"
-        }
-      },
-      {
-        network: "bg2",
-        chainId: 5002,
-        urls: {
-          apiURL: "https://bg2-explorer.chainfusion.org/api",
-          browserURL: "https://bg2-explorer.chainfusion.org"
-        }
-      },
-      {
-        network: "bg3",
-        chainId: 5003,
-        urls: {
-          apiURL: "https://bg3-explorer.chainfusion.org/api",
-          browserURL: "https://bg3-explorer.chainfusion.org"
         }
       },
       {
@@ -176,19 +134,19 @@ const config: HardhatUserConfig = {
         }
       },
       {
-        network: "q-testnet",
-        chainId: 35443,
-        urls: {
-          apiURL: "https://explorer.qtestnet.org/api",
-          browserURL: "https://explorer.qtestnet.org"
-        }
-      },
-      {
         network: "fantom-testnet",
         chainId: 4002,
         urls: {
           apiURL: "https://testnet.ftmscan.com/api",
           browserURL: "https://testnet.ftmscan.com"
+        }
+      },
+      {
+        network: "q-testnet",
+        chainId: 35443,
+        urls: {
+          apiURL: "https://explorer.qtestnet.org/api",
+          browserURL: "https://explorer.qtestnet.org"
         }
       },
     ]
