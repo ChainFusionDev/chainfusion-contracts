@@ -10,6 +10,7 @@ import "./ContractKeys.sol";
 import "./SignerOwnable.sol";
 import "../chain/Globals.sol";
 
+// TODO: Completely rewrite reward distribution logic
 contract ValidatorRewardDistributionPool is Initializable, ContractKeys, SignerOwnable {
     struct RewardPosition {
         uint256 balance;

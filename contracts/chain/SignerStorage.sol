@@ -9,7 +9,7 @@ contract SignerStorage is Initializable {
     event SignerUpdated(address signer);
 
     modifier onlySigner() {
-        require(this.getAddress() == msg.sender, "SignerOwnable: only signer");
+        require(signer == msg.sender, "SignerStorage: only signer");
         _;
     }
 
@@ -17,8 +17,7 @@ contract SignerStorage is Initializable {
         signer = _signer;
     }
 
-    function setAddress(address _newSigner) public payable {
-        require(signer == msg.sender, "SignerStorage: only signer");
+    function setAddress(address _newSigner) public payable onlySigner {
         signer = _newSigner;
 
         uint256 _value = msg.value;
